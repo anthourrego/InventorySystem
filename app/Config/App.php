@@ -4,8 +4,7 @@ namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
 
-class App extends BaseConfig
-{
+class App extends BaseConfig {
     /**
      * --------------------------------------------------------------------------
      * Base Site URL
@@ -23,7 +22,7 @@ class App extends BaseConfig
      *
      * @var string
      */
-    public $baseURL = 'http://localhost:8080/';
+    public $baseURL = 'http://localhost/pedroProject';
 
     /**
      * --------------------------------------------------------------------------
@@ -69,7 +68,7 @@ class App extends BaseConfig
      *
      * @var string
      */
-    public $defaultLocale = 'en';
+    public $defaultLocale = 'es';
 
     /**
      * --------------------------------------------------------------------------
@@ -83,7 +82,7 @@ class App extends BaseConfig
      *
      * @var bool
      */
-    public $negotiateLocale = false;
+    public $negotiateLocale = true;
 
     /**
      * --------------------------------------------------------------------------
@@ -96,7 +95,7 @@ class App extends BaseConfig
      *
      * @var string[]
      */
-    public $supportedLocales = ['en'];
+    public $supportedLocales = ['es'];
 
     /**
      * --------------------------------------------------------------------------
@@ -108,7 +107,7 @@ class App extends BaseConfig
      *
      * @var string
      */
-    public $appTimezone = 'America/Chicago';
+    public $appTimezone = 'America/Bogota';
 
     /**
      * --------------------------------------------------------------------------

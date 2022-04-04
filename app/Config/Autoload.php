@@ -15,8 +15,7 @@ use CodeIgniter\Config\AutoloadConfig;
  * NOTE: If you use an identical key in $psr4 or $classmap, then
  * the values in this file will overwrite the framework's values.
  */
-class Autoload extends AutoloadConfig
-{
+class Autoload extends AutoloadConfig {
     /**
      * -------------------------------------------------------------------
      * Namespaces
@@ -83,5 +82,7 @@ class Autoload extends AutoloadConfig
      *
      * @var array<int, string>
      */
-    public $files = [];
+    public $files = [
+        'app/Helpers/404.php'
+    ];
 }
