@@ -33,7 +33,6 @@ class UsuariosModel extends Model {
                 'usuario' => $this->usuario
                 ,"estado" => 1
               ])->first();
-    
     if (!is_null($valid)) {
       if(password_verify($this->password, $valid->password)){
         $this->id = $valid->id;

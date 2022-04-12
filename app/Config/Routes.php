@@ -34,6 +34,12 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'Home::index');
 $routes->post('/iniciarSesion', 'Home::iniciarSesion');
 
+
+//Usuarios
+$routes->group('Usuarios', ['filter' => 'authGuard'], function ($routes) {
+    $routes->get('/', 'UsuariosController::index');
+});
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 use App\Models\UsuariosModel;
-use \Config\Services;
 
 class Home extends Libraries {
 

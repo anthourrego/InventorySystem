@@ -10,9 +10,9 @@
 		<!-- /.navbar -->
 
 		<!-- Main Sidebar Container -->
-		<aside class="main-sidebar sidebar-dark-navy elevation-4">
+		<aside class="main-sidebar sidebar-dark-warning elevation-4">
 			<!-- Brand Logo -->
-			<a href="#" class="brand-link">
+			<a href="<?= base_url() ?>" class="brand-link">
 				<img src="<?= base_url("assets/img/icono-blanco.png") ?>" alt="Inventory System" class="brand-image">
 				<span class="brand-text font-weight-light">Inventory System</span>
 			</a>
@@ -43,7 +43,7 @@
 							</ul>
 						</li>
             <li class="nav-item">
-              <a href="pages/widgets.html" class="nav-link">
+              <a href="<?= base_url("Usuarios") ?>" class="nav-link <?= current_url(true)->getSegment(3) == 'Usuarios' ? 'active' : '' ?>">
                 <i class="nav-icon fas fa-users"></i>
                 <p>Usuarios</p>
               </a>
