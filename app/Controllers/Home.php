@@ -27,7 +27,7 @@ class Home extends Libraries {
                 'Login.js'
             ];
     
-            return view('UI/viewDefault', $this->content);
+            return view('UI/viewSimple', $this->content);
         }
     }
     
@@ -77,5 +77,11 @@ class Home extends Libraries {
         } else {
             show_404();
         }
+    }
+
+    public function cerrarSesion(){
+        $this->session->destroy();
+        $resp = array("success" => 1, "msj" => "Sesión cerrada.");
+        echo json_encode($resp);
     }
 }

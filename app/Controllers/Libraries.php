@@ -9,6 +9,7 @@ class Libraries extends BaseController {
     parent::__construct();
     
     $this->content['Project_Name'] = "Inventory System";
+    $this->content["session"] = $this->session;
     $this->LJQuery();
     
     if($this->session->has("logged_in") && $this->session->get("logged_in")){

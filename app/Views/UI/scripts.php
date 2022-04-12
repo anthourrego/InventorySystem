@@ -1,9 +1,9 @@
 </body>
-  <script>
-    function base_url(){
-      return "<?= base_url(); ?>/";
-    }
-  </script>
+<script>
+  function base_url(){
+    return "<?= base_url(); ?>/";
+  }
+</script>
   <?php 
     if(isset($js)){
       foreach ($js as $js1) {

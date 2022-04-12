@@ -37,6 +37,7 @@ class UsuariosModel extends Model {
     if (!is_null($valid)) {
       if(password_verify($this->password, $valid->password)){
         $this->id = $valid->id;
+        $this->nombre = $valid->nombre;
         $this->perfil = $valid->perfil;
         $this->foto = $valid->foto;
         $this->fecha = $valid->fecha;

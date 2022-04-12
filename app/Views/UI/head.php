@@ -33,7 +33,7 @@
       }
     ?>
   </head>
-  <body>
+  <body class="<?= $session->has("logged_in") && $session->get("logged_in") ? 'hold-transition sidebar-mini layout-fixed sidebar-collapse' : ''?>">
     <div id="cargando" class="d-none">
       <div class="box-loading">
           <div class="loader">
