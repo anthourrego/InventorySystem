@@ -28,11 +28,11 @@
                     </div>
                   </div>
                 </div>
-                <button type="submit" class="btn btn-lg bg-primary btn-block btn-login text-white text-uppercase font-weight-bold mb-2" id="btn-inciar">
+                <button type="submit" class="btn btn-lg bg-primary btn-block btn-login text-white text-uppercase font-weight-bold mb-2">
                   Ingresar <i class="fas fa-sign-in-alt"></i>
                 </button>
               </form>
-              <p class="mt-5 mb-3 text-muted text-center"><?= date('Y');  base_url(); ?> &copy;</p>
+              <p class="mt-5 mb-3 text-muted text-center"><?= date('Y'); ?> &copy;</p>
             </div>
           </div>
         </div>

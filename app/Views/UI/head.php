@@ -34,3 +34,13 @@
     ?>
   </head>
   <body>
+    <div id="cargando" class="d-none">
+      <div class="box-loading">
+          <div class="loader">
+            <div class="loader-1">
+              <div class="loader-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

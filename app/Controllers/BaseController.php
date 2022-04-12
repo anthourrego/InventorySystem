@@ -8,6 +8,7 @@ use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use \Config\Services;
 
 /**
  * Class BaseController
@@ -35,18 +36,21 @@ class BaseController extends Controller {
      * @var array
      */
     protected $helpers = [];
-    public $routes;
+    
+    public function __construct() {
+        $this->session = Services::session();
+    }
+
     /**
      * Constructor.
      */
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
-    {
+    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
 
         // Preload any models, libraries, etc, here.
 
-        // E.g.: $this->session = \Config\Services::session();
-        $this->routes = \Config\Services::routes();
+        $this->session = Services::session();
+        $this->routes = Services::routes();
     }
 }
