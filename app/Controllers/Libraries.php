@@ -77,7 +77,8 @@ class Libraries extends BaseController {
     ];
 
     $this->content['js'][] = [
-      'vendor/almasaeed2010/adminlte/dist/js/adminlte.min.js'
+      'vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js'
+      ,'vendor/almasaeed2010/adminlte/dist/js/adminlte.min.js'
     ];
   }
 
@@ -98,6 +99,30 @@ class Libraries extends BaseController {
 
     $this->content['js'][] = [
       'assets/Libraries/OverlayScrollbars/js/OverlayScrollbars.min.js'
+    ];
+  }
+
+  public function LDataTables(){
+    $this->content['css'][] = [
+      'vendor/datatables/datatables/media/css/dataTables.bootstrap4.min.css'
+      ,'vendor/datatables.net/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css'
+    ];
+
+    $this->content['js'][] = [
+      'vendor/datatables/datatables/media/js/jquery.dataTables.min.js'
+      ,'vendor/datatables/datatables/media/js/dataTables.bootstrap4.min.js'
+      ,'vendor/datatables.net/datatables.net-buttons/js/dataTables.buttons.min.js'
+      ,'vendor/datatables.net/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js'
+      ,'vendor/stuk/jszip/dist/jszip.min.js'
+      ,'vendor/bpampuch/pdfmake/build/pdfmake.min.js'
+      ,'vendor/bpampuch/pdfmake/build/vfs_fonts.js'
+      ,'vendor/datatables.net/datatables.net-buttons/js/buttons.html5.min.js'
+      ,'vendor/datatables.net/datatables.net-buttons/js/buttons.print.min.js'
+      ,'vendor/datatables.net/datatables.net-scroller/js/dataTables.scroller.min.js'
+    ];
+
+    $this->content['js_add'][] = [
+      'DataTables.js'
     ];
   }
 

@@ -255,6 +255,10 @@
   background-color: #222e3c;
 }
 
+div.dt-button-collection .dt-button {
+    min-width: 100%;
+}
+
 @media (min-width: 576px) {
   .w-sm-25 {
     width: 25% !important;

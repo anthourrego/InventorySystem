@@ -38,6 +38,7 @@ $routes->post('/iniciarSesion', 'Home::iniciarSesion');
 //Usuarios
 $routes->group('Usuarios', ['filter' => 'authGuard'], function ($routes) {
     $routes->get('/', 'UsuariosController::index');
+    $routes->post('DT', 'UsuariosController::listaUsuarios');
 });
 
 /*

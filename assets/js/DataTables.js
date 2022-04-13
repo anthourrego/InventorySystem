@@ -35,13 +35,16 @@ var domftrip = "<'row no-gutters pt-1 px-1'<'col-sm-12'f>><'row'<'col-sm-12'tr>>
 var domftr = "<'row no-gutters pt-1 px-1'<'col-12'f>><'row'<'col-md-12't>><'row'<'col-md-6'><'col-md-6'>>r";
 var domlftri = "<'row no-gutters pt-1 px-1'<'col-sm-12'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i>>";
 
-function dtSS($parametros) {
-	try {
-		var $tblID = $parametros.data.tblID;
-	} catch (e) {
-		console.error('No hay tblID definida');
+function dataTable(config) {
+	console.log(config.buttonsAdd);
+	if(config.tblId) {
+		$tblID = config.tblId;
+	} else {
+		console.error('No hay tabala definida');
+		alertify.error('No hay tabla definida');
 		return false;
 	}
+
 	var settings = {
 		processing: true,
 		serverSide: true,
@@ -49,22 +52,6 @@ function dtSS($parametros) {
 		draw: 25,
 		language,
 		pageLength: 25,
-		ajax: {
-			url: base_url() + "DataTables/dtSS/",
-			type: 'POST',
-			data: {
-				select: JSON.stringify($parametros.data.select),
-				table: JSON.stringify($parametros.data.table),
-				column_order: JSON.stringify($parametros.data.column_order),
-				column_search: JSON.stringify($parametros.data.column_search),
-				orden: $parametros.data.orden,
-				columnas: JSON.stringify($parametros.data.columnas),
-				group_by: JSON.stringify($parametros.data.group_by),
-				having: JSON.stringify($parametros.data.having),
-				or_where: JSON.stringify($parametros.data.or_where),
-				where_in: JSON.stringify($parametros.data.where_in)
-			}
-		},
 		initComplete: function (settings, json) {
 			var self = this;
 			$(this).closest('.dataTables_wrapper').find('div.dataTables_filter input').unbind().keyup(function (e) {
@@ -83,26 +70,40 @@ function dtSS($parametros) {
 			[10, 25, 50, -1],
 			['10', '25', '50', 'Todos']
 		],
-		dom: domlftri,
+		dom: domBftrip,
 		buttons: [
-			{ extend: 'copy', className: 'copyButton', text: 'Copiar' },
-			{ extend: 'csv', className: 'csvButton', text: 'CSV' },
-			//{ extend: 'excel', className: 'excelButton', text: 'Excel' },
-			{ extend: 'excel', action: newExportAction, text: 'Excel' },
-			{ extend: 'pdf', className: 'pdfButton', tex: 'PDF' },
-			{ extend: 'print', className: 'printButton', text: 'Imprimir' }
+			{ extend: 'copy', className: 'copyButton btn-warning', text:'<i class="fa-solid fa-copy"></i>', attr: { title: "Copiar", "data-toggle":"tooltip" } },
+			{ extend: 'csv', className: 'csvButton btn-light', text: '<i class="fa-solid fa-file-csv"></i>', attr: { title: "CSV", "data-toggle":"tooltip" } },
+			{ extend: 'excel', className: "btn-success", action: newExportAction, text: '<i class="fa-solid fa-file-excel"></i>', attr: { title: "Excel", "data-toggle":"tooltip" } },
+			{ extend: 'pdf', className: 'pdfButton btn-danger', text: '<i class="fa-solid fa-file-pdf"></i>', attr: { title: "PDF", "data-toggle":"tooltip" } },
+			{ extend: 'print', className: 'printButton btn-info', text: '<i class="fa-solid fa-print"></i>', attr: { title: "Imprimir", "data-toggle":"tooltip" } },
+			{ extend: 'pageLength', className: ""}
 		],
 		deferRender: true
 	};
-	delete $parametros['data'];
-	for (var attrname in $parametros) {
-		settings[attrname] = $parametros[attrname];
-		delete $parametros[attrname];
+
+	delete config['tblId'];
+	for (var attrname in config) {
+		settings[attrname] = config[attrname];
+		delete config[attrname];
 	}
-	settings = Object.assign(settings, $parametros);
+	settings = Object.assign(settings, config);
 	var dt = $($tblID).DataTable(settings);
+	$('[data-toggle="tooltip"]').tooltip();
 	return dt;
 }
+
+var oldExportAction = function (self, e, dt, button, config) {
+	if (button[0].className.indexOf('buttons-excel') >= 0) {
+		if ($.fn.dataTable.ext.buttons.excelHtml5.available(dt, config)) {
+			$.fn.dataTable.ext.buttons.excelHtml5.action.call(self, e, dt, button, config);
+		}else{
+			$.fn.dataTable.ext.buttons.excelFlash.action.call(self, e, dt, button, config);
+		}
+	} else if (button[0].className.indexOf('buttons-print') >= 0) {
+		$.fn.dataTable.ext.buttons.print.action(e, dt, button, config);
+	}
+};
 
 var newExportAction = function (e, dt, button, config) {
 	var self = this;

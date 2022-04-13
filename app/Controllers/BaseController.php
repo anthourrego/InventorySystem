@@ -8,7 +8,8 @@ use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
-use \Config\Services;
+use Config\Services;
+use Config\Database;
 
 /**
  * Class BaseController
@@ -52,5 +53,6 @@ class BaseController extends Controller {
 
         $this->session = Services::session();
         $this->routes = Services::routes();
+        $this->db = Database::connect();
     }
 }
