@@ -6,6 +6,9 @@
 					<i class="fas fa-bars"></i>
 				</a>
 			</li>
+			<li class="nav-item d-none border-left <?= (isset($title) ? 'd-sm-inline-block' : '') ?>">
+				<h4 class="nav-link mb-0"><?= (isset($title) ? $title : '') ?></h4>
+			</li>
 		</nav>
 		<!-- /.navbar -->
 

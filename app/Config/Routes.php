@@ -39,6 +39,7 @@ $routes->post('/iniciarSesion', 'Home::iniciarSesion');
 $routes->group('Usuarios', ['filter' => 'authGuard'], function ($routes) {
     $routes->get('/', 'UsuariosController::index');
     $routes->post('DT', 'UsuariosController::listaUsuarios');
+    $routes->get('Foto/(:any)', 'UsuariosController::foto/$1');
 });
 
 /*

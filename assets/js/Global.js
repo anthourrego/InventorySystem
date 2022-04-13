@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
   $("#cerrarSesion").click(function (e) {
     e.preventDefault();
-    alertify.globalConfirm('Cerrar sesión', '¿Está seguro de cerrar sesión?', function () {
+    alertify.globalConfirm(`<i class="fas fa-sign-out-alt nav-icon"></i> Cerrar sesión`, '¿Está seguro de cerrar sesión?', function () {
       $.ajax({
         type: "POST",
         url: base_url() + "Home/cerrarSesion",

@@ -36,7 +36,6 @@ var domftr = "<'row no-gutters pt-1 px-1'<'col-12'f>><'row'<'col-md-12't>><'row'
 var domlftri = "<'row no-gutters pt-1 px-1'<'col-sm-12'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i>>";
 
 function dataTable(config) {
-	console.log(config.buttonsAdd);
 	if(config.tblId) {
 		$tblID = config.tblId;
 	} else {
@@ -65,6 +64,7 @@ function dataTable(config) {
 			setTimeout(function () {
 				$('div.dataTables_filter input').focus();
 			}, 0);
+			$(`${$tblID}_wrapper [data-toggle="tooltip"]`).tooltip();
 		},
 		lengthMenu: [
 			[10, 25, 50, -1],
@@ -72,14 +72,14 @@ function dataTable(config) {
 		],
 		dom: domBftrip,
 		buttons: [
-			{ extend: 'copy', className: 'copyButton btn-warning', text:'<i class="fa-solid fa-copy"></i>', attr: { title: "Copiar", "data-toggle":"tooltip" } },
-			{ extend: 'csv', className: 'csvButton btn-light', text: '<i class="fa-solid fa-file-csv"></i>', attr: { title: "CSV", "data-toggle":"tooltip" } },
+			/* { extend: 'copy', className: 'copyButton btn-warning', text:'<i class="fa-solid fa-copy"></i>', attr: { title: "Copiar", "data-toggle":"tooltip" } },
+			{ extend: 'csv', className: 'csvButton btn-light', text: '<i class="fa-solid fa-file-csv"></i>', attr: { title: "CSV", "data-toggle":"tooltip" } }, */
 			{ extend: 'excel', className: "btn-success", action: newExportAction, text: '<i class="fa-solid fa-file-excel"></i>', attr: { title: "Excel", "data-toggle":"tooltip" } },
 			{ extend: 'pdf', className: 'pdfButton btn-danger', text: '<i class="fa-solid fa-file-pdf"></i>', attr: { title: "PDF", "data-toggle":"tooltip" } },
 			{ extend: 'print', className: 'printButton btn-info', text: '<i class="fa-solid fa-print"></i>', attr: { title: "Imprimir", "data-toggle":"tooltip" } },
-			{ extend: 'pageLength', className: ""}
+			{ extend: 'pageLength' },
 		],
-		deferRender: true
+		deferRender: true,
 	};
 
 	delete config['tblId'];
@@ -89,7 +89,7 @@ function dataTable(config) {
 	}
 	settings = Object.assign(settings, config);
 	var dt = $($tblID).DataTable(settings);
-	$('[data-toggle="tooltip"]').tooltip();
+	$(`${$tblID}_wrapper [data-toggle="tooltip"]`).tooltip();
 	return dt;
 }
 

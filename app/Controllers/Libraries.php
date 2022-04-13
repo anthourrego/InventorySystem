@@ -126,4 +126,21 @@ class Libraries extends BaseController {
     ];
   }
 
+  public function LMoment(){
+    $this->content['js'][] = [
+      'vendor/moment/moment/moment.js',
+      'vendor/moment/moment/locale/es-mx.js'
+    ];
+  }
+
+  public function LLightbox(){
+    $this->content['css'][] = [
+      'assets/Libraries/lightbox/lightbox.min.css'
+    ];
+
+    $this->content['js'][] = [
+      'assets/Libraries/lightbox/lightbox.min.js'
+    ];
+  }
+
 } 

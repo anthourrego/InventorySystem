@@ -19,7 +19,8 @@
         "datatables.net/datatables.net-scroller": "dev-master",
         "stuk/jszip": "^3.0",
         "bpampuch/pdfmake": "^0.2.4",
-        "hermawan/codeigniter4-datatables": "^0.5.4"
+        "hermawan/codeigniter4-datatables": "^0.5.4",
+        "moment/moment": "^2.29"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9",
@@ -50,5 +51,11 @@
         "forum": "http://forum.codeigniter.com/",
         "source": "https://github.com/codeigniter4/CodeIgniter4",
         "slack": "https://codeigniterchat.slack.com"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "oomphinc/composer-installers-extender": true
+        }
     }
 }
