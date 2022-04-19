@@ -12,6 +12,7 @@ class UsuariosController extends Libraries {
 
         $this->LDataTables();
         $this->LMoment();
+        $this->LFancybox();
         $this->content['js_add'][] = [
             'Usuarios.js'
         ];
@@ -46,7 +47,7 @@ class UsuariosController extends Libraries {
         return DataTable::of($query)->toJson(true);
     }
 
-    public function foto($img){
+    public function foto($img = null){
         $filename= UPLOADS_PATH ."usuarios/{$img}"; //<-- specify the image  file
         //Si la foto no existe la colocamos por defecto
         if(!file_exists($filename)){ 
@@ -58,5 +59,28 @@ class UsuariosController extends Libraries {
         header("Content-Disposition: inline; filename='{$filename}';"); //<-- sends filename header
         readfile($filename); //<--reads and outputs the file onto the output buffer
         exit(); // or die()
+    }
+
+    public function eliminar(){
+        $resp["success"] = false;
+        //Traemos los datos del post
+        $id = $this->request->getPost("idUsuario");
+        $estado = $this->request->getPost("estado");
+
+        $usuario = new UsuariosModel();
+        
+        $data = [
+            "id" => $id,
+            "estado" => $estado
+        ];
+
+        if($usuario->save($data)) {
+            $resp["success"] = true;
+            $resp['msj'] = "Usuario se ha actualizado correctamente";
+        } else {
+            $resp['msj'] = "Error al cambiar el estado";
+        }
+
+        echo json_encode($resp);
     }
 }

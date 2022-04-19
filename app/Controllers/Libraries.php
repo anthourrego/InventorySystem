@@ -143,4 +143,14 @@ class Libraries extends BaseController {
     ];
   }
 
+  public function LFancybox(){
+    $this->content['css'][] = [
+      'assets/Libraries/fancybox/jquery.fancybox.min.css'
+    ];
+
+    $this->content['js'][] = [
+      'assets/Libraries/fancybox/jquery.fancybox.min.js'
+    ];
+  }
+
 } 
