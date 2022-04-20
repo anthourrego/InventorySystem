@@ -355,3 +355,9 @@ div.dt-button-collection .dt-button {
     width: 100% !important;
   }
 }
+
+
+.select2-container--bootstrap4.select2-container--focus .select2-selection {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}

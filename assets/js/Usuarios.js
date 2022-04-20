@@ -60,9 +60,82 @@ $(function(){
     DTUsuarios.ajax.reload();
   });
 
+  $("#foto").on("change", function(event){
+    const file = this.files[0];
+    if (file){
+      if(file.size <= 2000000){
+        let reader = new FileReader();
+        reader.onload = function(event){
+          //console.log(event.target.result);
+          $('#imgFoto').attr('src', event.target.result);
+        }
+        reader.readAsDataURL(file);
+        $("#content-preview").removeClass("d-none");
+        $("#content-upload").addClass("d-none");
+      } else {
+        alertify.error("La imagen es superior a 2mb");
+        $("#foto").val('');
+        $('#imgFoto').attr('src', base_url() + "Usuarios/Foto");
+        $("#content-preview").addClass("d-none");
+        $("#content-upload").removeClass("d-none");
+      }
+    } else {
+      $("#foto").val('');
+      $('#imgFoto').attr('src', base_url() + "Usuarios/Foto");
+      $("#content-preview").addClass("d-none");
+      $("#content-upload").removeClass("d-none");
+    }
+  });
+
+  $(".btn-eliminar-foto").on("click", function(e){
+    e.preventDefault();
+    $("#foto").val('');
+    $('#imgFoto').attr('src', base_url() + "Usuarios/Foto");
+    $("#content-preview").addClass("d-none");
+    $("#content-upload").removeClass("d-none");
+  });
+
   $("#btnCrearUsuario").on("click", function(){
     $("#modalUsuario").modal("show");
     $("#modalUsuarioLabel").html(`<i class="fa-solid fa-user-plus"></i> Crear usuario`)
+  });
+
+  $(".btn-pass").on("click", function () {
+    if ($(this).find('i').hasClass('fa-eye')) {
+      $(this).closest('.input-group').find('input').attr('type', 'text');
+      $(this).find('i').removeClass('fa-eye').addClass('fa-eye-slash');
+    } else {
+      $(this).closest('.input-group').find('input').attr('type', 'password');
+      $(this).find('i').removeClass('fa-eye-slash').addClass('fa-eye');
+    }
+  });
+
+  //Las condiciones del formulario
+  $("#formUsuario").validate({
+    rules: {
+      pass: "required",
+      RePass: {
+        equalTo: "#pass"
+      }
+    }
+  });
+
+  $("#usuario").on("focusout", function(){
+    let usuario = $(this).val();
+    if(usuario.length > 0){
+      $.ajax({
+        type: "GET",
+        url: rutaBase + "ValidaUsuario/" + usuario,
+        dataType: 'json',
+        success: function (resp) {
+          console.log(resp);
+          if(resp > 0){
+            alertify.warning("El usuario <b>" + usuario + "</b>, ya se encuentra creado, intente con otro nombre.");
+            $("#usuario").trigger("focus");
+          }
+        }
+      });
+    }
   });
 });
 

@@ -153,4 +153,20 @@ class Libraries extends BaseController {
     ];
   }
 
+  public function LSelect2(){
+    $this->content['css'][] = [
+      'vendor/select2/select2/dist/css/select2.min.css'
+      ,'vendor/ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css'
+    ];
+
+    $this->content['js'][] = [
+      'vendor/select2/select2/dist/js/select2.full.min.js',
+      'vendor/select2/select2/dist/js/i18n/es.js',
+    ];
+
+    $this->content['js_add'][] = [
+      'select2.js'
+    ];
+  }
+
 } 

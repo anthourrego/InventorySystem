@@ -1,27 +1,3 @@
-<style>
-  .content-img {
-    width: 100%;
-    height: 228px;
-    border: 1px solid #ced4da !important;
-    transition: background-color 0.5s ease;
-  }
-
-  .content-img:hover {
-    background-color: rgb(13 110 253 / 25%);
-    transition: background-color 0.5s ease;
-  }
-  .input-file-img {
-    position: absolute;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    outline: none;
-    opacity: 0;
-    cursor: pointer;
-  }
-</style>
-
 <div class="card">
   <div class="card-header">
     <div class="row justify-content-between">
@@ -63,7 +39,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="modalUsuarioLabel" aria-hidden="true">
+<div class="modal fade modalFormulario" id="modalUsuario" data-backdrop="static" data-keyboard="false" aria-labelledby="modalUsuarioLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -76,35 +52,63 @@
         <form id="formUsuario">
           <div class="form-row">
             <div class="col-6">
-              <div class="content-img rounded d-flex align-items-center justify-content-center">
-                <div class="text-center position-absolute w-90">
-                  <i class="fas fa-cloud-upload-alt"></i>
-                  <span> Selecciona o arrastre su imagen</span>
+              <div id="content-upload">
+                <div class="content-img rounded d-flex align-items-center justify-content-center">
+                  <div class="text-center position-absolute w-90">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span> Selecciona o arrastre su imagen</span>
+                  </div>
+                  <input id="foto" name="foto" class="input-file-img" accept=".png, .jpg, .jpeg" type="file">
                 </div>
-                <input id="foto" name="foto" class="input-file-img" accept="image/*" type="file">
+              </div>
+              <div id="content-preview" class="d-none text-center">
+                <img id="imgFoto" src="<?= base_url("Usuarios/Foto") ?>" class="img-thumbnail h-100">
+                <button type="button" class="btn btn-danger btn-sm btn-eliminar-foto"><i class="fas fa-times"></i></button>
               </div>
             </div>
             <div class="col-6">
-              <div class="form-group">
-                <label class="mb-0" for="usuario">Usuario</label>
+              <div class="form-group form-valid">
+                <label class="mb-0" for="usuario">Usuario <span class="text-danger">*</span></label>
                 <input placeholder="Username" class="form-control" id="usuario" name="usuario" type="text" minlength="1" maxlength="255" required>
               </div>
-              <div class="form-group">
-                <label class="mb-0" for="perfil">Perfil</label>
-                <select id="perfil" name="perfil" class="form-control">
-                  <option selected disabled>Seleccione...</option>
+              <div class="form-group form-valid">
+                <label class="mb-0" for="perfil">Perfil <span class="text-danger">*</span></label>
+                <select id="perfil" required name="perfil" class="custom-select select2" data-placeholder="Seleccione..." data-allow-clear="1">
+                  <option></option>
                   <option value="Administrador">Administrador</option>
                   <option value="Especial">Especial</option>
                   <option value="Vendedor">Vendedor</option>
                 </select>
+              </div>
+              <div class="form-group form-valid">
+                <label class="mb-0" for="nombre">Nombre <span class="text-danger">*</span></label>
+                <input type="text" id="nombre" name="nombre" class="form-control" minlength="1" maxlength="300" required placeholder="Nombre">
+              </div>
+            </div>
+            <div class="col-6 form-group form-valid">
+              <label class="mb-0" for="pass">Contraseña <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <input type="password" required id="pass" placeholder="******" minlength="1" maxlength="255" name="pass" class="form-control">
+                <div class="input-group-append">
+                  <button class="btn btn-secondary btn-pass" type="button"><i class="fas fa-eye"></i></button>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 form-group form-valid">
+              <label class="mb-0" for="RePass">Confirmar Contraseña <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <input type="password" required id="RePass" placeholder="******" minlength="1" maxlength="255" name="RePass" class="form-control">
+                <div class="input-group-append">
+                  <button class="btn btn-secondary btn-pass" type="button"><i class="fas fa-eye"></i></button>
+                </div>
               </div>
             </div>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary" form="formUsuario">Guardar</button>
+        <button type="submit" class="btn btn-success" form="formUsuario"><i class="fas fa-save"></i> Guardar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
       </div>
     </div>
   </div>

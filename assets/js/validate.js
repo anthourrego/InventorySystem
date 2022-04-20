@@ -1,11 +1,11 @@
 $(function(){
 	jQuery.validator.setDefaults({
-	  	debug: false,
+	  	debug: true,
 	  	ignore: ":hidden:not(.ignore)",
 	  	errorElement: "em",
 	  	errorPlacement: function (error, element) {
-			error.addClass("invalid-feedback");
-			element.closest(".form-valid").append(error);
+				error.addClass("invalid-feedback");
+				element.closest(".form-valid").append(error);
 	  	},
 	  	highlight: function (element, errorClass, validClass) {
 				$(element).addClass("is-invalid");
@@ -14,7 +14,16 @@ $(function(){
 	  	unhighlight: function (element, errorClass, validClass) {
 				$(element).removeClass("is-invalid");
 				//$(element).addClass("is-valid");
-	  	}
+	  	},
+			invalidHandler: function(form, validator){
+				var error = validator.numberOfInvalids();
+				if (error) {
+					var element = validator.errorList[0].element;
+					if ($(element).is("select.select2")) {
+						$(element).select2('open');
+					}
+				}
+			}
 	});
 
 	// validation of chosen on change
@@ -28,7 +37,7 @@ $(function(){
 		});
 	}
 
-	$("form").validate();
+	$(".formValid").validate();
 
 	$('.modalFormulario').on('hide.bs.modal', function (event) {
 		$(this).find("form").each(function(pos, formulario) {

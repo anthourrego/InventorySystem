@@ -9,7 +9,7 @@
         "codeigniter4/framework": "^4",
         "almasaeed2010/adminlte": "^3.2",
         "twbs/bootstrap": "4.6.1",
-        "components/jquery": "^3.6",
+        "components/jquery": "3.5.1",
         "fortawesome/font-awesome": "^6.1",
         "datatables/datatables": "^1.10",
         "datatables.net/datatables.net": "dev-master",
@@ -20,7 +20,9 @@
         "stuk/jszip": "^3.0",
         "bpampuch/pdfmake": "^0.2.4",
         "hermawan/codeigniter4-datatables": "^0.5.4",
-        "moment/moment": "^2.29"
+        "moment/moment": "^2.29",
+        "select2/select2": "^4.0",
+        "ttskch/select2-bootstrap4-theme": "^1.5"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9",

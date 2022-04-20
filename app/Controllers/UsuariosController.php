@@ -13,6 +13,11 @@ class UsuariosController extends Libraries {
         $this->LDataTables();
         $this->LMoment();
         $this->LFancybox();
+        $this->LSelect2();
+        $this->LJQueryValidation();
+        $this->content['css_add'][] = [
+            'Usuarios.css'
+        ];
         $this->content['js_add'][] = [
             'Usuarios.js'
         ];
@@ -82,5 +87,15 @@ class UsuariosController extends Libraries {
         }
 
         echo json_encode($resp);
+    }
+
+    public function validaUsuario($usuario){
+        $user = new UsuariosModel();
+
+        $usuario = $user->asObject()
+                ->where(['usuario' => $usuario])
+                ->countAllResults();
+
+        echo json_encode($usuario);
     }
 }

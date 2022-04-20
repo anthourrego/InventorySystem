@@ -42,6 +42,7 @@ $routes->group('Usuarios', ['filter' => 'authGuard'], function ($routes) {
     $routes->get('Foto', 'UsuariosController::foto');
     $routes->get('Foto/(:any)', 'UsuariosController::foto/$1');
     $routes->post('Eliminar', 'UsuariosController::eliminar');
+    $routes->get('ValidaUsuario/(:any)', 'UsuariosController::validaUsuario/$1');
 });
 
 /*

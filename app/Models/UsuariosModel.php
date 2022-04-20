@@ -48,4 +48,8 @@ class UsuariosModel extends Model {
       return false; 
     }
   }
+
+  public function validaUsuario(){
+    
+  }
 }
