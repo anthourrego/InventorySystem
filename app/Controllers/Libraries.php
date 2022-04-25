@@ -104,13 +104,13 @@ class Libraries extends BaseController {
 
   public function LDataTables(){
     $this->content['css'][] = [
-      'vendor/datatables/datatables/media/css/dataTables.bootstrap4.min.css'
+      'vendor/datatables.net/datatables.net-bs4/css/dataTables.bootstrap4.min.css'
       ,'vendor/datatables.net/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css'
     ];
 
     $this->content['js'][] = [
-      'vendor/datatables/datatables/media/js/jquery.dataTables.min.js'
-      ,'vendor/datatables/datatables/media/js/dataTables.bootstrap4.min.js'
+      'vendor/datatables.net/datatables.net/js/jquery.dataTables.min.js'
+      ,'vendor/datatables.net/datatables.net-bs4/js/dataTables.bootstrap4.min.js'
       ,'vendor/datatables.net/datatables.net-buttons/js/dataTables.buttons.min.js'
       ,'vendor/datatables.net/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js'
       ,'vendor/stuk/jszip/dist/jszip.min.js'

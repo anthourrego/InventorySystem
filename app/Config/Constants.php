@@ -80,5 +80,6 @@ defined('EXIT__AUTO_MAX')      || define('EXIT__AUTO_MAX', 125); // highest auto
 
 //Routes
 defined('ASSETS_PATH')      || define('ASSETS_PATH', ROOTPATH . "assets/");
-defined('UPLOADS_PATH')      || define('UPLOADS_PATH', ROOTPATH . "writable/uploads/");
+defined('UPLOADS_PATH')      || define('UPLOADS_PATH', WRITEPATH  . "uploads/");
+defined('UPLOADS_USER_PATH')      || define('UPLOADS_USER_PATH', WRITEPATH  . "uploads/usuarios/");
 

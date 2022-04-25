@@ -20,7 +20,7 @@
   </div>
   <div class="card-body">
     <div class="table-responsive">
-      <table id="table" class="table table-striped table-hover table-bordered w-100">
+      <table id="table" class="table table-sm table-striped table-hover table-bordered w-100">
         <thead> 
           <tr>
             <th>Foto</th>
@@ -49,7 +49,9 @@
         </button>
       </div>
       <div class="modal-body">
-        <form id="formUsuario">
+        <form id="formUsuario" enctype="multipart/form-data">
+          <input type="hidden" name="id" id="id">
+          <input type="hidden" name="editFoto" id="editFoto" value="0">
           <div class="form-row">
             <div class="col-6">
               <div id="content-upload">
@@ -69,26 +71,27 @@
             <div class="col-6">
               <div class="form-group form-valid">
                 <label class="mb-0" for="usuario">Usuario <span class="text-danger">*</span></label>
-                <input placeholder="Username" class="form-control" id="usuario" name="usuario" type="text" minlength="1" maxlength="255" required>
+                <input placeholder="Username" class="form-control soloLetras" id="usuario" name="usuario" type="text" minlength="1" maxlength="255" required>
               </div>
               <div class="form-group form-valid">
                 <label class="mb-0" for="perfil">Perfil <span class="text-danger">*</span></label>
                 <select id="perfil" required name="perfil" class="custom-select select2" data-placeholder="Seleccione..." data-allow-clear="1">
                   <option></option>
-                  <option value="Administrador">Administrador</option>
-                  <option value="Especial">Especial</option>
-                  <option value="Vendedor">Vendedor</option>
+                  <option value="0">Perfil libre</option>
+                  <?php foreach ($perfiles as $perfil) : ?>
+                    <option value="<?=  $perfil->id?>"><?= $perfil->nombre ?></option>
+                  <?php endforeach ?>
                 </select>
               </div>
               <div class="form-group form-valid">
                 <label class="mb-0" for="nombre">Nombre <span class="text-danger">*</span></label>
-                <input type="text" id="nombre" name="nombre" class="form-control" minlength="1" maxlength="300" required placeholder="Nombre">
+                <input type="text" id="nombre" name="nombre" class="form-control soloLetrasEspacio" minlength="1" maxlength="300" required placeholder="Nombre">
               </div>
             </div>
             <div class="col-6 form-group form-valid">
               <label class="mb-0" for="pass">Contraseña <span class="text-danger">*</span></label>
               <div class="input-group">
-                <input type="password" required id="pass" placeholder="******" minlength="1" maxlength="255" name="pass" class="form-control">
+                <input type="password" required id="pass" placeholder="******" minlength="1" maxlength="255" name="pass" class="form-control soloLetras">
                 <div class="input-group-append">
                   <button class="btn btn-secondary btn-pass" type="button"><i class="fas fa-eye"></i></button>
                 </div>
@@ -102,6 +105,22 @@
                   <button class="btn btn-secondary btn-pass" type="button"><i class="fas fa-eye"></i></button>
                 </div>
               </div>
+            </div>
+            <div class="col-6 form-group form-group-edit">
+              <label class="mb-0" for="fechaLog">Ultimo login</label>
+              <input class="form-control" id="fechaLog" disabled>
+            </div>
+            <div class="col-6 form-group form-group-edit">
+              <label class="mb-0" for="fechaMod">Fecha modificación</label>
+              <input class="form-control" id="fechaMod" disabled>
+            </div>
+            <div class="col-6 form-group form-group-edit">
+              <label class="mb-0" for="fechaCre">Fecha creación</label>
+              <input class="form-control" id="fechaCre" disabled>
+            </div>
+            <div class="col-6 form-group form-group-edit">
+              <label class="mb-0" for="estado">Estado</label>
+              <input class="form-control" id="estado" disabled>
             </div>
           </div>
         </form>

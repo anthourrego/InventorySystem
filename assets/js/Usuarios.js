@@ -1,7 +1,6 @@
 let rutaBase = base_url() + "Usuarios/";
 
-let DTUsuarios = dataTable({
-  tblId: "#table",
+let DTUsuarios = $("#table").DataTable({
   ajax: {
     url: rutaBase + "DT",
     type: "POST",
@@ -12,7 +11,7 @@ let DTUsuarios = dataTable({
   columns: [
     {
       orderable: false,
-      data: 'foto',
+      defaultContent: '',
       className: "text-center",
       render: function(meta, type, data, meta) {
         return `<a href="${base_url()}Usuarios/Foto/${data.foto}" data-fancybox="images${data.id}" data-caption="${data.nombre}">
@@ -27,23 +26,24 @@ let DTUsuarios = dataTable({
     {
       data: 'ultimo_login',
       render: function(meta, type, data, meta) {
-        return moment(data.ultimo_login, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYYY hh:mm:ss A");
+        return moment(data.ultimo_login, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A");
       }
     },
     {
-      data: 'fecha',
+      data: 'created_at',
       render: function(meta, type, data, meta) {
-        return moment(data.fecha, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYYY hh:mm:ss A");
+        return moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A");
       }
     },
     {
       orderable: false,
+      searchable: false,
       defaultContent: '',
       className: 'text-center',
       render: function(meta, type, data, meta) {
         return `<div class="btn-group btn-group-sm" role="group">
                   <button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-user-pen"></i></button>
-                  <button type="button" class="btn btn-${data.estado == "1" ? "danger" : "info"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-user-${data.estado == "1" ? "large-slash" : "check"}"></i></button>
+                  <button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-user-${data.estado == "1" ? "large-slash" : "check"}"></i></button>
                 </div>`;
       }
     },
@@ -51,6 +51,33 @@ let DTUsuarios = dataTable({
   createdRow: function(row, data, dataIndex){
     $(row).find(".btnCambiarEstado").on("click", function(){
       eliminar(data);
+    });
+
+    $(row).find(".btnEditar").click(function(e){
+      e.preventDefault();
+      $("#modalUsuarioLabel").html(`<i class="fa-solid fa-user-pen"></i> Editar usuario`);
+      console.log(data);
+      $("#id").val(data.id);
+      $("#nombre").val(data.nombre);
+      $("#usuario").val(data.usuario);
+      $("#perfil").val((data.perfilId == null ? 0 : data.perfilId)).trigger('change');
+      $("#fechaLog").val(moment(data.ultimo_login, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
+      $("#fechaMod").val(moment(data.updated_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
+      $("#fechaCre").val(moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
+      $("#estado").val(data.Estadito);
+      $("#editFoto").val(0);
+      if (data.foto != null) {
+        $("#foto").val('');
+        $('#imgFoto').attr('src', base_url() + "Usuarios/Foto/" + data.foto);
+        $("#content-preview").removeClass("d-none");
+        $("#content-upload").addClass("d-none");
+      } else {
+        $("#content-preview").addClass("d-none");
+        $("#content-upload").removeClass("d-none");
+      }
+      $("#pass, #RePass").closest(".form-group").addClass("d-none");
+      $(".form-group-edit").removeClass("d-none");
+      $("#modalUsuario").modal("show");
     });
   }
 });
@@ -72,6 +99,10 @@ $(function(){
         reader.readAsDataURL(file);
         $("#content-preview").removeClass("d-none");
         $("#content-upload").addClass("d-none");
+
+        if ($("#id").val().length > 0) {
+          $("#editFoto").val(0);
+        }
       } else {
         alertify.error("La imagen es superior a 2mb");
         $("#foto").val('');
@@ -93,11 +124,23 @@ $(function(){
     $('#imgFoto').attr('src', base_url() + "Usuarios/Foto");
     $("#content-preview").addClass("d-none");
     $("#content-upload").removeClass("d-none");
+
+    if ($("#id").val().length > 0) {
+      $("#editFoto").val(1);
+    }
   });
 
   $("#btnCrearUsuario").on("click", function(){
+    $("#id").val("");
+    $("#editFoto").val(0);
+    $("#foto").val('');
+    $('#imgFoto').attr('src', base_url() + "Usuarios/Foto");
+    $("#content-preview").addClass("d-none");
+    $("#content-upload").removeClass("d-none");
+    $("#modalUsuarioLabel").html(`<i class="fa-solid fa-user-plus"></i> Crear usuario`);
+    $(".form-group-edit").addClass("d-none");
+    $("#pass, #RePass").closest(".form-group").removeClass("d-none");
     $("#modalUsuario").modal("show");
-    $("#modalUsuarioLabel").html(`<i class="fa-solid fa-user-plus"></i> Crear usuario`)
   });
 
   $(".btn-pass").on("click", function () {
@@ -122,19 +165,55 @@ $(function(){
 
   $("#usuario").on("focusout", function(){
     let usuario = $(this).val();
+    let id = $("#id").val().length ? $("#id").val() : 0;
     if(usuario.length > 0){
       $.ajax({
         type: "GET",
-        url: rutaBase + "ValidaUsuario/" + usuario,
+        url: rutaBase + "ValidaUsuario/" + usuario + "/" + id,
         dataType: 'json',
         success: function (resp) {
-          console.log(resp);
           if(resp > 0){
             alertify.warning("El usuario <b>" + usuario + "</b>, ya se encuentra creado, intente con otro nombre.");
             $("#usuario").trigger("focus");
           }
         }
       });
+    }
+  });
+
+  //Formulario de usuario
+  $("#formUsuario").on("submit", function(e){
+    e.preventDefault();
+    let pass = $("#pass").val().trim();
+    let RePass = $("#RePass").val().trim();
+    
+    if ($(this).valid()) {
+      if (pass == RePass) {
+        $.ajax({ 
+          url: rutaBase + "Crear",
+          type:'POST',
+          dataType: 'json',
+          processData: false,
+          contentType: false,
+          cache: false,
+          data: new FormData(this),
+          success: function(resp){
+            if (resp.success) {
+              DTUsuarios.ajax.reload();
+              $("#modalUsuario").modal("hide");
+              $('#imgFoto').attr('src', base_url() + "Usuarios/Foto");
+              $("#content-preview").addClass("d-none");
+              $("#content-upload").removeClass("d-none");
+              alertify.success(resp.msj);
+            } else {
+              alertify.alert('¡Advertencia!', resp.msj);
+            }
+          }
+        });
+      } else {
+        alertify.warning("La contraseñas no coinciden, intentelo de nuevo");
+        $("#pass").trigger("focus");
+      }
     }
   });
 });
@@ -160,5 +239,4 @@ function eliminar(data){
         }
       });
     },function(){});
-  
 }

@@ -1,6 +1,6 @@
 $(function(){
 	jQuery.validator.setDefaults({
-	  	debug: true,
+	  	debug: false,
 	  	ignore: ":hidden:not(.ignore)",
 	  	errorElement: "em",
 	  	errorPlacement: function (error, element) {
@@ -48,5 +48,6 @@ $(function(){
 
 function resetForm(idForm){
 	$(idForm)[0].reset();
+	$(".select2").trigger('change');
 	$(idForm).validate().resetForm();
 }

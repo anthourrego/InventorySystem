@@ -51,6 +51,12 @@
                 <p>Usuarios</p>
               </a>
             </li>
+						<li class="nav-item">
+              <a href="<?= base_url("Perfiles") ?>" class="nav-link <?= current_url(true)->getSegment(3) == 'Perfiles' ? 'active' : '' ?>">
+                <i class="nav-icon fa-solid fa-address-book"></i>
+                <p>Perfiles</p>
+              </a>
+            </li>
 					</ul>
 				</nav>
 				<!-- /.sidebar-menu -->

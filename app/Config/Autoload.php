@@ -86,5 +86,6 @@ class Autoload extends AutoloadConfig {
      */
     public $files = [
         'app/Helpers/404.php'
+        ,'APP/Helpers/listErrors.php'
     ];
 }

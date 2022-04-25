@@ -51,6 +51,54 @@ document.addEventListener('DOMContentLoaded', function (e) {
       });
     }, function () { });
   });
+
+	//Solo deja escribir números
+	$(".soloNumeros").keypress(function(e){
+		var keynum = window.event ? window.event.keyCode : e.which;
+		if ((keynum == 8) || (keynum == 46))
+			return true;
+			return /\d/.test(String.fromCharCode(keynum));
+	})
+	
+	//Solo permite alfanumerico
+	$(".soloLetras").keypress(function(e){
+		key = e.keyCode || e.which;
+		tecla = String.fromCharCode(key).toLowerCase();
+		letras = "abcdefghijklmnopqrstuvwxyz-_1234567890";
+		especiales = "8-37-39-46";
+	
+		tecla_especial = false
+		for(var i in especiales){
+				 if(key == especiales[i]){
+						 tecla_especial = true;
+						 break;
+				 }
+		 }
+	
+		 if(letras.indexOf(tecla)==-1 && !tecla_especial){
+				 return false;
+		 }
+	});
+
+	$(".soloLetrasEspacio").keypress(function(e){
+		key = e.keyCode || e.which;
+		tecla = String.fromCharCode(key).toLowerCase();
+		letras = "abcdefghijklmnopqrstuvwxyz1234567890 ";
+		especiales = "8-37-39-46";
+	
+		tecla_especial = false
+		for(var i in especiales){
+				 if(key == especiales[i]){
+						 tecla_especial = true;
+						 break;
+				 }
+		 }
+	
+		 if(letras.indexOf(tecla)==-1 && !tecla_especial){
+				 return false;
+		 }
+	});
+	
 });
 
 alertify.globalConfirm || alertify.dialog('globalConfirm', function () {

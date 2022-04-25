@@ -11,7 +11,6 @@
         "twbs/bootstrap": "4.6.1",
         "components/jquery": "3.5.1",
         "fortawesome/font-awesome": "^6.1",
-        "datatables/datatables": "^1.10",
         "datatables.net/datatables.net": "dev-master",
         "datatables.net/datatables.net-bs4": "dev-master",
         "datatables.net/datatables.net-buttons": "dev-master",

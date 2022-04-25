@@ -38,11 +38,21 @@ $routes->post('/iniciarSesion', 'Home::iniciarSesion');
 //Usuarios
 $routes->group('Usuarios', ['filter' => 'authGuard'], function ($routes) {
     $routes->get('/', 'UsuariosController::index');
-    $routes->post('DT', 'UsuariosController::listaUsuarios');
+    $routes->post('DT', 'UsuariosController::listaDT');
     $routes->get('Foto', 'UsuariosController::foto');
     $routes->get('Foto/(:any)', 'UsuariosController::foto/$1');
     $routes->post('Eliminar', 'UsuariosController::eliminar');
-    $routes->get('ValidaUsuario/(:any)', 'UsuariosController::validaUsuario/$1');
+    $routes->post('Crear', 'UsuariosController::crear');
+    $routes->get('ValidaUsuario/(:any)/(:num)', 'UsuariosController::validaUsuario/$1/$2');
+});
+
+//Pefiles
+$routes->group('Perfiles', ['filter' => 'authGuard'], function ($routes) {
+    $routes->get('/', 'PerfilesController::index');
+    $routes->post('DT', 'PerfilesController::listaDT');
+    $routes->post('Eliminar', 'PerfilesController::eliminar');
+    $routes->post('Crear', 'PerfilesController::crearEditar');
+    $routes->post('Editar', 'PerfilesController::crearEditar');
 });
 
 /*

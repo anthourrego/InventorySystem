@@ -7,9 +7,12 @@ use CodeIgniter\Model;
 class UsuariosModel extends Model {
   protected $table = 'usuarios';
   protected $primaryKey = 'id';
+  protected $useAutoIncrement = true;
+  
   protected $allowedFields = [
     'usuario', 
     'password',
+    'nombre',
     'perfil',
     'foto',
     'estado',
@@ -17,6 +20,25 @@ class UsuariosModel extends Model {
     'fecha'
   ];
 
+  protected $useTimestamps = true;
+  protected $createdField  = 'created_at';
+  protected $updatedField  = 'updated_at';
+
+  protected $validationRules    = [
+    'usuario'       => 'required|alpha_dash|min_length[3]|max_length[255]|is_unique[usuarios.usuario, id, {id}]',
+    'nombre'        => 'required|string|min_length[3]|max_length[255]',
+    'perfil'        => 'permit_empty|min_length[1]|numeric',
+    'foto'          => 'permit_empty',
+    'password'      => 'required|min_length[8]',
+    'ultimo_login'  => 'permit_empty|valid_date[Y-m-d H:i:s]',
+    
+  ];
+  protected $validationMessages = [
+    "usuario" => [
+      'is_unique' => 'El usuario <b>{value}</b>, ya se encuentra creado, intente con otro nombre.',
+    ]
+  ];
+  
   public function get($id = null) {
     if ($id === null) {
       return $this->findAll();
@@ -39,7 +61,7 @@ class UsuariosModel extends Model {
         $this->nombre = $valid->nombre;
         $this->perfil = $valid->perfil;
         $this->foto = $valid->foto;
-        $this->fecha = $valid->fecha;
+        $this->created_at = $valid->created_at;
         return true;
       } else {
         return false; 
@@ -47,9 +69,5 @@ class UsuariosModel extends Model {
     } else {
       return false; 
     }
-  }
-
-  public function validaUsuario(){
-    
   }
 }

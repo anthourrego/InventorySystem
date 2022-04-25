@@ -35,63 +35,34 @@ var domftrip = "<'row no-gutters pt-1 px-1'<'col-sm-12'f>><'row'<'col-sm-12'tr>>
 var domftr = "<'row no-gutters pt-1 px-1'<'col-12'f>><'row'<'col-md-12't>><'row'<'col-md-6'><'col-md-6'>>r";
 var domlftri = "<'row no-gutters pt-1 px-1'<'col-sm-12'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i>>";
 
-function dataTable(config) {
-	if(config.tblId) {
-		$tblID = config.tblId;
-	} else {
-		console.error('No hay tabala definida');
-		alertify.error('No hay tabla definida');
-		return false;
-	}
-
-	var settings = {
-		processing: true,
-		serverSide: true,
-		order: [],
-		draw: 25,
-		language,
-		pageLength: 25,
-		initComplete: function (settings, json) {
-			var self = this;
-			$(this).closest('.dataTables_wrapper').find('div.dataTables_filter input').unbind().keyup(function (e) {
-				e.preventDefault();
-				if (e.keyCode == 13) {
-					table = $("body").find($tblID).dataTable();
-					table.fnFilter(this.value);
-					self.fnFilter(this.value);
-				}
-			});
-			setTimeout(function () {
-				$('div.dataTables_filter input').focus();
-			}, 0);
-			$(`${$tblID}_wrapper [data-toggle="tooltip"]`).tooltip();
-		},
-		lengthMenu: [
-			[10, 25, 50, -1],
-			['10', '25', '50', 'Todos']
-		],
-		dom: domBftrip,
-		buttons: [
-			/* { extend: 'copy', className: 'copyButton btn-warning', text:'<i class="fa-solid fa-copy"></i>', attr: { title: "Copiar", "data-toggle":"tooltip" } },
-			{ extend: 'csv', className: 'csvButton btn-light', text: '<i class="fa-solid fa-file-csv"></i>', attr: { title: "CSV", "data-toggle":"tooltip" } }, */
-			{ extend: 'excel', className: "btn-success", action: newExportAction, text: '<i class="fa-solid fa-file-excel"></i>', attr: { title: "Excel", "data-toggle":"tooltip" } },
-			{ extend: 'pdf', className: 'pdfButton btn-danger', text: '<i class="fa-solid fa-file-pdf"></i>', attr: { title: "PDF", "data-toggle":"tooltip" } },
-			{ extend: 'print', className: 'printButton btn-info', text: '<i class="fa-solid fa-print"></i>', attr: { title: "Imprimir", "data-toggle":"tooltip" } },
-			{ extend: 'pageLength' },
-		],
-		deferRender: true,
-	};
-
-	delete config['tblId'];
-	for (var attrname in config) {
-		settings[attrname] = config[attrname];
-		delete config[attrname];
-	}
-	settings = Object.assign(settings, config);
-	var dt = $($tblID).DataTable(settings);
-	$(`${$tblID}_wrapper [data-toggle="tooltip"]`).tooltip();
-	return dt;
-}
+$.extend(true, $.fn.dataTable.defaults, {
+	processing: true,
+	serverSide: true,
+	language,
+	pageLength: 25,
+	deferRender: true,
+	dom: domBftrip,
+	search: {
+		return: true
+	},
+	lengthMenu: [
+		[10, 25, 50, -1],
+		['10', '25', '50', 'Todos']
+	],
+	initComplete: function (settings, json) {
+		let table = "#" + settings.sTableId;
+		$(`${table}_filter input`).trigger("focus");
+		$(`${table}_wrapper [data-toggle="tooltip"]`).tooltip();
+	},
+	buttons: [
+		/* { extend: 'copy', className: 'copyButton btn-warning', text:'<i class="fa-solid fa-copy"></i>', attr: { title: "Copiar", "data-toggle":"tooltip" } },
+		{ extend: 'csv', className: 'csvButton btn-light', text: '<i class="fa-solid fa-file-csv"></i>', attr: { title: "CSV", "data-toggle":"tooltip" } }, */
+		{ extend: 'excel', className: "btn-success", action: newExportAction, text: '<i class="fa-solid fa-file-excel"></i>', attr: { title: "Excel", "data-toggle":"tooltip" } },
+		{ extend: 'pdf', className: 'pdfButton btn-danger', text: '<i class="fa-solid fa-file-pdf"></i>', attr: { title: "PDF", "data-toggle":"tooltip" } },
+		{ extend: 'print', className: 'printButton btn-info', text: '<i class="fa-solid fa-print"></i>', attr: { title: "Imprimir", "data-toggle":"tooltip" } },
+		{ extend: 'pageLength' },
+	],
+});
 
 var oldExportAction = function (self, e, dt, button, config) {
 	if (button[0].className.indexOf('buttons-excel') >= 0) {
