@@ -169,4 +169,10 @@ class Libraries extends BaseController {
     ];
   }
 
+  public function LInputMask(){
+    $this->content['js'][] = [
+      'vendor/robinherbots/jquery.inputmask/dist/jquery.inputmask.min.js',
+    ];
+  }
+
 } 

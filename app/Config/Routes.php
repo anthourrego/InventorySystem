@@ -64,6 +64,17 @@ $routes->group('Categorias', ['filter' => 'authGuard'], function ($routes) {
     $routes->post('Eliminar', 'CategoriasController::eliminar');
 });
 
+//Clientes
+$routes->group('Clientes', ['filter' => 'authGuard'], function ($routes) {
+    $routes->get('/', 'ClientesController::index');
+    $routes->post('DT', 'ClientesController::listaDT');
+    $routes->post('Eliminar', 'ClientesController::eliminar');
+    $routes->post('Crear', 'ClientesController::crearEditar');
+    $routes->post('Editar', 'ClientesController::crearEditar');
+    $routes->get('Validar/(:any)/(:num)', 'ClientesController::validaCliente/$1/$2');
+});
+
+
 
 /*
  * --------------------------------------------------------------------

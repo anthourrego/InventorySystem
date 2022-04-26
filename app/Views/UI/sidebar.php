@@ -63,6 +63,12 @@
                 <p>Categorias</p>
               </a>
             </li>
+						<li class="nav-item">
+              <a href="<?= base_url("Clientes") ?>" class="nav-link <?= current_url(true)->getSegment(3) == 'Clientes' ? 'active' : '' ?>">
+								<i class="nav-icon fa-solid fa-user-tie"></i>
+                <p>Clientes</p>
+              </a>
+            </li>
 					</ul>
 				</nav>
 				<!-- /.sidebar-menu -->

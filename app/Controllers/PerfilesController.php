@@ -89,7 +89,7 @@ class PerfilesController extends Libraries {
                 $resp["success"] = true;
                 $resp["msj"] = "El pefil <b>{$datosSave["nombre"]}</b> se " . (empty($postData['id']) ? 'creo' : 'actualizo') . " correctamente.";
             } else {
-                $resp["msj"] = "No puede crear el perfil." . listErrors($perfil->errors());
+                $resp["msj"] = "No puede " . (empty($postData['id']) ? 'crear' : 'actualizar') . " el perfil." . listErrors($perfil->errors());
             }
 
             return json_encode($resp);

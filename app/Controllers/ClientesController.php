@@ -2,19 +2,20 @@
 
 namespace App\Controllers;
 use \Hermawan\DataTables\DataTable;
-use App\Models\CategoriasModel;
+use App\Models\ClientesModel;
 
-class CategoriasController extends Libraries {
+class ClientesController extends Libraries {
     public function index() {
-        $this->content['title'] = "Categorias";
-        $this->content['view'] = "vCategorias";
+        $this->content['title'] = "Clientes";
+        $this->content['view'] = "vClientes";
 
         $this->LDataTables();
         $this->LMoment();
         $this->LJQueryValidation();
+        $this->LInputMask();
 
         $this->content['js_add'][] = [
-            'Categorias.js'
+            'Clientes.js'
         ];
 
         return view('UI/viewDefault', $this->content);
@@ -23,18 +24,25 @@ class CategoriasController extends Libraries {
     public function listaDT(){
         $estado = $this->request->getPost("estado");
 
-        $query = $this->db->table('categorias')
+        $query = $this->db->table('clientes')
                         ->select("
                             id, 
+                            documento, 
                             nombre, 
-                            descripcion, 
+                            direccion, 
+                            telefono, 
+                            administrador, 
+                            cartera, 
+                            telefonocart, 
+                            compras, 
+                            ultima_compra, 
                             estado, 
+                            created_at,
+                            updated_at,
                             CASE 
                                 WHEN estado = 1 THEN 'Activo' 
                                 ELSE 'Inactivo' 
                             END AS Estadito,
-                            created_at,
-                            updated_at
                         ");
 
         if($estado != "-1"){
@@ -42,6 +50,20 @@ class CategoriasController extends Libraries {
         }
 
         return DataTable::of($query)->toJson(true);
+    }
+
+    public function validaCliente($nroDocumento, $id){
+        if ($this->request->isAJAX()){ 
+            $user = new ClientesModel();
+    
+            $usuario = $user->asObject()
+                    ->where(['documento' => $nroDocumento, "id != " => $id])
+                    ->countAllResults();
+
+            echo json_encode($usuario);
+        } else {
+            show_404();
+        }
     }
 
     public function crearEditar(){
@@ -52,16 +74,21 @@ class CategoriasController extends Libraries {
             //Creamos los datos para guardar
             $datosSave = array(
                 "id" => $postData["id"],
+                "documento" => trim($postData["documento"]),
                 "nombre" => trim($postData["nombre"]),
-                "descripcion" => trim($postData["descripcion"]),
+                "direccion" => trim($postData["direccion"]),
+                "telefono" => trim($postData["telefono"]),
+                "administrador" => trim($postData["administrador"]),
+                "cartera" => trim($postData["cartera"]),
+                "telefonoCart" => trim($postData["telefonoCart"]),
             );
 
-            $perfil = new CategoriasModel();
+            $perfil = new ClientesModel();
             if ($perfil->save($datosSave)) {
                 $resp["success"] = true;
-                $resp["msj"] = "La categoria <b>{$datosSave["nombre"]}</b> se " . (empty($postData['id']) ? 'creo' : 'actualizo') . " correctamente.";
+                $resp["msj"] = "El cliente <b>{$datosSave["nombre"]}</b> se " . (empty($postData['id']) ? 'creo' : 'actualizo') . " correctamente.";
             } else {
-                $resp["msj"] = "No puede " . (empty($postData['id']) ? 'crear' : 'actualizar') . " la categoria." . listErrors($perfil->errors());
+                $resp["msj"] = "No puede " . (empty($postData['id']) ? 'crear' : 'actualizar') . " el cliente." . listErrors($perfil->errors());
             }
 
             return json_encode($resp);
@@ -70,6 +97,8 @@ class CategoriasController extends Libraries {
         }
     }
 
+
+
     public function eliminar(){
         if ($this->request->isAJAX()){
             $resp["success"] = false;
@@ -77,16 +106,16 @@ class CategoriasController extends Libraries {
             $id = $this->request->getPost("id");
             $estado = $this->request->getPost("estado");
     
-            $perfil = new CategoriasModel();
+            $cliente = new ClientesModel();
             
             $data = [
                 "id" => $id,
                 "estado" => $estado
             ];
     
-            if($perfil->save($data)) {
+            if($cliente->save($data)) {
                 $resp["success"] = true;
-                $resp['msj'] = "Categoria actualizada correctamente";
+                $resp['msj'] = "Cliente actualizada correctamente";
             } else {
                 $resp['msj'] = "Error al cambiar el estado";
             }
@@ -96,4 +125,5 @@ class CategoriasController extends Libraries {
             show_404();
         }
     }
+
 }

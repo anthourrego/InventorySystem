@@ -189,7 +189,7 @@ class UsuariosController extends Libraries {
                     $resp["msj"] = "El usuario <b>{$user->usuario}</b> se creo correctamente.";
                 }
             } else {
-                $resp["msj"] = "No puede crear el usuario." . listErrors($user->errors());
+                $resp["msj"] = "No puede " . (empty($postData['id']) ? 'crear' : 'actualizar') . " el usuario." . listErrors($user->errors());
             }
 
             

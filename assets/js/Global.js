@@ -98,6 +98,25 @@ document.addEventListener('DOMContentLoaded', function (e) {
 				 return false;
 		 }
 	});
+
+	$(".soloLetrasEspacioCaracteres").keypress(function(e){
+		key = e.keyCode || e.which;
+		tecla = String.fromCharCode(key).toLowerCase();
+		letras = "abcdefghijklmnopqrstuvwxyz1234567890 -_#|";
+		especiales = "8-37-39-46";
+	
+		tecla_especial = false
+		for(var i in especiales){
+				 if(key == especiales[i]){
+						 tecla_especial = true;
+						 break;
+				 }
+		 }
+	
+		 if(letras.indexOf(tecla)==-1 && !tecla_especial){
+				 return false;
+		 }
+	});
 	
 });
 

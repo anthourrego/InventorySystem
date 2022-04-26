@@ -21,7 +21,8 @@
         "hermawan/codeigniter4-datatables": "^0.5.4",
         "moment/moment": "^2.29",
         "select2/select2": "^4.0",
-        "ttskch/select2-bootstrap4-theme": "^1.5"
+        "ttskch/select2-bootstrap4-theme": "^1.5",
+        "robinherbots/jquery.inputmask": "^5.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9",

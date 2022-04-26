@@ -27,7 +27,7 @@ class Usuarios extends Migration {
                 'type'           => 'TEXT',
             ],
             'perfil' => [
-                'type'           => 'int',
+                'type'           => 'INT',
                 'constraint'     => 11,
                 'null'           => true,
                 'unsigned'       => true
