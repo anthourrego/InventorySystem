@@ -55,6 +55,16 @@ $routes->group('Perfiles', ['filter' => 'authGuard'], function ($routes) {
     $routes->post('Editar', 'PerfilesController::crearEditar');
 });
 
+//Categorias
+$routes->group('Categorias', ['filter' => 'authGuard'], function ($routes) {
+    $routes->get('/', 'CategoriasController::index');
+    $routes->post('DT', 'CategoriasController::listaDT');
+    $routes->post('Crear', 'CategoriasController::crearEditar');
+    $routes->post('Editar', 'CategoriasController::crearEditar');
+    $routes->post('Eliminar', 'CategoriasController::eliminar');
+});
+
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

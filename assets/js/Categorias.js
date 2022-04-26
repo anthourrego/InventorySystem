@@ -1,6 +1,6 @@
-let rutaBase = base_url() + "Perfiles/";
+let rutaBase = base_url() + "Categorias/";
 
-let DTPefiles = $("#table").DataTable({
+let DTCategorias = $("#table").DataTable({
   ajax: {
     url: rutaBase + "DT",
     type: "POST",
@@ -45,7 +45,7 @@ let DTPefiles = $("#table").DataTable({
 
     $(row).find(".btnEditar").click(function(e){
       e.preventDefault();
-      $("#modalPefilesLabel").html(`<i class="fa-solid fa-edit"></i> Editar perfil`);
+      $("#modalCategoriasLabel").html(`<i class="fa-solid fa-edit"></i> Editar categoria`);
       $("#id").val(data.id);
       $("#nombre").val(data.nombre);
       $("#descripcion").val(data.descripcion);
@@ -53,24 +53,24 @@ let DTPefiles = $("#table").DataTable({
       $("#fechaCre").val(moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
       $("#estado").val(data.Estadito);
       $(".form-group-edit").removeClass("d-none");
-      $("#modalPefiles").modal("show");
+      $("#modalCategorias").modal("show");
     });
   }
 });
 
 $(function(){
   $("#selectEstado").on("change", function(){
-    DTPefiles.ajax.reload();
+    DTCategorias.ajax.reload();
   });
 
   $("#btnCrear").on("click", function(){
     $("#id").val("");
     $(".form-group-edit").addClass("d-none");
-    $("#modalPefilesLabel").html(`<i class="fa-solid fa-plus"></i> Crear perfil`)
-    $("#modalPefiles").modal("show");
+    $("#modalCategoriasLabel").html(`<i class="fa-solid fa-plus"></i> Crear categorias`)
+    $("#modalCategorias").modal("show");
   });
 
-  $("#formPefiles").submit(function(e){
+  $("#formCategorias").submit(function(e){
     e.preventDefault();
     let id = $("#id").val().trim();
     if ($(this).valid()) {
@@ -84,8 +84,8 @@ $(function(){
         data: new FormData(this),
         success: function(resp){
           if (resp.success) {
-            DTPefiles.ajax.reload();
-            $("#modalPefiles").modal("hide");
+            DTCategorias.ajax.reload();
+            $("#modalCategorias").modal("hide");
             alertify.success(resp.msj);
           } else {
             alertify.alert('¡Advertencia!', resp.msj);
@@ -97,7 +97,7 @@ $(function(){
 });
 
 function eliminar(data){
-  alertify.confirm('Cambiar estado', `Esta seguro de cambiar el estado del perfil <b>${data.nombre}</b> a ${data.estado == "1" ? 'Ina' : 'A'}ctivo`, 
+  alertify.confirm('Cambiar estado', `Esta seguro de cambiar el estado de la categoria <b>${data.nombre}</b> a ${data.estado == "1" ? 'Ina' : 'A'}ctivo`, 
     function(){
       $.ajax({
         type: "POST",
@@ -110,7 +110,7 @@ function eliminar(data){
         success: function (resp) {
           if(resp.success){
             alertify.success(resp.msj);
-            DTPefiles.ajax.reload();
+            DTCategorias.ajax.reload();
           } else {
             alertify.error(resp.msj);
           }
