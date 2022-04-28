@@ -96,8 +96,8 @@ class UsuariosController extends Libraries {
             } else {
                 $resp['msj'] = "Error al cambiar el estado";
             }
-    
-            echo json_encode($resp);
+            
+            return $this->response->setJSON($resp);
         } else {
             show_404();
         }
@@ -111,13 +111,13 @@ class UsuariosController extends Libraries {
                     ->where(['usuario' => $usuario, "id != " => $id])
                     ->countAllResults();
 
-            echo json_encode($usuario);
+            return $this->response->setJSON($usuario);
         } else {
             show_404();
         }
     }
 
-    public function crear(){
+    public function crearEditar(){
         if ($this->request->isAJAX()){ 
             $resp["success"] = false;
             $filenameDelete = "";
@@ -207,9 +207,44 @@ class UsuariosController extends Libraries {
                 $this->db->transRollback();
             }
 
-            echo json_encode($resp);
+            return $this->response->setJSON($resp);
         } else {
             show_404();
         }
+    }
+
+    public function cambiarPass(){
+        if ($this->request->isAJAX()){
+            $resp['success'] = false;
+            $resp['msj'] = "Funca";
+
+            $dataPost = $this->request->getPost();
+
+            $user = new UsuariosModel();
+            
+            if (!empty(trim($dataPost["id"]))) {
+                if (trim($dataPost["pass"]) == trim($dataPost["RePass"])) {
+                    $dataSave = array(
+                        "id" => trim($dataPost["id"]),
+                        "password" => password_hash(trim($dataPost["pass"]), PASSWORD_DEFAULT, array("cost" => 15))
+                    );
+
+                    if ($user->save($dataSave)) {
+                        $resp["success"] = true;
+                        $resp['msj'] = "Contraseña actualizada correctamente";
+                    } else {
+                        $resp['msj'] = "Error al actualizar la contraseña del usuario";
+                    }
+                } else {
+                    $resp["msj"] = "La contraseñas no coinciden, intentelo de nuevo";
+                }
+            } else {
+                $resp["msj"] = "No se ha definido usuario para actualizar";
+            }
+            
+            return $this->response->setJSON($resp);
+        } else {
+            show_404();
+        }    
     }
 }

@@ -43,16 +43,19 @@ let DTUsuarios = $("#table").DataTable({
       render: function(meta, type, data, meta) {
         return `<div class="btn-group btn-group-sm" role="group">
                   <button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-user-pen"></i></button>
+                  <button type="button" class="btn btn-info btnCambiarPass" title="Cambiar Contraseña"><i class="fa-solid fa-user-lock"></i></button>
                   <button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-user-${data.estado == "1" ? "large-slash" : "check"}"></i></button>
                 </div>`;
       }
     },
   ],
   createdRow: function(row, data, dataIndex){
+    //Cambio de estado
     $(row).find(".btnCambiarEstado").on("click", function(){
       eliminar(data);
     });
 
+    //Editar usuario
     $(row).find(".btnEditar").click(function(e){
       e.preventDefault();
       $("#modalUsuarioLabel").html(`<i class="fa-solid fa-user-pen"></i> Editar usuario`);
@@ -78,6 +81,14 @@ let DTUsuarios = $("#table").DataTable({
       $("#pass, #RePass").closest(".form-group").addClass("d-none");
       $(".form-group-edit").removeClass("d-none");
       $("#modalUsuario").modal("show");
+    });
+
+    //Cambio de contraseña
+    $(row).find(".btnCambiarPass").click(function(e){
+      console.log(data);
+      $("#formPass input[name='id'").val(data.id);
+
+      $("#cambioPassModal").modal("show");
     });
   }
 });
@@ -184,13 +195,14 @@ $(function(){
   //Formulario de usuario
   $("#formUsuario").on("submit", function(e){
     e.preventDefault();
+    let id = $("#id").val().trim();
     let pass = $("#pass").val().trim();
     let RePass = $("#RePass").val().trim();
     
     if ($(this).valid()) {
       if (pass == RePass) {
         $.ajax({ 
-          url: rutaBase + "Crear",
+          url: rutaBase + (id.length > 0 ? "Editar" : "Crear"),
           type:'POST',
           dataType: 'json',
           processData: false,
@@ -213,6 +225,48 @@ $(function(){
       } else {
         alertify.warning("La contraseñas no coinciden, intentelo de nuevo");
         $("#pass").trigger("focus");
+      }
+    }
+  });
+
+  //Las condiciones del formulario password
+  $("#formPass").validate({
+    rules: {
+      pass: "required",
+      RePass: {
+        equalTo: "#formPassPass"
+      }
+    }
+  })
+
+  $("#formPass").submit(function(e) {
+    e.preventDefault();
+    let pass = $(this).find("input[name='pass']").val().trim();
+    let RePass = $(this).find("input[name='RePass']").val().trim();
+    
+    if ($(this).valid()) {
+      if (pass == RePass) {
+      $.ajax({ 
+          url: rutaBase + "CambiarPass",
+          type:'POST',
+          dataType: 'json',
+          processData: false,
+          contentType: false,
+          cache: false,
+          data: new FormData(this),
+          success: function(resp){
+            if (resp.success) {
+              DTUsuarios.ajax.reload();
+              $("#cambioPassModal").modal("hide");
+              alertify.success(resp.msj);
+            } else {
+              alertify.alert('¡Advertencia!', resp.msj);
+            }
+          }
+        });
+      } else {
+        alertify.warning("La contraseñas no coinciden, intentelo de nuevo");
+        $(this).find("input[name='pass']").trigger("focus");
       }
     }
   });

@@ -42,8 +42,10 @@ $routes->group('Usuarios', ['filter' => 'authGuard'], function ($routes) {
     $routes->get('Foto', 'UsuariosController::foto');
     $routes->get('Foto/(:any)', 'UsuariosController::foto/$1');
     $routes->post('Eliminar', 'UsuariosController::eliminar');
-    $routes->post('Crear', 'UsuariosController::crear');
+    $routes->post('Crear', 'UsuariosController::crearEditar');
+    $routes->post('Editar', 'UsuariosController::crearEditar');
     $routes->get('ValidaUsuario/(:any)/(:num)', 'UsuariosController::validaUsuario/$1/$2');
+    $routes->post('CambiarPass', 'UsuariosController::cambiarPass');
 });
 
 //Pefiles

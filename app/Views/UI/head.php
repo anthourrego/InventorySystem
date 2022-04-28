@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="icon" type="image/x-icon" href="<?= base_url('assets/img/icono-negro.ico') ?>">
-  <title><?= $Project_Name . (isset($title) ? " | {$title}" : '') ?></title>
+  <title><?= (isset($title) ? "{$title} | " : '') . $Project_Name ?></title>
   <head>
     <?php 
       if(isset($css)){

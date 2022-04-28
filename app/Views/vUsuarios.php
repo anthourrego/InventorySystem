@@ -132,3 +132,44 @@
     </div>
   </div>
 </div>
+
+<!-- Modal Cambios Password-->
+<div class="modal fade modalFormulario" id="cambioPassModal"  data-backdrop="static" data-keyboard="false" aria-labelledby="cambioPassModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cambioPassModalLabel">Cambiar contraseña</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="formPass">
+          <input type="hidden" name="id">
+          <div class="form-group form-valid">
+            <label class="mb-0" for="formPassPass">Contraseña <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <input type="password" required id="formPassPass" placeholder="******" minlength="1" maxlength="255" name="pass" class="form-control soloLetras">
+              <div class="input-group-append">
+                <button class="btn btn-secondary btn-pass" type="button"><i class="fas fa-eye"></i></button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-valid">
+            <label class="mb-0" for="formPassRePass">Confirmar Contraseña <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <input type="password" required id="formPassRePass" placeholder="******" minlength="1" maxlength="255" name="RePass" class="form-control">
+              <div class="input-group-append">
+                <button class="btn btn-secondary btn-pass" type="button"><i class="fas fa-eye"></i></button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-close"></i> Cerrar</button>
+        <button type="submit" class="btn btn-success" form="formPass"><i class="fas fa-save"></i> Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
