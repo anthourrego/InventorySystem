@@ -72,7 +72,7 @@ class Home extends Libraries {
                 $resp["msj"] = "El usuario contiene caracteres extraños";
             }
 
-            echo json_encode($resp);
+            return $this->response->setJSON($resp);
         } else {
             show_404();
         }
@@ -81,6 +81,6 @@ class Home extends Libraries {
     public function cerrarSesion(){
         $this->session->destroy();
         $resp = array("success" => 1, "msj" => "Sesión cerrada.");
-        echo json_encode($resp);
+        return $this->response->setJSON($resp);
     }
 }

@@ -57,31 +57,31 @@
           <div class="form-row">
             <div class="col-12 form-group form-valid mb-1">
               <label class="mb-0" for="documento">Nro documento</label>
-              <input placeholder="Ingresar nro documento" class="form-control soloNumeros" id="documento" name="documento" type="tel" minlength="1" maxlength="30">
+              <input placeholder="Ingresar nro documento" class="form-control soloNumeros" id="documento" name="documento" type="tel" minlength="1" maxlength="30" autocomplete="off">
             </div>
             <div class="col-12 form-group form-valid mb-1">
               <label class="mb-0" for="nombre">Nombre <span class="text-danger">*</span></label>
-              <input placeholder="Ingresar nombre" class="form-control soloLetrasEspacio" id="nombre" name="nombre" type="text" minlength="1" maxlength="255" required>
+              <input placeholder="Ingresar nombre" class="form-control soloLetrasEspacio" id="nombre" name="nombre" type="text" minlength="1" maxlength="255" required autocomplete="off">
             </div>
             <div class="col-12 form-group form-valid mb-1">
               <label class="mb-0" for="direccion">Dirección <span class="text-danger">*</span></label>
-              <input placeholder="Ingresar dirección" class="form-control soloLetrasEspacioCaracteres" id="direccion" name="direccion" type="text" minlength="1" maxlength="300" required>
+              <input placeholder="Ingresar dirección" class="form-control soloLetrasEspacioCaracteres" id="direccion" name="direccion" type="text" minlength="1" maxlength="300" required autocomplete="off">
             </div>
             <div class="col-12 form-group form-valid mb-1">
               <label class="mb-0" for="telefono">Teléfono <span class="text-danger">*</span></label>
-              <input placeholder="Ingresar teléfono" class="form-control soloNumeros" id="telefono" name="telefono" type="tel" minlength="10" maxlength="50" required>
+              <input placeholder="Ingresar teléfono" class="form-control soloNumeros" id="telefono" name="telefono" type="tel" minlength="10" maxlength="50" required autocomplete="off">
             </div>
             <div class="col-12 form-group form-valid mb-1">
               <label class="mb-0" for="administrador">Administrador</label>
-              <input placeholder="Ingresar administrador" class="form-control soloLetrasEspacio" id="administrador" name="administrador" type="text" minlength="1" maxlength="255">
+              <input placeholder="Ingresar administrador" class="form-control soloLetrasEspacio" id="administrador" name="administrador" type="text" minlength="1" maxlength="255" autocomplete="off">
             </div>
             <div class="col-12 form-group form-valid mb-1">
               <label class="mb-0" for="cartera">Cartera</label>
-              <input placeholder="Ingresar encargado cartera" class="form-control soloLetrasEspacio" id="cartera" name="cartera" type="text" minlength="1" maxlength="255">
+              <input placeholder="Ingresar encargado cartera" class="form-control soloLetrasEspacio" id="cartera" name="cartera" type="text" minlength="1" maxlength="255" autocomplete="off">
             </div>
             <div class="col-12 form-group form-valid mb-1">
               <label class="mb-0" for="telefonoCart">Teléfono cartera</label>
-              <input placeholder="Ingresar teléfono cartera" class="form-control soloNumeros" id="telefonoCart" name="telefonoCart" type="tel" minlength="10" maxlength="50">
+              <input placeholder="Ingresar teléfono cartera" class="form-control soloNumeros" id="telefonoCart" name="telefonoCart" type="tel" minlength="10" maxlength="50" autocomplete="off">
             </div>
             <div class="col-6 form-group form-group-edit mb-1">
               <label class="mb-0" for="cantCompras">Cantidad compras</label>

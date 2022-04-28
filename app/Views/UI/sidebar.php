@@ -69,6 +69,12 @@
                 <p>Clientes</p>
               </a>
             </li>
+						<li class="nav-item">
+              <a href="<?= base_url("Productos") ?>" class="nav-link <?= current_url(true)->getSegment(3) == 'Productos' ? 'active' : '' ?>">
+								<i class="nav-icon fa-brands fa-product-hunt"></i>
+                <p>Productos</p>
+              </a>
+            </li>
 					</ul>
 				</nav>
 				<!-- /.sidebar-menu -->

@@ -15,13 +15,13 @@ class Usuarios extends Migration {
             ],
             'usuario' => [
                 'type'           => 'VARCHAR',
-                'constraint'     => '255',
+                'constraint'     => 255,
                 'unique' => true,
                 'null'=>false,
             ],
             'nombre' => [
                 'type'           => 'VARCHAR',
-                'constraint'     => '255',
+                'constraint'     => 255,
             ],
             'password' => [
                 'type'           => 'TEXT',

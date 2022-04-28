@@ -19,11 +19,12 @@ class UsuariosController extends Libraries {
 
         $perfiles = new PerfilesModel();
 
-        $this->content["perfiles"] = $perfiles->asObject()->findAll();
+        $this->content["perfiles"] = $perfiles->asObject()->where("estado", 1)->findAll();
 
         $this->content['css_add'][] = [
             'Usuarios.css'
         ];
+        
         $this->content['js_add'][] = [
             'Usuarios.js'
         ];

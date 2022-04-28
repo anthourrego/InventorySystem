@@ -66,7 +66,7 @@ class PerfilesController extends Libraries {
                 $resp['msj'] = "Error al cambiar el estado";
             }
     
-            echo json_encode($resp);
+            return $this->response->setJSON($resp);
         } else {
             show_404();
         }
@@ -92,7 +92,7 @@ class PerfilesController extends Libraries {
                 $resp["msj"] = "No puede " . (empty($postData['id']) ? 'crear' : 'actualizar') . " el perfil." . listErrors($perfil->errors());
             }
 
-            return json_encode($resp);
+            return $this->response->setJSON($resp);
         } else {
             show_404();
         }

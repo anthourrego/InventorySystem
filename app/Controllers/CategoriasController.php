@@ -64,7 +64,7 @@ class CategoriasController extends Libraries {
                 $resp["msj"] = "No puede " . (empty($postData['id']) ? 'crear' : 'actualizar') . " la categoria." . listErrors($perfil->errors());
             }
 
-            return json_encode($resp);
+            return $this->response->setJSON($resp);
         } else {
             show_404();
         }
@@ -91,7 +91,7 @@ class CategoriasController extends Libraries {
                 $resp['msj'] = "Error al cambiar el estado";
             }
     
-            echo json_encode($resp);
+            return $this->response->setJSON($resp);
         } else {
             show_404();
         }

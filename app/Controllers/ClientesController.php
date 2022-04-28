@@ -60,7 +60,7 @@ class ClientesController extends Libraries {
                     ->where(['documento' => $nroDocumento, "id != " => $id])
                     ->countAllResults();
 
-            echo json_encode($usuario);
+            return $this->response->setJSON($usuario);
         } else {
             show_404();
         }
@@ -91,7 +91,7 @@ class ClientesController extends Libraries {
                 $resp["msj"] = "No puede " . (empty($postData['id']) ? 'crear' : 'actualizar') . " el cliente." . listErrors($perfil->errors());
             }
 
-            return json_encode($resp);
+            return $this->response->setJSON($resp);
         } else {
             show_404();
         }
@@ -120,7 +120,7 @@ class ClientesController extends Libraries {
                 $resp['msj'] = "Error al cambiar el estado";
             }
     
-            echo json_encode($resp);
+            return $this->response->setJSON($resp);
         } else {
             show_404();
         }

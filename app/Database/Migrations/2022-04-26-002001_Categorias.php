@@ -15,7 +15,7 @@ class Categorias extends Migration {
             ],
             'nombre' => [
                 'type'           => 'VARCHAR',
-                'constraint'     => '255',
+                'constraint'     => 255,
                 'unique'         => true,
             ],
             'descripcion' => [

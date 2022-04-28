@@ -76,6 +76,16 @@ $routes->group('Clientes', ['filter' => 'authGuard'], function ($routes) {
     $routes->get('Validar/(:any)/(:num)', 'ClientesController::validaCliente/$1/$2');
 });
 
+//Productos
+$routes->group('Productos', ['filter' => 'authGuard'], function ($routes) {
+    $routes->get('/', 'ProductosController::index');
+    $routes->post('DT', 'ProductosController::listaDT');
+    /* $routes->post('Eliminar', 'ClientesController::eliminar');
+    $routes->post('Crear', 'ClientesController::crearEditar');
+    $routes->post('Editar', 'ClientesController::crearEditar');
+    $routes->get('Validar/(:any)/(:num)', 'ClientesController::validaCliente/$1/$2'); */
+});
+
 
 
 /*

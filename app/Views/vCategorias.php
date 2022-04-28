@@ -51,11 +51,11 @@
           <div class="form-row">
             <div class="col-12 form-group form-valid">
               <label class="mb-0" for="nombre">Nombre <span class="text-danger">*</span></label>
-              <input placeholder="Nombre" class="form-control soloLetrasEspacio" id="nombre" name="nombre" type="text" minlength="1" maxlength="255" required>
+              <input placeholder="Nombre" class="form-control soloLetrasEspacio" id="nombre" name="nombre" type="text" minlength="1" maxlength="255" required autocomplete="off">
             </div>
             <div class="col-12 form-group form-valid">
               <label class="mb-0" for="descripcion">Descripción</label>
-              <textarea class="form-control" id="descripcion" name="descripcion" minlength="1" maxlength="500" placeholder="Descripción" rows="3"></textarea>
+              <textarea class="form-control" id="descripcion" name="descripcion" minlength="1" maxlength="500" placeholder="Descripción" rows="3" autocomplete="off"></textarea>
             </div>
             <div class="col-6 form-group form-group-edit">
               <label class="mb-0" for="fechaMod">Fecha modificación</label>

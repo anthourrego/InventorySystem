@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class Clientes extends Migration {
+class Productos extends Migration {
     public function up() {
         $this->forge->addField([
             'id'   => [
@@ -13,46 +13,53 @@ class Clientes extends Migration {
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'nombre' => [
-                'type'           => 'VARCHAR',
-                'constraint'     => 255,
+            'id_categoria' => [
+                'type'           => 'INT',
+                'constraint'     => 11,
+                'unsigned'       => true
             ],
-            'documento' => [
-                'type'           => 'VARCHAR',
-                'constraint'     => 30,
+            'referencia' => [
+                'type'           => 'TEXT',
                 'null'           => true,
                 'unique'         => true,
             ],
-            'direccion' => [
-                'type'     => 'TEXT',
+            'item' => [
+                'type'           => 'TEXT',
+                'null'           => true,
+                'unique'         => true,
             ],
-            'telefono' => [
-                'type'        => 'VARCHAR',
-                'constraint'  => 50,
+            'descripcion' => [
+                'type'        => 'TEXT',
+                'null'           => true,
             ],
-            'administrador' => [
-                'type'        => 'VARCHAR',
-                'constraint'     => 255,
-                'null'        => true,
+
+            'imagen' => [
+                'type'        => 'TEXT',
+                'null'           => true,
             ],
-            'cartera' => [
-                'type'        => 'VARCHAR',
-                'constraint'  => 255,
-                'null'        => true,
-            ],
-            'telefonocart' => [
-                'type'        => 'VARCHAR',
-                'constraint'  => 50,
-                'null'        => true,
-            ],
-            'compras' => [
+            'stock' => [
                 'type'        => 'INT',
                 'constraint'  => 11,
                 'default'     => 0
             ],
-            'ultima_compra' => [
-                'type'           => 'datetime',
-                'null'           => true,
+            'precio_venta' => [
+                'type'        => 'FLOAT',
+                'default'     => 0
+            ],
+            'ubicacion' => [
+                'type'        => 'VARCHAR',
+                'constraint'  => 255,
+                'null'        => true,
+            ],
+            'manifiesto' => [
+                'type'        => 'VARCHAR',
+                'constraint'  => 255,
+                'null'        => true,
+            ],
+            'ventas' => [
+                'type'        => 'INT',
+                'constraint'  => 11,
+                'default'     => 0
             ],
             'estado' => [
                 'type'           => 'TINYINT',
@@ -64,10 +71,11 @@ class Clientes extends Migration {
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->createTable('clientes');
+        $this->forge->addForeignKey('id_categoria', 'categorias', 'id');
+        $this->forge->createTable('productos');
     }
 
     public function down() {
-        $this->forge->dropTable('clientes');
+        $this->forge->dropTable('productos');
     }
 }

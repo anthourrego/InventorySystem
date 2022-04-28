@@ -71,7 +71,7 @@
             <div class="col-6">
               <div class="form-group form-valid">
                 <label class="mb-0" for="usuario">Usuario <span class="text-danger">*</span></label>
-                <input placeholder="Username" class="form-control soloLetras" id="usuario" name="usuario" type="text" minlength="1" maxlength="255" required>
+                <input placeholder="Username" class="form-control soloLetras" id="usuario" name="usuario" type="text" minlength="1" maxlength="255" required autocomplete="off">
               </div>
               <div class="form-group form-valid">
                 <label class="mb-0" for="perfil">Perfil <span class="text-danger">*</span></label>
@@ -85,13 +85,13 @@
               </div>
               <div class="form-group form-valid">
                 <label class="mb-0" for="nombre">Nombre <span class="text-danger">*</span></label>
-                <input type="text" id="nombre" name="nombre" class="form-control soloLetrasEspacio" minlength="1" maxlength="300" required placeholder="Nombre">
+                <input type="text" id="nombre" name="nombre" class="form-control soloLetrasEspacio" minlength="1" maxlength="300" required placeholder="Nombre" autocomplete="off">
               </div>
             </div>
             <div class="col-6 form-group form-valid">
               <label class="mb-0" for="pass">Contraseña <span class="text-danger">*</span></label>
               <div class="input-group">
-                <input type="password" required id="pass" placeholder="******" minlength="1" maxlength="255" name="pass" class="form-control soloLetras">
+                <input type="password" required id="pass" placeholder="******" minlength="1" maxlength="255" name="pass" class="form-control soloLetras" autocomplete="off">
                 <div class="input-group-append">
                   <button class="btn btn-secondary btn-pass" type="button"><i class="fas fa-eye"></i></button>
                 </div>
@@ -100,7 +100,7 @@
             <div class="col-6 form-group form-valid">
               <label class="mb-0" for="RePass">Confirmar Contraseña <span class="text-danger">*</span></label>
               <div class="input-group">
-                <input type="password" required id="RePass" placeholder="******" minlength="1" maxlength="255" name="RePass" class="form-control">
+                <input type="password" required id="RePass" placeholder="******" minlength="1" maxlength="255" name="RePass" class="form-control" autocomplete="off">
                 <div class="input-group-append">
                   <button class="btn btn-secondary btn-pass" type="button"><i class="fas fa-eye"></i></button>
                 </div>
