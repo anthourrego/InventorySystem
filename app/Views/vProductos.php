@@ -83,20 +83,20 @@
               </div>
               <div class="form-group form-valid">
                 <label class="mb-0" for="referencia">Referencia <span class="text-danger">*</span></label>
-                <input placeholder="Ingrese la referencia" data-campo="referencia" class="form-control soloLetras validaCampo" id="referencia" name="referencia" type="text" minlength="1" maxlength="255" required>
+                <input placeholder="Ingrese la referencia" data-campo="referencia" class="form-control soloLetras validaCampo" id="referencia" name="referencia" type="text" minlength="1" maxlength="255" required autocomplete="off">
               </div>
               <div class="form-group form-valid">
                 <label class="mb-0" for="item">Item <span class="text-danger">*</span></label>
-                <input placeholder="Ingrese el ítem" type="text" data-campo="item" id="item" name="item" class="form-control soloLetras validaCampo" minlength="1" maxlength="300" required >
+                <input placeholder="Ingrese el ítem" type="text" data-campo="item" id="item" name="item" class="form-control soloLetras validaCampo" minlength="1" maxlength="300" required autocomplete="off">
               </div>
             </div>
             <div class="col-6 form-group form-valid">
               <label class="mb-0" for="stock">Stock <span class="text-danger">*</span></label>
-              <input class="form-control inputFocusSelect" id="stock" name="stock" type="number" value="0" placeholder="Ingrese el stock" autocomplete="off" required>
+              <input class="form-control inputFocusSelect" id="stock" name="stock" type="number" value="0" placeholder="Ingrese el stock" autocomplete="off" required autocomplete="off">
             </div>
             <div class="col-6 form-group form-valid">
               <label class="mb-0" for="precioVent">Precio venta <span class="text-danger">*</span></label>
-              <input class="form-control inputPesos" id="precioVent" name="precioVent" type="tel" value="0" placeholder="Ingrese el precio de venta" autocomplete="off" required>
+              <input class="form-control inputPesos" id="precioVent" name="precioVent" type="tel" value="0" placeholder="Ingrese el precio de venta" autocomplete="off" required autocomplete="off">
             </div>
             <div class="col-6 form-group form-valid">
               <label class="mb-0" for="ubicacion">Ubicación</label>

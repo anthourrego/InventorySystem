@@ -447,3 +447,38 @@ div.dt-button-collection .dt-button {
 }
 
 /* ================= Fin efecto cargando =========================== */
+
+/* ================= Campos para la preview la imagenes =================== */
+.content-img, #content-preview {
+  width: 100%;
+  height: 228px;
+}
+
+.content-img {
+  border: 1px solid #ced4da !important;
+  transition: background-color 0.5s ease;
+}
+
+.content-img:hover {
+  background-color: rgb(13 110 253 / 25%);
+  transition: background-color 0.5s ease;
+}
+
+.input-file-img {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.btn-eliminar-foto {
+  position: absolute;
+  top: 0px;
+  right: 5px;
+}
+
+/* ================= Fin Campos para la preview la imagenes =================== */

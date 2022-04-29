@@ -125,9 +125,18 @@ $(function(){
 
   $("#btnCrear").on("click", function(){
     $("#id").val("");
+    $("#editFoto").val(0);
+    $("#foto").val('');
+    $('#imgFoto').attr('src', base_url() + "Usuarios/Foto");
+    $("#content-preview").addClass("d-none");
+    $("#content-upload").removeClass("d-none");
     $(".form-group-edit").addClass("d-none");
     $("#modalCrearEditarLabel").html(`<i class="fa-solid fa-plus"></i> Crear producto`)
     $("#modalCrearEditar").modal("show");
+    //Despues de abrir la modal enfocamos el primer campo
+    $('#modalCrearEditar').on('shown.bs.modal	', function (event) {
+      $("#categoria").select2('open');
+    })
   });
 
   $("#formCrearEditar").submit(function(e){
@@ -157,7 +166,7 @@ $(function(){
 });
 
 function eliminar(data){
-  alertify.confirm('Cambiar estado', `Esta seguro de cambiar el estado del producto <b>${data.referencia}</b> a ${data.estado == "1" ? 'Ina' : 'A'}ctivo`, 
+  alertify.confirm('Cambiar estado', `Esta seguro de cambiar el estado del producto <b>${data.referencia} ("${data.item}")</b> a ${data.estado == "1" ? 'Ina' : 'A'}ctivo`, 
     function(){
       $.ajax({
         type: "POST",

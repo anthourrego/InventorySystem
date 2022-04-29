@@ -20,11 +20,7 @@ class ProductosController extends Libraries {
 
         $categorias = new CategoriasModel();
         $this->content["categorias"] = $categorias->asObject()->where("estado", 1)->findAll();
-
-        $this->content['css_add'][] = [
-            'Productos.css'
-        ];
-
+        
         $this->content['js_add'][] = [
             'Productos.js'
         ];
