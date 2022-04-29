@@ -68,6 +68,9 @@ $(function(){
     $(".form-group-edit").addClass("d-none");
     $("#modalPefilesLabel").html(`<i class="fa-solid fa-plus"></i> Crear perfil`)
     $("#modalPefiles").modal("show");
+    $('#modalPefiles').on('shown.bs.modal	', function (event) {
+      $("#nombre").trigger('focus');
+    });
   });
 
   $("#formPefiles").submit(function(e){

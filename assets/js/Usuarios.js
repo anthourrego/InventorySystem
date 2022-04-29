@@ -152,6 +152,9 @@ $(function(){
     $(".form-group-edit").addClass("d-none");
     $("#pass, #RePass").closest(".form-group").removeClass("d-none");
     $("#modalUsuario").modal("show");
+    $('#modalUsuario').on('shown.bs.modal	', function (event) {
+      $("#usuario").trigger('focus');
+    });
   });
 
   $(".btn-pass").on("click", function () {

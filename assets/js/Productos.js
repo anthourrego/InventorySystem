@@ -136,7 +136,7 @@ $(function(){
     //Despues de abrir la modal enfocamos el primer campo
     $('#modalCrearEditar').on('shown.bs.modal	', function (event) {
       $("#categoria").select2('open');
-    })
+    });
   });
 
   $("#formCrearEditar").submit(function(e){

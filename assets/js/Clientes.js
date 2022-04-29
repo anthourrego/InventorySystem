@@ -81,6 +81,9 @@ $(function(){
     $(".form-group-edit").addClass("d-none");
     $("#modalClientesLabel").html(`<i class="fa-solid fa-plus"></i> Crear cliente`)
     $("#modalClientes").modal("show");
+    $('#modalClientes').on('shown.bs.modal	', function (event) {
+      $("#documento").trigger('focus');
+    });
   });
 
   $("#formClientes").submit(function(e){
