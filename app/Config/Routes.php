@@ -80,10 +80,12 @@ $routes->group('Clientes', ['filter' => 'authGuard'], function ($routes) {
 $routes->group('Productos', ['filter' => 'authGuard'], function ($routes) {
     $routes->get('/', 'ProductosController::index');
     $routes->post('DT', 'ProductosController::listaDT');
-    /* $routes->post('Eliminar', 'ClientesController::eliminar');
-    $routes->post('Crear', 'ClientesController::crearEditar');
-    $routes->post('Editar', 'ClientesController::crearEditar');
-    $routes->get('Validar/(:any)/(:num)', 'ClientesController::validaCliente/$1/$2'); */
+    $routes->get('ValidaProducto/(:any)/(:any)/(:num)', 'ProductosController::validarProducto/$1/$2/$3');
+    $routes->post('Crear', 'ProductosController::crearEditar');
+    $routes->post('Editar', 'ProductosController::crearEditar');
+    $routes->get('Foto', 'ProductosController::foto');
+    $routes->get('Foto/(:num)/(:any)', 'ProductosController::foto/$1/$2');
+    $routes->post('Eliminar', 'ProductosController::eliminar');
 });
 
 

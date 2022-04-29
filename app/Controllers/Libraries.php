@@ -173,6 +173,10 @@ class Libraries extends BaseController {
     $this->content['js'][] = [
       'vendor/robinherbots/jquery.inputmask/dist/jquery.inputmask.min.js',
     ];
+
+    $this->content['js_add'][] = [
+      'InputMask.js'
+    ];
   }
 
 } 

@@ -1,3 +1,17 @@
+const formatoPesos = new Intl.NumberFormat('es-CO', {
+	style: 'currency',
+	currency: 'COP',
+	minimumFractionDigits: 2
+});
+
+$(function(){
+	$(".inputFocusSelect").click(function() {
+    $(this).trigger("select");
+  }).focus(function(){
+    $(this).trigger("select");
+  });
+})
+
 document.addEventListener('DOMContentLoaded', function (e) {
   alertify.defaults.theme.ok = "btn btn-primary";
   alertify.defaults.theme.cancel = "btn btn-danger";

@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use \Hermawan\DataTables\DataTable;
 use App\Models\CategoriasModel;
+use App\Models\ProductosModel;
 
 class ProductosController extends Libraries {
     public function index() {
@@ -14,6 +15,8 @@ class ProductosController extends Libraries {
         $this->LMoment();
         $this->LJQueryValidation();
         $this->LSelect2();
+        $this->LFancybox();
+        $this->LInputMask();
 
         $categorias = new CategoriasModel();
         $this->content["categorias"] = $categorias->asObject()->where("estado", 1)->findAll();
@@ -60,5 +63,153 @@ class ProductosController extends Libraries {
         }
 
         return DataTable::of($query)->toJson(true);
+    }
+
+    public function validarProducto($campo, $nombre, $id){
+        if ($this->request->isAJAX()){ 
+            $prod = new ProductosModel();
+    
+            $producto = $prod->asObject()
+                    ->where([$campo => $nombre, "id != " => $id])
+                    ->countAllResults();
+
+            return $this->response->setJSON($producto);
+        } else {
+            show_404();
+        }
+    }
+
+    public function crearEditar(){
+        if ($this->request->isAJAX()){ 
+            $resp["success"] = false;
+            $filenameDelete = "";
+            $postData = (object) $this->request->getPost();
+
+            $product = new ProductosModel();
+            //Creamos el producto y llenamos los datos
+            $producto = array(
+                "id" => $postData->id
+                ,"id_categoria" => trim($postData->categoria)
+                ,"referencia" => trim($postData->referencia)
+                ,"item" => trim($postData->item)
+                ,"descripcion" => trim($postData->descripcion)
+                ,"stock" => trim($postData->stock)
+                ,"precio_venta" => str_replace(",", "", trim(str_replace("$", "", $postData->precioVent)))
+                ,"ubicacion" => trim($postData->ubicacion)
+                ,"manifiesto" => trim($postData->manifiesto)
+            );
+
+            //Validamos si eliminar la foto de perfil y buscamos el usuario
+            if($postData->editFoto != 0 && !empty($postData->id)) {
+                $foto = $product->find($postData->id)["imagen"];
+                $Creamos["imagen"] = null;
+                $filenameDelete = UPLOADS_PRODUCT_PATH . $postData->id . "/" . $foto; //<-- specify the image  file
+            }
+
+            $this->db->transBegin();
+            
+            //Validamos si el usuario que ingresaron ya existe
+            if ($product->save($producto)) {
+                //Traemos el id insertado
+                $product->id = empty($postData->id) ? $product->getInsertID() : $postData->id; 
+                $imgFoto = $this->request->getFile("imagen"); 
+                if (!empty($imgFoto->getBasename())) {
+                    //Validamos la foto
+                    $validated = $this->validate([
+                        'rules' => [
+                            'uploaded[imagen]',
+                            'mime_in[imagen,image/jpg,image/jpeg,image/gif,image/png]',
+                            'max_size[imagen,2048]',
+                        ],
+                    ]);
+                    
+                    //Se valida los datos de la imagen
+                    if ($validated) {
+                        if ($imgFoto->isValid() && !$imgFoto->hasMoved()) {
+                            //Validamos que la imagen suba correctamente
+                            $nameImg = "01.{$imgFoto->getClientExtension()}";
+                            if ($imgFoto->move(UPLOADS_PRODUCT_PATH . "/" . $product->id, $nameImg, true)) {
+                                $updateFoto = array(
+                                    "id" => $product->id,
+                                    "imagen" => $nameImg
+                                );
+
+                                if ($product->save($updateFoto)) { 
+                                    $resp["success"] = true;
+                                    $resp["msj"] = "El producto <b>{$product->referencia}</b> se creo correctamente.";
+                                } else {
+                                    $resp["msj"] = "Ha ocurrido un error al actualizar los datos de la foto.";
+                                }
+                            } else {
+                                $resp["msj"] = "Ha ocurrido un error al subir la foto.";
+                            }
+                        } else {
+                            $resp["msj"] = "Error al subir la foto, {$imgFoto->getErrorString()}";
+                        }
+                    } else {
+                        $resp["msj"] = "Error al subir la foto, " . trim(str_replace("rules", "", $this->validator->getErrors()["rules"])); 
+                    }
+                } else {
+                    $resp["success"] = true;
+                    $resp["msj"] = "El producto <b>{$product->referencia}</b> se creo correctamente.";
+                }
+            } else {
+                $resp["msj"] = "No puede " . (empty($postData['id']) ? 'crear' : 'actualizar') . " el producto." . listErrors($product->errors());
+            }
+
+            
+            //Validamos para elminar la foto
+            if ($filenameDelete != '' && file_exists($filenameDelete)) {
+                if(!@unlink($filenameDelete)) {
+                    $resp["success"] = false;
+                    $resp["msj"] = "Error al eliminar la foto de perfil, intente de nuevo";
+                } 
+            }
+
+            if($resp["success"] == true){
+                $this->db->transCommit();
+            } else {
+                $this->db->transRollback();
+            }
+
+            return $this->response->setJSON($resp);
+        } else {
+            show_404();
+        }
+    }
+
+    public function foto($id = null, $img = null){
+        $filename = UPLOADS_PRODUCT_PATH ."{$id}/{$img}"; //<-- specify the image  file
+        //Si la foto no existe la colocamos por defecto
+        if(is_null($img) || !file_exists($filename)){ 
+            $filename = ASSETS_PATH . "img/nofoto.png";
+        }
+        $mime = mime_content_type($filename); //<-- detect file type
+        header('Content-Length: '.filesize($filename)); //<-- sends filesize header
+        header("Content-Type: {$mime}"); //<-- send mime-type header
+        header("Content-Disposition: inline; filename='{$filename}';"); //<-- sends filename header
+        readfile($filename); //<--reads and outputs the file onto the output buffer
+        exit(); // or die()
+    }
+
+    public function eliminar(){
+        if ($this->request->isAJAX()){
+            $resp["success"] = false;
+            //Traemos los datos del post
+            $data = (object) $this->request->getPost();
+    
+            $perfil = new ProductosModel();
+            
+            if($perfil->save($data)) {
+                $resp["success"] = true;
+                $resp['msj'] = "Producto actualizado correctamente";
+            } else {
+                $resp['msj'] = "Error al cambiar el estado";
+            }
+    
+            return $this->response->setJSON($resp);
+        } else {
+            show_404();
+        }
     }
 }

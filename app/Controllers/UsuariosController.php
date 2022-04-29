@@ -190,7 +190,7 @@ class UsuariosController extends Libraries {
                     $resp["msj"] = "El usuario <b>{$user->usuario}</b> se creo correctamente.";
                 }
             } else {
-                $resp["msj"] = "No puede " . (empty($postData['id']) ? 'crear' : 'actualizar') . " el usuario." . listErrors($user->errors());
+                $resp["msj"] = "No puede " . (empty($this->request->getPost("id")) ? 'crear' : 'actualizar') . " el usuario." . listErrors($user->errors());
             }
 
             

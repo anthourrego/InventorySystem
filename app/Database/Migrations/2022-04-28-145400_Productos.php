@@ -19,12 +19,13 @@ class Productos extends Migration {
                 'unsigned'       => true
             ],
             'referencia' => [
-                'type'           => 'TEXT',
-                'null'           => true,
+                'type'           => 'VARCHAR',
+                'constraint'     => 255,
                 'unique'         => true,
             ],
             'item' => [
-                'type'           => 'TEXT',
+                'type'           => 'VARCHAR',
+                'constraint'     => 255,
                 'null'           => true,
                 'unique'         => true,
             ],
@@ -43,7 +44,8 @@ class Productos extends Migration {
                 'default'     => 0
             ],
             'precio_venta' => [
-                'type'        => 'FLOAT',
+                'type'        => 'DECIMAL',
+                'constraint'  => '20,2',
                 'default'     => 0
             ],
             'ubicacion' => [

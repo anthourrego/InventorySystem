@@ -52,7 +52,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form id="formCrearEditar" enctype="multipart/form-data">
+        <form id="formCrearEditar" class="formValid" enctype="multipart/form-data">
           <input type="hidden" name="id" id="id">
           <input type="hidden" name="editFoto" id="editFoto" value="0">
           <div class="form-row">
@@ -63,11 +63,11 @@
                     <i class="fas fa-cloud-upload-alt"></i>
                     <span> Selecciona o arrastre su imagen</span>
                   </div>
-                  <input id="foto" name="foto" class="input-file-img" accept=".png, .jpg, .jpeg" type="file">
+                  <input id="foto" name="imagen" class="input-file-img" accept=".png, .jpg, .jpeg" type="file">
                 </div>
               </div>
               <div id="content-preview" class="d-none text-center">
-                <img id="imgFoto" src="<?= base_url("Usuarios/Foto") ?>" class="img-thumbnail h-100">
+                <img id="imgFoto" src="<?= base_url("Productos/Foto") ?>" class="img-thumbnail h-100">
                 <button type="button" class="btn btn-danger btn-sm btn-eliminar-foto"><i class="fas fa-times"></i></button>
               </div>
             </div>
@@ -83,20 +83,20 @@
               </div>
               <div class="form-group form-valid">
                 <label class="mb-0" for="referencia">Referencia <span class="text-danger">*</span></label>
-                <input placeholder="Ingrese la referencia" class="form-control soloLetras" id="referencia" name="referencia" type="text" minlength="1" maxlength="255" required>
+                <input placeholder="Ingrese la referencia" data-campo="referencia" class="form-control soloLetras validaCampo" id="referencia" name="referencia" type="text" minlength="1" maxlength="255" required>
               </div>
               <div class="form-group form-valid">
                 <label class="mb-0" for="item">Item <span class="text-danger">*</span></label>
-                <input placeholder="Ingrese el ítem" type="text" id="item" name="item" class="form-control soloLetras" minlength="1" maxlength="300" required >
+                <input placeholder="Ingrese el ítem" type="text" data-campo="item" id="item" name="item" class="form-control soloLetras validaCampo" minlength="1" maxlength="300" required >
               </div>
             </div>
             <div class="col-6 form-group form-valid">
               <label class="mb-0" for="stock">Stock <span class="text-danger">*</span></label>
-              <input class="form-control" id="stock" name="stock" type="number" value="0" placeholder="Ingrese el stock" autocomplete="off" required>
+              <input class="form-control inputFocusSelect" id="stock" name="stock" type="number" value="0" placeholder="Ingrese el stock" autocomplete="off" required>
             </div>
             <div class="col-6 form-group form-valid">
               <label class="mb-0" for="precioVent">Precio venta <span class="text-danger">*</span></label>
-              <input class="form-control" id="precioVent" name="precioVent" type="number" value="0" placeholder="Ingrese el precio de venta" autocomplete="off" required>
+              <input class="form-control inputPesos" id="precioVent" name="precioVent" type="tel" value="0" placeholder="Ingrese el precio de venta" autocomplete="off" required>
             </div>
             <div class="col-6 form-group form-valid">
               <label class="mb-0" for="ubicacion">Ubicación</label>
@@ -108,7 +108,7 @@
             </div>
             <div class="col-12 form-group form-valid">
               <label class="mb-0" for="descripcion">Descripción <span class="text-danger">*</span></label>
-              <textarea class="form-control" id="descripcion" name="descripcion" minlength="1" maxlength="500" placeholder="Ingrese la descripción" rows="3" autocomplete="off"></textarea>
+              <textarea class="form-control" id="descripcion" name="descripcion" minlength="1" required maxlength="500" placeholder="Ingrese la descripción" rows="3" autocomplete="off"></textarea>
             </div>
             <div class="col-6 form-group form-group-edit">
               <label class="mb-0" for="ventas">Ventas</label>
@@ -130,7 +130,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-success" form="formProducto"><i class="fas fa-save"></i> Guardar</button>
+        <button type="submit" class="btn btn-success" form="formCrearEditar"><i class="fas fa-save"></i> Guardar</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
       </div>
     </div>
