@@ -69,7 +69,7 @@
             </div>
             <div class="col-12 form-group form-valid mb-1">
               <label class="mb-0" for="telefono">Teléfono <span class="text-danger">*</span></label>
-              <input placeholder="Ingresar teléfono" class="form-control soloNumeros" id="telefono" name="telefono" type="tel" minlength="10" maxlength="50" required autocomplete="off">
+              <input placeholder="Ingresar teléfono" class="form-control soloNumeros inputTel" id="telefono" name="telefono" type="tel" minlength="10" maxlength="50" required autocomplete="off">
             </div>
             <div class="col-12 form-group form-valid mb-1">
               <label class="mb-0" for="administrador">Administrador</label>
@@ -81,7 +81,7 @@
             </div>
             <div class="col-12 form-group form-valid mb-1">
               <label class="mb-0" for="telefonoCart">Teléfono cartera</label>
-              <input placeholder="Ingresar teléfono cartera" class="form-control soloNumeros" id="telefonoCart" name="telefonoCart" type="tel" minlength="10" maxlength="50" autocomplete="off">
+              <input placeholder="Ingresar teléfono cartera" class="form-control soloNumeros inputTel" id="telefonoCart" name="telefonoCart" type="tel" minlength="10" maxlength="50" autocomplete="off">
             </div>
             <div class="col-6 form-group form-group-edit mb-1">
               <label class="mb-0" for="cantCompras">Cantidad compras</label>

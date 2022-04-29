@@ -8,4 +8,6 @@ $(function(){
     prefix: '$ ', 
     placeholder: '0,00'
   });
+
+  $(".inputTel").inputmask({'mask':'(999) 999-9999'});
 });

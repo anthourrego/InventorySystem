@@ -76,9 +76,6 @@ $(function(){
     DTClientes.ajax.reload();
   });
 
-  //Inicializamos los inputmaks de los telefonos
-  $("#telefonoCart, #telefono").inputmask({'mask':'(999) 999-9999'});
-
   $("#btnCrear").on("click", function(){
     $("#id").val("");
     $(".form-group-edit").addClass("d-none");
