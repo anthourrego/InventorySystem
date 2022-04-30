@@ -50,7 +50,6 @@ let DTClientes = $("#table").DataTable({
 
     $(row).find(".btnEditar").click(function(e){
       e.preventDefault();
-      console.log(data);
       $("#modalClientesLabel").html(`<i class="fa-solid fa-edit"></i> Editar cliente`);
       $("#id").val(data.id);
       $("#documento").val(data.documento);
@@ -81,9 +80,12 @@ $(function(){
     $(".form-group-edit").addClass("d-none");
     $("#modalClientesLabel").html(`<i class="fa-solid fa-plus"></i> Crear cliente`)
     $("#modalClientes").modal("show");
-    $('#modalClientes').on('shown.bs.modal	', function (event) {
+  });
+
+  $('#modalClientes').on('shown.bs.modal	', function (event) {
+    if($("#id").val().length <= 0) {
       $("#documento").trigger('focus');
-    });
+    }
   });
 
   $("#formClientes").submit(function(e){
@@ -99,7 +101,6 @@ $(function(){
         cache: false,
         data: new FormData(this),
         success: function(resp){
-          console.log(resp);
           if (resp.success) {
             DTClientes.ajax.reload();
             $("#modalClientes").modal("hide");

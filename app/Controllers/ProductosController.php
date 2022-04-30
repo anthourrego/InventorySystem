@@ -89,7 +89,7 @@ class ProductosController extends Libraries {
                 ,"referencia" => trim($postData->referencia)
                 ,"item" => trim($postData->item)
                 ,"descripcion" => trim($postData->descripcion)
-                ,"stock" => trim($postData->stock)
+                ,"stock" => $postData->stock
                 ,"precio_venta" => str_replace(",", "", trim(str_replace("$", "", $postData->precioVent)))
                 ,"ubicacion" => trim($postData->ubicacion)
                 ,"manifiesto" => trim($postData->manifiesto)
@@ -98,7 +98,7 @@ class ProductosController extends Libraries {
             //Validamos si eliminar la foto de perfil y buscamos el usuario
             if($postData->editFoto != 0 && !empty($postData->id)) {
                 $foto = $product->find($postData->id)["imagen"];
-                $Creamos["imagen"] = null;
+                $producto["imagen"] = null;
                 $filenameDelete = UPLOADS_PRODUCT_PATH . $postData->id . "/" . $foto; //<-- specify the image  file
             }
 
@@ -150,7 +150,7 @@ class ProductosController extends Libraries {
                     $resp["msj"] = "El producto <b>{$product->referencia}</b> se creo correctamente.";
                 }
             } else {
-                $resp["msj"] = "No puede " . (empty($postData['id']) ? 'crear' : 'actualizar') . " el producto." . listErrors($product->errors());
+                $resp["msj"] = "No puede " . (empty($postData->id) ? 'crear' : 'actualizar') . " el producto." . listErrors($product->errors());
             }
 
             

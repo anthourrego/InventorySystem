@@ -8,6 +8,7 @@ let DTUsuarios = $("#table").DataTable({
       return $.extend(d, {"estado": $("#selectEstado").val()} )
     }
   },
+  order: [[2, "asc"]],
   columns: [
     {
       orderable: false,
@@ -59,7 +60,6 @@ let DTUsuarios = $("#table").DataTable({
     $(row).find(".btnEditar").click(function(e){
       e.preventDefault();
       $("#modalUsuarioLabel").html(`<i class="fa-solid fa-user-pen"></i> Editar usuario`);
-      console.log(data);
       $("#id").val(data.id);
       $("#nombre").val(data.nombre);
       $("#usuario").val(data.usuario);
@@ -69,8 +69,8 @@ let DTUsuarios = $("#table").DataTable({
       $("#fechaCre").val(moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
       $("#estado").val(data.Estadito);
       $("#editFoto").val(0);
+      $("#foto").val('');
       if (data.foto != null) {
-        $("#foto").val('');
         $('#imgFoto').attr('src', base_url() + "Usuarios/Foto/" + data.foto);
         $("#content-preview").removeClass("d-none");
         $("#content-upload").addClass("d-none");
@@ -85,7 +85,6 @@ let DTUsuarios = $("#table").DataTable({
 
     //Cambio de contraseña
     $(row).find(".btnCambiarPass").click(function(e){
-      console.log(data);
       $("#formPass input[name='id'").val(data.id);
 
       $("#cambioPassModal").modal("show");
@@ -104,7 +103,6 @@ $(function(){
       if(file.size <= 2000000){
         let reader = new FileReader();
         reader.onload = function(event){
-          //console.log(event.target.result);
           $('#imgFoto').attr('src', event.target.result);
         }
         reader.readAsDataURL(file);
@@ -152,9 +150,12 @@ $(function(){
     $(".form-group-edit").addClass("d-none");
     $("#pass, #RePass").closest(".form-group").removeClass("d-none");
     $("#modalUsuario").modal("show");
-    $('#modalUsuario').on('shown.bs.modal	', function (event) {
+  });
+
+  $('#modalUsuario').on('shown.bs.modal	', function (event) {
+    if($("#id").val().length <= 0) {
       $("#usuario").trigger('focus');
-    });
+    }
   });
 
   $(".btn-pass").on("click", function () {

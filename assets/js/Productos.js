@@ -8,9 +8,11 @@ let DTProductos = $("#table").DataTable({
       return $.extend(d, {"estado": $("#selectEstado").val()} )
     }
   },
+  order: [[2, "asc"]],
   columns: [
     {
       orderable: false,
+      searchable: false,
       defaultContent: '',
       className: "text-center",
       render: function(meta, type, data, meta) {
@@ -29,7 +31,20 @@ let DTProductos = $("#table").DataTable({
       }
     },
     {data: 'nombreCategoria'},
-    {data: 'stock'},
+    {
+      data: 'stock',
+      render: function(meta, type, data, meta) {
+        //Se coloca el color según el stock
+        let btnColor = "success";
+        if (data.stock <= 0) {
+          btnColor = "danger";
+        } else if (data.stock > 0 &&  data.stock <= 24) {
+          btnColor = "warning";
+        }  
+
+        return `<button class="btn btn-${btnColor}">${data.stock}</button>`;
+      }
+    },
     {
       data: 'precio_venta',
       className: 'text-right',
@@ -63,6 +78,39 @@ let DTProductos = $("#table").DataTable({
       e.preventDefault();
       eliminar(data);
     });
+
+    //Editar
+    $(row).find(".btnEditar").click(function(e){
+      e.preventDefault();
+      $("#modalCrearEditarLabel").html(`<i class="fa-solid fa-edit"></i> Editar producto`);
+      $("#id").val(data.id);
+      $("#categoria").val(data.id_categoria).trigger('change');
+      $("#referencia").val(data.referencia);
+      $("#item").val(data.item);
+      $("#stock").val(data.stock);
+      $("#precioVent").val(data.precio_venta);
+      $("#ubicacion").val(data.ubicacion);
+      $("#manifiesto").val(data.manifiesto);
+      $("#descripcion").val(data.descripcion);
+      $("#ventas").val(data.ventas);
+      $("#fechaLog").val(moment(data.ultimo_login, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
+      $("#fechaMod").val(moment(data.updated_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
+      $("#fechaCre").val(moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
+      $("#estado").val(data.Estadito);
+      
+      $("#editFoto").val(0);
+      $("#foto").val('');
+      if (data.imagen != null) {
+        $('#imgFoto').attr('src', base_url() + "Productos/Foto/" + data.id + "/" + data.imagen);
+        $("#content-preview").removeClass("d-none");
+        $("#content-upload").addClass("d-none");
+      } else {
+        $("#content-preview").addClass("d-none");
+        $("#content-upload").removeClass("d-none");
+      }
+      $(".form-group-edit").removeClass("d-none");
+      $("#modalCrearEditar").modal("show");
+    });
   }
 });
 
@@ -73,7 +121,6 @@ $(function(){
       if(file.size <= 2000000){
         let reader = new FileReader();
         reader.onload = function(event){
-          //console.log(event.target.result);
           $('#imgFoto').attr('src', event.target.result);
         }
         reader.readAsDataURL(file);
@@ -95,6 +142,18 @@ $(function(){
       $('#imgFoto').attr('src', base_url() + "Usuarios/Foto");
       $("#content-preview").addClass("d-none");
       $("#content-upload").removeClass("d-none");
+    }
+  });
+
+  $(".btn-eliminar-foto").on("click", function(e){
+    e.preventDefault();
+    $("#foto").val('');
+    $('#imgFoto').attr('src', base_url() + "Productos/Foto");
+    $("#content-preview").addClass("d-none");
+    $("#content-upload").removeClass("d-none");
+
+    if ($("#id").val().length > 0) {
+      $("#editFoto").val(1);
     }
   });
 
@@ -127,16 +186,18 @@ $(function(){
     $("#id").val("");
     $("#editFoto").val(0);
     $("#foto").val('');
-    $('#imgFoto').attr('src', base_url() + "Usuarios/Foto");
+    $('#imgFoto').attr('src', base_url() + "Productos/Foto");
     $("#content-preview").addClass("d-none");
     $("#content-upload").removeClass("d-none");
     $(".form-group-edit").addClass("d-none");
     $("#modalCrearEditarLabel").html(`<i class="fa-solid fa-plus"></i> Crear producto`)
     $("#modalCrearEditar").modal("show");
-    //Despues de abrir la modal enfocamos el primer campo
-    $('#modalCrearEditar').on('shown.bs.modal	', function (event) {
+  });
+
+  $('#modalCrearEditar').on('shown.bs.modal	', function (event) {
+    if($("#id").val().length <= 0) {
       $("#categoria").select2('open');
-    });
+    }
   });
 
   $("#formCrearEditar").submit(function(e){

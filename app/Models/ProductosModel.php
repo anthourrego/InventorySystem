@@ -38,12 +38,22 @@ class ProductosModel extends Model
     // Validation
     protected $validationRules      = [
         'id_categoria' => "required|integer|min_length[1]",
-        'nombre'       => "required|alpha_numeric_space|min_length[1]|max_length[255]|is_unique[perfiles.nombre, id, {id}]",
-        'descripcion'  => 'permit_empty|min_length[1]|max_length[500]',
+        'referencia'   => "required|alpha_numeric_punct|min_length[1]|max_length[255]|is_unique[productos.referencia, id, {id}]",
+        'item'         => 'required|alpha_numeric_punct|min_length[1]|max_length[255]|is_unique[productos.item, id, {id}]',
+        'descripcion'  => 'permit_empty|alpha_numeric_punct|min_length[1]|max_length[500]',
+        'stock'        => 'required|numeric|min_length[1]|max_length[11]',
+        'precio_venta' => 'required|decimal|min_length[1]|max_length[20]',
+        'ubicacion'    => 'permit_empty|alpha_numeric_punct|min_length[1]|max_length[255]',
+        'manifiesto'   => 'permit_empty|alpha_numeric_punct|min_length[1]|max_length[255]',
+        'ventas'       => 'permit_empty|integer|min_length[1]|max_length[11]',
+        'estado'       => 'permit_empty|integer|min_length[1]|max_length[1]',
     ];
     protected $validationMessages   = [
-        "nombre" => [
-            'is_unique' => 'El perfil <b>{value}</b>, ya se encuentra creado, intente con otro nombre.',
+        "referencia" => [
+            'is_unique' => 'Le referencia <b>{value}</b>, ya se encuentra creado, intente con otra referencia.',
+        ],
+        "item" => [
+            'is_unique' => 'El ítem <b>{value}</b>, ya se encuentra creado, intente con ítem nombre.',
         ]
     ];
     protected $skipValidation       = false;

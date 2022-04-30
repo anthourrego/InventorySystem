@@ -68,9 +68,12 @@ $(function(){
     $(".form-group-edit").addClass("d-none");
     $("#modalCategoriasLabel").html(`<i class="fa-solid fa-plus"></i> Crear categorias`)
     $("#modalCategorias").modal("show");
-    $('#modalCategorias').on('shown.bs.modal	', function (event) {
+  });
+
+  $('#modalCategorias').on('shown.bs.modal	', function (event) {
+    if($("#id").val().length <= 0) {
       $("#nombre").trigger('focus');
-    });
+    }
   });
 
   $("#formCategorias").submit(function(e){
