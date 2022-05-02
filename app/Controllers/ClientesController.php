@@ -97,8 +97,6 @@ class ClientesController extends Libraries {
         }
     }
 
-
-
     public function eliminar(){
         if ($this->request->isAJAX()){
             $resp["success"] = false;
@@ -118,6 +116,29 @@ class ClientesController extends Libraries {
                 $resp['msj'] = "Cliente actualizada correctamente";
             } else {
                 $resp['msj'] = "Error al cambiar el estado";
+            }
+    
+            return $this->response->setJSON($resp);
+        } else {
+            show_404();
+        }
+    }
+
+    public function getCliente(){
+        if ($this->request->isAJAX()){
+            $resp["success"] = false;
+            //Traemos los datos del post
+            $data = (object) $this->request->getPost();
+            
+            $clienteModel = new ClientesModel();
+
+            $result = $clienteModel->like('documento', $data->buscar)
+                                ->orLike('nombre', $data->buscar)
+                                ->find();
+
+            if(count($result) == 1) {
+                $resp["success"] = true;
+                $resp["data"] = $result[0]; 
             }
     
             return $this->response->setJSON($resp);

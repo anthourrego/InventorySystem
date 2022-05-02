@@ -25,7 +25,7 @@
 
 				<!-- Sidebar Menu -->
 				<nav class="mt-2">
-					<ul id="opciones" class="nav nav-pills nav-sidebar flex-column nav-flat" data-widget="treeview" role="menu" data-accordion="false">
+					<ul id="opciones" class="nav nav-pills nav-sidebar flex-column nav-flat nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
 					<!-- Add icons to the links using the .nav-icon class
 					with font-awesome or any other icon font library -->
 						<li class="nav-item has-treeview user-panel mt-2 pb-2 mb-2">
@@ -74,6 +74,29 @@
 								<i class="nav-icon fa-brands fa-product-hunt"></i>
                 <p>Productos</p>
               </a>
+            </li>
+						<li class="nav-item <?= (current_url(true)->getSegment(3) == 'Ventas' && (current_url(true)->getSegment(4) == 'Crear' || current_url(true)->getSegment(4) == 'Administrar')) ? 'menu-is-opening menu-open' : '' ?>">
+              <a href="#" class="nav-link <?= current_url(true)->getSegment(3) == 'Ventas' ? 'active' : '' ?>">
+								<i class="nav-icon fa-solid fa-store"></i>
+                <p>
+									Ventas
+									<i class="fas fa-angle-left right"></i>
+								</p>
+              </a>
+							<ul class="nav nav-treeview">
+								<li	li class="nav-item">
+									<a href="<?= base_url("Ventas/Crear") ?>" class="nav-link <?= (current_url(true)->getSegment(3) == 'Ventas' && current_url(true)->getSegment(4) == 'Crear') ? 'active' : '' ?>">
+										<i class="far fa-circle nav-icon"></i>
+										<p>Crear venta</p>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="<?= base_url("Ventas/Administrar") ?>" class="nav-link <?= (current_url(true)->getSegment(3) == 'Ventas' && current_url(true)->getSegment(4) == 'Administrar') ? 'active' : '' ?>">
+										<i class="far fa-circle nav-icon"></i>
+										<p>Administrar ventas</p>
+									</a>
+								</li>
+							</ul>
             </li>
 					</ul>
 				</nav>

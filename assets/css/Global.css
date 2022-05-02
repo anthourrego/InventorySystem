@@ -482,3 +482,24 @@ div.dt-button-collection .dt-button {
 }
 
 /* ================= Fin Campos para la preview la imagenes =================== */
+/* Select2 sm */
+.custom-select-sm + .select2-container .select2-selection{
+  height: calc(1.5em + 0.5rem + 2px) !important;
+}
+
+.custom-select-sm + .select2-container .select2-selection__rendered,
+.custom-select-sm + .select2-container .select2-selection__placeholder{
+  line-height: calc(1.5em + .5rem) !important;
+}
+
+.select2-search__field {
+  padding: 0.25rem 0.5rem;
+  font-size: .875rem;
+  line-height: 1.5;
+  height: calc(1.8125rem + 2px);
+}
+
+/* DataTables */
+.dts_label {
+  display: none;
+}

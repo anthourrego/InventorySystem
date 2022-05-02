@@ -1,3 +1,4 @@
+let busquedaModal = false;
 var language = {
 	lengthMenu: "Mostrar _MENU_ registros por página.",
 	zeroRecords: "No se ha encontrado ningún registro.",
@@ -35,6 +36,7 @@ var domlftrip = "<'row no-gutters pt-1 px-1'<'col-sm-6'l><'col-sm-6'f>><'row'<'c
 var domftrip = "<'row no-gutters pt-1 px-1'<'col-sm-12'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>";
 var domftr = "<'row no-gutters pt-1 px-1'<'col-12'f>><'row'<'col-md-12't>><'row'<'col-md-6'><'col-md-6'>>r";
 var domlftri = "<'row no-gutters pt-1 px-1'<'col-sm-12'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i>>";
+var domSearch = "<'row no-gutters pt-3 px-1'<'col-12'f>><'row'<'col-sm-12'tr>><'row'<'col-12'i>>";
 
 $.extend(true, $.fn.dataTable.defaults, {
 	processing: true,
@@ -52,8 +54,15 @@ $.extend(true, $.fn.dataTable.defaults, {
 	],
 	initComplete: function (settings, json) {
 		let table = "#" + settings.sTableId;
-		$(`${table}_filter input`).trigger("focus");
 		$(`${table}_wrapper [data-toggle="tooltip"]`).tooltip();
+		
+		if (busquedaModal) {
+			setTimeout(() => {
+				$(`${table}_filter input`).trigger("focus");
+			}, 500);
+		} else {
+			$(`${table}_filter input`).trigger("focus");
+		}
 	},
 	buttons: [
 		/* { extend: 'copy', className: 'copyButton btn-warning', text:'<i class="fa-solid fa-copy"></i>', attr: { title: "Copiar", "data-toggle":"tooltip" } },

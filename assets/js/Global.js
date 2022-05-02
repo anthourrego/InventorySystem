@@ -1,3 +1,6 @@
+let lastFocus = null;
+let lastFocusValue = "";
+
 const formatoPesos = new Intl.NumberFormat('es-CO', {
 	style: 'currency',
 	currency: 'COP',
@@ -10,7 +13,22 @@ $(function(){
   }).focus(function(){
     $(this).trigger("select");
   });
-})
+
+	$(document).on("focusin, click", ".lastFocus", function(){
+		lastFocus = $(this);
+		lastFocusValue = $(this).val().trim();
+		if(lastFocusValue == null){
+			lastFocusValue = '';
+			lastFocus = null;
+		}
+	});
+
+	$(document).on("focusout", ".lastFocus", function(){
+		if ($(this).val().trim() != lastFocusValue) {
+			$(this).change();
+		}
+	});
+});
 
 document.addEventListener('DOMContentLoaded', function (e) {
   alertify.defaults.theme.ok = "btn btn-primary";
@@ -409,5 +427,42 @@ alertify.globalAlert ||  alertify.dialog('globalAlert', function () {
 				this.elements.content.setAttribute("style", "padding: 16px 24px 16px 16px !important;");
 			}
 		},
+	};
+});
+
+alertify.busquedaAlert || alertify.dialog('busquedaAlert',function factory(){
+	return {
+		main:function(content){
+			this.setContent(content);
+		},
+		setup:function(){
+			return {
+				options:{
+					maximizable:false,
+					resizable:false,
+					padding:false,
+					title: 'Búsqueda'
+				}
+			};
+		},
+		hooks:{
+			onshow: function(){
+				busquedaModal = true;
+				this.elements.footer.style.display="none";
+			},
+			onclose:function(){
+				if (busquedaModal) {
+					lastFocus.val(lastFocusValue).change();
+				}
+				alertify.busquedaAlert().set({onshow:null});
+				$(".ajs-modal").unbind();
+				delete alertify.ajaxAlert;
+				$("#tblBusqueda").unbind().remove();
+				setTimeout(function(){
+					alertify.busquedaAlert().destroy();
+				},300);
+				busquedaModal = false;
+			}
+		}
 	};
 });

@@ -50,7 +50,7 @@ class UsuariosController extends Libraries {
                                 WHEN u.estado = 1 THEN 'Activo' 
                                 ELSE 'Inactivo' 
                             END AS Estadito
-                        ")->join('perfiles AS p', 'u.perfil = p.id', 'left');;
+                        ")->join('perfiles AS p', 'u.perfil = p.id', 'left');
 
         if($estado != "-1"){
             $query->where("u.estado", $estado);
@@ -243,5 +243,28 @@ class UsuariosController extends Libraries {
         } else {
             show_404();
         }    
+    }
+
+    public function getUsuario(){
+        if ($this->request->isAJAX()){
+            $resp["success"] = false;
+            //Traemos los datos del post
+            $data = (object) $this->request->getPost();
+            
+            $userModel = new UsuariosModel();
+
+            $result = $userModel->like('usuario', $data->buscar)
+                                ->orLike('nombre', $data->buscar)
+                                ->find();
+            
+            if(count($result) == 1) {
+                $resp["success"] = true;
+                $resp["data"] = $result[0]; 
+            }
+    
+            return $this->response->setJSON($resp);
+        } else {
+            show_404();
+        }
     }
 }
