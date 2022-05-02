@@ -4,8 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class VentasModel extends Model
-{
+class VentasModel extends Model {
     protected $DBGroup          = 'default';
     protected $table            = 'ventas';
     protected $primaryKey       = 'id';
@@ -61,4 +60,8 @@ class VentasModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    function cargarVenta($id){
+
+    }
 }

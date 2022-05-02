@@ -39,18 +39,10 @@ let DT = $("#table").DataTable({
       eliminar(data);
     });
 
-    /* $(row).find(".btnEditar").click(function(e){
+    $(row).find(".btnEditar").click(function(e){
       e.preventDefault();
-      $("#modalCategoriasLabel").html(`<i class="fa-solid fa-edit"></i> Editar categoria`);
-      $("#id").val(data.id);
-      $("#nombre").val(data.nombre);
-      $("#descripcion").val(data.descripcion);
-      $("#fechaMod").val(moment(data.updated_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
-      $("#fechaCre").val(moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
-      $("#estado").val(data.Estadito);
-      $(".form-group-edit").removeClass("d-none");
-      $("#modalCategorias").modal("show");
-    }); */
+      window.location.href = base_url() + 'Ventas/Editar/'+data.id.trim();
+    });
   }
 });
 

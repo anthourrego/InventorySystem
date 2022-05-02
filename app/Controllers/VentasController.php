@@ -45,6 +45,29 @@ class VentasController extends Libraries {
         return view('UI/viewDefault', $this->content);
     }
 
+    public function Editar($id) {
+        $ventaModel = new VentasModel();
+        $venta = $ventaModel->cargarVenta($id);
+        var_dump($venta);
+        $this->content["nroVenta"] = $venta->codigo;
+
+        $this->content['title'] = "Edtar venta Nro";
+        $this->content['view'] = "Ventas/vCrear";
+
+        $this->LDataTables();
+        $this->LMoment();
+        $this->LSelect2();
+        $this->LInputMask();
+        $this->LJQueryValidation();
+        $this->LFancybox();
+
+        $this->content['js_add'][] = [
+            'Ventas/Crear.js'
+        ];
+
+        return view('UI/viewDefault', $this->content);
+    }
+
     public function listaDT(){
         $query = $this->db->table('ventas AS V')
                         ->select("
