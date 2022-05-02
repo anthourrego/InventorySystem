@@ -2,7 +2,7 @@
   <div class="card-header">
     <div class="row justify-content-between">
       <div class="offset-8 offset-md-9 col-5 col-md-3 text-right">
-        <button type="button" class="btn btn-primary" id="btnCrear"><i class="fa-solid fa-plus"></i> Crear</button>
+        <a href="<?= base_url("Ventas/Crear") ?>" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Crear</a>
       </div>
     </div>
   </div>

@@ -14,7 +14,16 @@ class VentasModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = [
+        "codigo",
+        "id_cliente",
+        "id_vendedor",
+        "productos",
+        "impuesto",
+        "neto",
+        "total",
+        "metodo_pago"
+    ];
 
     // Dates
     protected $useTimestamps = false;
@@ -24,8 +33,21 @@ class VentasModel extends Model
     protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      = [];
-    protected $validationMessages   = [];
+    protected $validationRules      = [
+        'codigo' => 'required|numeric|min_length[1]|max_length[11]|is_unique[ventas.codigo, id, {id}]',
+        'id_cliente' => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[clientes.id]',
+        'id_vendedor' => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[usuarios.id]',
+        'productos' => 'required|string|min_length[1]',
+        'impuesto' => 'required|decimal|min_length[1]|max_length[20]',
+        'neto' => 'required|decimal|min_length[1]|max_length[20]',
+        'total' => 'required|decimal|min_length[1]|max_length[20]',
+        'metodo_pago' => 'required|string|min_length[1]|max_length[50]',
+    ];
+    protected $validationMessages   = [
+        "codigo" => [
+            'is_unique' => 'El codigo <b>{value}</b>, ya se encuentra en uso, intente con otro codigo.',
+        ]
+    ];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
 

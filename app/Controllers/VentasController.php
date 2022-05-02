@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use \Hermawan\DataTables\DataTable;
 use App\Models\VentasModel;
+use App\Models\ProductosModel;
 
 class VentasController extends Libraries {
     public function index() {
@@ -30,11 +31,12 @@ class VentasController extends Libraries {
         $this->LSelect2();
         $this->LInputMask();
         $this->LJQueryValidation();
+        $this->LFancybox();
 
         $ventaModel = new VentasModel();
+        $codigo = $ventaModel->asObject()->orderBy('id', 'desc')->first();
 
-        $this->content["nroVenta"] = $ventaModel->asObject()->first();
-        $this->content["nroVenta"] = is_null($ventaModel->asObject()->first()) ? 1 : ($ventaModel->asObject()->first()->codigo + 1);
+        $this->content["nroVenta"] = is_null($codigo) ? 1 : ($codigo->codigo + 1);
 
         $this->content['js_add'][] = [
             'Ventas/Crear.js'
@@ -78,6 +80,81 @@ class VentasController extends Libraries {
                 $resp['msj'] = "Venta eliminada correctamente";
             } else {
                 $resp['msj'] = "Error al eliminar la venta";
+            }
+    
+            return $this->response->setJSON($resp);
+        } else {
+            show_404();
+        }
+    }
+
+    public function crearEditar(){
+        if ($this->request->isAJAX()){
+            $resp["success"] = false;
+            //Traemos los datos del post
+            $dataPost = (object) $this->request->getPost();
+            //var_dump($dataPost);
+            $valorTotal = 0;
+            $prod = json_decode($dataPost->productos);
+            
+            $productoModel = new ProductosModel();
+            $ventaModel = new VentasModel();
+
+            $codigo = $ventaModel->asObject()->orderBy('id', 'desc')->first();
+            $codigo = is_null($codigo) ? 1 : ($codigo->codigo + 1);
+
+
+            if (count($prod) > 0) {
+                $this->db->transBegin();
+
+                $dataSave = array(
+                    "codigo" => $codigo,
+                    "id_cliente" => $dataPost->idCliente,
+                    "id_vendedor" => $dataPost->idUsuario,
+                    "productos" => $dataPost->productos,
+                    "impuesto" => 0,
+                    "neto" => 0,
+                    "total" => 0,
+                    "metodo_pago" => $dataPost->metodoPago
+                );
+
+                if($ventaModel->save($dataSave)){
+                    $dataSave["id"] = $ventaModel->getInsertID();
+                    foreach ($prod as $it) {
+                        $valorTotal = $valorTotal + ($it->cantidad * $it->precio_venta);
+    
+                        $product = $productoModel->find($it->id);
+                        $product["stock"] = $product["stock"] - $it->cantidad;
+    
+                        if(!$productoModel->save($product)){
+                            $resp["msj"] = "Error al guardar al actualizar el producto.";
+                            break;
+                        }
+                    }
+    
+                    if ($this->db->transStatus() !== false) {
+                        $dataSave["total"] = $valorTotal;
+                        $dataSave["neto"] = $valorTotal;
+
+                        if ($ventaModel->save($dataSave)) {
+                            $resp["success"] = true;
+                            $resp["msj"] = $dataSave;
+                        } else {
+                            $resp["msj"] = "Ha ocurrido un error al guardar la venta." . listErrors($ventaModel->errors());
+                        }
+                    }
+                } else{
+                    $resp["msj"] = "Ha ocurrido un error al guardar la venta." . listErrors($ventaModel->errors());
+                }
+
+                if($resp["success"] == false || $this->db->transStatus() === false) {
+                    $this->db->transRollback();
+                } else {
+                    $this->db->transCommit();
+                }
+
+            } else {
+                $resp['msj'] = "No se puede generar la venta si no hay productos seleccionados";
             }
     
             return $this->response->setJSON($resp);

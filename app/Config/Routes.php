@@ -95,8 +95,8 @@ $routes->group('Ventas', ['filter' => 'authGuard'], function ($routes) {
     $routes->post('DT', 'VentasController::listaDT');
     $routes->post('Eliminar', 'VentasController::eliminar');
     $routes->post('DTProductos', 'ProductosController::listaDT');
-    /* $routes->get('ValidaProducto/(:any)/(:any)/(:num)', 'VentasController::validarProducto/$1/$2/$3');
     $routes->post('Crear', 'VentasController::crearEditar');
+    /* $routes->get('ValidaProducto/(:any)/(:any)/(:num)', 'VentasController::validarProducto/$1/$2/$3');
     $routes->post('Editar', 'VentasController::crearEditar');
     $routes->get('Foto', 'VentasController::foto');
     $routes->get('Foto/(:num)/(:any)', 'VentasController::foto/$1/$2'); */

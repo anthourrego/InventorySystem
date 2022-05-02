@@ -23,7 +23,6 @@ let DTProductos = $("#table").DataTable({
                 </a>`;
       }
     },
-    {data: 'referencia'},
     {data: 'item'},
     {
       data: 'descripcion',
@@ -77,15 +76,21 @@ let DTProductos = $("#table").DataTable({
         productosVentas.push(data);
         DTProductosVenta.clear().rows.add(productosVentas).draw();
       }
+      calcularTotal();
     });
   }
 });
 
 let DTProductosVenta = $("#tblProductos").DataTable({
   data: productosVentas,
-  dom: domlftrip,
+  dom: domSearch1,
   processing: false,
 	serverSide: false,
+  order: [[1, "asc"]],
+  scrollY: screen.height - 650,
+  scroller: {
+    loadingIndicator: true
+  },
   columns: [
     {
       orderable: false,
@@ -106,12 +111,16 @@ let DTProductosVenta = $("#tblProductos").DataTable({
       }
     },
     {
+      orderable: false,
+      searchable: false,
       data: 'cantidad',
       render: function(meta, type, data, meta) {
         return `<input type="number" class="form-control form-control-sm cantidadProduct inputFocusSelect soloNumeros" min="1" value="${data.cantidad}">`;
       }
     },
     {
+      orderable: false,
+      searchable: false,
       data: 'valorTotal',
       className: 'text-right valorTotal',
       render: function(meta, type, data, meta) {
@@ -121,17 +130,13 @@ let DTProductosVenta = $("#tblProductos").DataTable({
   ],
   createdRow: function(row, data, dataIndex){
     $(row).find(".cantidadProduct").on("change", function(){
-      let cant = $(this).val().trim();
+      let cant = Number($(this).val().trim());
       let resultado = productosVentas.find((it) => it.id == data.id);
-      console.log(cant);
-      console.log(data.stock);
-      console.log((cant <= data.stock));
-      if (cant <= data.stock) {
-        resultado.cantidad = $(this).val().trim();
+      if (cant <= Number(data.stock)) {
+        resultado.cantidad = cant;
         resultado.valorTotal = resultado.cantidad * resultado.precio_venta;
   
         $(row).find(".valorTotal").text(formatoPesos.format(resultado.valorTotal));
-        calcularTotal();
       } else {
         alertify.alert("Advertencia", `Ha superado la cantidad maxima, solo hay <b>${data.stock}</b> disponibles`);
         resultado.cantidad = 1;
@@ -139,12 +144,24 @@ let DTProductosVenta = $("#tblProductos").DataTable({
         $(this).val(1);
         $(row).find(".valorTotal").text(formatoPesos.format(data.precio_venta));
       }
-    })
+
+      data = resultado;
+
+      calcularTotal();
+    });
+
+    $(row).find(".btnBorrar").click(function(e){
+      e.preventDefault();
+      productosVentas = productosVentas.filter(it => it.id != data.id);
+      DTProductosVenta.clear().rows.add(productosVentas).draw();
+      $("#p"+data.id).removeClass("disabled").prop("disabled", false);
+      calcularTotal();
+    });
   }
 });
 
 $(function(){
-  $("#vendedor").on("change", function(e){
+  $("#vendedor").on("focusout, change", function(e){
     e.preventDefault();
     selfi = this
     selfValue = $(selfi).val().trim();
@@ -159,7 +176,7 @@ $(function(){
           },
           success: function (resp) {
             if(resp.success){
-              $(selfi).val(resp.data.usuario);
+              $(selfi).val(resp.data.usuario).data("id", resp.data.id);
               $(selfi).next(".input-group-append").find("span").text(resp.data.nombre);
             } else {
               selfValue = selfValue == "." ? "" : selfValue;
@@ -189,7 +206,8 @@ $(function(){
                       createdRow: function(row,data,dataIndex){
                         $(row).click(function(){
                           busquedaModal = false;
-                          lastFocus.val(data.usuario).change();
+                          lastFocus.data("id", "");
+                          lastFocus.val(data.usuario).focusin().change();
                           lastFocusValue = data.usuario;
                           alertify.busquedaAlert().close();
                         });
@@ -204,13 +222,13 @@ $(function(){
           }
         });
       } else {
-        $(selfi).val("");
+        $(selfi).val("").data("id", "");
         $(selfi).next(".input-group-append").find("span").text("");
       }
     }
   });
 
-  $("#cliente").on("change", function(e){
+  $("#cliente").on("focusout, change", function(e){
     e.preventDefault();
     selfi = this
     selfValue = $(selfi).val().trim();
@@ -225,7 +243,7 @@ $(function(){
           },
           success: function (resp) {
             if(resp.success){
-              $(selfi).val(resp.data.documento);
+              $(selfi).val(resp.data.documento).data("id", resp.data.id);
               $(selfi).next(".input-group-append").find("span").text(resp.data.nombre);
             } else {
               selfValue = selfValue == "." ? "" : selfValue;
@@ -255,6 +273,7 @@ $(function(){
                       createdRow: function(row,data,dataIndex){
                         $(row).click(function(){
                           busquedaModal = false;
+                          lastFocus.data("id", "")
                           lastFocus.val(data.documento).focusin().change();
                           lastFocusValue = data.documento;
                           alertify.busquedaAlert().close();
@@ -270,7 +289,7 @@ $(function(){
           }
         });
       } else {
-        $(selfi).val("");
+        $(selfi).val("").data("id", "");
         $(selfi).next(".input-group-append").find("span").text("");
       }
     }
@@ -280,7 +299,39 @@ $(function(){
     e.preventDefault();
     if ($(this).valid()) {
       if (productosVentas.length > 0) {
-
+        form = new FormData(this);
+        form.append("idCliente", $("#cliente").data("id"));
+        form.append("idUsuario", $("#vendedor").data("id"));
+        form.append("productos", JSON.stringify(productosVentas));
+        
+        $.ajax({ 
+          url: rutaBase + "Crear",
+          type:'POST',
+          dataType: 'json',
+          processData: false,
+          contentType: false,
+          cache: false,
+          data: form,
+          success: function(resp){
+            if (resp.success) {
+              alertify.confirm("Venta creada correctamente", `Nro de venta: <b>${resp.msj.codigo}</b> por valor de <b>${formatoPesos.format(resp.msj.total)}</b><br>Quiere crear una nueva venta?`, 
+                function(){
+                  productosVentas = [];
+                  $("#nroVenta").val(resp.msj.codigo + 1);
+                  $("#cliente").data("id", "");
+                  $("#vendedor").data("id", "");
+                  DTProductos.ajax.reload();
+                  DTProductosVenta.clear().rows.add(productosVentas).draw();
+                  resetForm("#formVenta");
+                }, 
+                function(){ 
+                  window.location.href = base_url() + 'Ventas/Administrar';
+                });
+            } else {
+              alertify.alert('¡Advertencia!', resp.msj);
+            }
+          }
+        });
       } else {
         alertify.alert("Advertencia", "Debe de elegiar minimo un producto para guardar la venta.");
       }
@@ -289,5 +340,10 @@ $(function(){
 });
 
 function calcularTotal(){
+  sumTotal = 0;
+  productosVentas.forEach((it) => {
+    sumTotal += Number(it.valorTotal);
+  });
 
+  $("#total").val(sumTotal);
 }

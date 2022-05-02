@@ -8,9 +8,10 @@ const formatoPesos = new Intl.NumberFormat('es-CO', {
 });
 
 $(function(){
-	$(".inputFocusSelect").click(function() {
+	$(document).on("click", ".inputFocusSelect", function(e) {
+		e.preventDefault();
     $(this).trigger("select");
-  }).focus(function(){
+  }).on("focus", function(){
     $(this).trigger("select");
   });
 
@@ -22,12 +23,36 @@ $(function(){
 			lastFocus = null;
 		}
 	});
+});
 
-	$(document).on("focusout", ".lastFocus", function(){
-		if ($(this).val().trim() != lastFocusValue) {
-			$(this).change();
+$(document).on('keydown', "input:not(button, [type=search], .flexdatalist-alias,  .dataTables_filter input), select", function (evt) {
+	if (evt.keyCode == 13) {
+		var fields = $(this).parents('form:eq(0),body').find('input,a,select,button,textarea').filter(':visible:not([disabled])');
+		var index = fields.index(this);
+
+		if (index > -1 && (index + 1) < fields.length) {
+			if (!fields.eq(index + 1).attr('disabled')) {
+				if (fields.eq(index).is('button')) {
+					fields.eq(index).click();
+				} else {
+					setTimeout(function () {
+						fields.eq(index + 1).focus();
+					}, 0);
+				}
+			} else {
+				var self = this;
+				setTimeout(function () {
+					$(self).change().focusout();
+				}, 0);
+			}
+		} else if ((index + 1) == fields.length) {
+			var self = this;
+			setTimeout(function () {
+				$(self).change().focusout();
+			}, 0);
 		}
-	});
+		return false;
+	}
 });
 
 document.addEventListener('DOMContentLoaded', function (e) {
