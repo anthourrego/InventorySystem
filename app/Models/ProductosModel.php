@@ -39,7 +39,7 @@ class ProductosModel extends Model
     protected $validationRules      = [
         'id_categoria' => "required|integer|min_length[1]",
         'referencia'   => "required|alpha_numeric_punct|min_length[1]|max_length[255]|is_unique[productos.referencia, id, {id}]",
-        'item'         => 'required|alpha_numeric_punct|min_length[1]|max_length[255]|is_unique[productos.item, id, {id}]',
+        'item'         => 'required|alpha_numeric_punct|min_length[1]|max_length[255]',
         'descripcion'  => 'permit_empty|alpha_numeric_punct|min_length[1]|max_length[500]',
         'stock'        => 'required|numeric|min_length[1]|max_length[11]',
         'precio_venta' => 'required|decimal|min_length[1]|max_length[20]',

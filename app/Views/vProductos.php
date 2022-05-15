@@ -87,7 +87,7 @@
               </div>
               <div class="form-group form-valid">
                 <label class="mb-0" for="item">Item <span class="text-danger">*</span></label>
-                <input placeholder="Ingrese el ítem" type="text" data-campo="item" id="item" name="item" class="form-control soloLetras validaCampo" minlength="1" maxlength="300" required autocomplete="off">
+                <input placeholder="Ingrese el ítem" type="text" data-campo="item" id="item" name="item" class="form-control soloLetras" minlength="1" maxlength="300" required autocomplete="off">
               </div>
             </div>
             <div class="col-6 form-group form-valid">
@@ -136,3 +136,8 @@
     </div>
   </div>
 </div>
+
+
+<script>
+  $CATEGORIAS = <?= COUNT($categorias) ?>;
+</script>

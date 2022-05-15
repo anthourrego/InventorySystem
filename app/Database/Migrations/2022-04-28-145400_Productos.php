@@ -26,7 +26,6 @@ class Productos extends Migration {
             'item' => [
                 'type'           => 'VARCHAR',
                 'constraint'     => 255,
-                'unique'         => true,
             ],
             'descripcion' => [
                 'type'        => 'TEXT',
