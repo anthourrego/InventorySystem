@@ -4,15 +4,20 @@ namespace App\Controllers;
 
 use \Hermawan\DataTables\DataTable;
 use App\Models\PerfilesModel;
+use App\Models\PermisosModel;
 
 class PerfilesController extends Libraries {
     public function index() {
         $this->content['title'] = "Perfiles";
         $this->content['view'] = "vPerfiles";
 
+        $permisos = new PermisosModel();
+        $this->content["permisos"] = $permisos->lista();
+
         $this->LDataTables();
         $this->LMoment();
         $this->LJQueryValidation();
+        $this->Lgijgo();
 
         $this->content['js_add'][] = [
             'Perfiles.js'

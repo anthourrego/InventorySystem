@@ -1,5 +1,14 @@
 let rutaBase = base_url() + "Perfiles/";
 
+var arbolPermisos = $('#tree').tree({
+  primaryKey: 'id',
+  uiLibrary: 'bootstrap4',
+  checkboxes: true,
+  select: false,
+  cascadeCheck: false,
+  dataSource: $PERMISOS
+});
+
 let DTPefiles = $("#table").DataTable({
   ajax: {
     url: rutaBase + "DT",
@@ -32,6 +41,7 @@ let DTPefiles = $("#table").DataTable({
       render: function(meta, type, data, meta) {
         return `<div class="btn-group btn-group-sm" role="group">
                   <button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>
+                  <button type="button" class="btn btn-info btnPermisos" title="Permisos"><i class="fa-solid fa-lock"></i></button>
                   <button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>
                 </div>`;
       }
@@ -54,6 +64,24 @@ let DTPefiles = $("#table").DataTable({
       $("#estado").val(data.Estadito);
       $(".form-group-edit").removeClass("d-none");
       $("#modalPefiles").modal("show");
+    });
+
+    $(row).find(".btnPermisos").click(function(e){
+      e.preventDefault();
+      $("#modalPermisosLabel").html("<i class='fa-solid fa-lock'></i> " +data.nombre + " | Permisos");
+      $("#btnGuardarPermisos").data("id", data.id);
+      $.ajax({
+        url: base_url() + "Permisos/Perfil/" + data.id,
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+          data.forEach(it => {
+            let node = arbolPermisos.getNodeById(it.permiso);
+            arbolPermisos.check(node).expand(node);
+          });
+          $("#modalPermisos").modal("show");
+        }
+      });
     });
   }
 });
@@ -98,6 +126,46 @@ $(function(){
           }
         }
       });
+    }
+  });
+
+  $("#modalPermisos").on('hidden.bs.modal', function (event) {
+    arbolPermisos.reload();
+    $("#btnGuardarPermisos").data("id", 0);
+  });
+
+  $("#checkAllPermisos").click(function(e){
+    e.preventDefault();
+    arbolPermisos.checkAll().expandAll();
+  });
+
+  $("#unCheckAllPermisos").click(function(e){
+    e.preventDefault();
+    arbolPermisos.uncheckAll().collapseAll();
+  });
+
+  $("#btnGuardarPermisos").click(function(e){
+    e.preventDefault();
+    let id = $(this).data("id");
+    
+    if (id != 0) {
+      var checked = arbolPermisos.getCheckedNodes();
+      $.ajax({
+        url: base_url() + "Permisos/Guardar",
+        type: "POST",
+        dataType: "json",
+        data: {id, checked, tipo: 1},
+        success: function(resp) {
+          if (resp.success) {
+            $("#modalPermisos").modal("hide");
+            alertify.success(resp.msj);
+          } else {
+            alertify.alert('¡Advertencia!', resp.msj);
+          }
+        }
+      });
+    } else {
+      alertify.alert("No se ha seleccionado el perfil para guardar.");
     }
   });
 });

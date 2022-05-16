@@ -179,4 +179,15 @@ class Libraries extends BaseController {
     ];
   }
 
+  public function Lgijgo(){
+    $this->content['css'][] = [
+      'assets/Libraries/gijgo/css/gijgo.min.css'
+    ];
+
+    $this->content['js'][] = [
+      'assets/Libraries/gijgo/js/gijgo.min.js',
+      'assets/Libraries/gijgo/js/messages/messages.es-es.min.js'
+    ];
+  }
+
 } 

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
-
 class VentasModel extends Model {
     protected $DBGroup          = 'default';
     protected $table            = 'ventas';
@@ -62,6 +61,24 @@ class VentasModel extends Model {
     protected $afterDelete    = [];
 
     function cargarVenta($id){
+        $venta = $this->db->table("ventas AS V")
+            ->select("
+                V.id,
+                V.codigo,
+                V.id_cliente,
+                C.documento AS NroDocumentoCliente,
+                C.nombre AS NombreCliente,
+                V.id_vendedor,
+                U.usuario AS UsuarioCliente,
+                U.nombre AS NombreVendedor,
+                V.productos,
+                V.total,
+                V.metodo_pago
+            ")->join("clientes AS C", "V.id_cliente = C.id", "left")
+            ->join("usuarios AS U", "V.id_vendedor = U.id", "left")
+            ->where("V.id", $id)
+            ->get()->getResultObject();
 
+        return $venta;
     }
 }

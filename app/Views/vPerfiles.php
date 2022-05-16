@@ -79,3 +79,30 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="modalPermisos" data-backdrop="static" data-keyboard="false" aria-labelledby="modalPermisosLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalPermisosLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <button class="btn btn-primary" id="checkAllPermisos"><i class="fa-regular fa-square-check"></i> Marcar Todo</button>
+        <button class="btn btn-danger" id="unCheckAllPermisos"><i class="fa-regular fa-square"></i> Desmarcar Todo</button>
+        <hr>
+        <div id="tree"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-id="0" id="btnGuardarPermisos"><i class="fas fa-save"></i> Guardar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $PERMISOS = <?= json_encode($permisos) ?>;
+</script>

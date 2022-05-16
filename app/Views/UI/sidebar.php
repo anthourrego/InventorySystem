@@ -38,6 +38,12 @@
 							</a>
 							<ul class="nav nav-treeview">
 								<li class="nav-item">
+									<a id="sincronizarPermisos" href="#" class="nav-link">
+										<i class="fa-solid fa-rotate nav-icon"></i>
+										<p>Sincronizar</p>
+									</a>
+								</li>
+								<li class="nav-item">
 									<a id="cerrarSesion" href="#" class="nav-link">
 										<i class="fas fa-sign-out-alt nav-icon"></i>
 										<p>Cerrar Sesión</p>
@@ -45,36 +51,47 @@
 								</li>
 							</ul>
 						</li>
+						<?php if (validPermissions([1], true)) { ?> 
             <li class="nav-item">
               <a href="<?= base_url("Usuarios") ?>" class="nav-link <?= current_url(true)->getSegment(3) == 'Usuarios' ? 'active' : '' ?>">
                 <i class="nav-icon fas fa-users"></i>
                 <p>Usuarios</p>
               </a>
             </li>
+						<?php } ?>
+						<?php if (validPermissions([2], true)) { ?> 
 						<li class="nav-item">
               <a href="<?= base_url("Perfiles") ?>" class="nav-link <?= current_url(true)->getSegment(3) == 'Perfiles' ? 'active' : '' ?>">
                 <i class="nav-icon fa-solid fa-address-book"></i>
                 <p>Perfiles</p>
               </a>
             </li>
+						<?php } ?>
+						<?php if (validPermissions([3], true)) { ?> 
 						<li class="nav-item">
               <a href="<?= base_url("Categorias") ?>" class="nav-link <?= current_url(true)->getSegment(3) == 'Categorias' ? 'active' : '' ?>">
 								<i class="nav-icon fa-brands fa-buffer"></i>
                 <p>Categorias</p>
               </a>
             </li>
+						<?php } ?>
+						<?php if (validPermissions([4], true)) { ?> 
 						<li class="nav-item">
               <a href="<?= base_url("Clientes") ?>" class="nav-link <?= current_url(true)->getSegment(3) == 'Clientes' ? 'active' : '' ?>">
 								<i class="nav-icon fa-solid fa-user-tie"></i>
                 <p>Clientes</p>
               </a>
             </li>
+						<?php } ?>
+						<?php if (validPermissions([5], true)) { ?> 
 						<li class="nav-item">
               <a href="<?= base_url("Productos") ?>" class="nav-link <?= current_url(true)->getSegment(3) == 'Productos' ? 'active' : '' ?>">
 								<i class="nav-icon fa-brands fa-product-hunt"></i>
                 <p>Productos</p>
               </a>
             </li>
+						<?php } ?>
+						<?php if (validPermissions([6], true)) { ?> 
 						<li class="nav-item <?= (current_url(true)->getSegment(3) == 'Ventas' && (current_url(true)->getSegment(4) == 'Crear' || current_url(true)->getSegment(4) == 'Administrar')) ? 'menu-is-opening menu-open' : '' ?>">
               <a href="#" class="nav-link <?= current_url(true)->getSegment(3) == 'Ventas' ? 'active' : '' ?>">
 								<i class="nav-icon fa-solid fa-store"></i>
@@ -98,6 +115,7 @@
 								</li>
 							</ul>
             </li>
+						<?php } ?>
 					</ul>
 				</nav>
 				<!-- /.sidebar-menu -->

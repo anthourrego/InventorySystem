@@ -109,6 +109,18 @@ document.addEventListener('DOMContentLoaded', function (e) {
     }, function () { });
   });
 
+	$("#sincronizarPermisos").click(function (e) {
+    e.preventDefault();
+		$.ajax({
+			type: "POST",
+			url: base_url() + "Permisos/Sincronizar",
+			dataType: 'json',
+			success: function (data) {
+				window.location.reload();
+			},
+		});
+  });
+
 	//Solo deja escribir números
 	$(".soloNumeros").keypress(function(e){
 		var keynum = window.event ? window.event.keyCode : e.which;

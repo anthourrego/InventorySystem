@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Models\UsuariosModel;
 use App\Models\PerfilesModel;
 use \Hermawan\DataTables\DataTable;
+use App\Models\PermisosModel;
 
 class UsuariosController extends Libraries {
 
@@ -16,10 +17,14 @@ class UsuariosController extends Libraries {
         $this->LFancybox();
         $this->LSelect2();
         $this->LJQueryValidation();
+        $this->Lgijgo();
 
-        $perfiles = new PerfilesModel();
+        $permisosModel = new PermisosModel();
+        $this->content["permisos"] = $permisosModel->lista();
 
-        $this->content["perfiles"] = $perfiles->asObject()->where("estado", 1)->findAll();
+        $perfilesModel = new PerfilesModel();
+
+        $this->content["perfiles"] = $perfilesModel->asObject()->where("estado", 1)->findAll();
         
         $this->content['js_add'][] = [
             'Usuarios.js'

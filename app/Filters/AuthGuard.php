@@ -10,6 +10,11 @@ class AuthGuard implements FilterInterface
     if (!session()->has("logged_in") && !session()->get('logged_in')) {
       return redirect()->route('/');
     }
+    
+    //Con los argumentos validamos los numero de permisos
+    if ($arguments != null) {
+      return validPermissions($arguments);
+    }
   }
   
   public function after(RequestInterface $request, ResponseInterface $response, $arguments = null) {

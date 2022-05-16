@@ -48,10 +48,18 @@ class VentasController extends Libraries {
     public function Editar($id) {
         $ventaModel = new VentasModel();
         $venta = $ventaModel->cargarVenta($id);
-        var_dump($venta);
+
+        if (count($venta) != 1) {
+            return redirect()->route('Ventas/Administrar');
+        }
+
+        $venta = $venta[0];
+        
+        $this->content["venta"] = $venta;
+
         $this->content["nroVenta"] = $venta->codigo;
 
-        $this->content['title'] = "Edtar venta Nro";
+        $this->content['title'] = "Editar venta Nro " . $venta->codigo;
         $this->content['view'] = "Ventas/vCrear";
 
         $this->LDataTables();
@@ -184,5 +192,9 @@ class VentasController extends Libraries {
         } else {
             show_404();
         }
+    }
+
+    private function cargarVenta(){
+
     }
 }

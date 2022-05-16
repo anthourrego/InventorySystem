@@ -3,6 +3,12 @@
   function base_url(){
     return "<?= base_url(); ?>/";
   }
+
+  function validPermissions($permiso = 0){
+    let listaPermisos = <?= json_encode(session()->get("permisos")) ?>
+
+    return listaPermisos.some(item => item == $permiso);
+  }
 </script>
   <?php 
     if(isset($js)){

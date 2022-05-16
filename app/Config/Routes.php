@@ -34,18 +34,17 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'Home::index');
 $routes->post('/iniciarSesion', 'Home::iniciarSesion');
 
-
 //Usuarios
-$routes->group('Usuarios', ['filter' => 'authGuard'], function ($routes) {
+$routes->group('Usuarios', ['filter' => 'authGuard:1'], function ($routes) {
     $routes->get('/', 'UsuariosController::index');
     $routes->post('DT', 'UsuariosController::listaDT');
     $routes->get('Foto', 'UsuariosController::foto');
     $routes->get('Foto/(:any)', 'UsuariosController::foto/$1');
-    $routes->post('Eliminar', 'UsuariosController::eliminar');
-    $routes->post('Crear', 'UsuariosController::crearEditar');
-    $routes->post('Editar', 'UsuariosController::crearEditar');
-    $routes->get('ValidaUsuario/(:any)/(:num)', 'UsuariosController::validaUsuario/$1/$2');
-    $routes->post('CambiarPass', 'UsuariosController::cambiarPass');
+    $routes->post('Eliminar', 'UsuariosController::eliminar', ['filter' => 'authGuard:14']);
+    $routes->post('Crear', 'UsuariosController::crearEditar', ['filter' => 'authGuard:11']);
+    $routes->post('Editar', 'UsuariosController::crearEditar', ['filter' => 'authGuard:12']);
+    $routes->post('CambiarPass', 'UsuariosController::cambiarPass', ['filter' => 'authGuard:13']);
+    $routes->get('ValidaUsuario/(:any)/(:num)', 'UsuariosController::validaUsuario/$1/$2', ['filter' => 'authGuard:11,12']);
 });
 
 //Pefiles
@@ -111,6 +110,14 @@ $routes->group('Busqueda', ['filter' => 'authGuard'], function ($routes) {
     $routes->post('Vendedor', 'UsuariosController::getUsuario');
     $routes->post('Clientes', 'ClientesController::listaDT');
     $routes->post('Cliente', 'ClientesController::getCliente');
+});
+
+//Permisos
+$routes->group('Permisos', ['filter' => 'authGuard'], function ($routes) {
+    $routes->get('Perfil/(:num)', 'PermisosController::Permisos/$1/perfilId');
+    $routes->get('Usuarios/(:num)', 'PermisosController::Permisos/$1/usuarioId', ['filter' => 'authGuard:15']);
+    $routes->post('Guardar', 'PermisosController::Guardar', ['filter' => 'authGuard:15']);
+    $routes->post('Sincronizar', 'PermisosController::sincronizar');
 });
 
 

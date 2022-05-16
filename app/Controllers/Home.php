@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 use App\Models\UsuariosModel;
+use App\Models\PermisosModel;
 
 class Home extends Libraries {
 
@@ -48,6 +49,18 @@ class Home extends Libraries {
 
                     if ($usuario->save($updateData)){
 
+                        $permisosModel = new PermisosModel();
+
+                        $campo = $usuario->perfil == null ? 'usuarioId' : 'perfilId';
+                        $id = $usuario->perfil == null ? $usuario->id : $usuario->perfil;
+                        $permisos = $permisosModel->select("permiso")->where($campo, $id)->findAll();
+                        $per = [];
+
+                        foreach ($permisos as $it) {
+                            $per[] = $it->permiso;
+                        }
+                        
+                        //Treamos los permisos del usuarios
                         $userdata = [
                             'id_user'  => $usuario->id,
                             'nombre'  => $usuario->nombre,
@@ -55,8 +68,9 @@ class Home extends Libraries {
                             'perfil'     => $usuario->perfil,
                             'foto'     => $usuario->foto,
                             'logged_in' => true,
+                            'permisos' => $per
                         ];
-    
+
                         $this->session->set($userdata);
 
                         $resp["success"] = true;

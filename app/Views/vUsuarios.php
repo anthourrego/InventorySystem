@@ -13,9 +13,11 @@
           </select>
         </div>
       </div>
-      <div class="col-5 col-md-3 text-right">
-        <button type="button" class="btn btn-primary" id="btnCrearUsuario"><i class="fa-solid fa-user-plus"></i> Crear</button>
-      </div>
+      <?php if (validPermissions([11], true)) { ?>
+        <div class="col-5 col-md-3 text-right">
+          <button type="button" class="btn btn-primary" id="btnCrearUsuario"><i class="fa-solid fa-user-plus"></i> Crear</button>
+        </div>
+      <?php } ?>
     </div>
   </div>
   <div class="card-body">
@@ -60,7 +62,7 @@
                     <i class="fas fa-cloud-upload-alt"></i>
                     <span> Selecciona o arrastre su imagen</span>
                   </div>
-                  <input id="foto" name="foto" class="input-file-img" accept=".png, .jpg, .jpeg" type="file">
+                  <input id="foto" name="foto" class="input-file-img inputVer" accept=".png, .jpg, .jpeg" type="file">
                 </div>
               </div>
               <div id="content-preview" class="d-none text-center">
@@ -71,11 +73,11 @@
             <div class="col-6">
               <div class="form-group form-valid">
                 <label class="mb-0" for="usuario">Usuario <span class="text-danger">*</span></label>
-                <input placeholder="Username" class="form-control soloLetras" id="usuario" name="usuario" type="text" minlength="1" maxlength="255" required autocomplete="off">
+                <input placeholder="Username" class="form-control soloLetras inputVer" id="usuario" name="usuario" type="text" minlength="1" maxlength="255" required autocomplete="off">
               </div>
               <div class="form-group form-valid">
                 <label class="mb-0" for="perfil">Perfil <span class="text-danger">*</span></label>
-                <select id="perfil" required name="perfil" class="custom-select select2" data-placeholder="Seleccione..." data-allow-clear="1">
+                <select id="perfil" required name="perfil" class="custom-select select2 inputVer" data-placeholder="Seleccione..." data-allow-clear="1">
                   <option></option>
                   <option value="0">Perfil libre</option>
                   <?php foreach ($perfiles as $perfil) : ?>
@@ -85,7 +87,7 @@
               </div>
               <div class="form-group form-valid">
                 <label class="mb-0" for="nombre">Nombre <span class="text-danger">*</span></label>
-                <input type="text" id="nombre" name="nombre" class="form-control soloLetrasEspacio" minlength="1" maxlength="300" required placeholder="Nombre" autocomplete="off">
+                <input type="text" id="nombre" name="nombre" class="form-control soloLetrasEspacio inputVer" minlength="1" maxlength="300" required placeholder="Nombre" autocomplete="off">
               </div>
             </div>
             <div class="col-6 form-group form-valid">
@@ -167,9 +169,37 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-close"></i> Cerrar</button>
         <button type="submit" class="btn btn-success" form="formPass"><i class="fas fa-save"></i> Guardar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-close"></i> Cerrar</button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Modal permisos -->
+<div class="modal fade" id="modalPermisos" data-backdrop="static" data-keyboard="false" aria-labelledby="modalPermisosLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalPermisosLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <button class="btn btn-primary" id="checkAllPermisos"><i class="fa-regular fa-square-check"></i> Marcar Todo</button>
+        <button class="btn btn-danger" id="unCheckAllPermisos"><i class="fa-regular fa-square"></i> Desmarcar Todo</button>
+        <hr>
+        <div id="tree"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-id="0" id="btnGuardarPermisos"><i class="fas fa-save"></i> Guardar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $PERMISOS = <?= json_encode($permisos) ?>;
+</script>

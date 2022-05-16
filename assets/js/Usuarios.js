@@ -1,5 +1,14 @@
 let rutaBase = base_url() + "Usuarios/";
 
+var arbolPermisos = $('#tree').tree({
+  primaryKey: 'id',
+  uiLibrary: 'bootstrap4',
+  checkboxes: true,
+  select: false,
+  cascadeCheck: false,
+  dataSource: $PERMISOS
+});
+
 let DTUsuarios = $("#table").DataTable({
   ajax: {
     url: rutaBase + "DT",
@@ -42,10 +51,20 @@ let DTUsuarios = $("#table").DataTable({
       defaultContent: '',
       className: 'text-center',
       render: function(meta, type, data, meta) {
+
+        btnEditar = validPermissions(12) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-user-pen"></i></button>': '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
+
+        btnCambiarPass = validPermissions(13) ?  '<button type="button" class="btn btn-warning btnCambiarPass" title="Cambiar Contraseña"><i class="fa-solid fa-user-lock"></i></button>' : '';
+
+        btnPermisos = (data.perfilId == null && validPermissions(15)) ? '<button type="button" class="btn btn-info btnPermisos" title="Permisos"><i class="fa-solid fa-user-shield"></i></button>' : '';
+
+        btnCambiarEstado = validPermissions(14) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-user-${data.estado == "1" ? "large-slash" : "check"}"></i></button>` : '';
+
         return `<div class="btn-group btn-group-sm" role="group">
-                  <button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-user-pen"></i></button>
-                  <button type="button" class="btn btn-info btnCambiarPass" title="Cambiar Contraseña"><i class="fa-solid fa-user-lock"></i></button>
-                  <button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-user-${data.estado == "1" ? "large-slash" : "check"}"></i></button>
+                  ${btnEditar}
+                  ${btnCambiarPass}
+                  ${btnPermisos}
+                  ${btnCambiarEstado}
                 </div>`;
       }
     },
@@ -57,13 +76,22 @@ let DTUsuarios = $("#table").DataTable({
     });
 
     //Editar usuario
-    $(row).find(".btnEditar").click(function(e){
+    $(row).find(".btnEditar, .btnVer").click(function(e){
       e.preventDefault();
-      $("#modalUsuarioLabel").html(`<i class="fa-solid fa-user-pen"></i> Editar usuario`);
+      if ($(this).hasClass("btnVer")) {
+        $("#modalUsuarioLabel").html(`<i class="fa-solid fa-eye"></i> Ver usuario`);
+        $(".btn-eliminar-foto, button[form='formUsuario']").addClass("d-none");
+        $(".inputVer").addClass("disabled").prop("disabled", true).trigger('change');
+      } else {
+        $("#modalUsuarioLabel").html(`<i class="fa-solid fa-user-pen"></i> Editar usuario`);
+        $(".inputVer").removeClass("disabled").prop("disabled", false).trigger('change');
+        $(".btn-eliminar-foto, button[form='formUsuario']").removeClass("d-none");
+      }
+      
       $("#id").val(data.id);
       $("#nombre").val(data.nombre);
       $("#usuario").val(data.usuario);
-      $("#perfil").val((data.perfilId == null ? 0 : data.perfilId)).trigger('change');
+      $("#perfil").val((data.perfilId == null ? 0 : data.perfilId));
       $("#fechaLog").val(moment(data.ultimo_login, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
       $("#fechaMod").val(moment(data.updated_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
       $("#fechaCre").val(moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
@@ -88,6 +116,25 @@ let DTUsuarios = $("#table").DataTable({
       $("#formPass input[name='id'").val(data.id);
 
       $("#cambioPassModal").modal("show");
+    });
+
+    //Permisos
+    $(row).find(".btnPermisos").click(function(e){
+      e.preventDefault();
+      $("#modalPermisosLabel").html("<i class='fa-solid fa-user-shield'></i> " +data.nombre + " | Permisos");
+      $("#btnGuardarPermisos").data("id", data.id);
+      $.ajax({
+        url: base_url() + "Permisos/Usuarios/" + data.id,
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+          data.forEach(it => {
+            let node = arbolPermisos.getNodeById(it.permiso);
+            arbolPermisos.check(node).expand(node);
+          });
+          $("#modalPermisos").modal("show");
+        }
+      });
     });
   }
 });
@@ -140,12 +187,12 @@ $(function(){
   });
 
   $("#btnCrearUsuario").on("click", function(){
-    $("#id").val("");
+    $(".inputVer").val("").removeClass("disabled").prop("disabled", false).trigger('change');
     $("#editFoto").val(0);
-    $("#foto").val('');
+    $("#foto").val('').removeClass("disabled").prop("disabled", false);
     $('#imgFoto').attr('src', base_url() + "Usuarios/Foto");
     $("#content-preview").addClass("d-none");
-    $("#content-upload").removeClass("d-none");
+    $("#content-upload, .btn-eliminar-foto, button[form='formUsuario']").removeClass("d-none");
     $("#modalUsuarioLabel").html(`<i class="fa-solid fa-user-plus"></i> Crear usuario`);
     $(".form-group-edit").addClass("d-none");
     $("#pass, #RePass").closest(".form-group").removeClass("d-none");
@@ -272,6 +319,46 @@ $(function(){
         alertify.warning("La contraseñas no coinciden, intentelo de nuevo");
         $(this).find("input[name='pass']").trigger("focus");
       }
+    }
+  });
+
+  $("#modalPermisos").on('hidden.bs.modal', function (event) {
+    arbolPermisos.reload();
+    $("#btnGuardarPermisos").data("id", 0);
+  });
+
+  $("#checkAllPermisos").click(function(e){
+    e.preventDefault();
+    arbolPermisos.checkAll().expandAll();
+  });
+
+  $("#unCheckAllPermisos").click(function(e){
+    e.preventDefault();
+    arbolPermisos.uncheckAll().collapseAll();
+  });
+
+  $("#btnGuardarPermisos").click(function(e){
+    e.preventDefault();
+    let id = $(this).data("id");
+    
+    if (id != 0) {
+      var checked = arbolPermisos.getCheckedNodes();
+      $.ajax({
+        url: base_url() + "Permisos/Guardar",
+        type: "POST",
+        dataType: "json",
+        data: {id, checked, tipo: 2},
+        success: function(resp) {
+          if (resp.success) {
+            $("#modalPermisos").modal("hide");
+            alertify.success(resp.msj);
+          } else {
+            alertify.alert('¡Advertencia!', resp.msj);
+          }
+        }
+      });
+    } else {
+      alertify.alert("No se ha seleccionado el perfil para guardar.");
     }
   });
 });
