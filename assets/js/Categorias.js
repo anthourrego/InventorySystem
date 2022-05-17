@@ -30,9 +30,14 @@ let DTCategorias = $("#table").DataTable({
       defaultContent: '',
       className: 'text-center',
       render: function(meta, type, data, meta) {
+        btnEditar = validPermissions(32) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
+
+        btnCambiarEstado = validPermissions(33) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
+
+
         return `<div class="btn-group btn-group-sm" role="group">
-                  <button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>
-                  <button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>
+                  ${btnEditar}
+                  ${btnCambiarEstado}
                 </div>`;
       }
     },
@@ -43,9 +48,18 @@ let DTCategorias = $("#table").DataTable({
       eliminar(data);
     });
 
-    $(row).find(".btnEditar").click(function(e){
+    $(row).find(".btnEditar, .btnVer").click(function(e){
       e.preventDefault();
-      $("#modalCategoriasLabel").html(`<i class="fa-solid fa-edit"></i> Editar categoria`);
+
+      if ($(this).hasClass("btnVer")) {
+        $("#modalCategoriasLabel").html(`<i class="fa-solid fa-eye"></i> Ver categoria`);
+        $(".inputVer").addClass("disabled").prop("disabled", true);
+        $("button[form='formCategorias']").addClass("d-none");
+      } else {
+        $("#modalCategoriasLabel").html(`<i class="fa-solid fa-edit"></i> Editar categoria`);
+        $(".inputVer").removeClass("disabled").prop("disabled", false);
+        $("button[form='formCategorias']").removeClass("d-none");
+      }
       $("#id").val(data.id);
       $("#nombre").val(data.nombre);
       $("#descripcion").val(data.descripcion);

@@ -13,9 +13,11 @@
           </select>
         </div>
       </div>
-      <div class="col-5 col-md-3 text-right">
-        <button type="button" class="btn btn-primary" id="btnCrear"><i class="fa-solid fa-plus"></i> Crear</button>
-      </div>
+      <?php if (validPermissions([31], true)) { ?>
+        <div class="col-5 col-md-3 text-right">
+          <button type="button" class="btn btn-primary" id="btnCrear"><i class="fa-solid fa-plus"></i> Crear</button>
+        </div>
+      <?php } ?>
     </div>
   </div>
   <div class="card-body">
@@ -47,15 +49,15 @@
       </div>
       <div class="modal-body">
         <form id="formCategorias" class="formValid">
-          <input type="hidden" name="id" id="id">
+          <input type="hidden" class="inputVer" name="id" id="id">
           <div class="form-row">
             <div class="col-12 form-group form-valid">
               <label class="mb-0" for="nombre">Nombre <span class="text-danger">*</span></label>
-              <input placeholder="Nombre" class="form-control soloLetrasEspacio" id="nombre" name="nombre" type="text" minlength="1" maxlength="255" required autocomplete="off">
+              <input placeholder="Nombre" class="form-control soloLetrasEspacio inputVer" id="nombre" name="nombre" type="text" minlength="1" maxlength="255" required autocomplete="off">
             </div>
             <div class="col-12 form-group form-valid">
               <label class="mb-0" for="descripcion">Descripción</label>
-              <textarea class="form-control" id="descripcion" name="descripcion" minlength="1" maxlength="500" placeholder="Descripción" rows="3" autocomplete="off"></textarea>
+              <textarea class="form-control inputVer" id="descripcion" name="descripcion" minlength="1" maxlength="500" placeholder="Descripción" rows="3" autocomplete="off"></textarea>
             </div>
             <div class="col-6 form-group form-group-edit">
               <label class="mb-0" for="fechaMod">Fecha modificación</label>

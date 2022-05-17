@@ -57,12 +57,12 @@ $routes->group('Perfiles', ['filter' => 'authGuard:2'], function ($routes) {
 });
 
 //Categorias
-$routes->group('Categorias', ['filter' => 'authGuard'], function ($routes) {
+$routes->group('Categorias', ['filter' => 'authGuard:3'], function ($routes) {
     $routes->get('/', 'CategoriasController::index');
     $routes->post('DT', 'CategoriasController::listaDT');
-    $routes->post('Crear', 'CategoriasController::crearEditar');
-    $routes->post('Editar', 'CategoriasController::crearEditar');
-    $routes->post('Eliminar', 'CategoriasController::eliminar');
+    $routes->post('Crear', 'CategoriasController::crearEditar', ['filter' => 'authGuard:31']);
+    $routes->post('Editar', 'CategoriasController::crearEditar', ['filter' => 'authGuard:32']);
+    $routes->post('Eliminar', 'CategoriasController::eliminar', ['filter' => 'authGuard:33']);
 });
 
 //Clientes
