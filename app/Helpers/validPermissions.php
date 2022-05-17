@@ -1,6 +1,8 @@
 <?php
+use CodeIgniter\HTTP\CLIRequest;
+
 if (! function_exists('validPermissions')) {
-  function validPermissions($permisos = [], $return = false) {
+  function validPermissions($permisos = [], $return = false, $ajax = false) {
     $cont = 0; 
     foreach ($permisos as $it) {
       if (!in_array($it, session()->get("permisos"))) {
@@ -15,7 +17,12 @@ if (! function_exists('validPermissions')) {
       return !$validaPermiso;
     } else {
       if ($validaPermiso) {
-        return redirect()->route('/');
+        if ($ajax) {
+          echo view("UI/noPermissions");
+          exit;
+        } else {
+          return redirect()->route('/');
+        }
       }
     }
   }
