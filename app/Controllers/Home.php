@@ -4,7 +4,7 @@ namespace App\Controllers;
 use App\Models\UsuariosModel;
 use App\Models\PermisosModel;
 
-class Home extends Libraries {
+class Home extends BaseController {
 
     public function index() {
         

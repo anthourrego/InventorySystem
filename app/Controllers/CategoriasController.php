@@ -4,7 +4,7 @@ namespace App\Controllers;
 use \Hermawan\DataTables\DataTable;
 use App\Models\CategoriasModel;
 
-class CategoriasController extends Libraries {
+class CategoriasController extends BaseController {
     public function index() {
         $this->content['title'] = "Categorias";
         $this->content['view'] = "vCategorias";

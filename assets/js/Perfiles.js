@@ -39,10 +39,15 @@ let DTPefiles = $("#table").DataTable({
       defaultContent: '',
       className: 'text-center',
       render: function(meta, type, data, meta) {
+        btnEditar = validPermissions(22) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>': '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
+
+        btnPermisos = validPermissions(23) ? '<button type="button" class="btn btn-info btnPermisos" title="Permisos"><i class="fa-solid fa-lock"></i></button>' : '';
+
+        btnCambiarEstado = validPermissions(24) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
         return `<div class="btn-group btn-group-sm" role="group">
-                  <button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>
-                  <button type="button" class="btn btn-info btnPermisos" title="Permisos"><i class="fa-solid fa-lock"></i></button>
-                  <button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>
+                  ${btnEditar}
+                  ${btnPermisos}
+                  ${btnCambiarEstado}
                 </div>`;
       }
     },
@@ -53,9 +58,19 @@ let DTPefiles = $("#table").DataTable({
       eliminar(data);
     });
 
-    $(row).find(".btnEditar").click(function(e){
+    $(row).find(".btnEditar, .btnVer").click(function(e){
       e.preventDefault();
-      $("#modalPefilesLabel").html(`<i class="fa-solid fa-edit"></i> Editar perfil`);
+
+      if ($(this).hasClass("btnVer")) {
+        $("#modalPefilesLabel").html(`<i class="fa-solid fa-eye"></i> Ver perfil`);
+        $(".inputVer").addClass("disabled").prop("disabled", true);
+        $("button[form='formPefiles']").addClass("d-none");
+      } else {
+        $("#modalPefilesLabel").html(`<i class="fa-solid fa-edit"></i> Editar perfil`);
+        $(".inputVer").removeClass("disabled").prop("disabled", false);
+        $("button[form='formPefiles']").removeClass("d-none");
+      }
+      
       $("#id").val(data.id);
       $("#nombre").val(data.nombre);
       $("#descripcion").val(data.descripcion);

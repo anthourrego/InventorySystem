@@ -48,12 +48,12 @@ $routes->group('Usuarios', ['filter' => 'authGuard:1'], function ($routes) {
 });
 
 //Pefiles
-$routes->group('Perfiles', ['filter' => 'authGuard'], function ($routes) {
+$routes->group('Perfiles', ['filter' => 'authGuard:2'], function ($routes) {
     $routes->get('/', 'PerfilesController::index');
     $routes->post('DT', 'PerfilesController::listaDT');
-    $routes->post('Eliminar', 'PerfilesController::eliminar');
-    $routes->post('Crear', 'PerfilesController::crearEditar');
-    $routes->post('Editar', 'PerfilesController::crearEditar');
+    $routes->post('Crear', 'PerfilesController::crearEditar', ['filter' => 'authGuard:21']);
+    $routes->post('Editar', 'PerfilesController::crearEditar', ['filter' => 'authGuard:22']);
+    $routes->post('Eliminar', 'PerfilesController::eliminar', ['filter' => 'authGuard:24']);
 });
 
 //Categorias
@@ -114,9 +114,9 @@ $routes->group('Busqueda', ['filter' => 'authGuard'], function ($routes) {
 
 //Permisos
 $routes->group('Permisos', ['filter' => 'authGuard'], function ($routes) {
-    $routes->get('Perfil/(:num)', 'PermisosController::Permisos/$1/perfilId');
+    $routes->get('Perfil/(:num)', 'PermisosController::Permisos/$1/perfilId', ['filter' => 'authGuard:23']);
     $routes->get('Usuarios/(:num)', 'PermisosController::Permisos/$1/usuarioId', ['filter' => 'authGuard:15']);
-    $routes->post('Guardar', 'PermisosController::Guardar', ['filter' => 'authGuard:15']);
+    $routes->post('Guardar', 'PermisosController::Guardar', ['filter' => 'authGuard:15,23']);
     $routes->post('Sincronizar', 'PermisosController::sincronizar');
 });
 

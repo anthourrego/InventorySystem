@@ -6,7 +6,7 @@ use App\Models\PerfilesModel;
 use \Hermawan\DataTables\DataTable;
 use App\Models\PermisosModel;
 
-class UsuariosController extends Libraries {
+class UsuariosController extends BaseController {
 
     public function index() {
         $this->content['title'] = "Usuarios";

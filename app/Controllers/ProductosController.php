@@ -6,7 +6,7 @@ use \Hermawan\DataTables\DataTable;
 use App\Models\CategoriasModel;
 use App\Models\ProductosModel;
 
-class ProductosController extends Libraries {
+class ProductosController extends BaseController {
     public function index() {
         $this->content['title'] = "Productos";
         $this->content['view'] = "vProductos";

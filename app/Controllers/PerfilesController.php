@@ -6,7 +6,7 @@ use \Hermawan\DataTables\DataTable;
 use App\Models\PerfilesModel;
 use App\Models\PermisosModel;
 
-class PerfilesController extends Libraries {
+class PerfilesController extends BaseController {
     public function index() {
         $this->content['title'] = "Perfiles";
         $this->content['view'] = "vPerfiles";
