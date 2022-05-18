@@ -35,9 +35,13 @@ let DTClientes = $("#table").DataTable({
       defaultContent: '',
       className: 'text-center',
       render: function(meta, type, data, meta) {
+        btnEditar = validPermissions(42) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
+
+        btnCambiarEstado = validPermissions(43) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
+
         return `<div class="btn-group btn-group-sm" role="group">
-                  <button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>
-                  <button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>
+                  ${btnEditar}
+                  ${btnCambiarEstado}
                 </div>`;
       }
     },
@@ -48,9 +52,20 @@ let DTClientes = $("#table").DataTable({
       eliminar(data);
     });
 
-    $(row).find(".btnEditar").click(function(e){
+    $(row).find(".btnEditar, .btnVer").click(function(e){
       e.preventDefault();
-      $("#modalClientesLabel").html(`<i class="fa-solid fa-edit"></i> Editar cliente`);
+
+      if ($(this).hasClass("btnVer")) {
+        $("#modalClientesLabel").html(`<i class="fa-solid fa-eye"></i> Ver cliente`);
+        $(".inputVer").addClass("disabled").prop("disabled", true);
+        $("button[form='formClientes']").addClass("d-none");
+
+      } else {
+        $("#modalClientesLabel").html(`<i class="fa-solid fa-edit"></i> Editar cliente`);
+        $(".inputVer").removeClass("disabled").prop("disabled", false);
+        $("button[form='formClientes']").removeClass("d-none");
+      }
+      
       $("#id").val(data.id);
       $("#documento").val(data.documento);
       $("#nombre").val(data.nombre);

@@ -67,13 +67,13 @@ $routes->group('Categorias', ['filter' => 'authGuard:3'], function ($routes) {
 });
 
 //Clientes
-$routes->group('Clientes', ['filter' => 'authGuard'], function ($routes) {
+$routes->group('Clientes', ['filter' => 'authGuard:4'], function ($routes) {
     $routes->get('/', 'Clientes::index');
     $routes->post('DT', 'Clientes::listaDT');
-    $routes->post('Eliminar', 'Clientes::eliminar');
-    $routes->post('Crear', 'Clientes::crearEditar');
-    $routes->post('Editar', 'Clientes::crearEditar');
-    $routes->get('Validar/(:any)/(:num)', 'Clientes::validaCliente/$1/$2');
+    $routes->post('Crear', 'Clientes::crearEditar', ['filter' => ['authGuard:41', 'ajax']]);
+    $routes->post('Editar', 'Clientes::crearEditar', ['filter' => ['authGuard:42', 'ajax']]);
+    $routes->post('Eliminar', 'Clientes::eliminar', ['filter' => ['authGuard:43', 'ajax']]);
+    $routes->get('Validar/(:any)/(:num)', 'Clientes::validaCliente/$1/$2', ['filter' => ['authGuard:41,42', 'ajax']]);
 });
 
 //Productos
@@ -106,7 +106,7 @@ $routes->group('Busqueda', ['filter' => 'authGuard'], function ($routes) {
     $routes->post('Vendedores', 'Usuarios::listaDT');
     $routes->post('Vendedor', 'Usuarios::getUsuario', ['filter' => 'ajax']);
     $routes->post('Clientes', 'Clientes::listaDT');
-    $routes->post('Cliente', 'Clientes::getCliente');
+    $routes->post('Cliente', 'Clientes::getCliente', ['filter' => 'ajax']);
 });
 
 //Permisos

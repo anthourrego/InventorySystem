@@ -53,98 +53,82 @@ class Clientes extends BaseController {
     }
 
     public function validaCliente($nroDocumento, $id){
-        if ($this->request->isAJAX()){ 
-            $user = new ClientesModel();
-    
-            $usuario = $user->asObject()
-                    ->where(['documento' => $nroDocumento, "id != " => $id])
-                    ->countAllResults();
+        $user = new ClientesModel();
 
-            return $this->response->setJSON($usuario);
-        } else {
-            show_404();
-        }
+        $usuario = $user->asObject()
+                ->where(['documento' => $nroDocumento, "id != " => $id])
+                ->countAllResults();
+
+        return $this->response->setJSON($usuario);
     }
 
     public function crearEditar(){
-        if ($this->request->isAJAX()){
-            $resp["success"] = false;
-            //Traemos los datos del post
-            $postData = $this->request->getPost();
-            //Creamos los datos para guardar
-            $datosSave = array(
-                "id" => $postData["id"],
-                "documento" => trim($postData["documento"]),
-                "nombre" => trim($postData["nombre"]),
-                "direccion" => trim($postData["direccion"]),
-                "telefono" => trim($postData["telefono"]),
-                "administrador" => trim($postData["administrador"]),
-                "cartera" => trim($postData["cartera"]),
-                "telefonoCart" => trim($postData["telefonoCart"]),
-            );
+        $resp["success"] = false;
+        //Traemos los datos del post
+        $postData = $this->request->getPost();
+        //Creamos los datos para guardar
+        $datosSave = array(
+            "id" => $postData["id"],
+            "documento" => trim($postData["documento"]),
+            "nombre" => trim($postData["nombre"]),
+            "direccion" => trim($postData["direccion"]),
+            "telefono" => trim($postData["telefono"]),
+            "administrador" => trim($postData["administrador"]),
+            "cartera" => trim($postData["cartera"]),
+            "telefonocart" => trim($postData["telefonoCart"]),
+        );
 
-            $perfil = new ClientesModel();
-            if ($perfil->save($datosSave)) {
-                $resp["success"] = true;
-                $resp["msj"] = "El cliente <b>{$datosSave["nombre"]}</b> se " . (empty($postData['id']) ? 'creo' : 'actualizo') . " correctamente.";
-            } else {
-                $resp["msj"] = "No puede " . (empty($postData['id']) ? 'crear' : 'actualizar') . " el cliente." . listErrors($perfil->errors());
-            }
-
-            return $this->response->setJSON($resp);
+        $clienteModel = new ClientesModel();
+        if ($clienteModel->save($datosSave)) {
+            $resp["success"] = true;
+            $resp["msj"] = "El cliente <b>{$datosSave["nombre"]}</b> se " . (empty($postData['id']) ? 'creo' : 'actualizo') . " correctamente.";
         } else {
-            show_404();
+            $resp["msj"] = "No puede " . (empty($postData['id']) ? 'crear' : 'actualizar') . " el cliente." . listErrors($clienteModel->errors());
         }
+
+        return $this->response->setJSON($resp);
     }
 
     public function eliminar(){
-        if ($this->request->isAJAX()){
-            $resp["success"] = false;
-            //Traemos los datos del post
-            $id = $this->request->getPost("id");
-            $estado = $this->request->getPost("estado");
-    
-            $cliente = new ClientesModel();
-            
-            $data = [
-                "id" => $id,
-                "estado" => $estado
-            ];
-    
-            if($cliente->save($data)) {
-                $resp["success"] = true;
-                $resp['msj'] = "Cliente actualizada correctamente";
-            } else {
-                $resp['msj'] = "Error al cambiar el estado";
-            }
-    
-            return $this->response->setJSON($resp);
+        $resp["success"] = false;
+        //Traemos los datos del post
+        $id = $this->request->getPost("id");
+        $estado = $this->request->getPost("estado");
+
+        $cliente = new ClientesModel();
+        
+        $data = [
+            "id" => $id,
+            "estado" => $estado
+        ];
+
+        if($cliente->save($data)) {
+            $resp["success"] = true;
+            $resp['msj'] = "Cliente actualizada correctamente";
         } else {
-            show_404();
+            $resp['msj'] = "Error al cambiar el estado";
         }
+
+        return $this->response->setJSON($resp);
     }
 
     public function getCliente(){
-        if ($this->request->isAJAX()){
-            $resp["success"] = false;
-            //Traemos los datos del post
-            $data = (object) $this->request->getPost();
-            
-            $clienteModel = new ClientesModel();
+        $resp["success"] = false;
+        //Traemos los datos del post
+        $data = (object) $this->request->getPost();
+        
+        $clienteModel = new ClientesModel();
 
-            $result = $clienteModel->like('documento', $data->buscar)
-                                ->orLike('nombre', $data->buscar)
-                                ->find();
+        $result = $clienteModel->like('documento', $data->buscar)
+                            ->orLike('nombre', $data->buscar)
+                            ->find();
 
-            if(count($result) == 1) {
-                $resp["success"] = true;
-                $resp["data"] = $result[0]; 
-            }
-    
-            return $this->response->setJSON($resp);
-        } else {
-            show_404();
+        if(count($result) == 1) {
+            $resp["success"] = true;
+            $resp["data"] = $result[0]; 
         }
+
+        return $this->response->setJSON($resp);
     }
 
 }

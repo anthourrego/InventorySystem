@@ -80,8 +80,8 @@ let DTUsuarios = $("#table").DataTable({
       e.preventDefault();
       if ($(this).hasClass("btnVer")) {
         $("#modalUsuarioLabel").html(`<i class="fa-solid fa-eye"></i> Ver usuario`);
-        $(".btn-eliminar-foto, button[form='formUsuario']").addClass("d-none");
         $(".inputVer").addClass("disabled").prop("disabled", true).trigger('change');
+        $(".btn-eliminar-foto, button[form='formUsuario']").addClass("d-none");
       } else {
         $("#modalUsuarioLabel").html(`<i class="fa-solid fa-user-pen"></i> Editar usuario`);
         $(".inputVer").removeClass("disabled").prop("disabled", false).trigger('change');
