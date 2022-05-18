@@ -111,10 +111,10 @@ $routes->group('Busqueda', ['filter' => 'authGuard'], function ($routes) {
 
 //Permisos
 $routes->group('Permisos', ['filter' => 'authGuard'], function ($routes) {
-    $routes->get('Perfil/(:num)', 'Permisos::Permisos/$1/perfilId', ['filter' => 'authGuard:23']);
-    $routes->get('Usuarios/(:num)', 'Permisos::Permisos/$1/usuarioId', ['filter' => 'authGuard:15']);
-    $routes->post('Guardar', 'Permisos::Guardar', ['filter' => 'authGuard:15,23']);
-    $routes->post('Sincronizar', 'Permisos::sincronizar');
+    $routes->get('Perfil/(:num)', 'Permisos::Permisos/$1/perfilId', ['filter' => ['authGuard:23', 'ajax']]);
+    $routes->get('Usuarios/(:num)', 'Permisos::Permisos/$1/usuarioId', ['filter' => ['authGuard:15', 'ajax']]);
+    $routes->post('Guardar', 'Permisos::Guardar', ['filter' => ['authGuard:15,23', 'ajax']]);
+    $routes->post('Sincronizar', 'Permisos::sincronizar', ['filter' => ['ajax']]);
 });
 
 
