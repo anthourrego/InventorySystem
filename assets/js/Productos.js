@@ -66,9 +66,12 @@ let DTProductos = $("#table").DataTable({
       defaultContent: '',
       className: 'text-center',
       render: function(meta, type, data, meta) {
+        btnEditar = validPermissions(52) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
+        btnCambiarEstado = validPermissions(53) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
+
         return `<div class="btn-group btn-group-sm" role="group">
-                  <button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>
-                  <button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>
+                  ${btnEditar}
+                  ${btnCambiarEstado}
                 </div>`;
       }
     },
@@ -80,9 +83,19 @@ let DTProductos = $("#table").DataTable({
     });
 
     //Editar
-    $(row).find(".btnEditar").click(function(e){
+    $(row).find(".btnEditar, .btnVer").click(function(e){
       e.preventDefault();
-      $("#modalCrearEditarLabel").html(`<i class="fa-solid fa-edit"></i> Editar producto`);
+
+      if ($(this).hasClass("btnVer")) {
+        $("#modalCrearEditarLabel").html(`<i class="fa-solid fa-eye"></i> Ver producto`);
+        $(".inputVer").addClass("disabled").prop("disabled", true).trigger('change');
+        $(".btn-eliminar-foto, button[form='formCrearEditar']").addClass("d-none");
+      } else {
+        $("#modalCrearEditarLabel").html(`<i class="fa-solid fa-edit"></i> Editar producto`);
+        $(".inputVer").removeClass("disabled").prop("disabled", false).trigger('change');
+        $(".btn-eliminar-foto, button[form='formCrearEditar']").removeClass("d-none");
+      }
+
       $("#id").val(data.id);
       $("#categoria").val(data.id_categoria).trigger('change');
       $("#referencia").val(data.referencia);
@@ -188,6 +201,8 @@ $(function(){
   });
 
   $("#btnCrear").on("click", function(){
+    $(".inputVer").removeClass("disabled").prop("disabled", false).trigger('change');
+    $(".btn-eliminar-foto, button[form='formCrearEditar']").removeClass("d-none");
     $("#id").val("");
     $("#editFoto").val(0);
     $("#foto").val('');

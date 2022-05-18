@@ -62,116 +62,108 @@ class Productos extends BaseController {
     }
 
     public function validarProducto($campo, $nombre, $id){
-        if ($this->request->isAJAX()){ 
-            $prod = new ProductosModel();
-    
-            $producto = $prod->asObject()
-                    ->where([$campo => $nombre, "id != " => $id])
-                    ->countAllResults();
+        $prod = new ProductosModel();
 
-            return $this->response->setJSON($producto);
-        } else {
-            show_404();
-        }
+        $producto = $prod->asObject()
+                ->where([$campo => $nombre, "id != " => $id])
+                ->countAllResults();
+
+        return $this->response->setJSON($producto);
     }
 
     public function crearEditar(){
-        if ($this->request->isAJAX()){ 
-            $resp["success"] = false;
-            $filenameDelete = "";
-            $postData = (object) $this->request->getPost();
+        $resp["success"] = false;
+        $filenameDelete = "";
+        $postData = (object) $this->request->getPost();
 
-            $product = new ProductosModel();
-            //Creamos el producto y llenamos los datos
-            $producto = array(
-                "id" => $postData->id
-                ,"id_categoria" => trim($postData->categoria)
-                ,"referencia" => trim($postData->referencia)
-                ,"item" => trim($postData->item)
-                ,"descripcion" => trim($postData->descripcion)
-                ,"stock" => $postData->stock
-                ,"precio_venta" => str_replace(",", "", trim(str_replace("$", "", $postData->precioVent)))
-                ,"ubicacion" => trim($postData->ubicacion)
-                ,"manifiesto" => trim($postData->manifiesto)
-            );
+        $product = new ProductosModel();
+        //Creamos el producto y llenamos los datos
+        $producto = array(
+            "id" => $postData->id
+            ,"id_categoria" => trim($postData->categoria)
+            ,"referencia" => trim($postData->referencia)
+            ,"item" => trim($postData->item)
+            ,"descripcion" => trim($postData->descripcion)
+            ,"stock" => $postData->stock
+            ,"precio_venta" => str_replace(",", "", trim(str_replace("$", "", $postData->precioVent)))
+            ,"ubicacion" => trim($postData->ubicacion)
+            ,"manifiesto" => trim($postData->manifiesto)
+        );
 
-            //Validamos si eliminar la foto de perfil y buscamos el usuario
-            if($postData->editFoto != 0 && !empty($postData->id)) {
-                $foto = $product->find($postData->id)["imagen"];
-                $producto["imagen"] = null;
-                $filenameDelete = UPLOADS_PRODUCT_PATH . $postData->id . "/" . $foto; //<-- specify the image  file
-            }
+        //Validamos si eliminar la foto de perfil y buscamos el usuario
+        if($postData->editFoto != 0 && !empty($postData->id)) {
+            $foto = $product->find($postData->id)["imagen"];
+            $producto["imagen"] = null;
+            $filenameDelete = UPLOADS_PRODUCT_PATH . $postData->id . "/" . $foto; //<-- specify the image  file
+        }
 
-            $this->db->transBegin();
-            
-            //Validamos si el usuario que ingresaron ya existe
-            if ($product->save($producto)) {
-                //Traemos el id insertado
-                $product->id = empty($postData->id) ? $product->getInsertID() : $postData->id; 
-                $imgFoto = $this->request->getFile("imagen"); 
-                if (!empty($imgFoto->getBasename())) {
-                    //Validamos la foto
-                    $validated = $this->validate([
-                        'rules' => [
-                            'uploaded[imagen]',
-                            'mime_in[imagen,image/jpg,image/jpeg,image/gif,image/png]',
-                            'max_size[imagen,2048]',
-                        ],
-                    ]);
-                    
-                    //Se valida los datos de la imagen
-                    if ($validated) {
-                        if ($imgFoto->isValid() && !$imgFoto->hasMoved()) {
-                            //Validamos que la imagen suba correctamente
-                            $nameImg = "01.{$imgFoto->getClientExtension()}";
-                            if ($imgFoto->move(UPLOADS_PRODUCT_PATH . "/" . $product->id, $nameImg, true)) {
-                                $updateFoto = array(
-                                    "id" => $product->id,
-                                    "imagen" => $nameImg
-                                );
+        $this->db->transBegin();
+        
+        //Validamos si el usuario que ingresaron ya existe
+        if ($product->save($producto)) {
+            //Traemos el id insertado
+            $product->id = empty($postData->id) ? $product->getInsertID() : $postData->id; 
+            $imgFoto = $this->request->getFile("imagen"); 
+            if (!empty($imgFoto->getBasename())) {
+                //Validamos la foto
+                $validated = $this->validate([
+                    'rules' => [
+                        'uploaded[imagen]',
+                        'mime_in[imagen,image/jpg,image/jpeg,image/gif,image/png]',
+                        'max_size[imagen,2048]',
+                    ],
+                ]);
+                
+                //Se valida los datos de la imagen
+                if ($validated) {
+                    if ($imgFoto->isValid() && !$imgFoto->hasMoved()) {
+                        //Validamos que la imagen suba correctamente
+                        $nameImg = "01.{$imgFoto->getClientExtension()}";
+                        if ($imgFoto->move(UPLOADS_PRODUCT_PATH . "/" . $product->id, $nameImg, true)) {
+                            $updateFoto = array(
+                                "id" => $product->id,
+                                "imagen" => $nameImg
+                            );
 
-                                if ($product->save($updateFoto)) { 
-                                    $resp["success"] = true;
-                                    $resp["msj"] = "El producto <b>{$product->referencia}</b> se creo correctamente.";
-                                } else {
-                                    $resp["msj"] = "Ha ocurrido un error al actualizar los datos de la foto.";
-                                }
+                            if ($product->save($updateFoto)) { 
+                                $resp["success"] = true;
+                                $resp["msj"] = "El producto <b>{$product->referencia}</b> se creo correctamente.";
                             } else {
-                                $resp["msj"] = "Ha ocurrido un error al subir la foto.";
+                                $resp["msj"] = "Ha ocurrido un error al actualizar los datos de la foto.";
                             }
                         } else {
-                            $resp["msj"] = "Error al subir la foto, {$imgFoto->getErrorString()}";
+                            $resp["msj"] = "Ha ocurrido un error al subir la foto.";
                         }
                     } else {
-                        $resp["msj"] = "Error al subir la foto, " . trim(str_replace("rules", "", $this->validator->getErrors()["rules"])); 
+                        $resp["msj"] = "Error al subir la foto, {$imgFoto->getErrorString()}";
                     }
                 } else {
-                    $resp["success"] = true;
-                    $resp["msj"] = "El producto <b>{$product->referencia}</b> se creo correctamente.";
+                    $resp["msj"] = "Error al subir la foto, " . trim(str_replace("rules", "", $this->validator->getErrors()["rules"])); 
                 }
             } else {
-                $resp["msj"] = "No puede " . (empty($postData->id) ? 'crear' : 'actualizar') . " el producto." . listErrors($product->errors());
+                $resp["success"] = true;
+                $resp["msj"] = "El producto <b>{$product->referencia}</b> se creo correctamente.";
             }
-
-            
-            //Validamos para elminar la foto
-            if ($filenameDelete != '' && file_exists($filenameDelete)) {
-                if(!@unlink($filenameDelete)) {
-                    $resp["success"] = false;
-                    $resp["msj"] = "Error al eliminar la foto de perfil, intente de nuevo";
-                } 
-            }
-
-            if($resp["success"] == true){
-                $this->db->transCommit();
-            } else {
-                $this->db->transRollback();
-            }
-
-            return $this->response->setJSON($resp);
         } else {
-            show_404();
+            $resp["msj"] = "No puede " . (empty($postData->id) ? 'crear' : 'actualizar') . " el producto." . listErrors($product->errors());
         }
+
+        
+        //Validamos para elminar la foto
+        if ($filenameDelete != '' && file_exists($filenameDelete)) {
+            if(!@unlink($filenameDelete)) {
+                $resp["success"] = false;
+                $resp["msj"] = "Error al eliminar la foto de perfil, intente de nuevo";
+            } 
+        }
+
+        if($resp["success"] == true){
+            $this->db->transCommit();
+        } else {
+            $this->db->transRollback();
+        }
+
+        return $this->response->setJSON($resp);
     }
 
     public function foto($id = null, $img = null){
@@ -189,23 +181,19 @@ class Productos extends BaseController {
     }
 
     public function eliminar(){
-        if ($this->request->isAJAX()){
-            $resp["success"] = false;
-            //Traemos los datos del post
-            $data = (object) $this->request->getPost();
-    
-            $perfil = new ProductosModel();
-            
-            if($perfil->save($data)) {
-                $resp["success"] = true;
-                $resp['msj'] = "Producto actualizado correctamente";
-            } else {
-                $resp['msj'] = "Error al cambiar el estado";
-            }
-    
-            return $this->response->setJSON($resp);
+        $resp["success"] = false;
+        //Traemos los datos del post
+        $data = (object) $this->request->getPost();
+
+        $perfil = new ProductosModel();
+        
+        if($perfil->save($data)) {
+            $resp["success"] = true;
+            $resp['msj'] = "Producto actualizado correctamente";
         } else {
-            show_404();
+            $resp['msj'] = "Error al cambiar el estado";
         }
+
+        return $this->response->setJSON($resp);
     }
 }

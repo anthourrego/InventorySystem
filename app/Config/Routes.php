@@ -77,27 +77,27 @@ $routes->group('Clientes', ['filter' => 'authGuard:4'], function ($routes) {
 });
 
 //Productos
-$routes->group('Productos', ['filter' => 'authGuard'], function ($routes) {
+$routes->group('Productos', ['filter' => 'authGuard:5'], function ($routes) {
     $routes->get('/', 'Productos::index');
     $routes->post('DT', 'Productos::listaDT');
-    $routes->get('ValidaProducto/(:any)/(:any)/(:num)', 'Productos::validarProducto/$1/$2/$3');
-    $routes->post('Crear', 'Productos::crearEditar');
-    $routes->post('Editar', 'Productos::crearEditar');
     $routes->get('Foto', 'Productos::foto');
     $routes->get('Foto/(:num)/(:any)', 'Productos::foto/$1/$2');
-    $routes->post('Eliminar', 'Productos::eliminar');
+    $routes->post('Crear', 'Productos::crearEditar', ['filter' => ['authGuard:51', 'ajax']]);
+    $routes->post('Editar', 'Productos::crearEditar', ['filter' => ['authGuard:52', 'ajax']]);
+    $routes->get('ValidaProducto/(:any)/(:any)/(:num)', 'Productos::validarProducto/$1/$2/$3', ['filter' => ['authGuard:51,52', 'ajax']]);
+    $routes->post('Eliminar', 'Productos::eliminar', ['filter' => ['authGuard:53', 'ajax']]);
 });
 
 //Ventas
-$routes->group('Ventas', ['filter' => 'authGuard'], function ($routes) {
+$routes->group('Ventas', ['filter' => 'authGuard:6'], function ($routes) {
     $routes->get('Administrar', 'Ventas::index');
+    $routes->post('DT', 'Ventas::listaDT');
+    $routes->post('DTProductos', 'Productos::listaDT');
     $routes->get('Crear', 'Ventas::crear');
     $routes->get('Editar/(:num)', 'Ventas::editar/$1');
-    $routes->post('DT', 'Ventas::listaDT');
-    $routes->post('Eliminar', 'Ventas::eliminar');
-    $routes->post('DTProductos', 'Productos::listaDT');
-    $routes->post('Crear', 'Ventas::crearEditar');
-    $routes->post('Editar', 'Ventas::crearEditar');
+    $routes->post('Eliminar', 'Ventas::eliminar', ['filter' => 'ajax']);
+    $routes->post('Crear', 'Ventas::crearEditar', ['filter' => 'ajax']);
+    $routes->post('Editar', 'Ventas::crearEditar', ['filter' => 'ajax']);
 });
 
 //Ventas

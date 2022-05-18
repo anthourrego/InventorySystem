@@ -107,6 +107,8 @@ $(function(){
   });
 
   $("#btnCrear").on("click", function(){
+    $(".inputVer").removeClass("disabled").prop("disabled", false);
+    $("button[form='formPefiles']").removeClass("d-none");
     $("#id").val("");
     $(".form-group-edit").addClass("d-none");
     $("#modalPefilesLabel").html(`<i class="fa-solid fa-plus"></i> Crear perfil`)

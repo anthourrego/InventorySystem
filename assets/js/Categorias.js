@@ -78,6 +78,8 @@ $(function(){
   });
 
   $("#btnCrear").on("click", function(){
+    $(".inputVer").removeClass("disabled").prop("disabled", false);
+    $("button[form='formCategorias']").removeClass("d-none");
     $("#id").val("");
     $(".form-group-edit").addClass("d-none");
     $("#modalCategoriasLabel").html(`<i class="fa-solid fa-plus"></i> Crear categorias`)

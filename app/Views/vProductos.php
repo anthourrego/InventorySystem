@@ -13,9 +13,11 @@
           </select>
         </div>
       </div>
-      <div class="col-5 col-md-3 text-right">
-        <button type="button" class="btn btn-primary" id="btnCrear"><i class="fa-solid fa-plus"></i> Crear</button>
-      </div>
+      <?php if (validPermissions([51], true)) { ?>
+        <div class="col-5 col-md-3 text-right">
+          <button type="button" class="btn btn-primary" id="btnCrear"><i class="fa-solid fa-plus"></i> Crear</button>
+        </div>
+      <?php } ?>
     </div>
   </div>
   <div class="card-body">
@@ -53,7 +55,7 @@
       </div>
       <div class="modal-body">
         <form id="formCrearEditar" class="formValid" enctype="multipart/form-data">
-          <input type="hidden" name="id" id="id">
+          <input type="hidden" name="id" class="inputVer" id="id">
           <input type="hidden" name="editFoto" id="editFoto" value="0">
           <div class="form-row">
             <div class="col-6">
@@ -63,7 +65,7 @@
                     <i class="fas fa-cloud-upload-alt"></i>
                     <span> Selecciona o arrastre su imagen</span>
                   </div>
-                  <input id="foto" name="imagen" class="input-file-img" accept=".png, .jpg, .jpeg" type="file">
+                  <input id="foto" name="imagen" class="input-file-img inputVer" accept=".png, .jpg, .jpeg" type="file">
                 </div>
               </div>
               <div id="content-preview" class="d-none text-center">
@@ -74,7 +76,7 @@
             <div class="col-6">
               <div class="form-group form-valid">
                 <label class="mb-0" for="categoria">Categoria <span class="text-danger">*</span></label>
-                <select id="categoria" required name="categoria" class="custom-select select2" data-placeholder="Seleccione..." data-allow-clear="1">
+                <select id="categoria" required name="categoria" class="custom-select select2 inputVer" data-placeholder="Seleccione..." data-allow-clear="1">
                   <option></option>
                   <?php foreach ($categorias as $it) : ?>
                     <option value="<?=  $it->id?>"><?= $it->nombre ?></option>
@@ -83,32 +85,32 @@
               </div>
               <div class="form-group form-valid">
                 <label class="mb-0" for="referencia">Referencia <span class="text-danger">*</span></label>
-                <input placeholder="Ingrese la referencia" data-campo="referencia" class="form-control soloLetras validaCampo" id="referencia" name="referencia" type="text" minlength="1" maxlength="255" required autocomplete="off">
+                <input placeholder="Ingrese la referencia" data-campo="referencia" class="form-control soloLetras validaCampo inputVer" id="referencia" name="referencia" type="text" minlength="1" maxlength="255" required autocomplete="off">
               </div>
               <div class="form-group form-valid">
                 <label class="mb-0" for="item">Item <span class="text-danger">*</span></label>
-                <input placeholder="Ingrese el ítem" type="text" data-campo="item" id="item" name="item" class="form-control soloLetras" minlength="1" maxlength="300" required autocomplete="off">
+                <input placeholder="Ingrese el ítem" type="text" data-campo="item" id="item" name="item" class="form-control soloLetras inputVer" minlength="1" maxlength="300" required autocomplete="off">
               </div>
             </div>
             <div class="col-6 form-group form-valid">
               <label class="mb-0" for="stock">Stock <span class="text-danger">*</span></label>
-              <input class="form-control inputFocusSelect" id="stock" name="stock" type="number" value="0" placeholder="Ingrese el stock" autocomplete="off" required autocomplete="off">
+              <input class="form-control inputFocusSelect inputVer" id="stock" name="stock" type="number" value="0" placeholder="Ingrese el stock" autocomplete="off" required autocomplete="off">
             </div>
             <div class="col-6 form-group form-valid">
               <label class="mb-0" for="precioVent">Precio venta <span class="text-danger">*</span></label>
-              <input class="form-control inputPesos" id="precioVent" name="precioVent" type="tel" value="0" placeholder="Ingrese el precio de venta" autocomplete="off" required autocomplete="off">
+              <input class="form-control inputPesos inputVer" id="precioVent" name="precioVent" type="tel" value="0" placeholder="Ingrese el precio de venta" autocomplete="off" required autocomplete="off">
             </div>
             <div class="col-6 form-group form-valid">
               <label class="mb-0" for="ubicacion">Ubicación</label>
-              <input class="form-control" id="ubicacion" name="ubicacion" type="text" minlength="0" maxlength="255" placeholder="Ingrese la ubicación" autocomplete="off">
+              <input class="form-control inputVer" id="ubicacion" name="ubicacion" type="text" minlength="0" maxlength="255" placeholder="Ingrese la ubicación" autocomplete="off">
             </div>
             <div class="col-6 form-group form-valid">
               <label class="mb-0" for="manifiesto">Manifiesto</label>
-              <input class="form-control" id="manifiesto" name="manifiesto" type="text" minlength="0" maxlength="255" placeholder="Ingrese el manifiesto" autocomplete="off">
+              <input class="form-control inputVer" id="manifiesto" name="manifiesto" type="text" minlength="0" maxlength="255" placeholder="Ingrese el manifiesto" autocomplete="off">
             </div>
             <div class="col-12 form-group form-valid">
               <label class="mb-0" for="descripcion">Descripción <span class="text-danger">*</span></label>
-              <textarea class="form-control" id="descripcion" name="descripcion" minlength="1" required maxlength="500" placeholder="Ingrese la descripción" rows="3" autocomplete="off"></textarea>
+              <textarea class="form-control inputVer" id="descripcion" name="descripcion" minlength="1" required maxlength="500" placeholder="Ingrese la descripción" rows="3" autocomplete="off"></textarea>
             </div>
             <div class="col-6 form-group form-group-edit">
               <label class="mb-0" for="ventas">Ventas</label>

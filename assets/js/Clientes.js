@@ -91,6 +91,8 @@ $(function(){
   });
 
   $("#btnCrear").on("click", function(){
+    $(".inputVer").removeClass("disabled").prop("disabled", false);
+    $("button[form='formClientes']").removeClass("d-none");
     $("#id").val("");
     $(".form-group-edit").addClass("d-none");
     $("#modalClientesLabel").html(`<i class="fa-solid fa-plus"></i> Crear cliente`)
