@@ -7,7 +7,7 @@ use \Hermawan\DataTables\DataTable;
 use App\Models\VentasModel;
 use App\Models\ProductosModel;
 
-class VentasController extends BaseController {
+class Ventas extends BaseController {
     public function index() {
         $this->content['title'] = "Administador Ventas";
         $this->content['view'] = "Ventas/vAdministador";

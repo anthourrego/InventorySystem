@@ -68,53 +68,53 @@ $routes->group('Categorias', ['filter' => 'authGuard:3'], function ($routes) {
 
 //Clientes
 $routes->group('Clientes', ['filter' => 'authGuard'], function ($routes) {
-    $routes->get('/', 'ClientesController::index');
-    $routes->post('DT', 'ClientesController::listaDT');
-    $routes->post('Eliminar', 'ClientesController::eliminar');
-    $routes->post('Crear', 'ClientesController::crearEditar');
-    $routes->post('Editar', 'ClientesController::crearEditar');
-    $routes->get('Validar/(:any)/(:num)', 'ClientesController::validaCliente/$1/$2');
+    $routes->get('/', 'Clientes::index');
+    $routes->post('DT', 'Clientes::listaDT');
+    $routes->post('Eliminar', 'Clientes::eliminar');
+    $routes->post('Crear', 'Clientes::crearEditar');
+    $routes->post('Editar', 'Clientes::crearEditar');
+    $routes->get('Validar/(:any)/(:num)', 'Clientes::validaCliente/$1/$2');
 });
 
 //Productos
 $routes->group('Productos', ['filter' => 'authGuard'], function ($routes) {
-    $routes->get('/', 'ProductosController::index');
-    $routes->post('DT', 'ProductosController::listaDT');
-    $routes->get('ValidaProducto/(:any)/(:any)/(:num)', 'ProductosController::validarProducto/$1/$2/$3');
-    $routes->post('Crear', 'ProductosController::crearEditar');
-    $routes->post('Editar', 'ProductosController::crearEditar');
-    $routes->get('Foto', 'ProductosController::foto');
-    $routes->get('Foto/(:num)/(:any)', 'ProductosController::foto/$1/$2');
-    $routes->post('Eliminar', 'ProductosController::eliminar');
+    $routes->get('/', 'Productos::index');
+    $routes->post('DT', 'Productos::listaDT');
+    $routes->get('ValidaProducto/(:any)/(:any)/(:num)', 'Productos::validarProducto/$1/$2/$3');
+    $routes->post('Crear', 'Productos::crearEditar');
+    $routes->post('Editar', 'Productos::crearEditar');
+    $routes->get('Foto', 'Productos::foto');
+    $routes->get('Foto/(:num)/(:any)', 'Productos::foto/$1/$2');
+    $routes->post('Eliminar', 'Productos::eliminar');
 });
 
 //Ventas
 $routes->group('Ventas', ['filter' => 'authGuard'], function ($routes) {
-    $routes->get('Administrar', 'VentasController::index');
-    $routes->get('Crear', 'VentasController::crear');
-    $routes->get('Editar/(:num)', 'VentasController::editar/$1');
-    $routes->post('DT', 'VentasController::listaDT');
-    $routes->post('Eliminar', 'VentasController::eliminar');
-    $routes->post('DTProductos', 'ProductosController::listaDT');
-    $routes->post('Crear', 'VentasController::crearEditar');
-    $routes->post('Editar', 'VentasController::crearEditar');
+    $routes->get('Administrar', 'Ventas::index');
+    $routes->get('Crear', 'Ventas::crear');
+    $routes->get('Editar/(:num)', 'Ventas::editar/$1');
+    $routes->post('DT', 'Ventas::listaDT');
+    $routes->post('Eliminar', 'Ventas::eliminar');
+    $routes->post('DTProductos', 'Productos::listaDT');
+    $routes->post('Crear', 'Ventas::crearEditar');
+    $routes->post('Editar', 'Ventas::crearEditar');
 });
 
 //Ventas
 $routes->group('Busqueda', ['filter' => 'authGuard'], function ($routes) {
-    $routes->get('DT', 'BusquedaController::dataTables');
-    $routes->post('Vendedores', 'UsuariosController::listaDT');
-    $routes->post('Vendedor', 'UsuariosController::getUsuario', ['filter' => 'ajax']);
-    $routes->post('Clientes', 'ClientesController::listaDT');
-    $routes->post('Cliente', 'ClientesController::getCliente');
+    $routes->get('DT', 'Busqueda::dataTables');
+    $routes->post('Vendedores', 'Usuarios::listaDT');
+    $routes->post('Vendedor', 'Usuarios::getUsuario', ['filter' => 'ajax']);
+    $routes->post('Clientes', 'Clientes::listaDT');
+    $routes->post('Cliente', 'Clientes::getCliente');
 });
 
 //Permisos
 $routes->group('Permisos', ['filter' => 'authGuard'], function ($routes) {
-    $routes->get('Perfil/(:num)', 'PermisosController::Permisos/$1/perfilId', ['filter' => 'authGuard:23']);
-    $routes->get('Usuarios/(:num)', 'PermisosController::Permisos/$1/usuarioId', ['filter' => 'authGuard:15']);
-    $routes->post('Guardar', 'PermisosController::Guardar', ['filter' => 'authGuard:15,23']);
-    $routes->post('Sincronizar', 'PermisosController::sincronizar');
+    $routes->get('Perfil/(:num)', 'Permisos::Permisos/$1/perfilId', ['filter' => 'authGuard:23']);
+    $routes->get('Usuarios/(:num)', 'Permisos::Permisos/$1/usuarioId', ['filter' => 'authGuard:15']);
+    $routes->post('Guardar', 'Permisos::Guardar', ['filter' => 'authGuard:15,23']);
+    $routes->post('Sincronizar', 'Permisos::sincronizar');
 });
 
 

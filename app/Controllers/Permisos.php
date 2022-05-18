@@ -6,7 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\PermisosModel;
 use App\Models\UsuariosModel;
 
-class PermisosController extends BaseController {
+class Permisos extends BaseController {
 	public function Permisos($id, $campo) {
 		if ($this->request->isAJAX()){ 
 			$permisoModel = new PermisosModel();
