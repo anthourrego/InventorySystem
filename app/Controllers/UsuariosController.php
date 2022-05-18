@@ -6,7 +6,7 @@ use App\Models\PerfilesModel;
 use \Hermawan\DataTables\DataTable;
 use App\Models\PermisosModel;
 
-class UsuariosController extends BaseController {
+class Usuarios extends BaseController {
 
     public function index() {
         $this->content['title'] = "Usuarios";
@@ -79,197 +79,177 @@ class UsuariosController extends BaseController {
     }
 
     public function eliminar(){
-        if ($this->request->isAJAX()){
-            $resp["success"] = false;
-            //Traemos los datos del post
-            $id = $this->request->getPost("idUsuario");
-            $estado = $this->request->getPost("estado");
-    
-            $usuario = new UsuariosModel();
-            
-            $data = [
-                "id" => $id,
-                "estado" => $estado
-            ];
-    
-            if($usuario->save($data)) {
-                $resp["success"] = true;
-                $resp['msj'] = "Usuario se ha actualizado correctamente";
-            } else {
-                $resp['msj'] = "Error al cambiar el estado";
-            }
-            
-            return $this->response->setJSON($resp);
+        $resp["success"] = false;
+        //Traemos los datos del post
+        $id = $this->request->getPost("idUsuario");
+        $estado = $this->request->getPost("estado");
+
+        $usuario = new UsuariosModel();
+        
+        $data = [
+            "id" => $id,
+            "estado" => $estado
+        ];
+
+        if($usuario->save($data)) {
+            $resp["success"] = true;
+            $resp['msj'] = "Usuario se ha actualizado correctamente";
         } else {
-            show_404();
+            $resp['msj'] = "Error al cambiar el estado";
         }
+        
+        return $this->response->setJSON($resp);
     }
 
     public function validaUsuario($usuario, $id){
-        if ($this->request->isAJAX()){ 
-            $user = new UsuariosModel();
-    
-            $usuario = $user->asObject()
-                    ->where(['usuario' => $usuario, "id != " => $id])
-                    ->countAllResults();
+        $user = new UsuariosModel();
 
-            return $this->response->setJSON($usuario);
-        } else {
-            show_404();
-        }
+        $usuario = $user->asObject()
+                ->where(['usuario' => $usuario, "id != " => $id])
+                ->countAllResults();
+
+        return $this->response->setJSON($usuario);
     }
 
     public function crearEditar(){
-        if ($this->request->isAJAX()){ 
-            $resp["success"] = false;
-            $filenameDelete = "";
-            $user = new UsuariosModel();
-            //Creamos el usuario y llenamos los datos
-            $usuario = array(
-                "id" => $this->request->getPost("id")
-                ,"usuario" => trim($this->request->getPost("usuario"))
-                ,"nombre" => trim($this->request->getPost("nombre"))
-                ,"perfil" => trim($this->request->getPost("perfil")) == 0 ? null : trim($this->request->getPost("perfil"))
-            );
+        $resp["success"] = false;
+        $filenameDelete = "";
+        $user = new UsuariosModel();
+        //Creamos el usuario y llenamos los datos
+        $usuario = array(
+            "id" => $this->request->getPost("id")
+            ,"usuario" => trim($this->request->getPost("usuario"))
+            ,"nombre" => trim($this->request->getPost("nombre"))
+            ,"perfil" => trim($this->request->getPost("perfil")) == 0 ? null : trim($this->request->getPost("perfil"))
+        );
 
-            if (empty($this->request->getPost("id"))) {
-                $usuario["password"] = password_hash(trim($this->request->getPost("pass")), PASSWORD_DEFAULT, array("cost" => 15));
-            }
+        if (empty($this->request->getPost("id"))) {
+            $usuario["password"] = password_hash(trim($this->request->getPost("pass")), PASSWORD_DEFAULT, array("cost" => 15));
+        }
 
-            //Validamos si eliminar la foto de perfil y buscamos el usuario
-            if($this->request->getPost("editFoto") != 0 && !empty($this->request->getPost("id"))) {
-                $foto = $user->find($this->request->getPost("id"))["foto"];
-                $usuario["foto"] = null;
-                $filenameDelete = UPLOADS_USER_PATH . $foto; //<-- specify the image  file
-            }
+        //Validamos si eliminar la foto de perfil y buscamos el usuario
+        if($this->request->getPost("editFoto") != 0 && !empty($this->request->getPost("id"))) {
+            $foto = $user->find($this->request->getPost("id"))["foto"];
+            $usuario["foto"] = null;
+            $filenameDelete = UPLOADS_USER_PATH . $foto; //<-- specify the image  file
+        }
 
-            $this->db->transBegin();
-            
-            //Validamos si el usuario que ingresaron ya existe
-            if ($user->save($usuario)) {
-                //Traemos el id insertado
-                $user->id = empty($this->request->getPost("id")) ? $user->getInsertID() : $this->request->getPost("id"); 
-                $imgFoto = $this->request->getFile("foto"); 
-                if (!empty($imgFoto->getBasename())) {
-                    //Validamos la foto
-                    $validated = $this->validate([
-                        'rules' => [
-                            'uploaded[foto]',
-                            'mime_in[foto,image/jpg,image/jpeg,image/gif,image/png]',
-                            'max_size[foto,2048]',
-                        ],
-                    ]);
-                    
-                    //Se valida los datos de la imagen
-                    if ($validated) {
-                        if ($imgFoto->isValid() && !$imgFoto->hasMoved()) {
-                            //Validamos que la imagen suba correctamente
-                            $nameImg = "{$user->id}.{$imgFoto->getClientExtension()}";
-                            if ($imgFoto->move(UPLOADS_USER_PATH, $nameImg, true)) {
-                                $updateFoto = array(
-                                    "id" => $user->id,
-                                    "foto" => $nameImg
-                                );
+        $this->db->transBegin();
+        
+        //Validamos si el usuario que ingresaron ya existe
+        if ($user->save($usuario)) {
+            //Traemos el id insertado
+            $user->id = empty($this->request->getPost("id")) ? $user->getInsertID() : $this->request->getPost("id"); 
+            $imgFoto = $this->request->getFile("foto"); 
+            if (!empty($imgFoto->getBasename())) {
+                //Validamos la foto
+                $validated = $this->validate([
+                    'rules' => [
+                        'uploaded[foto]',
+                        'mime_in[foto,image/jpg,image/jpeg,image/gif,image/png]',
+                        'max_size[foto,2048]',
+                    ],
+                ]);
+                
+                //Se valida los datos de la imagen
+                if ($validated) {
+                    if ($imgFoto->isValid() && !$imgFoto->hasMoved()) {
+                        //Validamos que la imagen suba correctamente
+                        $nameImg = "{$user->id}.{$imgFoto->getClientExtension()}";
+                        if ($imgFoto->move(UPLOADS_USER_PATH, $nameImg, true)) {
+                            $updateFoto = array(
+                                "id" => $user->id,
+                                "foto" => $nameImg
+                            );
 
-                                if ($user->save($updateFoto)) { 
-                                    $resp["success"] = true;
-                                    $resp["msj"] = "El usuario <b>{$user->usuario}</b> se creo correctamente.";
-                                } else {
-                                    $resp["msj"] = "Ha ocurrido un error al actualizar los datos de la foto.";
-                                }
+                            if ($user->save($updateFoto)) { 
+                                $resp["success"] = true;
+                                $resp["msj"] = "El usuario <b>{$user->usuario}</b> se creo correctamente.";
                             } else {
-                                $resp["msj"] = "Ha ocurrido un error al subir la foto.";
+                                $resp["msj"] = "Ha ocurrido un error al actualizar los datos de la foto.";
                             }
                         } else {
-                            $resp["msj"] = "Error al subir la foto, {$imgFoto->getErrorString()}";
+                            $resp["msj"] = "Ha ocurrido un error al subir la foto.";
                         }
                     } else {
-                        $resp["msj"] = "Error al subir la foto, " . trim(str_replace("rules", "", $this->validator->getErrors()["rules"])); 
+                        $resp["msj"] = "Error al subir la foto, {$imgFoto->getErrorString()}";
                     }
                 } else {
-                    $resp["success"] = true;
-                    $resp["msj"] = "El usuario <b>{$user->usuario}</b> se creo correctamente.";
+                    $resp["msj"] = "Error al subir la foto, " . trim(str_replace("rules", "", $this->validator->getErrors()["rules"])); 
                 }
             } else {
-                $resp["msj"] = "No puede " . (empty($this->request->getPost("id")) ? 'crear' : 'actualizar') . " el usuario." . listErrors($user->errors());
+                $resp["success"] = true;
+                $resp["msj"] = "El usuario <b>{$user->usuario}</b> se creo correctamente.";
             }
-
-            
-            //Validamos para elminar la foto
-            if ($filenameDelete != '' && file_exists($filenameDelete)) {
-                if(!@unlink($filenameDelete)) {
-                    $resp["success"] = false;
-                    $resp["msj"] = "Error al eliminar la foto de perfil, intente de nuevo";
-                } 
-            }
-
-            if($resp["success"] == true){
-                $this->db->transCommit();
-            } else {
-                $this->db->transRollback();
-            }
-
-            return $this->response->setJSON($resp);
         } else {
-            show_404();
+            $resp["msj"] = "No puede " . (empty($this->request->getPost("id")) ? 'crear' : 'actualizar') . " el usuario." . listErrors($user->errors());
         }
+
+        
+        //Validamos para elminar la foto
+        if ($filenameDelete != '' && file_exists($filenameDelete)) {
+            if(!@unlink($filenameDelete)) {
+                $resp["success"] = false;
+                $resp["msj"] = "Error al eliminar la foto de perfil, intente de nuevo";
+            } 
+        }
+
+        if($resp["success"] == true){
+            $this->db->transCommit();
+        } else {
+            $this->db->transRollback();
+        }
+
+        return $this->response->setJSON($resp);
     }
 
     public function cambiarPass(){
-        if ($this->request->isAJAX()){
-            $resp['success'] = false;
-            $resp['msj'] = "Funca";
+        $resp['success'] = false;
+        $resp['msj'] = "Funca";
 
-            $dataPost = $this->request->getPost();
+        $dataPost = $this->request->getPost();
 
-            $user = new UsuariosModel();
-            
-            if (!empty(trim($dataPost["id"]))) {
-                if (trim($dataPost["pass"]) == trim($dataPost["RePass"])) {
-                    $dataSave = array(
-                        "id" => trim($dataPost["id"]),
-                        "password" => password_hash(trim($dataPost["pass"]), PASSWORD_DEFAULT, array("cost" => 15))
-                    );
+        $user = new UsuariosModel();
+        
+        if (!empty(trim($dataPost["id"]))) {
+            if (trim($dataPost["pass"]) == trim($dataPost["RePass"])) {
+                $dataSave = array(
+                    "id" => trim($dataPost["id"]),
+                    "password" => password_hash(trim($dataPost["pass"]), PASSWORD_DEFAULT, array("cost" => 15))
+                );
 
-                    if ($user->save($dataSave)) {
-                        $resp["success"] = true;
-                        $resp['msj'] = "Contraseña actualizada correctamente";
-                    } else {
-                        $resp['msj'] = "Error al actualizar la contraseña del usuario";
-                    }
+                if ($user->save($dataSave)) {
+                    $resp["success"] = true;
+                    $resp['msj'] = "Contraseña actualizada correctamente";
                 } else {
-                    $resp["msj"] = "La contraseñas no coinciden, intentelo de nuevo";
+                    $resp['msj'] = "Error al actualizar la contraseña del usuario";
                 }
             } else {
-                $resp["msj"] = "No se ha definido usuario para actualizar";
+                $resp["msj"] = "La contraseñas no coinciden, intentelo de nuevo";
             }
-            
-            return $this->response->setJSON($resp);
         } else {
-            show_404();
-        }    
+            $resp["msj"] = "No se ha definido usuario para actualizar";
+        }
+        
+        return $this->response->setJSON($resp);
     }
 
     public function getUsuario(){
-        if ($this->request->isAJAX()){
-            $resp["success"] = false;
-            //Traemos los datos del post
-            $data = (object) $this->request->getPost();
-            
-            $userModel = new UsuariosModel();
+        $resp["success"] = false;
+        //Traemos los datos del post
+        $data = (object) $this->request->getPost();
+        
+        $userModel = new UsuariosModel();
 
-            $result = $userModel->like('usuario', $data->buscar)
-                                ->orLike('nombre', $data->buscar)
-                                ->find();
-            
-            if(count($result) == 1) {
-                $resp["success"] = true;
-                $resp["data"] = $result[0]; 
-            }
-    
-            return $this->response->setJSON($resp);
-        } else {
-            show_404();
+        $result = $userModel->like('usuario', $data->buscar)
+                            ->orLike('nombre', $data->buscar)
+                            ->find();
+        
+        if(count($result) == 1) {
+            $resp["success"] = true;
+            $resp["data"] = $result[0]; 
         }
+
+        return $this->response->setJSON($resp);
     }
 }

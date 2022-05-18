@@ -32,37 +32,38 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
-$routes->post('/iniciarSesion', 'Home::iniciarSesion');
+$routes->post('/iniciarSesion', 'Home::iniciarSesion', ['filter' => 'ajax']);
+$routes->post('/cerrarSesion', 'Home::cerrarSesion', ['filter' => ['authGuard', 'ajax']]);
 
 //Usuarios
 $routes->group('Usuarios', ['filter' => 'authGuard:1'], function ($routes) {
-    $routes->get('/', 'UsuariosController::index');
-    $routes->post('DT', 'UsuariosController::listaDT');
-    $routes->get('Foto', 'UsuariosController::foto');
-    $routes->get('Foto/(:any)', 'UsuariosController::foto/$1');
-    $routes->post('Eliminar', 'UsuariosController::eliminar', ['filter' => 'authGuard:14']);
-    $routes->post('Crear', 'UsuariosController::crearEditar', ['filter' => 'authGuard:11']);
-    $routes->post('Editar', 'UsuariosController::crearEditar', ['filter' => 'authGuard:12']);
-    $routes->post('CambiarPass', 'UsuariosController::cambiarPass', ['filter' => 'authGuard:13']);
-    $routes->get('ValidaUsuario/(:any)/(:num)', 'UsuariosController::validaUsuario/$1/$2', ['filter' => 'authGuard:11,12']);
+    $routes->get('/', 'Usuarios::index');
+    $routes->post('DT', 'Usuarios::listaDT');
+    $routes->get('Foto', 'Usuarios::foto');
+    $routes->get('Foto/(:any)', 'Usuarios::foto/$1');
+    $routes->post('Eliminar', 'Usuarios::eliminar', ['filter' => ['authGuard:14', 'ajax']]);
+    $routes->post('Crear', 'Usuarios::crearEditar', ['filter' => ['authGuard:11', 'ajax']]);
+    $routes->post('Editar', 'Usuarios::crearEditar', ['filter' => ['authGuard:12', 'ajax']]);
+    $routes->post('CambiarPass', 'Usuarios::cambiarPass', ['filter' => ['authGuard:13', 'ajax']]);
+    $routes->get('ValidaUsuario/(:any)/(:num)', 'Usuarios::validaUsuario/$1/$2', ['filter' => ['authGuard:11,12', 'ajax']]);
 });
 
 //Pefiles
 $routes->group('Perfiles', ['filter' => 'authGuard:2'], function ($routes) {
-    $routes->get('/', 'PerfilesController::index');
-    $routes->post('DT', 'PerfilesController::listaDT');
-    $routes->post('Crear', 'PerfilesController::crearEditar', ['filter' => 'authGuard:21']);
-    $routes->post('Editar', 'PerfilesController::crearEditar', ['filter' => 'authGuard:22']);
-    $routes->post('Eliminar', 'PerfilesController::eliminar', ['filter' => 'authGuard:24']);
+    $routes->get('/', 'Perfiles::index');
+    $routes->post('DT', 'Perfiles::listaDT');
+    $routes->post('Crear', 'Perfiles::crearEditar', ['filter' => ['authGuard:21', 'ajax']]);
+    $routes->post('Editar', 'Perfiles::crearEditar', ['filter' => ['authGuard:22', 'ajax']]);
+    $routes->post('Eliminar', 'Perfiles::eliminar', ['filter' => ['authGuard:24', 'ajax']]);
 });
 
 //Categorias
 $routes->group('Categorias', ['filter' => 'authGuard:3'], function ($routes) {
-    $routes->get('/', 'CategoriasController::index');
-    $routes->post('DT', 'CategoriasController::listaDT');
-    $routes->post('Crear', 'CategoriasController::crearEditar', ['filter' => 'authGuard:31']);
-    $routes->post('Editar', 'CategoriasController::crearEditar', ['filter' => 'authGuard:32']);
-    $routes->post('Eliminar', 'CategoriasController::eliminar', ['filter' => 'authGuard:33']);
+    $routes->get('/', 'Categorias::index');
+    $routes->post('DT', 'Categorias::listaDT');
+    $routes->post('Crear', 'Categorias::crearEditar', ['filter' => ['authGuard:31', 'ajax']]);
+    $routes->post('Editar', 'Categorias::crearEditar', ['filter' => ['authGuard:32', 'ajax']]);
+    $routes->post('Eliminar', 'Categorias::eliminar', ['filter' => ['authGuard:33', 'ajax']]);
 });
 
 //Clientes
@@ -107,7 +108,7 @@ $routes->group('Ventas', ['filter' => 'authGuard'], function ($routes) {
 $routes->group('Busqueda', ['filter' => 'authGuard'], function ($routes) {
     $routes->get('DT', 'BusquedaController::dataTables');
     $routes->post('Vendedores', 'UsuariosController::listaDT');
-    $routes->post('Vendedor', 'UsuariosController::getUsuario');
+    $routes->post('Vendedor', 'UsuariosController::getUsuario', ['filter' => 'ajax']);
     $routes->post('Clientes', 'ClientesController::listaDT');
     $routes->post('Cliente', 'ClientesController::getCliente');
 });

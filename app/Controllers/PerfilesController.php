@@ -6,7 +6,7 @@ use \Hermawan\DataTables\DataTable;
 use App\Models\PerfilesModel;
 use App\Models\PermisosModel;
 
-class PerfilesController extends BaseController {
+class Perfiles extends BaseController {
     public function index() {
         $this->content['title'] = "Perfiles";
         $this->content['view'] = "vPerfiles";
@@ -51,55 +51,47 @@ class PerfilesController extends BaseController {
     }
 
     public function eliminar(){
-        if ($this->request->isAJAX()){
-            $resp["success"] = false;
-            //Traemos los datos del post
-            $id = $this->request->getPost("id");
-            $estado = $this->request->getPost("estado");
-    
-            $perfil = new PerfilesModel();
-            
-            $data = [
-                "id" => $id,
-                "estado" => $estado
-            ];
-    
-            if($perfil->save($data)) {
-                $resp["success"] = true;
-                $resp['msj'] = "Perfil actualizado correctamente";
-            } else {
-                $resp['msj'] = "Error al cambiar el estado";
-            }
-    
-            return $this->response->setJSON($resp);
+        $resp["success"] = false;
+        //Traemos los datos del post
+        $id = $this->request->getPost("id");
+        $estado = $this->request->getPost("estado");
+
+        $perfil = new PerfilesModel();
+        
+        $data = [
+            "id" => $id,
+            "estado" => $estado
+        ];
+
+        if($perfil->save($data)) {
+            $resp["success"] = true;
+            $resp['msj'] = "Perfil actualizado correctamente";
         } else {
-            show_404();
+            $resp['msj'] = "Error al cambiar el estado";
         }
+
+        return $this->response->setJSON($resp);
     }
 
     public function crearEditar(){
-        if ($this->request->isAJAX()){
-            $resp["success"] = false;
-            //Traemos los datos del post
-            $postData = $this->request->getPost();
-            //Creamos los datos para guardar
-            $datosSave = array(
-                "id" => $postData["id"],
-                "nombre" => trim($postData["nombre"]),
-                "descripcion" => trim($postData["descripcion"]),
-            );
+        $resp["success"] = false;
+        //Traemos los datos del post
+        $postData = $this->request->getPost();
+        //Creamos los datos para guardar
+        $datosSave = array(
+            "id" => $postData["id"],
+            "nombre" => trim($postData["nombre"]),
+            "descripcion" => trim($postData["descripcion"]),
+        );
 
-            $perfil = new PerfilesModel();
-            if ($perfil->save($datosSave)) {
-                $resp["success"] = true;
-                $resp["msj"] = "El pefil <b>{$datosSave["nombre"]}</b> se " . (empty($postData['id']) ? 'creo' : 'actualizo') . " correctamente.";
-            } else {
-                $resp["msj"] = "No puede " . (empty($postData['id']) ? 'crear' : 'actualizar') . " el perfil." . listErrors($perfil->errors());
-            }
-
-            return $this->response->setJSON($resp);
+        $perfil = new PerfilesModel();
+        if ($perfil->save($datosSave)) {
+            $resp["success"] = true;
+            $resp["msj"] = "El pefil <b>{$datosSave["nombre"]}</b> se " . (empty($postData['id']) ? 'creo' : 'actualizo') . " correctamente.";
         } else {
-            show_404();
+            $resp["msj"] = "No puede " . (empty($postData['id']) ? 'crear' : 'actualizar') . " el perfil." . listErrors($perfil->errors());
         }
+
+        return $this->response->setJSON($resp);
     }
 }

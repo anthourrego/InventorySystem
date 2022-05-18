@@ -4,7 +4,7 @@ namespace App\Controllers;
 use \Hermawan\DataTables\DataTable;
 use App\Models\CategoriasModel;
 
-class CategoriasController extends BaseController {
+class Categorias extends BaseController {
     public function index() {
         $this->content['title'] = "Categorias";
         $this->content['view'] = "vCategorias";
@@ -45,55 +45,47 @@ class CategoriasController extends BaseController {
     }
 
     public function crearEditar(){
-        if ($this->request->isAJAX()){
-            $resp["success"] = false;
-            //Traemos los datos del post
-            $postData = $this->request->getPost();
-            //Creamos los datos para guardar
-            $datosSave = array(
-                "id" => $postData["id"],
-                "nombre" => trim($postData["nombre"]),
-                "descripcion" => trim($postData["descripcion"]),
-            );
+        $resp["success"] = false;
+        //Traemos los datos del post
+        $postData = $this->request->getPost();
+        //Creamos los datos para guardar
+        $datosSave = array(
+            "id" => $postData["id"],
+            "nombre" => trim($postData["nombre"]),
+            "descripcion" => trim($postData["descripcion"]),
+        );
 
-            $perfil = new CategoriasModel();
-            if ($perfil->save($datosSave)) {
-                $resp["success"] = true;
-                $resp["msj"] = "La categoria <b>{$datosSave["nombre"]}</b> se " . (empty($postData['id']) ? 'creo' : 'actualizo') . " correctamente.";
-            } else {
-                $resp["msj"] = "No puede " . (empty($postData['id']) ? 'crear' : 'actualizar') . " la categoria." . listErrors($perfil->errors());
-            }
-
-            return $this->response->setJSON($resp);
+        $perfil = new CategoriasModel();
+        if ($perfil->save($datosSave)) {
+            $resp["success"] = true;
+            $resp["msj"] = "La categoria <b>{$datosSave["nombre"]}</b> se " . (empty($postData['id']) ? 'creo' : 'actualizo') . " correctamente.";
         } else {
-            show_404();
+            $resp["msj"] = "No puede " . (empty($postData['id']) ? 'crear' : 'actualizar') . " la categoria." . listErrors($perfil->errors());
         }
+
+        return $this->response->setJSON($resp);
     }
 
     public function eliminar(){
-        if ($this->request->isAJAX()){
-            $resp["success"] = false;
-            //Traemos los datos del post
-            $id = $this->request->getPost("id");
-            $estado = $this->request->getPost("estado");
-    
-            $perfil = new CategoriasModel();
-            
-            $data = [
-                "id" => $id,
-                "estado" => $estado
-            ];
-    
-            if($perfil->save($data)) {
-                $resp["success"] = true;
-                $resp['msj'] = "Categoria actualizada correctamente";
-            } else {
-                $resp['msj'] = "Error al cambiar el estado";
-            }
-    
-            return $this->response->setJSON($resp);
+        $resp["success"] = false;
+        //Traemos los datos del post
+        $id = $this->request->getPost("id");
+        $estado = $this->request->getPost("estado");
+
+        $perfil = new CategoriasModel();
+        
+        $data = [
+            "id" => $id,
+            "estado" => $estado
+        ];
+
+        if($perfil->save($data)) {
+            $resp["success"] = true;
+            $resp['msj'] = "Categoria actualizada correctamente";
         } else {
-            show_404();
+            $resp['msj'] = "Error al cambiar el estado";
         }
+
+        return $this->response->setJSON($resp);
     }
 }

@@ -32,64 +32,60 @@ class Home extends BaseController {
     }
     
     public function iniciarSesion(){
-        if ($this->request->isAJAX()){
-            $resp['success'] = false;
+        $resp['success'] = false;
 
-            if(preg_match('/^[a-zA-Z0-9]+$/', $this->request->getPost("usuario"))){
-                $usuario = new UsuariosModel();
-                $usuario->usuario = $this->request->getPost("usuario");
-                $usuario->password = $this->request->getPost("password");
+        if(preg_match('/^[a-zA-Z0-9]+$/', $this->request->getPost("usuario"))){
+            $usuario = new UsuariosModel();
+            $usuario->usuario = $this->request->getPost("usuario");
+            $usuario->password = $this->request->getPost("password");
 
-                if ($usuario->validarUsuario()){
+            if ($usuario->validarUsuario()){
 
-                    $updateData = [
-                        "id" => $usuario->id
-                        ,"ultimo_login" => date("Y-m-d H:i:s")
+                $updateData = [
+                    "id" => $usuario->id
+                    ,"ultimo_login" => date("Y-m-d H:i:s")
+                ];
+
+                if ($usuario->save($updateData)){
+
+                    $permisosModel = new PermisosModel();
+
+                    $campo = $usuario->perfil == null ? 'usuarioId' : 'perfilId';
+                    $id = $usuario->perfil == null ? $usuario->id : $usuario->perfil;
+                    $permisos = $permisosModel->select("permiso")->where($campo, $id)->findAll();
+                    $per = [];
+
+                    foreach ($permisos as $it) {
+                        $per[] = $it->permiso;
+                    }
+                    
+                    //Treamos los permisos del usuarios
+                    $userdata = [
+                        'id_user'  => $usuario->id,
+                        'nombre'  => $usuario->nombre,
+                        'usuario'     => $usuario->usuario,
+                        'perfil'     => $usuario->perfil,
+                        'foto'     => $usuario->foto,
+                        'logged_in' => true,
+                        'permisos' => $per
                     ];
 
-                    if ($usuario->save($updateData)){
+                    $this->session->set($userdata);
 
-                        $permisosModel = new PermisosModel();
-
-                        $campo = $usuario->perfil == null ? 'usuarioId' : 'perfilId';
-                        $id = $usuario->perfil == null ? $usuario->id : $usuario->perfil;
-                        $permisos = $permisosModel->select("permiso")->where($campo, $id)->findAll();
-                        $per = [];
-
-                        foreach ($permisos as $it) {
-                            $per[] = $it->permiso;
-                        }
-                        
-                        //Treamos los permisos del usuarios
-                        $userdata = [
-                            'id_user'  => $usuario->id,
-                            'nombre'  => $usuario->nombre,
-                            'usuario'     => $usuario->usuario,
-                            'perfil'     => $usuario->perfil,
-                            'foto'     => $usuario->foto,
-                            'logged_in' => true,
-                            'permisos' => $per
-                        ];
-
-                        $this->session->set($userdata);
-
-                        $resp["success"] = true;
-                    } else {
-                        $resp["msj"] = "Error al iniciar sesión.";  
-                    }
-
+                    $resp["success"] = true;
                 } else {
-                    $resp["msj"] = "Usuario Y/O contraseña invalidos.";
+                    $resp["msj"] = "Error al iniciar sesión.";  
                 }
 
             } else {
-                $resp["msj"] = "El usuario contiene caracteres extraños";
+                $resp["msj"] = "Usuario Y/O contraseña invalidos.";
             }
 
-            return $this->response->setJSON($resp);
         } else {
-            show_404();
+            $resp["msj"] = "El usuario contiene caracteres extraños";
         }
+
+        return $this->response->setJSON($resp);
     }
 
     public function cerrarSesion(){
