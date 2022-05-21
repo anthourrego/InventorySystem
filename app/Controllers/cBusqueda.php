@@ -3,11 +3,13 @@
 namespace App\Controllers;
 
 class cBusqueda extends BaseController {
-    public function dataTables() {
-        $this->content['campos'] = array();
+	public function dataTables() {
+		$this->content['campos'] = array();
+		
 		if(isset($_GET['campos'])){
 			$this->content['campos'] = json_decode($_GET['campos']);
 		}
-        return view('UI/Busqueda', $this->content);
-    }
+		
+		return view('UI/Busqueda', $this->content);
+	}
 }

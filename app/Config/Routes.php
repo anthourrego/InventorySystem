@@ -117,6 +117,10 @@ $routes->group('Permisos', ['filter' => 'authGuard'], function ($routes) {
     $routes->post('Sincronizar', 'cPermisos::sincronizar', ['filter' => ['ajax']]);
 });
 
+//Configuración
+$routes->group('Configuracion', ['filter' => 'authGuard'], function ($routes) {
+    $routes->get('/', 'cConfiguracion::index');
+});
 
 
 /*
