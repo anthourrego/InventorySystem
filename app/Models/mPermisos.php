@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class PermisosModel extends Model {
+class mPermisos extends Model {
     protected $DBGroup          = 'default';
     protected $table            = 'permisosusuarioperfil';
     protected $primaryKey       = 'id';

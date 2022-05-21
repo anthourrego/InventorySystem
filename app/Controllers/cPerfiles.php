@@ -3,15 +3,15 @@
 namespace App\Controllers;
 
 use \Hermawan\DataTables\DataTable;
-use App\Models\PerfilesModel;
-use App\Models\PermisosModel;
+use App\Models\mPerfiles;
+use App\Models\mPermisos;
 
-class Perfiles extends BaseController {
+class cPerfiles extends BaseController {
     public function index() {
         $this->content['title'] = "Perfiles";
         $this->content['view'] = "vPerfiles";
 
-        $permisos = new PermisosModel();
+        $permisos = new mPermisos();
         $this->content["permisos"] = $permisos->lista();
 
         $this->LDataTables();
@@ -56,7 +56,7 @@ class Perfiles extends BaseController {
         $id = $this->request->getPost("id");
         $estado = $this->request->getPost("estado");
 
-        $perfil = new PerfilesModel();
+        $perfil = new mPerfiles();
         
         $data = [
             "id" => $id,
@@ -84,7 +84,7 @@ class Perfiles extends BaseController {
             "descripcion" => trim($postData["descripcion"]),
         );
 
-        $perfil = new PerfilesModel();
+        $perfil = new mPerfiles();
         if ($perfil->save($datosSave)) {
             $resp["success"] = true;
             $resp["msj"] = "El pefil <b>{$datosSave["nombre"]}</b> se " . (empty($postData['id']) ? 'creo' : 'actualizo') . " correctamente.";

@@ -2,9 +2,9 @@
 
 namespace App\Controllers;
 use \Hermawan\DataTables\DataTable;
-use App\Models\CategoriasModel;
+use App\Models\mCategorias;
 
-class Categorias extends BaseController {
+class cCategorias extends BaseController {
     public function index() {
         $this->content['title'] = "Categorias";
         $this->content['view'] = "vCategorias";
@@ -55,7 +55,7 @@ class Categorias extends BaseController {
             "descripcion" => trim($postData["descripcion"]),
         );
 
-        $perfil = new CategoriasModel();
+        $perfil = new mCategorias();
         if ($perfil->save($datosSave)) {
             $resp["success"] = true;
             $resp["msj"] = "La categoria <b>{$datosSave["nombre"]}</b> se " . (empty($postData['id']) ? 'creo' : 'actualizo') . " correctamente.";
@@ -72,7 +72,7 @@ class Categorias extends BaseController {
         $id = $this->request->getPost("id");
         $estado = $this->request->getPost("estado");
 
-        $perfil = new CategoriasModel();
+        $perfil = new mCategorias();
         
         $data = [
             "id" => $id,

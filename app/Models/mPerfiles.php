@@ -4,10 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class CategoriasModel extends Model
-{
+class mPerfiles extends Model {
     protected $DBGroup          = 'default';
-    protected $table            = 'categorias';
+    protected $table            = 'perfiles';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
@@ -31,12 +30,12 @@ class CategoriasModel extends Model
 
     // Validation
     protected $validationRules      = [
-        'nombre'       => "required|alpha_numeric_space|min_length[1]|max_length[255]|is_unique[categorias.nombre, id, {id}]",
+        'nombre'       => "required|alpha_numeric_space|min_length[1]|max_length[255]|is_unique[perfiles.nombre, id, {id}]",
         'descripcion'  => 'permit_empty|min_length[1]|max_length[500]',
     ];
     protected $validationMessages   = [
         "nombre" => [
-            'is_unique' => 'La categoria <b>{value}</b>, ya se encuentra creada, intente con otro nombre.',
+            'is_unique' => 'El perfil <b>{value}</b>, ya se encuentra creado, intente con otro nombre.',
         ]
     ];
     protected $skipValidation       = false;

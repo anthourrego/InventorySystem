@@ -2,9 +2,9 @@
 
 namespace App\Controllers;
 use \Hermawan\DataTables\DataTable;
-use App\Models\ClientesModel;
+use App\Models\mClientes;
 
-class Clientes extends BaseController {
+class cClientes extends BaseController {
     public function index() {
         $this->content['title'] = "Clientes";
         $this->content['view'] = "vClientes";
@@ -53,7 +53,7 @@ class Clientes extends BaseController {
     }
 
     public function validaCliente($nroDocumento, $id){
-        $user = new ClientesModel();
+        $user = new mClientes();
 
         $usuario = $user->asObject()
                 ->where(['documento' => $nroDocumento, "id != " => $id])
@@ -78,7 +78,7 @@ class Clientes extends BaseController {
             "telefonocart" => trim($postData["telefonoCart"]),
         );
 
-        $clienteModel = new ClientesModel();
+        $clienteModel = new mClientes();
         if ($clienteModel->save($datosSave)) {
             $resp["success"] = true;
             $resp["msj"] = "El cliente <b>{$datosSave["nombre"]}</b> se " . (empty($postData['id']) ? 'creo' : 'actualizo') . " correctamente.";
@@ -95,7 +95,7 @@ class Clientes extends BaseController {
         $id = $this->request->getPost("id");
         $estado = $this->request->getPost("estado");
 
-        $cliente = new ClientesModel();
+        $cliente = new mClientes();
         
         $data = [
             "id" => $id,
@@ -117,7 +117,7 @@ class Clientes extends BaseController {
         //Traemos los datos del post
         $data = (object) $this->request->getPost();
         
-        $clienteModel = new ClientesModel();
+        $clienteModel = new mClientes();
 
         $result = $clienteModel->like('documento', $data->buscar)
                             ->orLike('nombre', $data->buscar)

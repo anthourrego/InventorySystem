@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Controllers;
-use App\Models\UsuariosModel;
-use App\Models\PerfilesModel;
+use App\Models\mUsuarios;
+use App\Models\mPerfiles;
 use \Hermawan\DataTables\DataTable;
-use App\Models\PermisosModel;
+use App\Models\mPermisos;
 
-class Usuarios extends BaseController {
+class cUsuarios extends BaseController {
 
     public function index() {
         $this->content['title'] = "Usuarios";
@@ -19,10 +19,10 @@ class Usuarios extends BaseController {
         $this->LJQueryValidation();
         $this->Lgijgo();
 
-        $permisosModel = new PermisosModel();
+        $permisosModel = new mPermisos();
         $this->content["permisos"] = $permisosModel->lista();
 
-        $perfilesModel = new PerfilesModel();
+        $perfilesModel = new mPerfiles();
 
         $this->content["perfiles"] = $perfilesModel->asObject()->where("estado", 1)->findAll();
         
@@ -84,7 +84,7 @@ class Usuarios extends BaseController {
         $id = $this->request->getPost("idUsuario");
         $estado = $this->request->getPost("estado");
 
-        $usuario = new UsuariosModel();
+        $usuario = new mUsuarios();
         
         $data = [
             "id" => $id,
@@ -102,7 +102,7 @@ class Usuarios extends BaseController {
     }
 
     public function validaUsuario($usuario, $id){
-        $user = new UsuariosModel();
+        $user = new mUsuarios();
 
         $usuario = $user->asObject()
                 ->where(['usuario' => $usuario, "id != " => $id])
@@ -114,7 +114,7 @@ class Usuarios extends BaseController {
     public function crearEditar(){
         $resp["success"] = false;
         $filenameDelete = "";
-        $user = new UsuariosModel();
+        $user = new mUsuarios();
         //Creamos el usuario y llenamos los datos
         $usuario = array(
             "id" => $this->request->getPost("id")
@@ -209,7 +209,7 @@ class Usuarios extends BaseController {
 
         $dataPost = $this->request->getPost();
 
-        $user = new UsuariosModel();
+        $user = new mUsuarios();
         
         if (!empty(trim($dataPost["id"]))) {
             if (trim($dataPost["pass"]) == trim($dataPost["RePass"])) {
@@ -239,7 +239,7 @@ class Usuarios extends BaseController {
         //Traemos los datos del post
         $data = (object) $this->request->getPost();
         
-        $userModel = new UsuariosModel();
+        $userModel = new mUsuarios();
 
         $result = $userModel->like('usuario', $data->buscar)
                             ->orLike('nombre', $data->buscar)

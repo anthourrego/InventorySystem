@@ -21,7 +21,7 @@ $routes->setDefaultController('Home');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
-$routes->setAutoRoute(true);
+$routes->setAutoRoute(false);
 
 /*
  * --------------------------------------------------------------------
@@ -37,84 +37,84 @@ $routes->post('/cerrarSesion', 'Home::cerrarSesion', ['filter' => ['authGuard', 
 
 //Usuarios
 $routes->group('Usuarios', ['filter' => 'authGuard:1'], function ($routes) {
-    $routes->get('/', 'Usuarios::index');
-    $routes->post('DT', 'Usuarios::listaDT');
-    $routes->get('Foto', 'Usuarios::foto');
-    $routes->get('Foto/(:any)', 'Usuarios::foto/$1');
-    $routes->post('Eliminar', 'Usuarios::eliminar', ['filter' => ['authGuard:14', 'ajax']]);
-    $routes->post('Crear', 'Usuarios::crearEditar', ['filter' => ['authGuard:11', 'ajax']]);
-    $routes->post('Editar', 'Usuarios::crearEditar', ['filter' => ['authGuard:12', 'ajax']]);
-    $routes->post('CambiarPass', 'Usuarios::cambiarPass', ['filter' => ['authGuard:13', 'ajax']]);
-    $routes->get('ValidaUsuario/(:any)/(:num)', 'Usuarios::validaUsuario/$1/$2', ['filter' => ['authGuard:11,12', 'ajax']]);
+    $routes->get('/', 'cUsuarios::index');
+    $routes->post('DT', 'cUsuarios::listaDT');
+    $routes->get('Foto', 'cUsuarios::foto');
+    $routes->get('Foto/(:any)', 'cUsuarios::foto/$1');
+    $routes->post('Eliminar', 'cUsuarios::eliminar', ['filter' => ['authGuard:14', 'ajax']]);
+    $routes->post('Crear', 'cUsuarios::crearEditar', ['filter' => ['authGuard:11', 'ajax']]);
+    $routes->post('Editar', 'cUsuarios::crearEditar', ['filter' => ['authGuard:12', 'ajax']]);
+    $routes->post('CambiarPass', 'cUsuarios::cambiarPass', ['filter' => ['authGuard:13', 'ajax']]);
+    $routes->get('ValidaUsuario/(:any)/(:num)', 'cUsuarios::validaUsuario/$1/$2', ['filter' => ['authGuard:11,12', 'ajax']]);
 });
 
 //Pefiles
 $routes->group('Perfiles', ['filter' => 'authGuard:2'], function ($routes) {
-    $routes->get('/', 'Perfiles::index');
-    $routes->post('DT', 'Perfiles::listaDT');
-    $routes->post('Crear', 'Perfiles::crearEditar', ['filter' => ['authGuard:21', 'ajax']]);
-    $routes->post('Editar', 'Perfiles::crearEditar', ['filter' => ['authGuard:22', 'ajax']]);
-    $routes->post('Eliminar', 'Perfiles::eliminar', ['filter' => ['authGuard:24', 'ajax']]);
+    $routes->get('/', 'cPerfiles::index');
+    $routes->post('DT', 'cPerfiles::listaDT');
+    $routes->post('Crear', 'cPerfiles::crearEditar', ['filter' => ['authGuard:21', 'ajax']]);
+    $routes->post('Editar', 'cPerfiles::crearEditar', ['filter' => ['authGuard:22', 'ajax']]);
+    $routes->post('Eliminar', 'cPerfiles::eliminar', ['filter' => ['authGuard:24', 'ajax']]);
 });
 
 //Categorias
 $routes->group('Categorias', ['filter' => 'authGuard:3'], function ($routes) {
-    $routes->get('/', 'Categorias::index');
-    $routes->post('DT', 'Categorias::listaDT');
-    $routes->post('Crear', 'Categorias::crearEditar', ['filter' => ['authGuard:31', 'ajax']]);
-    $routes->post('Editar', 'Categorias::crearEditar', ['filter' => ['authGuard:32', 'ajax']]);
-    $routes->post('Eliminar', 'Categorias::eliminar', ['filter' => ['authGuard:33', 'ajax']]);
+    $routes->get('/', 'cCategorias::index');
+    $routes->post('DT', 'cCategorias::listaDT');
+    $routes->post('Crear', 'cCategorias::crearEditar', ['filter' => ['authGuard:31', 'ajax']]);
+    $routes->post('Editar', 'cCategorias::crearEditar', ['filter' => ['authGuard:32', 'ajax']]);
+    $routes->post('Eliminar', 'cCategorias::eliminar', ['filter' => ['authGuard:33', 'ajax']]);
 });
 
 //Clientes
 $routes->group('Clientes', ['filter' => 'authGuard:4'], function ($routes) {
-    $routes->get('/', 'Clientes::index');
-    $routes->post('DT', 'Clientes::listaDT');
-    $routes->post('Crear', 'Clientes::crearEditar', ['filter' => ['authGuard:41', 'ajax']]);
-    $routes->post('Editar', 'Clientes::crearEditar', ['filter' => ['authGuard:42', 'ajax']]);
-    $routes->post('Eliminar', 'Clientes::eliminar', ['filter' => ['authGuard:43', 'ajax']]);
-    $routes->get('Validar/(:any)/(:num)', 'Clientes::validaCliente/$1/$2', ['filter' => ['authGuard:41,42', 'ajax']]);
+    $routes->get('/', 'cClientes::index');
+    $routes->post('DT', 'cClientes::listaDT');
+    $routes->post('Crear', 'cClientes::crearEditar', ['filter' => ['authGuard:41', 'ajax']]);
+    $routes->post('Editar', 'cClientes::crearEditar', ['filter' => ['authGuard:42', 'ajax']]);
+    $routes->post('Eliminar', 'cClientes::eliminar', ['filter' => ['authGuard:43', 'ajax']]);
+    $routes->get('Validar/(:any)/(:num)', 'cClientes::validaCliente/$1/$2', ['filter' => ['authGuard:41,42', 'ajax']]);
 });
 
 //Productos
 $routes->group('Productos', ['filter' => 'authGuard:5'], function ($routes) {
-    $routes->get('/', 'Productos::index');
-    $routes->post('DT', 'Productos::listaDT');
-    $routes->get('Foto', 'Productos::foto');
-    $routes->get('Foto/(:num)/(:any)', 'Productos::foto/$1/$2');
-    $routes->post('Crear', 'Productos::crearEditar', ['filter' => ['authGuard:51', 'ajax']]);
-    $routes->post('Editar', 'Productos::crearEditar', ['filter' => ['authGuard:52', 'ajax']]);
-    $routes->get('ValidaProducto/(:any)/(:any)/(:num)', 'Productos::validarProducto/$1/$2/$3', ['filter' => ['authGuard:51,52', 'ajax']]);
-    $routes->post('Eliminar', 'Productos::eliminar', ['filter' => ['authGuard:53', 'ajax']]);
+    $routes->get('/', 'cProductos::index');
+    $routes->post('DT', 'cProductos::listaDT');
+    $routes->get('Foto', 'cProductos::foto');
+    $routes->get('Foto/(:num)/(:any)', 'cProductos::foto/$1/$2');
+    $routes->post('Crear', 'cProductos::crearEditar', ['filter' => ['authGuard:51', 'ajax']]);
+    $routes->post('Editar', 'cProductos::crearEditar', ['filter' => ['authGuard:52', 'ajax']]);
+    $routes->get('ValidaProducto/(:any)/(:any)/(:num)', 'cProductos::validarProducto/$1/$2/$3', ['filter' => ['authGuard:51,52', 'ajax']]);
+    $routes->post('Eliminar', 'cProductos::eliminar', ['filter' => ['authGuard:53', 'ajax']]);
 });
 
 //Ventas
 $routes->group('Ventas', ['filter' => 'authGuard:6'], function ($routes) {
-    $routes->get('Administrar', 'Ventas::index');
-    $routes->post('DT', 'Ventas::listaDT');
-    $routes->post('DTProductos', 'Productos::listaDT');
-    $routes->get('Crear', 'Ventas::crear');
-    $routes->get('Editar/(:num)', 'Ventas::editar/$1');
-    $routes->post('Eliminar', 'Ventas::eliminar', ['filter' => 'ajax']);
-    $routes->post('Crear', 'Ventas::crearEditar', ['filter' => 'ajax']);
-    $routes->post('Editar', 'Ventas::crearEditar', ['filter' => 'ajax']);
+    $routes->get('Administrar', 'cVentas::index');
+    $routes->post('DT', 'cVentas::listaDT');
+    $routes->post('DTProductos', 'cProductos::listaDT');
+    $routes->get('Crear', 'cVentas::crear');
+    $routes->get('Editar/(:num)', 'cVentas::editar/$1');
+    $routes->post('Eliminar', 'cVentas::eliminar', ['filter' => 'ajax']);
+    $routes->post('Crear', 'cVentas::crearEditar', ['filter' => 'ajax']);
+    $routes->post('Editar', 'cVentas::crearEditar', ['filter' => 'ajax']);
 });
 
 //Ventas
 $routes->group('Busqueda', ['filter' => 'authGuard'], function ($routes) {
-    $routes->get('DT', 'Busqueda::dataTables');
-    $routes->post('Vendedores', 'Usuarios::listaDT');
-    $routes->post('Vendedor', 'Usuarios::getUsuario', ['filter' => 'ajax']);
+    $routes->get('DT', 'cBusqueda::dataTables');
+    $routes->post('Vendedores', 'cUsuarios::listaDT');
+    $routes->post('Vendedor', 'cUsuarios::getUsuario', ['filter' => 'ajax']);
     $routes->post('Clientes', 'Clientes::listaDT');
     $routes->post('Cliente', 'Clientes::getCliente', ['filter' => 'ajax']);
 });
 
 //Permisos
 $routes->group('Permisos', ['filter' => 'authGuard'], function ($routes) {
-    $routes->get('Perfil/(:num)', 'Permisos::Permisos/$1/perfilId', ['filter' => ['authGuard:23', 'ajax']]);
-    $routes->get('Usuarios/(:num)', 'Permisos::Permisos/$1/usuarioId', ['filter' => ['authGuard:15', 'ajax']]);
-    $routes->post('Guardar', 'Permisos::Guardar', ['filter' => ['authGuard:15,23', 'ajax']]);
-    $routes->post('Sincronizar', 'Permisos::sincronizar', ['filter' => ['ajax']]);
+    $routes->get('Perfil/(:num)', 'cPermisos::Permisos/$1/perfilId', ['filter' => ['authGuard:23', 'ajax']]);
+    $routes->get('Usuarios/(:num)', 'cPermisos::Permisos/$1/usuarioId', ['filter' => ['authGuard:15', 'ajax']]);
+    $routes->post('Guardar', 'cPermisos::Guardar', ['filter' => ['authGuard:15,23', 'ajax']]);
+    $routes->post('Sincronizar', 'cPermisos::sincronizar', ['filter' => ['ajax']]);
 });
 
 

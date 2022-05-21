@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class Busqueda extends BaseController {
+class cBusqueda extends BaseController {
     public function dataTables() {
         $this->content['campos'] = array();
 		if(isset($_GET['campos'])){

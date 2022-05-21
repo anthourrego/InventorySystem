@@ -4,10 +4,10 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use \Hermawan\DataTables\DataTable;
-use App\Models\VentasModel;
-use App\Models\ProductosModel;
+use App\Models\mVentas;
+use App\Models\mProductos;
 
-class Ventas extends BaseController {
+class cVentas extends BaseController {
     public function index() {
         $this->content['title'] = "Administador Ventas";
         $this->content['view'] = "Ventas/vAdministador";
@@ -33,7 +33,7 @@ class Ventas extends BaseController {
         $this->LJQueryValidation();
         $this->LFancybox();
 
-        $ventaModel = new VentasModel();
+        $ventaModel = new mVentas();
         $codigo = $ventaModel->asObject()->orderBy('id', 'desc')->first();
 
         $this->content["nroVenta"] = is_null($codigo) ? 1 : ($codigo->codigo + 1);
@@ -46,7 +46,7 @@ class Ventas extends BaseController {
     }
 
     public function Editar($id) {
-        $ventaModel = new VentasModel();
+        $ventaModel = new mVentas();
         $venta = $ventaModel->cargarVenta($id);
 
         if (count($venta) != 1) {
@@ -103,7 +103,7 @@ class Ventas extends BaseController {
         //Traemos los datos del post
         $data = (object) $this->request->getPost();
         
-        $ventas = new VentasModel();
+        $ventas = new mVentas();
 
         if ($ventas->delete($data->id)) { 
             $resp["success"] = true;
@@ -123,8 +123,8 @@ class Ventas extends BaseController {
         $valorTotal = 0;
         $prod = json_decode($dataPost->productos);
         
-        $productoModel = new ProductosModel();
-        $ventaModel = new VentasModel();
+        $productoModel = new mProductos();
+        $ventaModel = new mVentas();
 
         $codigo = $ventaModel->asObject()->orderBy('id', 'desc')->first();
         $codigo = is_null($codigo) ? 1 : ($codigo->codigo + 1);

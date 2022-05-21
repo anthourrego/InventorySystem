@@ -4,10 +4,10 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class ClientesModel extends Model
+class mCategorias extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'clientes';
+    protected $table            = 'categorias';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
@@ -16,15 +16,10 @@ class ClientesModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         "nombre",
-        "documento",
-        "direccion",
-        "telefono",
-        "administrador",
-        "cartera",
-        "telefonocart",
-        "compras",
-        "ultima_compra",
+        "descripcion",
         "estado",
+        "created_at",
+        "updated_at"
     ];
 
     // Dates
@@ -36,17 +31,12 @@ class ClientesModel extends Model
 
     // Validation
     protected $validationRules      = [
-        "documento" =>'permit_empty|numeric|min_length[1]|max_length[30]|is_unique[clientes.documento, id, {id}]',
-        "nombre" => "required|alpha_numeric_space|min_length[1]|max_length[255]",
-        "direccion" => 'required|string|min_length[1]|max_length[300]',
-        "telefono" => "required|string|min_length[10]|max_length[50]",
-        "administrador" => "permit_empty|alpha_numeric_space|min_length[1]|max_length[255]",
-        "cartera" => "permit_empty|alpha_numeric_space|min_length[1]|max_length[255]",
-        "telefonocart" => "permit_empty|string|min_length[10]|max_length[50]"
+        'nombre'       => "required|alpha_numeric_space|min_length[1]|max_length[255]|is_unique[categorias.nombre, id, {id}]",
+        'descripcion'  => 'permit_empty|min_length[1]|max_length[500]',
     ];
     protected $validationMessages   = [
-        "documento" => [
-            'is_unique' => 'El número de documento <b>{value}</b>, ya se encuentra creada, intente con otro documento.',
+        "nombre" => [
+            'is_unique' => 'La categoria <b>{value}</b>, ya se encuentra creada, intente con otro nombre.',
         ]
     ];
     protected $skipValidation       = false;

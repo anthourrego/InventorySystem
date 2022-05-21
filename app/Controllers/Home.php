@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Controllers;
-use App\Models\UsuariosModel;
-use App\Models\PermisosModel;
+use App\Models\mUsuarios;
+use App\Models\mPermisos;
 
 class Home extends BaseController {
 
@@ -35,7 +35,7 @@ class Home extends BaseController {
         $resp['success'] = false;
 
         if(preg_match('/^[a-zA-Z0-9]+$/', $this->request->getPost("usuario"))){
-            $usuario = new UsuariosModel();
+            $usuario = new mUsuarios();
             $usuario->usuario = $this->request->getPost("usuario");
             $usuario->password = $this->request->getPost("password");
 
@@ -48,7 +48,7 @@ class Home extends BaseController {
 
                 if ($usuario->save($updateData)){
 
-                    $permisosModel = new PermisosModel();
+                    $permisosModel = new mPermisos();
 
                     $campo = $usuario->perfil == null ? 'usuarioId' : 'perfilId';
                     $id = $usuario->perfil == null ? $usuario->id : $usuario->perfil;

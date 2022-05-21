@@ -3,12 +3,12 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\PermisosModel;
-use App\Models\UsuariosModel;
+use App\Models\mPermisos;
+use App\Models\mUsuarios;
 
-class Permisos extends BaseController {
+class cPermisos extends BaseController {
 	public function Permisos($id, $campo) {
-		$permisoModel = new PermisosModel();
+		$permisoModel = new mPermisos();
 
 		$permisos = $permisoModel->select("permiso")->where($campo, $id)->findAll();
 		
@@ -20,7 +20,7 @@ class Permisos extends BaseController {
 		$postData = (object) $this->request->getPost();
 		$campo = $postData->tipo == 1 ? 'perfilId' : 'usuarioId';
 
-		$permisoModel = new PermisosModel();
+		$permisoModel = new mPermisos();
 		
 		$this->db->transBegin();
 
@@ -58,8 +58,8 @@ class Permisos extends BaseController {
 	}
 
 	public function sincronizar(){
-		$userModel = new UsuariosModel();
-		$permisoModel = new PermisosModel();
+		$userModel = new mUsuarios();
+		$permisoModel = new mPermisos();
 
 		$usuario = $userModel->asObject()->find(session()->get("id_user"));
 

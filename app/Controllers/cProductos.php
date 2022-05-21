@@ -3,10 +3,10 @@
 namespace App\Controllers;
 
 use \Hermawan\DataTables\DataTable;
-use App\Models\CategoriasModel;
-use App\Models\ProductosModel;
+use App\Models\mCategorias;
+use App\Models\mProductos;
 
-class Productos extends BaseController {
+class cProductos extends BaseController {
     public function index() {
         $this->content['title'] = "Productos";
         $this->content['view'] = "vProductos";
@@ -18,7 +18,7 @@ class Productos extends BaseController {
         $this->LFancybox();
         $this->LInputMask();
 
-        $categorias = new CategoriasModel();
+        $categorias = new mCategorias();
         $this->content["categorias"] = $categorias->asObject()->where("estado", 1)->findAll();
         
         $this->content['js_add'][] = [
@@ -62,7 +62,7 @@ class Productos extends BaseController {
     }
 
     public function validarProducto($campo, $nombre, $id){
-        $prod = new ProductosModel();
+        $prod = new mProductos();
 
         $producto = $prod->asObject()
                 ->where([$campo => $nombre, "id != " => $id])
@@ -76,7 +76,7 @@ class Productos extends BaseController {
         $filenameDelete = "";
         $postData = (object) $this->request->getPost();
 
-        $product = new ProductosModel();
+        $product = new mProductos();
         //Creamos el producto y llenamos los datos
         $producto = array(
             "id" => $postData->id
@@ -185,7 +185,7 @@ class Productos extends BaseController {
         //Traemos los datos del post
         $data = (object) $this->request->getPost();
 
-        $perfil = new ProductosModel();
+        $perfil = new mProductos();
         
         if($perfil->save($data)) {
             $resp["success"] = true;

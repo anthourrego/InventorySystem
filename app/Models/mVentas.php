@@ -3,7 +3,8 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
-class VentasModel extends Model {
+
+class mVentas extends Model {
     protected $DBGroup          = 'default';
     protected $table            = 'ventas';
     protected $primaryKey       = 'id';
