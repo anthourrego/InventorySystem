@@ -64,13 +64,13 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
   $(document).on({
     ajaxStart: function() {
-      $("#cargando").removeClass('d-none');
+      $("#cargandoAjax").removeClass('d-none');
     },
     ajaxStop: function() {
-      $("#cargando").addClass('d-none');
+      $("#cargandoAjax").addClass('d-none');
     },
     ajaxError: function(funcion, request, settings){
-      $("#cargando").removeClass('d-none');
+      $("#cargandoAjax").removeClass('d-none');
       alertify.globalAlert('Error', request.responseText, function(){
         this.destroy();
       });
@@ -120,6 +120,23 @@ document.addEventListener('DOMContentLoaded', function (e) {
 			},
 		});
   });
+
+	//Validamos si el menú esta abierto o cerrado
+	$("[data-widget='pushmenu']").on("click", function(e) {
+		e.preventDefault();
+		let sidebarEstado = $("body").hasClass("sidebar-collapse");
+		$.ajax({
+			type: "POST",
+			url: base_url() + "sidebar",
+			dataType: "json",
+			data: {sidebarEstado},
+			success: function(data){
+				if(!data.success){
+					alertify.warning("Error al actualizar el estado del menú");
+				}
+			}
+		});
+	})
 
 	//Solo deja escribir números
 	$(".soloNumeros").keypress(function(e){

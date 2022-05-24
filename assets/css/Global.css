@@ -371,7 +371,7 @@ div.dt-button-collection .dt-button {
 
 /* ============ Efecto de cargando ===================== */
 
-#cargando {
+#cargando, #cargandoAjax {
   bottom: 0;
   left: 0;
   position: fixed;
@@ -382,8 +382,12 @@ div.dt-button-collection .dt-button {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
+#cargandoAjax {
+  background-color: transparent;
+}
+
 @media(max-width: 767px) {
-  #cargando {
+  #cargando, #cargandoAjax {
     background: rgba( 255, 255, 255, .8 ) url("../../assets/img/cargando.gif") 50% 50% no-repeat;
   }
 

@@ -34,6 +34,7 @@ $routes->setAutoRoute(false);
 $routes->get('/', 'Home::index');
 $routes->post('/iniciarSesion', 'Home::iniciarSesion', ['filter' => 'ajax']);
 $routes->post('/cerrarSesion', 'Home::cerrarSesion', ['filter' => ['authGuard', 'ajax']]);
+$routes->post('sidebar', 'Home::sidebar', ['filter' => ['authGuard', 'ajax']]);
 
 //Usuarios
 $routes->group('Usuarios', ['filter' => 'authGuard:1'], function ($routes) {

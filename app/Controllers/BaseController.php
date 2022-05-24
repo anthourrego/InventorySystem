@@ -39,10 +39,6 @@ class BaseController extends Controller {
      * @var array
      */
     protected $helpers = [];
-    
-    public function __construct() {
-        $this->session = Services::session();
-    }
 
     /**
      * Constructor.
@@ -53,16 +49,14 @@ class BaseController extends Controller {
 
         // Preload any models, libraries, etc, here.
 
-        $this->session = Services::session();
         $this->routes = Services::routes();
         $this->db = Database::connect();
 
         $this->content['Project_Name'] = "Inventory System";
-        $this->content["session"] = $this->session;
         
         $this->LJQuery();
         
-        if($this->session->has("logged_in") && $this->session->get("logged_in")){
+        if(session()->has("logged_in") && session()->get("logged_in")){
             $this->LAdminLTE();
             $this->LOverlayScrollbars();
             $this->LGlobal();

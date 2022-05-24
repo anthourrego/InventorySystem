@@ -81,7 +81,7 @@ class cPermisos extends BaseController {
 			'permisos' => $per
 		];
 
-		$this->session->set($userdata);
+		session()->set($userdata);
 
 		return $this->response->setJSON(true); 
 	}

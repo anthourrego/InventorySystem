@@ -33,13 +33,14 @@
       }
     ?>
   </head>
-  <body class="<?= $session->has("logged_in") && $session->get("logged_in") ? 'hold-transition sidebar-mini layout-fixed sidebar-collapse' : ''?>">
+  <body class="<?= session()->has("logged_in") && session()->get("logged_in") ? 'hold-transition sidebar-mini layout-fixed ' . (session()->has("sidebar") && session()->get("sidebar") == 'true' ? '' : 'sidebar-collapse') : ''?>">
+
+    <div id="cargandoAjax" class="d-none"></div>
     <div id="cargando" class="d-none">
       <div class="box-loading">
-          <div class="loader">
-            <div class="loader-1">
-              <div class="loader-2"></div>
-            </div>
+        <div class="loader">
+          <div class="loader-1">
+            <div class="loader-2"></div>
           </div>
         </div>
       </div>

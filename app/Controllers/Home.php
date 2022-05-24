@@ -8,7 +8,7 @@ class Home extends BaseController {
 
 	public function index() {
         
-		if ($this->session->has("logged_in") && $this->session->get("logged_in")) {
+		if (session()->has("logged_in") && session()->get("logged_in")) {
 			$this->content['title'] = "Inicio";
 			$this->content['view'] = "vInicio";
 			
@@ -70,7 +70,7 @@ class Home extends BaseController {
 						'permisos' => $per
 					];
 
-					$this->session->set($userdata);
+					session()->set($userdata);
 
 					$resp["success"] = true;
 				} else {
@@ -89,8 +89,16 @@ class Home extends BaseController {
 	}
 
 	public function cerrarSesion(){
-		$this->session->destroy();
+		session()->destroy();
 		$resp = array("success" => 1, "msj" => "Sesión cerrada.");
+		return $this->response->setJSON($resp);
+	}
+
+	public function sidebar(){
+		$resp["success"] = true;
+		$dataPost = $this->request->getPost();
+		session()->set("sidebar", $dataPost["sidebarEstado"]);
+
 		return $this->response->setJSON($resp);
 	}
 }

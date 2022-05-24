@@ -32,7 +32,7 @@
 							<a href="#" class="nav-link">
 								<i class="nav-icon far fa-user-circle"></i>
 								<p>
-									<?= substr($session->get('nombre'), 0, 18) . '...'; ?>
+									<?= substr(session()->get('nombre'), 0, 18) . '...'; ?>
 									<i class="fas fa-angle-left right"></i>
 								</p>
 							</a>
