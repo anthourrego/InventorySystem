@@ -237,4 +237,14 @@ class BaseController extends Controller {
             'assets/Libraries/gijgo/js/messages/messages.es-es.min.js'
         ];
     }
+
+    public function LSweetAlet2(){
+        $this->content['css'][] = [
+            'assets/Libraries/sweetAlert2/css/sweetalert2.min.css'
+        ];
+
+        $this->content['js'][] = [
+            'assets/Libraries/sweetAlert2/js/sweetalert2.min.js'
+        ];
+    }
 }

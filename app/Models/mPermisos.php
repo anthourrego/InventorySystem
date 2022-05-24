@@ -159,7 +159,13 @@ class mPermisos extends Model {
 			],
 			[
 				"id" => 7,
-				"text" => "Configuración"
+				"text" => "Configuración",
+				"children" => [
+					[
+						"id" => 71,
+						"text" => "Modificar"
+					]
+				]
 			]
 		];
 

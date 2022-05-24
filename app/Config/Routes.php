@@ -119,7 +119,9 @@ $routes->group('Permisos', ['filter' => 'authGuard'], function ($routes) {
 
 //Configuración
 $routes->group('Configuracion', ['filter' => 'authGuard'], function ($routes) {
-    $routes->get('/', 'cConfiguracion::index');
+    $routes->get('/', 'cConfiguracion::index', ['filter' => 'authGuard:7']);
+    $routes->get('Datos', 'cConfiguracion::datos', ['filter' => ['ajax']]);
+    $routes->post('Actualizar', 'cConfiguracion::actualizar', ['filter' => ['authGuard:71', 'ajax']]);
 });
 
 
