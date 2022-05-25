@@ -95,7 +95,7 @@
             </div>
             <div class="col-6 form-group form-valid">
               <label class="mb-0" for="stock">Stock <span class="text-danger">*</span></label>
-              <input class="form-control inputFocusSelect inputVer" id="stock" name="stock" type="number" value="0" placeholder="Ingrese el stock" autocomplete="off" required autocomplete="off">
+              <input class="form-control inputFocusSelect inputVer <?= $inventario_negativo == '1' ? 'soloNumerosNegativo' : 'soloNumeros' ?>" id="stock" name="stock" type="number" <?= $inventario_negativo == '1' ? '' : 'min="0"' ?> value="0" placeholder="Ingrese el stock" autocomplete="off" required autocomplete="off">
             </div>
             <div class="col-6 form-group form-valid">
               <label class="mb-0" for="precioVent">Precio venta <span class="text-danger">*</span></label>
@@ -148,4 +148,5 @@
 <script>
   $CATEGORIAS = <?= COUNT($categorias) ?>;
   $COSTO = "<?= $costo ?>";
+  $INVENTARIONEGATIVO = "<?= $inventario_negativo ?>";
 </script>

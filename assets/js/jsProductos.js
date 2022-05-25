@@ -232,6 +232,17 @@ $(function(){
   $("#formCrearEditar").submit(function(e){
     e.preventDefault();
     let id = $("#id").val().trim();
+    let stock = $("#stock").val();
+
+    if ($INVENTARIONEGATIVO == '0' && stock < 0 ) {
+      alertify.alert("¡Advertencia!", "El stock no puede estar en negativo.", function(){
+        setTimeout(() => {
+          $("#stock").trigger("focus").select();
+        }, 10);
+      });
+      return;
+    }
+
     if ($(this).valid()) {
       $.ajax({ 
         url: rutaBase + (id.length > 0 ? "Editar" : "Crear"),

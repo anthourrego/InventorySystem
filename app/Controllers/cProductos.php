@@ -11,6 +11,7 @@ class cProductos extends BaseController {
 		$this->content['title'] = "Productos";
 		$this->content['view'] = "vProductos";
 		$this->content["costo"] = (session()->has("costoProducto") ? session()->get("costoProducto") : '0');
+		$this->content["inventario_negativo"] = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
 
 		$this->LDataTables();
 		$this->LMoment();
@@ -77,87 +78,98 @@ class cProductos extends BaseController {
 		$resp["success"] = false;
 		$filenameDelete = "";
 		$postData = (object) $this->request->getPost();
+		$inventarioNegativo = (session()->has("inventarioNegativo") ?  session()->get("inventarioNegativo") : '0');
 
-		$product = new mProductos();
-		//Creamos el producto y llenamos los datos
-		$producto = array(
-			"id" => $postData->id
-			,"id_categoria" => trim($postData->categoria)
-			,"referencia" => trim($postData->referencia)
-			,"item" => trim($postData->item)
-			,"descripcion" => trim($postData->descripcion)
-			,"stock" => $postData->stock
-			,"precio_venta" => str_replace(",", "", trim(str_replace("$", "", $postData->precioVent)))
-			,"ubicacion" => trim($postData->ubicacion)
-			,"manifiesto" => trim($postData->manifiesto)
-			,"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $postData->costo))) : '0')
-			,"id_manifiesto" => trim($postData->manifiesto)
-		);
-
-		//Validamos si eliminar la foto de perfil y buscamos el usuario
-		if($postData->editFoto != 0 && !empty($postData->id)) {
-			$foto = $product->find($postData->id)["imagen"];
-			$producto["imagen"] = null;
-			$filenameDelete = UPLOADS_PRODUCT_PATH . $postData->id . "/" . $foto; //<-- specify the image  file
+		//Validamos si se puede guardar inventario negativo
+		if ($inventarioNegativo == '0' && intval($postData->stock) < 0) {
+			$inventarioNegativo = false;
+		} else {
+			$inventarioNegativo = true;
 		}
 
-		$this->db->transBegin();
-        
-		//Validamos si el usuario que ingresaron ya existe
-		if ($product->save($producto)) {
-			//Traemos el id insertado
-			$product->id = empty($postData->id) ? $product->getInsertID() : $postData->id; 
-			$imgFoto = $this->request->getFile("imagen"); 
-			if (!empty($imgFoto->getBasename())) {
-				//Validamos la foto
-				$validated = $this->validate([
-					'rules' => [
-						'uploaded[imagen]',
-						'mime_in[imagen,image/jpg,image/jpeg,image/gif,image/png]',
-						'max_size[imagen,2048]',
-					],
-				]);
-                
-				//Se valida los datos de la imagen
-				if ($validated) {
-					if ($imgFoto->isValid() && !$imgFoto->hasMoved()) {
-						//Validamos que la imagen suba correctamente
-						$nameImg = "01.{$imgFoto->getClientExtension()}";
-						if ($imgFoto->move(UPLOADS_PRODUCT_PATH . "/" . $product->id, $nameImg, true)) {
-							$updateFoto = array(
-								"id" => $product->id,
-								"imagen" => $nameImg
-							);
-
-							if ($product->save($updateFoto)) { 
-								$resp["success"] = true;
-								$resp["msj"] = "El producto <b>{$product->referencia}</b> se creo correctamente.";
+		if ($inventarioNegativo) {
+			$product = new mProductos();
+			//Creamos el producto y llenamos los datos
+			$producto = array(
+				"id" => $postData->id
+				,"id_categoria" => trim($postData->categoria)
+				,"referencia" => trim($postData->referencia)
+				,"item" => trim($postData->item)
+				,"descripcion" => trim($postData->descripcion)
+				,"stock" => $postData->stock
+				,"precio_venta" => str_replace(",", "", trim(str_replace("$", "", $postData->precioVent)))
+				,"ubicacion" => trim($postData->ubicacion)
+				,"id_manifiesto" => strlen(trim($postData->manifiesto)) == 0 ? null : trim($postData->manifiesto)
+				,"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $postData->costo))) : '0')
+			);
+	
+			//Validamos si eliminar la foto de perfil y buscamos el usuario
+			if($postData->editFoto != 0 && !empty($postData->id)) {
+				$foto = $product->find($postData->id)["imagen"];
+				$producto["imagen"] = null;
+				$filenameDelete = UPLOADS_PRODUCT_PATH . $postData->id . "/" . $foto; //<-- specify the image  file
+			}
+	
+			$this->db->transBegin();
+					
+			//Validamos si el usuario que ingresaron ya existe
+			if ($product->save($producto)) {
+				//Traemos el id insertado
+				$product->id = empty($postData->id) ? $product->getInsertID() : $postData->id; 
+				$imgFoto = $this->request->getFile("imagen"); 
+				if (!empty($imgFoto->getBasename())) {
+					//Validamos la foto
+					$validated = $this->validate([
+						'rules' => [
+							'uploaded[imagen]',
+							'mime_in[imagen,image/jpg,image/jpeg,image/gif,image/png]',
+							'max_size[imagen,2048]',
+						],
+					]);
+									
+					//Se valida los datos de la imagen
+					if ($validated) {
+						if ($imgFoto->isValid() && !$imgFoto->hasMoved()) {
+							//Validamos que la imagen suba correctamente
+							$nameImg = "01.{$imgFoto->getClientExtension()}";
+							if ($imgFoto->move(UPLOADS_PRODUCT_PATH . "/" . $product->id, $nameImg, true)) {
+								$updateFoto = array(
+									"id" => $product->id,
+									"imagen" => $nameImg
+								);
+	
+								if ($product->save($updateFoto)) { 
+									$resp["success"] = true;
+									$resp["msj"] = "El producto <b>{$product->referencia}</b> se creo correctamente.";
+								} else {
+									$resp["msj"] = "Ha ocurrido un error al actualizar los datos de la foto.";
+								}
 							} else {
-								$resp["msj"] = "Ha ocurrido un error al actualizar los datos de la foto.";
+								$resp["msj"] = "Ha ocurrido un error al subir la foto.";
 							}
 						} else {
-							$resp["msj"] = "Ha ocurrido un error al subir la foto.";
+							$resp["msj"] = "Error al subir la foto, {$imgFoto->getErrorString()}";
 						}
 					} else {
-						$resp["msj"] = "Error al subir la foto, {$imgFoto->getErrorString()}";
+						$resp["msj"] = "Error al subir la foto, " . trim(str_replace("rules", "", $this->validator->getErrors()["rules"])); 
 					}
 				} else {
-					$resp["msj"] = "Error al subir la foto, " . trim(str_replace("rules", "", $this->validator->getErrors()["rules"])); 
+					$resp["success"] = true;
+					$resp["msj"] = "El producto <b>{$product->referencia}</b> se creo correctamente.";
 				}
 			} else {
-				$resp["success"] = true;
-				$resp["msj"] = "El producto <b>{$product->referencia}</b> se creo correctamente.";
+				$resp["msj"] = "No puede " . (empty($postData->id) ? 'crear' : 'actualizar') . " el producto." . listErrors($product->errors());
+			}
+					
+			//Validamos para elminar la foto
+			if ($filenameDelete != '' && file_exists($filenameDelete)) {
+				if(!@unlink($filenameDelete)) {
+					$resp["success"] = false;
+					$resp["msj"] = "Error al eliminar la foto de perfil, intente de nuevo";
+				} 
 			}
 		} else {
-			$resp["msj"] = "No puede " . (empty($postData->id) ? 'crear' : 'actualizar') . " el producto." . listErrors($product->errors());
-		}
-        
-		//Validamos para elminar la foto
-		if ($filenameDelete != '' && file_exists($filenameDelete)) {
-			if(!@unlink($filenameDelete)) {
-				$resp["success"] = false;
-				$resp["msj"] = "Error al eliminar la foto de perfil, intente de nuevo";
-			} 
+			$resp["msj"] = "El stock no puede estar en negativo.";
 		}
 
 		if($resp["success"] == true){
