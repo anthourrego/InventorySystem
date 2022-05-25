@@ -44,7 +44,7 @@ class cProductos extends BaseController {
 												P.precio_venta,
 												p.costo,
 												P.ubicacion,
-												P.manifiesto,
+												P.id_manifiesto AS manifiesto,
 												P.ventas, 
 												P.estado, 
 												P.created_at,
@@ -91,6 +91,7 @@ class cProductos extends BaseController {
 			,"ubicacion" => trim($postData->ubicacion)
 			,"manifiesto" => trim($postData->manifiesto)
 			,"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $postData->costo))) : '0')
+			,"id_manifiesto" => trim($postData->manifiesto)
 		);
 
 		//Validamos si eliminar la foto de perfil y buscamos el usuario

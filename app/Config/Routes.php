@@ -125,6 +125,16 @@ $routes->group('Configuracion', ['filter' => 'authGuard'], function ($routes) {
     $routes->post('Actualizar', 'cConfiguracion::actualizar', ['filter' => ['authGuard:71', 'ajax']]);
 });
 
+//Configuración
+$routes->group('Manifiesto', ['filter' => 'authGuard:8'], function ($routes) {
+    $routes->get('/', 'cManifiesto::index');
+    $routes->post('DT', 'cManifiesto::listaDT');
+    $routes->get('Archivo/(:any)', 'cManifiesto::archivo/$1');
+    $routes->post('Crear', 'cManifiesto::crearEditar', ['filter' => ['authGuard:11', 'ajax']]);
+    $routes->post('Editar', 'cManifiesto::crearEditar', ['filter' => ['authGuard:12', 'ajax']]);
+    $routes->post('Eliminar', 'cManifiesto::eliminar', ['filter' => ['authGuard:14', 'ajax']]);
+});
+
 
 /*
  * --------------------------------------------------------------------

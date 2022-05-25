@@ -73,7 +73,7 @@
             <div class="col-6">
               <div class="form-group form-valid">
                 <label class="mb-0" for="usuario">Usuario <span class="text-danger">*</span></label>
-                <input placeholder="Username" class="form-control soloLetras inputVer" id="usuario" name="usuario" type="text" minlength="1" maxlength="255" required autocomplete="off">
+                <input placeholder="Username" class="form-control soloLetras inputVer" id="usuario" name="usuario" type="text" minlength="3" maxlength="255" required autocomplete="off">
               </div>
               <div class="form-group form-valid">
                 <label class="mb-0" for="perfil">Perfil <span class="text-danger">*</span></label>

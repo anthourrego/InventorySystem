@@ -1,0 +1,192 @@
+let rutaBase = base_url() + "Manifiesto/";
+
+let DTManifiestos = $("#table").DataTable({
+  ajax: {
+    url: rutaBase + "DT",
+    type: "POST",
+    data: function (d) {
+      return $.extend(d, { "estado": $("#selectEstado").val() })
+    }
+  },
+  order: [[2, "asc"]],
+  columns: [
+    { data: 'nombre' },
+    { data: 'Nombre_Estado' },
+    {
+      data: 'created_at',
+      render: function (meta, type, data, meta) {
+        return moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A");
+      }
+    },
+    {
+      orderable: false,
+      searchable: false,
+      defaultContent: '',
+      className: 'text-center',
+      render: function (meta, type, data, meta) {
+
+        btnEditar = validPermissions(82) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-user-pen"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
+
+        btnCambiarEstado = validPermissions(83) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
+
+        btnAsignarProductos = validPermissions(86) ? `<button type="button" class="btn btn-info btnAsignarProductos" title="Asignar Productos"><i class="fa-solid fa-circle-plus"></i></button>` : '';
+
+        btnVerArchivo = validPermissions(84) ? `<button type="button" class="btn btn-light btnVerArchivo" title="Ver Archivo"><i class="fa-solid fa-file-circle-check"></i></button>` : '';
+
+        btnDescargarArhivo = validPermissions(85) ? `<button type="button" class="btn btn-dark btnDescargarArhivo" title="Descargar Archivo"><i class="fa-solid fa-download"></i></button>` : '';
+
+        return `<div class="btn-group btn-group-sm" role="group">
+          ${btnEditar}
+          ${btnCambiarEstado}
+          ${btnAsignarProductos}
+          ${btnVerArchivo}
+          ${btnDescargarArhivo}
+        </div>`;
+      }
+    },
+  ],
+  createdRow: function (row, data, dataIndex) {
+    //Cambio de estado
+    $(row).find(".btnCambiarEstado").on("click", function () {
+      eliminar(data);
+    });
+
+    //Editar Manifiesto
+    $(row).find(".btnEditar, .btnVer").click(function (e) {
+      e.preventDefault();
+
+      if ($(this).hasClass("btnVer")) {
+        $("#modalManifiestoLabel").html(`<i class="fa-solid fa-eye"></i> Ver Manifiesto`);
+        $(".inputVer").addClass("disabled").prop("disabled", true).trigger('change');
+      } else {
+        $("#modalManifiestoLabel").html(`<i class="fa-solid fa-user-pen"></i> Editar Manifiesto`);
+        $(".inputVer").removeClass("disabled").prop("disabled", false).trigger('change');
+      }
+
+      $("#labelInputFile").text(data.ruta_archivo);
+      $("#id").val(data.id);
+      $("#nombre").val(data.nombre);
+      $("#fechaLog").val(moment(data.ultimo_login, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
+      $("#fechaMod").val(moment(data.updated_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
+      $("#fechaCre").val(moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
+      $("#estado").val(data.Nombre_Estado);
+      $(".form-group-edit").removeClass("d-none");
+      $("#modalManifiesto").modal("show");
+    });
+
+    $(row).find(".btnAsignarProductos").on("click", function () {
+      console.log(data);
+    });
+  }
+});
+
+$(function () {
+  $("#selectEstado").on("change", function () {
+    DTManifiestos.ajax.reload();
+  });
+
+  $("#btnCrearManifiesto").on("click", function () {
+    $(".inputVer").val("").removeClass("disabled").prop("disabled", false).trigger('change');
+    $("#modalManifiestoLabel").html(`<i class="fa-solid fa-user-plus"></i> Crear Manifiesto`);
+    $(".form-group-edit").addClass("d-none");
+    $("#editFile").val(0);
+    $("#labelInputFile").text('Seleccionar archivo...');
+    $("#modalManifiesto").modal("show");
+  });
+
+  $('#modalManifiesto').on('shown.bs.modal	', function (event) {
+    if ($("#id").val().length <= 0) {
+      $("#nombre").trigger('focus');
+    }
+  });
+
+  //Formulario de Manifiesto
+  $("#formManifiesto").on("submit", function (e) {
+    e.preventDefault();
+
+    if (!$("#fileUpload").prop('files').length) {
+      return alertify.warning("No tiene archivo seleccionado");
+    }
+
+    const file = $("#fileUpload").prop('files')[0];
+    if (file.size >= 10000000) {
+      return alertify.error("El archivo es superior a 10Mb");
+    }
+
+    let id = $("#id").val().trim();
+
+    if ($(this).valid()) {
+      $.ajax({
+        url: rutaBase + (id.length > 0 ? "Editar" : "Crear"),
+        type: 'POST',
+        dataType: 'json',
+        processData: false,
+        contentType: false,
+        cache: false,
+        data: new FormData(this),
+        success: function (resp) {
+          if (resp.success) {
+            DTManifiestos.ajax.reload();
+            $("#modalManifiesto").modal("hide");
+            alertify.success(resp.msj);
+          } else {
+            alertify.alert('¡Advertencia!', resp.msj);
+          }
+        }
+      });
+    }
+  });
+
+  //Las condiciones del formulario
+  $("#formManifiesto").validate({
+    rules: {
+      fileUpload: {
+        required: true,
+        accept: "image/*,application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/msword"
+      }
+    },
+    messages: {
+      fileUpload: {
+        accept: "Seleccione un archivo valido"
+      }
+    }
+  });
+
+  $("#fileUpload").on('change', function () {
+    const file = this.files[0];
+    if (!file || (file && file.size >= 10000000)) {
+      if (file && file.size >= 10000000) alertify.error("El archivo es superior a 10Mb");
+      $("#fileUpload").val('');
+      $("#labelInputFile").text('Seleccionar archivo...');
+    } else {
+      $("#labelInputFile").text($(this).val());
+      if ($("#id").val().length > 0) {
+        $("#editFile").val(1);
+      }
+    }
+  });
+
+});
+
+function eliminar(data) {
+  alertify.confirm('Cambiar estado', `Esta seguro de cambiar el estado del Manifiesto ${data.nombre} a ${data.estado == "1" ? 'Ina' : 'A'}ctivo`,
+    function () {
+      $.ajax({
+        type: "POST",
+        url: rutaBase + "Eliminar",
+        dataType: 'json',
+        data: {
+          idManifiesto: data.id,
+          estado: (data.estado == "1" ? 0 : 1)
+        },
+        success: function (resp) {
+          if (resp.success) {
+            alertify.success(resp.msj);
+            DTManifiestos.ajax.reload();
+          } else {
+            alertify.error(resp.msj);
+          }
+        }
+      });
+    }, function () { });
+}

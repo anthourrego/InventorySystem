@@ -166,6 +166,36 @@ class mPermisos extends Model {
 						"text" => "Modificar"
 					]
 				]
+			],
+			[
+				"id" => 8,
+				"text" => "Manifiesto",
+				"children" => [
+					[
+						"id" => 81,
+						"text" => "Crear"
+					],
+					[
+						"id" => 82,
+						"text" => "Editar"
+					],
+					[
+						"id" => 83,
+						"text" => "Activar/Inactivar"
+					],
+					[
+						"id" => 84,
+						"text" => "Ver Archivo"
+					],
+					[
+						"id" => 85,
+						"text" => "Descargar Archivo"
+					],
+					[
+						"id" => 86,
+						"text" => "Asignar Productos"
+					]
+				]
 			]
 		];
 
