@@ -51,10 +51,11 @@ class Productos extends Migration {
 				'constraint'  => 255,
 				'null'        => true,
 			],
-			'manifiesto' => [
-				'type'        => 'VARCHAR',
-				'constraint'  => 255,
-				'null'        => true,
+			'id_manifiesto' => [
+				'type'           => 'INT',
+				'constraint'     => 11,
+				'null'		       => true,
+				'unsigned'       => true
 			],
 			'ventas' => [
 				'type'        => 'INT',
@@ -72,6 +73,7 @@ class Productos extends Migration {
 
 		$this->forge->addKey('id', true);
 		$this->forge->addForeignKey('id_categoria', 'categorias', 'id');
+		$this->forge->addForeignKey('id_manifiesto', 'manifiestos', 'id');
 		$this->forge->createTable('productos');
 	}
 

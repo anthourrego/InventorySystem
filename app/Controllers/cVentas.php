@@ -16,7 +16,7 @@ class cVentas extends BaseController {
 		$this->LMoment();
 
 		$this->content['js_add'][] = [
-			'Ventas/Administrador.js'
+			'Ventas/jsAdministrador.js'
 		];
 
 		return view('UI/viewDefault', $this->content);
@@ -39,7 +39,7 @@ class cVentas extends BaseController {
 		$this->content["nroVenta"] = is_null($codigo) ? 1 : ($codigo->codigo + 1);
 
 		$this->content['js_add'][] = [
-			'Ventas/Crear.js'
+			'Ventas/jsCrear.js'
 		];
 
 		return view('UI/viewDefault', $this->content);

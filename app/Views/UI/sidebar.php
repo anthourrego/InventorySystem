@@ -124,6 +124,14 @@
               </a>
             </li>
 						<?php } ?>
+						<?php if (validPermissions([8], true)) { ?> 
+						<li class="nav-item">
+              <a href="<?= base_url("Manifiesto") ?>" class="nav-link <?= current_url(true)->getSegment(3) == 'Manifiesto' ? 'active' : '' ?>">
+								<i class="nav-icon fa-solid fa-file"></i>
+                <p>Manifiesto</p>
+              </a>
+            </li>
+						<?php } ?>
 					</ul>
 				</nav>
 				<!-- /.sidebar-menu -->
