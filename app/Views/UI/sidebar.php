@@ -51,6 +51,12 @@
 								</li>
 							</ul>
 						</li>
+						<li class="nav-item">
+              <a href="<?= base_url() ?>" class="nav-link <?= current_url(true)->getSegment(3) == '' ? 'active' : '' ?>">
+                <i class="nav-icon fa-solid fa-house"></i>
+                <p>Inicio</p>
+              </a>
+            </li>
 						<?php if (validPermissions([1], true)) { ?> 
             <li class="nav-item">
               <a href="<?= base_url("Usuarios") ?>" class="nav-link <?= current_url(true)->getSegment(3) == 'Usuarios' ? 'active' : '' ?>">

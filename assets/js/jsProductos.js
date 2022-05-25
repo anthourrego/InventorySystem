@@ -139,7 +139,7 @@ let DTProductos = $("#table").DataTable({
 $(function(){
   //Se genera alerta informando que no hay ninguna categoria creada o habilitada
   if ($CATEGORIAS <= 0) {
-    alertify.alert("No hay ninguna categoria creada y/o habilitada. Por favor cree una.");
+    alertify.alert("¡Advertencia!", "No hay ninguna categoria creada y/o habilitada. Por favor cree una.");
   }
 
   $("#foto").on("change", function(event){
