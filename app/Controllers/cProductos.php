@@ -10,6 +10,7 @@ class cProductos extends BaseController {
 	public function index() {
 		$this->content['title'] = "Productos";
 		$this->content['view'] = "vProductos";
+		$this->content["costo"] = (session()->has("costoProducto") ? session()->get("costoProducto") : '0');
 
 		$this->LDataTables();
 		$this->LMoment();
@@ -41,6 +42,7 @@ class cProductos extends BaseController {
 												P.imagen,
 												P.stock,
 												P.precio_venta,
+												p.costo,
 												P.ubicacion,
 												P.manifiesto,
 												P.ventas, 
@@ -88,6 +90,7 @@ class cProductos extends BaseController {
 			,"precio_venta" => str_replace(",", "", trim(str_replace("$", "", $postData->precioVent)))
 			,"ubicacion" => trim($postData->ubicacion)
 			,"manifiesto" => trim($postData->manifiesto)
+			,"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $postData->costo))) : '0')
 		);
 
 		//Validamos si eliminar la foto de perfil y buscamos el usuario

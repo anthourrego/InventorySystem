@@ -46,6 +46,14 @@ let DTProductos = $("#table").DataTable({
       }
     },
     {
+      data: 'costo',
+      className: 'text-right',
+      visible: ($COSTO == '1' ? true : false),
+      render: function(meta, type, data, meta) {
+        return formatoPesos.format(data.costo);
+      }
+    },
+    {
       data: 'precio_venta',
       className: 'text-right',
       render: function(meta, type, data, meta) {
@@ -102,6 +110,7 @@ let DTProductos = $("#table").DataTable({
       $("#item").val(data.item);
       $("#stock").val(data.stock);
       $("#precioVent").val(data.precio_venta);
+      $("#costo").val(data.costo);
       $("#ubicacion").val(data.ubicacion);
       $("#manifiesto").val(data.manifiesto);
       $("#descripcion").val(data.descripcion);

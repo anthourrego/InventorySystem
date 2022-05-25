@@ -31,6 +31,7 @@
             <th>Descripción</th>
             <th>Categoría</th>
             <th>Stock</th>
+            <th>Costo</th>
             <th>Precio venta</th>
             <th>Ubicación</th>
             <th>Manifiesto</th>
@@ -100,6 +101,10 @@
               <label class="mb-0" for="precioVent">Precio venta <span class="text-danger">*</span></label>
               <input class="form-control inputPesos inputVer" id="precioVent" name="precioVent" type="tel" value="0" placeholder="Ingrese el precio de venta" autocomplete="off" required autocomplete="off">
             </div>
+            <div class="col-6 form-group form-valid <?= $costo == "1" ? '' : 'd-none' ?>">
+              <label class="mb-0" for="costo">Costo <span class="text-danger">*</span></label>
+              <input class="form-control inputPesos inputVer" id="costo" <?= $costo == "1" ? '' : 'disabled' ?> name="costo" type="tel" value="0" placeholder="Ingrese el costo" autocomplete="off" required autocomplete="off">
+            </div>
             <div class="col-6 form-group form-valid">
               <label class="mb-0" for="ubicacion">Ubicación</label>
               <input class="form-control inputVer" id="ubicacion" name="ubicacion" type="text" minlength="0" maxlength="255" placeholder="Ingrese la ubicación" autocomplete="off">
@@ -142,4 +147,5 @@
 
 <script>
   $CATEGORIAS = <?= COUNT($categorias) ?>;
+  $COSTO = "<?= $costo ?>";
 </script>

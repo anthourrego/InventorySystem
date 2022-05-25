@@ -91,7 +91,7 @@ let DTUsuarios = $("#table").DataTable({
       $("#id").val(data.id);
       $("#nombre").val(data.nombre);
       $("#usuario").val(data.usuario);
-      $("#perfil").val((data.perfilId == null ? 0 : data.perfilId));
+      $("#perfil").val((data.perfilId == null ? 0 : data.perfilId)).change();
       $("#fechaLog").val(moment(data.ultimo_login, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
       $("#fechaMod").val(moment(data.updated_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
       $("#fechaCre").val(moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));

@@ -12,7 +12,7 @@ class cConfiguracion extends BaseController {
 
 		$this->LSelect2();
 
-		$this->content["editar"] = validPermissions([7], true);
+		$this->content["editar"] = validPermissions([71], true);
 
 		$this->content['js_add'][] = [
 			'jsConfiguracion.js'

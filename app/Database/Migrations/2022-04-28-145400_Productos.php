@@ -46,6 +46,11 @@ class Productos extends Migration {
 				'constraint'  => '20,2',
 				'default'     => 0
 			],
+			'costo' => [
+				'type'        => 'DECIMAL',
+				'constraint'  => '20,2',
+				'default'     => 0
+			],
 			'ubicacion' => [
 				'type'        => 'VARCHAR',
 				'constraint'  => 255,

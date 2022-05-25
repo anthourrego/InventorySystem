@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\mPermisos;
 use App\Models\mUsuarios;
+use App\Models\mConfiguracion;
 
 class cPermisos extends BaseController {
 	public function Permisos($id, $campo) {
@@ -80,6 +81,14 @@ class cPermisos extends BaseController {
 			'logged_in' => true,
 			'permisos' => $per
 		];
+
+		$mConfiguracion = new mConfiguracion();
+
+		$config = $mConfiguracion->select("campo, valor")->findAll(); 
+
+		foreach ($config as $it) {
+			$userdata[$it->campo] = $it->valor;
+		}
 
 		session()->set($userdata);
 

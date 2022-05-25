@@ -3,6 +3,7 @@
 namespace App\Controllers;
 use App\Models\mUsuarios;
 use App\Models\mPermisos;
+use App\Models\mConfiguracion;
 
 class Home extends BaseController {
 
@@ -69,6 +70,14 @@ class Home extends BaseController {
 						'logged_in' => true,
 						'permisos' => $per
 					];
+
+					$mConfiguracion = new mConfiguracion();
+
+					$config = $mConfiguracion->select("campo, valor")->findAll(); 
+
+					foreach ($config as $it) {
+						$userdata[$it->campo] = $it->valor;
+					}
 
 					session()->set($userdata);
 
