@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 use App\Models\mManifiesto;
+use App\Models\mProductos;
 use \Hermawan\DataTables\DataTable;
 
 class cManifiesto extends BaseController {
@@ -190,4 +191,65 @@ class cManifiesto extends BaseController {
 
 		return $this->response->setJSON($resp);
 	}
+
+	public function listaDTProds() {
+
+		$manifiesto = $this->request->getPost("manifiesto");
+		
+		$query = $this->db->table('productos AS P')
+			->select("
+					P.id,
+					P.item,
+					P.descripcion,
+					P.imagen,
+					P.id_manifiesto
+			")->join('categorias AS C', 'P.id_categoria = C.id', 'left')
+			->where("P.id_manifiesto IS NULL")
+			->where("P.estado = 1");
+
+		if (!is_null($manifiesto)) {
+			$query = $query->orWhere("P.id_manifiesto = '$manifiesto'");
+		}
+
+		return DataTable::of($query)->toJson(true);
+	}
+
+	public function actualizarProducto() {
+		$resp["success"] = false;
+		$filenameDelete = "";
+		$producto = new mProductos();
+		
+    // Creamos el manifiesto y llenamos los datos
+		$dataProd = array(
+			"id" => $this->request->getPost("idProd")
+			, "id_manifiesto" => $this->request->getPost("idManifiesto") == '-1' ? null : trim($this->request->getPost("idManifiesto"))
+		);
+
+		$this->db->transBegin();
+			
+		//Validamos si el manifiesto que ingresaron ya existe
+		if ($producto->save($dataProd)) {
+			$resp["success"] = true;
+			if ($this->request->getPost("idManifiesto") == '-1') {
+				$resp["msj"] = "Producto <b>{$producto->nombre}</b> eliminado correctamente.";
+			} else {
+				$resp["msj"] = "Producto <b>{$producto->nombre}</b> agregado al manifiesto.";
+			}
+		} else {
+			if ($this->request->getPost("idManifiesto") == '-1') {
+				$resp["msj"] = "Ha ocurrido un error al quitar el producto.";
+			} else {
+				$resp["msj"] = "Ha ocurrido un error al agregar el producto.";
+			}
+		}
+
+		if($resp["success"] == true){
+			$this->db->transCommit();
+		} else {
+			$this->db->transRollback();
+		}
+
+		return $this->response->setJSON($resp);
+	}
+
 }

@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-12">
+  <div class="col-12 col-md-12" id="cardManifiestos">
     <div class="card">
       <div class="card-header">
         <div class="row justify-content-between">
@@ -40,37 +40,19 @@
     </div>
   </div>
 
-  <div class="col-12">
+  <div style="display: none;" class="col-12 col-md-6" id="cardProds">
     <div class="card">
-      <div class="card-header">
-        <div class="row justify-content-between">
-          <div class="col-8 col-md-3">
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <label class="input-group-text" for="selectEstado">Estado</label>
-              </div>
-              <select class="custom-select" id="selectEstado">
-                <option selected value="1">Activo</option>
-                <option value="0">Inactivo</option>
-                <option value="-1">Todos</option>
-              </select>
-            </div>
-          </div>
-          <?php if (validPermissions([81], true)) { ?>
-            <div class="col-5 col-md-3 text-right">
-              <button type="button" class="btn btn-primary" id="btnCrearManifiesto"><i class="fa-solid fa-plus"></i> Crear</button>
-            </div>
-          <?php } ?>
-        </div>
-      </div>
       <div class="card-body">
+        <div class="col-12 text-right">
+          <button type="button" class="btn btn-primary" id="btnFinalizarAgregarProds"><i class="fa-solid fa-check"></i> Finalizar</button>
+        </div>
         <div class="table-responsive">
-          <table id="table" class="table table-sm table-striped table-hover table-bordered w-100">
+          <table id="tableProds" class="table table-sm table-striped table-hover table-bordered w-100">
             <thead> 
               <tr>
-                <th>Nombre</th>
-                <th>Estado</th>
-                <th>Fecha Creación</th>
+                <th>Imagen</th>
+                <th>Item</th>
+                <th>Descripción</th>
                 <th>Acciones</th>
               </tr>
             </thead>

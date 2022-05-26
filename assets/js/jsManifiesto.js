@@ -1,4 +1,5 @@
 let rutaBase = base_url() + "Manifiesto/";
+let manifiestoActual = null;
 
 let DTManifiestos = $("#table").DataTable({
   ajax: {
@@ -75,7 +76,83 @@ let DTManifiestos = $("#table").DataTable({
     });
 
     $(row).find(".btnAsignarProductos").on("click", function () {
-      console.log(data);
+      $("#cardManifiestos").removeClass('col-md-12').addClass('col-md-6');
+      $("#cardProds").show();
+      manifiestoActual = data.id;
+      DTProductos.ajax.reload();
+    });
+  }
+});
+
+let DTProductos = $("#tableProds").DataTable({
+  ajax: {
+    url: rutaBase + "DTProductos",
+    type: "POST",
+    data: function (d) {
+      return $.extend(d, { manifiesto: manifiestoActual })
+    }
+  },
+  dom: domlftrip,
+  order: [[2, "asc"]],
+  columns: [
+    {
+      orderable: false,
+      searchable: false,
+      defaultContent: '',
+      className: "text-center",
+      render: function (meta, type, data, meta) {
+        return `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
+          <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
+        </a>`;
+      }
+    },
+    { data: 'item' },
+    {
+      data: 'descripcion',
+      width: "30%",
+      render: function (meta, type, data, meta) {
+        return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
+      }
+    },
+    {
+      orderable: false,
+      searchable: false,
+      defaultContent: '',
+      className: 'text-center',
+      render: function (meta, type, data, meta) {
+        if (data.id_manifiesto == manifiestoActual) {
+          return `<div class="btn-group btn-group-sm" role="group">
+            <button type="button" class="btn btn-danger btnRemove" title="Agregar a manifiesto"><i class="fa-solid fa-circle-minus"></i></button>
+          </div>`;
+        } else {
+          return `<div class="btn-group btn-group-sm" role="group">
+            <button type="button" class="btn btn-success btnAdd" title="Agregar a manifiesto"><i class="fa-solid fa-plus"></i></button>
+          </div>`;
+        }
+      }
+    },
+  ],
+  createdRow: function (row, data, dataIndex) {
+    $(row).find(".btnAdd, .btnRemove").on("click", function () {
+
+      let idManifiesto = $(this).hasClass('btnRemove') ? '-1' : manifiestoActual;
+
+      $.ajax({
+        type: "POST",
+        url: rutaBase + "AgregarProducto",
+        dataType: 'json',
+        data: {
+          idProd: data.id, idManifiesto
+        },
+        success: function (resp) {
+          if (resp.success) {
+            alertify.success(resp.msj);
+            DTProductos.ajax.reload();
+          } else {
+            alertify.error(resp.msj);
+          }
+        }
+      });
     });
   }
 });
@@ -164,6 +241,11 @@ $(function () {
         $("#editFile").val(1);
       }
     }
+  });
+
+  $("#btnFinalizarAgregarProds").on('click', function () {
+    $("#cardManifiestos").addClass('col-md-12').removeClass('col-md-6');
+    $("#cardProds").hide();
   });
 
 });
