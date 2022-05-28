@@ -31,20 +31,30 @@ class cManifiesto extends BaseController {
 
 		$query = $this->db->table('manifiestos AS M')
       ->select("
-          M.id,
-          M.nombre, 
-          M.estado, 
-          M.ruta_archivo, 
-          M.created_at,
-          M.updated_at,
-          CASE 
-              WHEN M.estado = 1 THEN 'Activo' 
-              ELSE 'Inactivo' 
-          END AS Nombre_Estado
-      ");
+        '' AS eliminar,  
+				M.id,
+				M.nombre, 
+				M.estado, 
+				M.ruta_archivo, 
+				M.created_at,
+				M.updated_at,
+				CASE 
+						WHEN M.estado = 1 THEN 'Activo' 
+						ELSE 'Inactivo' 
+				END AS Nombre_Estado
+				, T.Total AS Total_Prods_Manifiesto
+      ")->join("(
+				SELECT 
+					COUNT(*) AS Total
+					, id_manifiesto 
+				FROM productos 
+				GROUP BY id_manifiesto
+			) AS T", "M.id = T.id_manifiesto", "LEFT");
 
-		if($estado != "-1"){
-			$query->where("M.estado", $estado);
+		if($estado == "2"){
+			$query->where("T.Total > 0");
+		} else if($estado == "0"){
+			$query->where("T.Total IS NULL OR T.Total = 0");
 		}
 
 		return DataTable::of($query)->toJson(true);
@@ -66,24 +76,52 @@ class cManifiesto extends BaseController {
 
 	public function eliminar(){
 		$resp["success"] = false;
+		$resp['alert'] = true;
 		//Traemos los datos del post
 		$id = $this->request->getPost("idManifiesto");
 		$estado = $this->request->getPost("estado");
 
-		$manifiesto = new mManifiesto();
-		
-		$data = [
-			"id" => $id,
-			"estado" => $estado
-		];
+		$producto = new mProductos();
 
-		if($manifiesto->save($data)) {
-			$resp["success"] = true;
-			$resp['msj'] = "Manifiesto se ha actualizado correctamente";
+		$prods = $producto->select("descripcion")->where("id_manifiesto IS NULL")->findAll();
+
+		if (count($prods) == 0) {
+
+			$prods = $producto->select("descripcion")->where("id_manifiesto", $id)->findAll();
+
+			if (count($prods) == 0) {
+				$resp['alert'] = false;
+				$manifiesto = new mManifiesto();
+	
+				$data = [
+					"id" => $id,
+					"estado" => $estado
+				];
+	
+				if($manifiesto->delete($id)) {
+					$resp["success"] = true;
+					$resp['msj'] = "Manifiesto se ha eliminado correctamente";
+				} else {
+					$resp['msj'] = "Error al eliminar el manifiesto";
+				}
+
+			} else {
+				$strProds = "Los siguientes productos pertenecen al manifiesto <br><ul>";
+
+				foreach ($prods as $i) $strProds .= "<li>" . $i['descripcion'] . "</li>";
+
+				$resp['msj'] = $strProds . "</ul>";
+			}
+
 		} else {
-			$resp['msj'] = "Error al cambiar el estado";
+
+			$strProds = "Los siguientes productos no tienen manifiesto registrado <br><ul>";
+
+			foreach ($prods as $i) $strProds .= "<li>" . $i['descripcion'] . "</li>";
+
+			$resp['msj'] = $strProds . "</ul>";
+
 		}
-		
 		return $this->response->setJSON($resp);
 	}
 

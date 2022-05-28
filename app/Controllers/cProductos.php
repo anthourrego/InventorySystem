@@ -5,6 +5,7 @@ namespace App\Controllers;
 use \Hermawan\DataTables\DataTable;
 use App\Models\mCategorias;
 use App\Models\mProductos;
+use App\Models\mManifiesto;
 
 class cProductos extends BaseController {
 	public function index() {
@@ -22,6 +23,9 @@ class cProductos extends BaseController {
 
 		$categorias = new mCategorias();
 		$this->content["categorias"] = $categorias->asObject()->where("estado", 1)->findAll();
+
+		$manifiestos = new mManifiesto();
+		$this->content["manifiestos"] = $manifiestos->asObject()->where("estado", 1)->findAll();
 		
 		$this->content['js_add'][] = [
 			'jsProductos.js'

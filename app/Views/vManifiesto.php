@@ -9,9 +9,9 @@
                 <label class="input-group-text" for="selectEstado">Estado</label>
               </div>
               <select class="custom-select" id="selectEstado">
-                <option selected value="1">Activo</option>
-                <option value="0">Inactivo</option>
-                <option value="-1">Todos</option>
+                <option selected value="1">Todos</option>
+                <option value="2">Asignados</option>
+                <option value="0">Sin Asignar</option>
               </select>
             </div>
           </div>
@@ -27,6 +27,7 @@
           <table id="table" class="table table-sm table-striped table-hover table-bordered w-100">
             <thead> 
               <tr>
+                <th>Eliminar</th>
                 <th>Nombre</th>
                 <th>Estado</th>
                 <th>Fecha Creación</th>

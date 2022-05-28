@@ -507,3 +507,8 @@ div.dt-button-collection .dt-button {
 .dts_label {
   display: none;
 }
+
+/* item-delete */
+.bg-delete-tb {
+  background-color: #ffa9b1 !important;
+}

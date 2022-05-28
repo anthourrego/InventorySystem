@@ -9,8 +9,21 @@ let DTManifiestos = $("#table").DataTable({
       return $.extend(d, { "estado": $("#selectEstado").val() })
     }
   },
+  select: true,
   order: [[2, "asc"]],
   columns: [
+    {
+      visible: false,
+      orderable: false,
+      select:true,
+      data: 'eliminar',
+      className: 'select-checkbox',
+      /* render: function (meta, type, data, meta) {
+        return `<div class="text-center">
+          <input type="checkbox" aria-label="Checkbox for following text input">
+        </div>`;
+      } */
+    },
     { data: 'nombre' },
     { data: 'Nombre_Estado' },
     {
@@ -28,7 +41,7 @@ let DTManifiestos = $("#table").DataTable({
 
         btnEditar = validPermissions(82) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-user-pen"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
 
-        btnCambiarEstado = validPermissions(83) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
+        btnCambiarEstado = validPermissions(83) ? `<button type="button" class="btn btn-danger btnCambiarEstado" title="Eliminar"><i class="fa-solid fa-trash"></i></button>` : '';
 
         btnAsignarProductos = validPermissions(86) ? `<button type="button" class="btn btn-info btnAsignarProductos" title="Asignar Productos"><i class="fa-solid fa-circle-plus"></i></button>` : '';
 
@@ -47,6 +60,9 @@ let DTManifiestos = $("#table").DataTable({
     },
   ],
   createdRow: function (row, data, dataIndex) {
+
+    if (!data.Total_Prods_Manifiesto) $(row).addClass('bg-delete-tb');
+
     //Cambio de estado
     $(row).find(".btnCambiarEstado").on("click", function () {
       eliminar(data);
@@ -126,7 +142,7 @@ let DTProductos = $("#tableProds").DataTable({
           </div>`;
         } else {
           return `<div class="btn-group btn-group-sm" role="group">
-            <button type="button" class="btn btn-success btnAdd" title="Agregar a manifiesto"><i class="fa-solid fa-plus"></i></button>
+            <button type="button" class="btn btn-success btnAdd" title="Eliminar de manifiesto"><i class="fa-solid fa-plus"></i></button>
           </div>`;
         }
       }
@@ -160,6 +176,10 @@ let DTProductos = $("#tableProds").DataTable({
 $(function () {
   $("#selectEstado").on("change", function () {
     DTManifiestos.ajax.reload();
+    /* DTManifiestos.column(0).visible(false);
+    if ($(this).val() == 0) {
+      DTManifiestos.column(0).visible(true);
+    } */
   });
 
   $("#btnCrearManifiesto").on("click", function () {
@@ -245,13 +265,14 @@ $(function () {
 
   $("#btnFinalizarAgregarProds").on('click', function () {
     $("#cardManifiestos").addClass('col-md-12').removeClass('col-md-6');
+    DTManifiestos.ajax.reload();
     $("#cardProds").hide();
   });
 
 });
 
 function eliminar(data) {
-  alertify.confirm('Cambiar estado', `Esta seguro de cambiar el estado del Manifiesto ${data.nombre} a ${data.estado == "1" ? 'Ina' : 'A'}ctivo`,
+  alertify.confirm('Cambiar estado', `¿Esta seguro de eliminar el Manifiesto ${data.nombre}?`,
     function () {
       $.ajax({
         type: "POST",
@@ -266,7 +287,11 @@ function eliminar(data) {
             alertify.success(resp.msj);
             DTManifiestos.ajax.reload();
           } else {
-            alertify.error(resp.msj);
+            if (resp.alert) {
+              alertify.alert('¡Advertencia!', resp.msj);
+            } else {
+              alertify.error(resp.msj);
+            }
           }
         }
       });
