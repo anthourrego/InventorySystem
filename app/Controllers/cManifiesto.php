@@ -284,23 +284,6 @@ class cManifiesto extends BaseController {
 		return $this->response->setJSON($resp);
 	}
 
-	public function getManifiesto(){
-		$resp["success"] = false;
-		//Traemos los datos del post
-		$data = (object) $this->request->getPost();
-        
-		$userModel = new mManifiesto();
-
-		$result = $userModel->like('nombre', $data->buscar)->orLike('nombre', $data->buscar)->find();
-        
-		if(count($result) == 1) {
-			$resp["success"] = true;
-			$resp["data"] = $result[0]; 
-		}
-
-		return $this->response->setJSON($resp);
-	}
-
 	public function listaDTProds() {
 
 		$manifiesto = $this->request->getPost("manifiesto");
@@ -323,7 +306,7 @@ class cManifiesto extends BaseController {
 		return DataTable::of($query)->toJson(true);
 	}
 
-	public function actualizarProducto() {
+	public function actualizarManifiesto() {
 		$resp["success"] = false;
 		$filenameDelete = "";
 		$producto = new mProductos();
@@ -359,6 +342,22 @@ class cManifiesto extends BaseController {
 		}
 
 		return $this->response->setJSON($resp);
+	}
+
+	public function descargarArchivo($id) {
+
+		$manifiesto = new mManifiesto();
+
+		$manif = $manifiesto->asObject()->where("id", $id)->find();
+
+		$manif = $manif[0];
+		if (isset($manif->ruta_archivo) && !is_null($manif->ruta_archivo)) {
+
+			return $this->response->download(UPLOADS_MANIFEST_PATH . $manif->ruta_archivo, null);
+
+		}
+
+
 	}
 
 }

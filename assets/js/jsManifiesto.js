@@ -54,12 +54,13 @@ let DTManifiestos = $("#table").DataTable({
 
         btnVerArchivo = validPermissions(84) ? `<button type="button" class="btn btn-light btnVerArchivo" title="Ver Archivo"><i class="fa-solid fa-file-circle-check"></i></button>` : '';
 
-        btnDescargarArhivo = validPermissions(85) ? `<button type="button" class="btn btn-dark btnDescargarArhivo" title="Descargar Archivo"><i class="fa-solid fa-download"></i></button>` : '';
+        btnDescargarArhivo = validPermissions(85) ? `<a href="${rutaBase}Descargar/${data.id}" type="button" class="btn btn-dark btnDescargarArhivo" title="Descargar Archivo"><i class="fa-solid fa-download"></i></a>` : '';
 
         return `<div class="btn-group btn-group-sm group-actions" role="group">
           ${btnEditar}
           ${btnCambiarEstado}
           ${btnAsignarProductos}
+          ${btnDescargarArhivo}
         </div>`;
       }
     },
