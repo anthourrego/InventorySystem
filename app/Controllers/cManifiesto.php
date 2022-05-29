@@ -209,7 +209,7 @@ class cManifiesto extends BaseController {
 
 		//Validamos si eliminar la foto de perfil y buscamos el manifiesto
 		if($this->request->getPost("editFoto") != 0 && !empty($this->request->getPost("id"))) {
-			$foto = $user->find($this->request->getPost("id"))["foto"];
+			$foto = $manifiesto->find($this->request->getPost("id"))["foto"];
 			$dataManifiesto["foto"] = null;
 			$filenameDelete = UPLOADS_MANIFEST_PATH . $foto; //<-- specify the image  file
 		}

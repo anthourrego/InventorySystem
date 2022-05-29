@@ -46,7 +46,7 @@ let DTManifiestos = $("#table").DataTable({
       className: 'text-center',
       render: function (meta, type, data, meta) {
 
-        btnEditar = validPermissions(82) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-user-pen"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
+        btnEditar = validPermissions(82) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-edit"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
 
         btnCambiarEstado = validPermissions(83) ? `<button type="button" class="btn btn-danger btnCambiarEstado" title="Eliminar"><i class="fa-solid fa-trash"></i></button>` : '';
 
