@@ -344,7 +344,7 @@ class cManifiesto extends BaseController {
 		return $this->response->setJSON($resp);
 	}
 
-	public function descargarArchivo($id) {
+	public function descargarVerArchivo($id, $ver) {
 
 		$manifiesto = new mManifiesto();
 
@@ -352,12 +352,28 @@ class cManifiesto extends BaseController {
 
 		$manif = $manif[0];
 		if (isset($manif->ruta_archivo) && !is_null($manif->ruta_archivo)) {
+			$path = UPLOADS_MANIFEST_PATH . $manif->ruta_archivo;
 
-			return $this->response->download(UPLOADS_MANIFEST_PATH . $manif->ruta_archivo, null);
+			if ($ver == 1) {
+
+				$image = file_get_contents($path);
+
+				if($image === FALSE) {
+					show_404();
+				} else {
+
+					$file = new \CodeIgniter\Files\File($path);
+
+					$mimeType = $file->getMimeType();;
+		
+					$this->response->setStatusCode(200)->setContentType($mimeType)->setBody($image)->send();
+				}
+
+			} else {
+				return $this->response->download($path, null);
+			}
 
 		}
-
-
 	}
 
 }
