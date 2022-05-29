@@ -161,6 +161,7 @@ class BaseController extends Controller {
             ,'vendor/datatables.net/datatables.net-buttons/js/buttons.html5.min.js'
             ,'vendor/datatables.net/datatables.net-buttons/js/buttons.print.min.js'
             ,'vendor/datatables.net/datatables.net-scroller/js/dataTables.scroller.min.js'
+            ,'vendor/datatables.net/datatables.net-select/js/dataTables.select.min.js'
         ];
 
         $this->content['js_add'][] = [

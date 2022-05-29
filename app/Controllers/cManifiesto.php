@@ -80,48 +80,119 @@ class cManifiesto extends BaseController {
 		//Traemos los datos del post
 		$id = $this->request->getPost("idManifiesto");
 		$estado = $this->request->getPost("estado");
-
+		$muchos = $this->request->getPost("muchos");
 		$producto = new mProductos();
 
-		$prods = $producto->select("descripcion")->where("id_manifiesto IS NULL")->findAll();
+		$this->db->transBegin();
 
-		if (count($prods) == 0) {
+		if ($muchos == "1") {
+			$resp['alert'] = false;
+			$todo = $this->request->getPost("todo");
+			$manifiesto = new mManifiesto();
+			$resp['msj'] = "No fue posible eliminar los manifiestos";
+			$total = 0;
 
-			$prods = $producto->select("descripcion")->where("id_manifiesto", $id)->findAll();
+			if ($todo == "1") {
 
-			if (count($prods) == 0) {
-				$resp['alert'] = false;
-				$manifiesto = new mManifiesto();
-	
-				$data = [
-					"id" => $id,
-					"estado" => $estado
-				];
-	
-				if($manifiesto->delete($id)) {
+				$manifiestos = $manifiesto
+					->select("id, nombre, ruta_archivo")
+					->join("(
+						SELECT 
+							COUNT(*) AS Total
+							, id_manifiesto 
+						FROM productos 
+						GROUP BY id_manifiesto
+					) AS T", "id = T.id_manifiesto", "LEFT")
+					->where("T.Total IS NULL OR T.Total = 0")
+					->findAll();
+
+				foreach ($manifiestos as $it) {
+					
+					if($manifiesto->delete($it['id'])) {
+						$filenameDelete = UPLOADS_MANIFEST_PATH . $it['ruta_archivo']; //<-- specify the image  file
+						
+						if(!@unlink($filenameDelete)) {
+							$resp['msj'] = "Error al eliminar documento anexo al manifiesto";
+						} else {
+							$total++;
+						}
+					}
+				}
+
+				if (count($manifiestos) == $total) {
 					$resp["success"] = true;
-					$resp['msj'] = "Manifiesto se ha eliminado correctamente";
-				} else {
-					$resp['msj'] = "Error al eliminar el manifiesto";
+					$resp['msj'] = "Manifiestos eliminados correctamente";
 				}
 
 			} else {
-				$strProds = "Los siguientes productos pertenecen al manifiesto <br><ul>";
+				$selecciones = $this->request->getPost("selecciones");
 
-				foreach ($prods as $i) $strProds .= "<li>" . $i['descripcion'] . "</li>";
+				foreach ($selecciones as $it) {
+					
+					if($manifiesto->delete($it['id'])) {
+						$filenameDelete = UPLOADS_MANIFEST_PATH . $it['archivo']; //<-- specify the image  file
+						
+						if(!@unlink($filenameDelete)) {
+							$resp['msj'] = "Error al eliminar documento anexo al manifiesto";
+						} else {
+							$total++;
+						}
+					};
+				}
 
-				$resp['msj'] = $strProds . "</ul>";
+				if (count($selecciones) == $total) {
+					$resp["success"] = true;
+					$resp['msj'] = "Manifiestos eliminados correctamente";
+				}
 			}
 
 		} else {
+	
+			$prods = $producto->select("descripcion")->where("id_manifiesto IS NULL")->findAll();
+	
+			if (count($prods) == 0) {	
+				$prods = $producto->select("descripcion")->where("id_manifiesto", $id)->findAll();
+	
+				if (count($prods) == 0) {
+					$resp['alert'] = false;
+					$manifiesto = new mManifiesto();
 
-			$strProds = "Los siguientes productos no tienen manifiesto registrado <br><ul>";
+					if($manifiesto->delete($id)) {
+						$archivo = $this->request->getPost("archivo");
+						$filenameDelete = UPLOADS_MANIFEST_PATH . $archivo; //<-- specify the image  file
 
-			foreach ($prods as $i) $strProds .= "<li>" . $i['descripcion'] . "</li>";
+						if(!@unlink($filenameDelete)) {
+							$resp['msj'] = "Error al eliminar documento anexo al manifiesto";
+						} else {
+							$resp["success"] = true;
+							$resp['msj'] = "Manifiesto se ha eliminado correctamente";
+						}
 
-			$resp['msj'] = $strProds . "</ul>";
-
+					} else {
+						$resp['msj'] = "Error al eliminar el manifiesto";
+					}
+				} else {
+					$strProds = "Los siguientes productos pertenecen al manifiesto <br><ul>";
+	
+					foreach ($prods as $i) $strProds .= "<li>" . $i['descripcion'] . "</li>";
+	
+					$resp['msj'] = $strProds . "</ul>";
+				}
+			} else {
+				$strProds = "Los siguientes productos no tienen manifiesto registrado <br><ul>";
+	
+				foreach ($prods as $i) $strProds .= "<li>" . $i['descripcion'] . "</li>";
+	
+				$resp['msj'] = $strProds . "</ul>";
+			}
 		}
+
+		if($resp["success"] == true){
+			$this->db->transCommit();
+		} else {
+			$this->db->transRollback();
+		}
+
 		return $this->response->setJSON($resp);
 	}
 

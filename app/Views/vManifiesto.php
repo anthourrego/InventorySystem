@@ -15,11 +15,14 @@
               </select>
             </div>
           </div>
-          <?php if (validPermissions([81], true)) { ?>
-            <div class="col-5 col-md-3 text-right">
+          <div class="col-5 col-md-3 text-right">
+            <?php if (validPermissions([81], true)) { ?>
               <button type="button" class="btn btn-primary" id="btnCrearManifiesto"><i class="fa-solid fa-plus"></i> Crear</button>
-            </div>
-          <?php } ?>
+            <?php } ?>
+            <?php if (validPermissions([87], true)) { ?>
+              <button style="display: none;" type="button" class="btn btn-danger" id="btnEliminarMultiple"><i class="fa-solid fa-trash"></i> Eliminar Todos</button>
+            <?php } ?>
+          </div>
         </div>
       </div>
       <div class="card-body">
@@ -27,7 +30,12 @@
           <table id="table" class="table table-sm table-striped table-hover table-bordered w-100">
             <thead> 
               <tr>
-                <th>Eliminar</th>
+                <th>
+                  <div class="custom-control custom-checkbox text-center">
+                    <input type="checkbox" class="custom-control-input" value="1" id="checkAll">
+                    <label class="custom-control-label" for="checkAll"></label>
+                  </div>
+                </th>
                 <th>Nombre</th>
                 <th>Estado</th>
                 <th>Fecha Creación</th>
@@ -116,4 +124,6 @@
   </div>
 </div>
 
-<script></script>
+<script>
+  let $permisoEliminarMultiple = <?= validPermissions([87], true) ? 'true' : 'false' ?>
+</script>

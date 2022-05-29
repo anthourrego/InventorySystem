@@ -1,5 +1,8 @@
 let rutaBase = base_url() + "Manifiesto/";
 let manifiestoActual = null;
+let seleccionoTodo = 0;
+let selecciones = [];
+let totalRegistros = 0;
 
 let DTManifiestos = $("#table").DataTable({
   ajax: {
@@ -9,20 +12,24 @@ let DTManifiestos = $("#table").DataTable({
       return $.extend(d, { "estado": $("#selectEstado").val() })
     }
   },
-  select: true,
+  select: {
+    style: 'multi',
+    selector: '.checkManifiesto'
+  },
   order: [[2, "asc"]],
   columns: [
     {
       visible: false,
       orderable: false,
-      select:true,
+      select: true,
       data: 'eliminar',
-      className: 'select-checkbox',
-      /* render: function (meta, type, data, meta) {
-        return `<div class="text-center">
-          <input type="checkbox" aria-label="Checkbox for following text input">
+      className: 'text-center',
+      render: function (meta, type, data, meta) {
+        return `<div class="custom-control custom-checkbox text-center">
+          <input type="checkbox" class="custom-control-input checkManifiesto" value="1" id="check${data.id}">
+          <label class="custom-control-label" for="check${data.id}"></label>
         </div>`;
-      } */
+      }
     },
     { data: 'nombre' },
     { data: 'Nombre_Estado' },
@@ -49,12 +56,10 @@ let DTManifiestos = $("#table").DataTable({
 
         btnDescargarArhivo = validPermissions(85) ? `<button type="button" class="btn btn-dark btnDescargarArhivo" title="Descargar Archivo"><i class="fa-solid fa-download"></i></button>` : '';
 
-        return `<div class="btn-group btn-group-sm" role="group">
+        return `<div class="btn-group btn-group-sm group-actions" role="group">
           ${btnEditar}
           ${btnCambiarEstado}
           ${btnAsignarProductos}
-          ${btnVerArchivo}
-          ${btnDescargarArhivo}
         </div>`;
       }
     },
@@ -62,6 +67,20 @@ let DTManifiestos = $("#table").DataTable({
   createdRow: function (row, data, dataIndex) {
 
     if (!data.Total_Prods_Manifiesto) $(row).addClass('bg-delete-tb');
+
+    if (
+      (seleccionoTodo == 1 && selecciones.findIndex(p => p.id == data.id) == -1)
+      || (seleccionoTodo == 0 && selecciones.findIndex(p => p.id == data.id) != -1)
+    ) {
+      DTManifiestos.row(dataIndex).select();
+      $(row).find('.checkManifiesto').prop("checked", true);
+    }
+
+    if (seleccionoTodo || (!seleccionoTodo && selecciones.length)) {
+      $(row).find(".group-actions button").prop('disabled', true);
+    } else {
+      $(row).find(".group-actions button").prop('disabled', false);
+    }
 
     //Cambio de estado
     $(row).find(".btnCambiarEstado").on("click", function () {
@@ -97,7 +116,65 @@ let DTManifiestos = $("#table").DataTable({
       manifiestoActual = data.id;
       DTProductos.ajax.reload();
     });
+  },
+  drawCallback: function (settings) {
+    totalRegistros = settings.json.recordsTotal;
+
+    if (totalRegistros < 1) {
+      $("#checkAll").prop("disabled", true);
+    } else {
+      $("#checkAll").prop("disabled", false);
+    }
   }
+}).on('select', function (e, dt, type, indexes) {
+
+  let dataRow = dt.rows(indexes).data().toArray()[0];
+  if (!seleccionoTodo) {
+    agregarManifiesto(dataRow);
+    if (totalRegistros == selecciones.length) {
+      seleccionoTodo = 1;
+      $("#checkAll").prop("indeterminate", false).prop("checked", true);
+      selecciones = [];
+    } else if (selecciones.length > 0) {
+      $("#checkAll").prop("indeterminate", true);
+    }
+  } else {
+    eliminarManifiesto(dataRow);
+    if (!selecciones.length) {
+      $("#checkAll").prop("indeterminate", false).prop("checked", true);
+    }
+  }
+
+  if (seleccionoTodo || (!seleccionoTodo && selecciones.length)) {
+    $(".group-actions button, #btnCrearManifiesto").prop('disabled', true);
+  } else {
+    $(".group-actions button, #btnCrearManifiesto").prop('disabled', false);
+  }
+
+}).on('deselect', function (e, dt, type, indexes) {
+
+  let dataRow = dt.rows(indexes).data().toArray()[0];
+  if (!seleccionoTodo) {
+    eliminarManifiesto(dataRow);
+    if (selecciones.length <= 0) {
+      $("#checkAll").prop("indeterminate", false).prop("checked", false);
+    }
+  } else {
+    agregarManifiesto(dataRow);
+    $("#checkAll").prop("indeterminate", true);
+    if (totalRegistros == selecciones.length) {
+      seleccionoTodo = 0;
+      $("#checkAll").prop("indeterminate", false).prop("checked", false);
+      selecciones = [];
+    }
+  }
+
+  if (seleccionoTodo || (!seleccionoTodo && selecciones.length)) {
+    $(".group-actions button, #btnCrearManifiesto").prop('disabled', true);
+  } else {
+    $(".group-actions button, #btnCrearManifiesto").prop('disabled', false);
+  }
+
 });
 
 let DTProductos = $("#tableProds").DataTable({
@@ -176,10 +253,32 @@ let DTProductos = $("#tableProds").DataTable({
 $(function () {
   $("#selectEstado").on("change", function () {
     DTManifiestos.ajax.reload();
-    /* DTManifiestos.column(0).visible(false);
-    if ($(this).val() == 0) {
-      DTManifiestos.column(0).visible(true);
-    } */
+    if ($permisoEliminarMultiple) {
+      selecciones = [];
+      $("#checkAll").prop("indeterminate", false).prop("checked", false);
+      DTManifiestos.column(0).visible(false);
+      $("#btnEliminarMultiple").hide();
+      if ($(this).val() == 0) {
+        $("#btnEliminarMultiple").show();
+        DTManifiestos.column(0).visible(true);
+
+        $("#btnEliminarMultiple").unbind('click').on('click', function () {
+
+          if (!seleccionoTodo && !selecciones.length) {
+            return alertify.warning("Debe seleccionar al menos un producto para eliminar");
+          }
+
+          let info = {
+            id: '',
+            estado: 0,
+            archivo: ''
+          }
+          eliminar(info, 1);
+
+        });
+
+      }
+    }
   });
 
   $("#btnCrearManifiesto").on("click", function () {
@@ -269,10 +368,24 @@ $(function () {
     $("#cardProds").hide();
   });
 
+  $(document).on('change', '#checkAll', function () {
+    $("#checkAll").prop("indeterminate", false);
+    selecciones = [];
+    if ($(this).is(":checked")) {
+      seleccionoTodo = 1;
+      $(".checkManifiesto").prop("checked", true);
+      DTManifiestos.rows().select();
+    } else {
+      seleccionoTodo = 0;
+      $(".checkManifiesto").prop("checked", false);
+      DTManifiestos.rows().deselect();
+    }
+  });
+
 });
 
-function eliminar(data) {
-  alertify.confirm('Cambiar estado', `¿Esta seguro de eliminar el Manifiesto ${data.nombre}?`,
+function eliminar(data, varios = 0) {
+  alertify.confirm('Cambiar estado', `¿Esta seguro de eliminar ${varios ? 'los manifiestos' : `el Manifiesto ${data.nombre}`}?`,
     function () {
       $.ajax({
         type: "POST",
@@ -280,12 +393,20 @@ function eliminar(data) {
         dataType: 'json',
         data: {
           idManifiesto: data.id,
-          estado: (data.estado == "1" ? 0 : 1)
+          estado: (data.estado == "1" ? 0 : 1),
+          archivo: data.ruta_archivo,
+          muchos: varios + '',
+          todo: seleccionoTodo + '',
+          selecciones: selecciones
         },
         success: function (resp) {
           if (resp.success) {
             alertify.success(resp.msj);
             DTManifiestos.ajax.reload();
+            $("#checkAll").prop("indeterminate", false).prop("checked", false);
+            selecciones = [];
+            seleccionoTodo = 0;
+            $("#btnCrearManifiesto").prop('disabled', false);
           } else {
             if (resp.alert) {
               alertify.alert('¡Advertencia!', resp.msj);
@@ -296,4 +417,19 @@ function eliminar(data) {
         }
       });
     }, function () { });
+}
+
+function agregarManifiesto(data) {
+  if (!selecciones.some(it => it.id == data.id)) {
+    selecciones.push({
+      id: data.id,
+      archivo: data.ruta_archivo,
+      nombre: data.nombre
+    });
+  }
+}
+
+function eliminarManifiesto(data) {
+  let index = selecciones.findIndex(ele => ele.id == data.id);
+  if (index != -1) selecciones.splice(index, 1);
 }

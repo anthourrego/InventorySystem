@@ -16,6 +16,7 @@
         "datatables.net/datatables.net-buttons": "dev-master",
         "datatables.net/datatables.net-buttons-bs4": "dev-master",
         "datatables.net/datatables.net-scroller": "dev-master",
+        "datatables.net/datatables.net-select": "dev-master",
         "stuk/jszip": "^3.0",
         "bpampuch/pdfmake": "^0.2.4",
         "hermawan/codeigniter4-datatables": "^0.5.4",

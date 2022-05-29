@@ -181,7 +181,7 @@ class mPermisos extends Model {
 					],
 					[
 						"id" => 83,
-						"text" => "Activar/Inactivar"
+						"text" => "Eliminar"
 					],
 					[
 						"id" => 84,
@@ -194,6 +194,10 @@ class mPermisos extends Model {
 					[
 						"id" => 86,
 						"text" => "Asignar Productos"
+					],
+					[
+						"id" => 87,
+						"text" => "Eliminar Multiple"
 					]
 				]
 			]

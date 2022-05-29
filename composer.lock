@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6cb08c068f286abfd87c597dabbd846a",
+    "content-hash": "7a71320fa3d8349c353504e96b21d624",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -346,12 +346,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/DataTables/Dist-DataTables.git",
-                "reference": "faa9e0cce93609c3ecc1586df4bf5a47bc1942be"
+                "reference": "31513c787f54e61939d2d4c4f1a3d7c9e788ae23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DataTables/Dist-DataTables/zipball/faa9e0cce93609c3ecc1586df4bf5a47bc1942be",
-                "reference": "faa9e0cce93609c3ecc1586df4bf5a47bc1942be",
+                "url": "https://api.github.com/repos/DataTables/Dist-DataTables/zipball/31513c787f54e61939d2d4c4f1a3d7c9e788ae23",
+                "reference": "31513c787f54e61939d2d4c4f1a3d7c9e788ae23",
                 "shasum": ""
             },
             "require": {
@@ -380,7 +380,7 @@
                 "forum": "https://datatables.net/forums",
                 "source": "https://github.com/DataTables/Dist-DataTables"
             },
-            "time": "2022-05-19T15:40:08+00:00"
+            "time": "2022-05-27T13:51:42+00:00"
         },
         {
             "name": "datatables.net/datatables.net-bs4",
@@ -569,6 +569,50 @@
                 "source": "https://github.com/DataTables/Dist-DataTables-Scroller"
             },
             "time": "2022-03-31T11:02:28+00:00"
+        },
+        {
+            "name": "datatables.net/datatables.net-select",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/DataTables/Dist-DataTables-Select.git",
+                "reference": "d23a8aed56182fb43d5af241c3e3a0923d92f822"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/DataTables/Dist-DataTables-Select/zipball/d23a8aed56182fb43d5af241c3e3a0923d92f822",
+                "reference": "d23a8aed56182fb43d5af241c3e3a0923d92f822",
+                "shasum": ""
+            },
+            "require": {
+                "datatables.net/datatables.net": ">=1.11.5"
+            },
+            "default-branch": true,
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "SpryMedia",
+                    "homepage": "https://datatables.net"
+                }
+            ],
+            "description": "Select provides table item selection capabilities - rows, columns and cells can be selected individually or collectively. Complex selection operations such as operating system style selection (ctrl/cmd and shift click) for multiple rows can be enabled with a single option for a DataTable. This is Select for DataTables",
+            "homepage": "http://www.datatables.net/",
+            "keywords": [
+                "datatables",
+                "jquery",
+                "select",
+                "selection",
+                "table"
+            ],
+            "support": {
+                "forum": "https://datatables.net/forums",
+                "source": "https://github.com/DataTables/Dist-DataTables-Select"
+            },
+            "time": "2022-03-31T11:03:34+00:00"
         },
         {
             "name": "fortawesome/font-awesome",
@@ -3590,7 +3634,8 @@
         "datatables.net/datatables.net-bs4": 20,
         "datatables.net/datatables.net-buttons": 20,
         "datatables.net/datatables.net-buttons-bs4": 20,
-        "datatables.net/datatables.net-scroller": 20
+        "datatables.net/datatables.net-scroller": 20,
+        "datatables.net/datatables.net-select": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
