@@ -110,8 +110,8 @@
               <input class="form-control inputVer" id="ubicacion" name="ubicacion" type="text" minlength="0" maxlength="255" placeholder="Ingrese la ubicación" autocomplete="off">
             </div>
             <div class="col-6 form-group form-valid">
-              <label class="mb-0" for="manifiesto">Manifiesto <span class="text-danger">*</span></label>
-              <select id="manifiesto" required name="manifiesto" class="custom-select select2 inputVer" data-placeholder="Seleccione..." data-allow-clear="1">
+              <label class="mb-0" for="manifiesto">Manifiesto</label>
+              <select id="manifiesto" name="manifiesto" class="custom-select select2 inputVer" data-placeholder="Seleccione..." data-allow-clear="1">
                 <option></option>
                 <?php foreach ($manifiestos as $it) : ?>
                   <option value="<?=  $it->id?>"><?= $it->nombre ?></option>

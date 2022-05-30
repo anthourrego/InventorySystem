@@ -82,6 +82,7 @@ class cProductos extends BaseController {
 		$resp["success"] = false;
 		$filenameDelete = "";
 		$postData = (object) $this->request->getPost();
+
 		$inventarioNegativo = (session()->has("inventarioNegativo") ?  session()->get("inventarioNegativo") : '0');
 
 		//Validamos si se puede guardar inventario negativo
