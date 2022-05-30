@@ -6,6 +6,9 @@ use App\Controllers\BaseController;
 use \Hermawan\DataTables\DataTable;
 use App\Models\mVentas;
 use App\Models\mProductos;
+use App\Models\mUsuarios;
+use App\Models\mClientes;
+use App\Models\mVentasProductos;
 
 class cVentas extends BaseController {
 	public function index() {
@@ -36,7 +39,14 @@ class cVentas extends BaseController {
 		$ventaModel = new mVentas();
 		$codigo = $ventaModel->asObject()->orderBy('id', 'desc')->first();
 
+		$mClientes = new mClientes();
+		$this->content["cantidadClientes"] = $mClientes->where("estado", 1)->countAllResults();
+
 		$this->content["nroVenta"] = is_null($codigo) ? 1 : ($codigo->codigo + 1);
+
+		$this->content["inventario_negativo"] = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
+
+		$this->content["cantidadVendedores"] = $this->cantidadVendedores();
 
 		$this->content['js_add'][] = [
 			'Ventas/jsCrear.js'
@@ -85,11 +95,13 @@ class cVentas extends BaseController {
 												C.nombre AS NombreCliente,
 												V.id_vendedor,
 												U.nombre AS NombreVendedor,
-												V.productos,
 												V.impuesto,
 												V.neto,
 												V.total,
-												V.metodo_pago,
+												CASE 
+													WHEN V.metodo_pago = 1 THEN 'Contado' 
+													ELSE 'Credito'
+												END AS metodo_pago,
 												V.created_at,
 												V.updated_at
 											")->join('clientes AS C', 'V.id_cliente = C.id', 'left')
@@ -125,6 +137,7 @@ class cVentas extends BaseController {
         
 		$productoModel = new mProductos();
 		$ventaModel = new mVentas();
+		$mVentasProductos = new mVentasProductos();
 
     $codigo = $ventaModel->asObject()->orderBy('id', 'desc')->first();
 		$codigo = is_null($codigo) ? 1 : ($codigo->codigo + 1);
@@ -136,23 +149,36 @@ class cVentas extends BaseController {
 				"codigo" => $codigo,
 				"id_cliente" => $dataPost->idCliente,
 				"id_vendedor" => $dataPost->idUsuario,
-				"productos" => $dataPost->productos,
 				"impuesto" => 0,
 				"neto" => 0,
 				"total" => 0,
-				"metodo_pago" => $dataPost->metodoPago
+				"metodo_pago" => $dataPost->metodoPago,
+				"observacion" => $dataPost->observacion
 			);
 
 			if($ventaModel->save($dataSave)){
 				$dataSave["id"] = $ventaModel->getInsertID();
 				foreach ($prod as $it) {
-					$valorTotal = $valorTotal + ($it->cantidad * $it->precio_venta);
+					$dataProductoVenta = [
+						"id_venta" => $dataSave["id"],
+						"id_producto" => $it->id,
+						"cantidad" => $it->cantidad,
+						"valor" => $it->valorUnitario,
+						"valor_original" => $it->precio_venta
+					];
+
+					$valorTotal = $valorTotal + ($it->cantidad * $it->valorUnitario);
 
 					$product = $productoModel->find($it->id);
 					$product["stock"] = $product["stock"] - $it->cantidad;
 
+					if (!$mVentasProductos->save($dataProductoVenta)) {
+						$resp["msj"] = "Ha ocurrido un error al guardar los productos." . listErrors($ventaModel->errors());
+						break;
+					}
+
 					if(!$productoModel->save($product)){
-						$resp["msj"] = "Error al guardar al actualizar el producto.";
+						$resp["msj"] = "Error al guardar al actualizar el producto. " . listErrors($ventaModel->errors());
 						break;
 					}
 				}
@@ -183,6 +209,25 @@ class cVentas extends BaseController {
 		}
 
 		return $this->response->setJSON($resp);
+	}
+
+	public function cantidadVendedores(){
+		$mUsuarios = new mUsuarios();
+
+		$vendedores = $mUsuarios->join("(
+											SELECT 
+												usuarioId,
+												perfilId, 
+												COUNT(*) AS Vendedor 
+											FROM permisosusuarioperfil 
+											WHERE permiso = '61' 
+											GROUP BY usuarioId, perfilId) AS pup", 
+											"(CASE WHEN usuarios.perfil IS NULL THEN usuarios.id = pup.usuarioId ELSE usuarios.perfil = pup.perfilId END)", "inner", 
+											false)
+											->where("usuarios.estado", 1)
+											->countAllResults();
+		
+		return $vendedores;
 	}
 
 	private function cargarVenta(){

@@ -34,7 +34,8 @@ class cUsuarios extends BaseController {
 	}
 
 	public function listaDT() {
-		$estado = $this->request->getPost("estado");
+		$postData = (object) $this->request->getPost(); 
+		$estado = $postData->estado;
 
 		$query = $this->db->table('usuarios AS u')
 										->select("
@@ -56,6 +57,10 @@ class cUsuarios extends BaseController {
 														ELSE 'Inactivo' 
 												END AS Estadito
 										")->join('perfiles AS p', 'u.perfil = p.id', 'left');
+
+		if(isset($postData->vendedor) && $postData->vendedor == 1){
+			$query->join("(SELECT usuarioId, perfilId, COUNT(*) AS Vendedor FROM permisosusuarioperfil WHERE permiso = '61' GROUP BY usuarioId, perfilId)  AS pup", "(CASE WHEN u.perfil IS NULL THEN u.id = pup.usuarioId ELSE u.perfil = pup.perfilId END)", "inner", false);
+		}
 
 		if($estado != "-1"){
 			$query->where("u.estado", $estado);

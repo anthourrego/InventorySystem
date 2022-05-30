@@ -17,7 +17,7 @@ class mVentas extends Model {
 		"codigo",
 		"id_cliente",
 		"id_vendedor",
-		"productos",
+		"observacion",
 		"impuesto",
 		"neto",
 		"total",
@@ -36,11 +36,11 @@ class mVentas extends Model {
 		'codigo' => 'required|numeric|min_length[1]|max_length[11]|is_unique[ventas.codigo, id, {id}]',
 		'id_cliente' => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[clientes.id]',
 		'id_vendedor' => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[usuarios.id]',
-		'productos' => 'required|string|min_length[1]',
 		'impuesto' => 'required|decimal|min_length[1]|max_length[20]',
 		'neto' => 'required|decimal|min_length[1]|max_length[20]',
 		'total' => 'required|decimal|min_length[1]|max_length[20]',
 		'metodo_pago' => 'required|string|min_length[1]|max_length[50]',
+		'observacion' => 'permit_empty|string|min_length[1]|max_length[500]',
 	];
 	protected $validationMessages   = [
 		"codigo" => [

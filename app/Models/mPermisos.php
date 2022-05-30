@@ -155,7 +155,13 @@ class mPermisos extends Model {
 			],
 			[
 				"id" => 6,
-				"text" => "Ventas"
+				"text" => "Ventas",
+				"children" => [
+					[
+						"id" => 61, //Para mostrar en la lista de vendedores
+						"text" => "Es vendedor"
+					]
+				]
 			],
 			[
 				"id" => 7,

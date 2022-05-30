@@ -1,4 +1,9 @@
 $(function(){
+  inputPesos();
+  $(".inputTel").inputmask({'mask':'(999) 999-9999'});
+});
+
+function inputPesos(){
   $(".inputPesos").inputmask({
     alias: 'decimal', 
     groupSeparator: '.',
@@ -7,7 +12,8 @@ $(function(){
     digitsOptional: false, 
     prefix: '$ ', 
     placeholder: '0,00'
+  }).focus(function(){
+    $(this).trigger("select");
   });
 
-  $(".inputTel").inputmask({'mask':'(999) 999-9999'});
-});
+}

@@ -106,8 +106,8 @@ $routes->group('Busqueda', ['filter' => 'authGuard'], function ($routes) {
     $routes->get('DT', 'cBusqueda::dataTables');
     $routes->post('Vendedores', 'cUsuarios::listaDT');
     $routes->post('Vendedor', 'cUsuarios::getUsuario', ['filter' => 'ajax']);
-    $routes->post('Clientes', 'Clientes::listaDT');
-    $routes->post('Cliente', 'Clientes::getCliente', ['filter' => 'ajax']);
+    $routes->post('Clientes', 'cClientes::listaDT');
+    $routes->post('Cliente', 'cClientes::getCliente', ['filter' => 'ajax']);
 });
 
 //Permisos

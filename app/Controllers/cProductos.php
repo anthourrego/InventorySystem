@@ -35,7 +35,7 @@ class cProductos extends BaseController {
 	}
 
 	public function listaDT() {
-		$estado = $this->request->getPost("estado");
+		$postData = (object) $this->request->getPost();
 
 		$query = $this->db->table('productos AS P')
 										->select("
@@ -61,8 +61,16 @@ class cProductos extends BaseController {
 												END AS Estadito
 										")->join('categorias AS C', 'P.id_categoria = C.id', 'left');
 
-		if($estado != "-1"){
-			$query->where("P.estado", $estado);
+		if($postData->estado != "-1"){
+			$query->where("P.estado", $postData->estado);
+		}
+
+		//validamos si aplica para ventas para realziar algunas validaciones
+		if (isset($postData->ventas) && $postData->ventas == 1) {
+			$inventarioNegativo = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
+			if ($inventarioNegativo == "0") {
+				$query->where("P.stock >", 0);
+			}
 		}
 
 		return DataTable::of($query)->toJson(true);

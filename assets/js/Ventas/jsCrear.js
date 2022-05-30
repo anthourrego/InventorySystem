@@ -6,7 +6,7 @@ let DTProductos = $("#table").DataTable({
     url: rutaBase + "DTProductos",
     type: "POST",
     data: function(d){
-      return $.extend(d, {"estado": 1} )
+      return $.extend(d, {"estado": 1, "ventas": 1} )
     }
   },
   dom: domlftrip,
@@ -72,6 +72,7 @@ let DTProductos = $("#table").DataTable({
       } else {
         $("#p" + data.id).addClass("disabled").prop("disabled", true);
         data.cantidad = 1;
+        data.valorUnitario = data.precio_venta;
         data.valorTotal = data.precio_venta;
         productosVentas.push(data);
         DTProductosVenta.clear().rows.add(productosVentas).draw();
@@ -87,7 +88,7 @@ let DTProductosVenta = $("#tblProductos").DataTable({
   processing: false,
 	serverSide: false,
   order: [[1, "asc"]],
-  scrollY: screen.height - 650,
+  scrollY: screen.height - 750,
   scroller: {
     loadingIndicator: true
   },
@@ -121,6 +122,14 @@ let DTProductosVenta = $("#tblProductos").DataTable({
     {
       orderable: false,
       searchable: false,
+      data: 'valorUnitario',
+      render: function(meta, type, data, meta) {
+      return `<input type="tel" class="form-control form-control-sm inputPesos text-right inputFocusSelect soloNumeros valorUnitario" min="0" value="${data.valorUnitario}">`;
+      }
+    },
+    {
+      orderable: false,
+      searchable: false,
       data: 'valorTotal',
       className: 'text-right valorTotal',
       render: function(meta, type, data, meta) {
@@ -129,20 +138,24 @@ let DTProductosVenta = $("#tblProductos").DataTable({
     },
   ],
   createdRow: function(row, data, dataIndex){
-    $(row).find(".cantidadProduct").on("change", function(){
-      let cant = Number($(this).val().trim());
+    $(row).find(".cantidadProduct, .valorUnitario").on("change", function(){
+      let cant = Number($(row).find(".cantidadProduct").val().trim());
+      let valorUnitario = $(row).find(".valorUnitario").val().trim().replaceAll(",", "").replaceAll("$ ", "");
       let resultado = productosVentas.find((it) => it.id == data.id);
-      if (cant <= Number(data.stock)) {
+      
+      //Validamos si puede asignar inventario negativo
+      if (($INVENTARIONEGATIVO == "1") || ($INVENTARIONEGATIVO == "0" && cant <= Number(data.stock))) {
         resultado.cantidad = cant;
-        resultado.valorTotal = resultado.cantidad * resultado.precio_venta;
+        resultado.valorUnitario = valorUnitario;
+        resultado.valorTotal = resultado.cantidad * resultado.valorUnitario;
   
         $(row).find(".valorTotal").text(formatoPesos.format(resultado.valorTotal));
       } else {
         alertify.alert("Advertencia", `Ha superado la cantidad maxima, solo hay <b>${data.stock}</b> disponibles`);
         resultado.cantidad = 1;
-        resultado.valorTotal = resultado.precio_venta;
+        resultado.valorTotal = resultado.valorUnitario;
         $(this).val(1);
-        $(row).find(".valorTotal").text(formatoPesos.format(data.precio_venta));
+        $(row).find(".valorTotal").text(formatoPesos.format(data.valorUnitario));
       }
 
       data = resultado;
@@ -157,10 +170,23 @@ let DTProductosVenta = $("#tblProductos").DataTable({
       $("#p"+data.id).removeClass("disabled").prop("disabled", false);
       calcularTotal();
     });
+  },
+  drawCallback: function( settings ) {
+    inputPesos();
   }
 });
 
 $(function(){
+  if ($CANTIDADVENDEDORES == 0 || $CANTIDADCLIENTES == 0) {
+    if ($CANTIDADVENDEDORES == 0 && $CANTIDADCLIENTES == 0) {
+      $msj = "vendedore y clientes";
+    } else {
+      $msj = $CANTIDADVENDEDORES == 0 ? "vendedores" : "clientes";
+    }
+
+    alertify.alert('¡Advertencia!', `No hay ${$msj} disponibles.`);
+  }
+
   $("#vendedor").on("focusout, change", function(e){
     e.preventDefault();
     selfi = this
@@ -173,6 +199,7 @@ $(function(){
           dataType: 'json',
           data: {
             buscar: selfValue,
+            vendedor: 1
           },
           success: function (resp) {
             if(resp.success){
@@ -190,7 +217,7 @@ $(function(){
                       ajax: {
                         url: base_url() + "Busqueda/Vendedores",
                         type: "POST",
-                        data: {estado: 1}
+                        data: {estado: 1, vendedor: 1}
                       },
                       dom: domSearch,
                       oSearch: { sSearch: selfValue },
@@ -302,6 +329,7 @@ $(function(){
         form = new FormData(this);
         form.append("idCliente", $("#cliente").data("id"));
         form.append("idUsuario", $("#vendedor").data("id"));
+        form.append("observacion", $("#observacion").val());
         form.append("productos", JSON.stringify(productosVentas));
         
         $.ajax({ 
@@ -318,8 +346,9 @@ $(function(){
                 function(){
                   productosVentas = [];
                   $("#nroVenta").val(resp.msj.codigo + 1);
-                  $("#cliente").data("id", "");
-                  $("#vendedor").data("id", "");
+                  $("#cliente, #vendedor").data("id", "").closest(".input-group").find(".input-group-text").text("");
+                  $("#observacion").val("");
+                  $("#total").val(0)
                   DTProductos.ajax.reload();
                   DTProductosVenta.clear().rows.add(productosVentas).draw();
                   resetForm("#formVenta");

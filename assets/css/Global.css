@@ -264,6 +264,10 @@ div.dt-button-collection .dt-button {
   width: 90% !important;
 }
 
+.w-60 {
+  width: 60% !important;
+}
+
 @media (min-width: 576px) {
   .w-sm-25 {
     width: 25% !important;
@@ -271,6 +275,10 @@ div.dt-button-collection .dt-button {
 
   .w-sm-50 {
     width: 50% !important;
+  }
+
+  .w-sm-60 {
+    width: 60% !important;
   }
 
   .w-sm-75 {
@@ -299,6 +307,10 @@ div.dt-button-collection .dt-button {
     width: 50% !important;
   }
 
+  .w-md-60 {
+    width: 60% !important;
+  }
+
   .w-md-75 {
     width: 75% !important;
   }
@@ -321,6 +333,10 @@ div.dt-button-collection .dt-button {
     width: 50% !important;
   }
 
+  .w-lg-60 {
+    width: 60% !important;
+  }
+
   .w-lg-75 {
     width: 75% !important;
   }
@@ -341,6 +357,10 @@ div.dt-button-collection .dt-button {
 
   .w-xl-50 {
     width: 50% !important;
+  }
+
+  .w-xl-60 {
+    width: 60% !important;
   }
 
   .w-xl-75 {
