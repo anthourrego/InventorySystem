@@ -44,6 +44,8 @@ class cVentas extends BaseController {
 
 		$this->content["nroVenta"] = is_null($codigo) ? 1 : ($codigo->codigo + 1);
 
+		$this->content["venta"] = null;
+
 		$this->content["inventario_negativo"] = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
 
 		$this->content["cantidadVendedores"] = $this->cantidadVendedores();
@@ -57,14 +59,33 @@ class cVentas extends BaseController {
 
 	public function Editar($id) {
 		$ventaModel = new mVentas();
+		$mVentasProductos = new mVentasProductos();
+
 		$venta = $ventaModel->cargarVenta($id);
 
 		if (count($venta) != 1) {
 			return redirect()->route('Ventas/Administrar');
 		}
-
 		$venta = $venta[0];
-        
+		
+		$productos = $mVentasProductos->select("
+											p.id,
+											ventasproductos.id AS idProductoVenta,
+											p.referencia, 
+											p.item, 
+											p.descripcion,
+											(p.stock + ventasproductos.cantidad) AS stock,
+											ventasproductos.cantidad,
+											ventasproductos.valor AS valorUnitario,
+											ventasproductos.valor_original,
+											p.precio_venta,
+											(ventasproductos.valor * ventasproductos.cantidad) AS valorTotal
+										")->join("productos AS p", "ventasproductos.id_producto = p.id")
+										->where("ventasproductos.id_venta", $venta->id)
+										->findAll();
+
+		$venta->productos = $productos;
+		
 		$this->content["venta"] = $venta;
 
 		$this->content["nroVenta"] = $venta->codigo;
@@ -79,8 +100,14 @@ class cVentas extends BaseController {
 		$this->LJQueryValidation();
 		$this->LFancybox();
 
+		$mClientes = new mClientes();
+		$this->content["cantidadClientes"] = $mClientes->where("estado", 1)->countAllResults();
+		$this->content["cantidadVendedores"] = $this->cantidadVendedores();
+		$this->content["inventario_negativo"] = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
+
 		$this->content['js_add'][] = [
-			'Ventas/jsCrear.js'
+			'Ventas/jsCrear.js',
+			'Ventas/jsEditar.js'
 		];
 
 		return view('UI/viewDefault', $this->content);
@@ -114,14 +141,52 @@ class cVentas extends BaseController {
 		$resp["success"] = false;
 		//Traemos los datos del post
 		$data = (object) $this->request->getPost();
+		$contActProd = true;
         
-		$ventas = new mVentas();
+		$this->db->transBegin();
 
-		if ($ventas->delete($data->id)) { 
-			$resp["success"] = true;
-			$resp['msj'] = "Venta eliminada correctamente";
+		$mVentasProductos = new mVentasProductos();
+		$mProductos = new mProductos();
+
+		$productosVentas = $mVentasProductos->where("id_venta", $data->id)->findAll();
+
+		//Actualizamos el inventario de los productos
+		foreach ($productosVentas as $it) {
+			$producto = $mProductos->asObject()->find($it->id_producto);
+			
+			$dataSave = [
+				"id" => $it->id_producto,
+				"stock" => ($producto->stock + $it->cantidad)
+			];
+
+			if (!$mProductos->save($dataSave)) {
+				$contActProd = false;
+				break;
+			}
+		}
+		
+		//Eliminamos todos los datos
+		if($contActProd) {
+			if($mVentasProductos->where("id_venta", $data->id)->delete()){
+				$ventas = new mVentas();
+				if ($ventas->delete($data->id)) { 
+					$resp["success"] = true;
+					$resp['msj'] = "Venta eliminada correctamente";
+				} else {
+					$resp['msj'] = "Error al eliminar la venta";
+				}
+			} else {
+				$resp['msj'] = "Error al eliminar los productos de la venta.";
+			}
 		} else {
-			$resp['msj'] = "Error al eliminar la venta";
+			$resp['msj'] = "Error al actualizar el inventario.";
+		}
+
+		if($resp["success"] == false || $this->db->transStatus() === false) {
+			$this->db->transRollback();
+		} else {
+			//$this->db->transRollback();
+			$this->db->transCommit();
 		}
 
 		return $this->response->setJSON($resp);
@@ -131,7 +196,6 @@ class cVentas extends BaseController {
 		$resp["success"] = false;
 		//Traemos los datos del post
 		$dataPost = (object) $this->request->getPost();
-		//var_dump($dataPost);
 		$valorTotal = 0;
 		$prod = json_decode($dataPost->productos);
         
@@ -139,7 +203,7 @@ class cVentas extends BaseController {
 		$ventaModel = new mVentas();
 		$mVentasProductos = new mVentasProductos();
 
-    $codigo = $ventaModel->asObject()->orderBy('id', 'desc')->first();
+    $codigo = $ventaModel->orderBy('id', 'desc')->first();
 		$codigo = is_null($codigo) ? 1 : ($codigo->codigo + 1);
 
 		if (count($prod) > 0) {
@@ -173,12 +237,12 @@ class cVentas extends BaseController {
 					$product["stock"] = $product["stock"] - $it->cantidad;
 
 					if (!$mVentasProductos->save($dataProductoVenta)) {
-						$resp["msj"] = "Ha ocurrido un error al guardar los productos." . listErrors($ventaModel->errors());
+						$resp["msj"] = "Ha ocurrido un error al guardar los productos." . listErrors($mVentasProductos->errors());
 						break;
 					}
 
 					if(!$productoModel->save($product)){
-						$resp["msj"] = "Error al guardar al actualizar el producto. " . listErrors($ventaModel->errors());
+						$resp["msj"] = "Error al guardar al actualizar el producto. " . listErrors($productoModel->errors());
 						break;
 					}
 				}
@@ -211,6 +275,137 @@ class cVentas extends BaseController {
 		return $this->response->setJSON($resp);
 	}
 
+	public function guardarEditar(){
+		$resp["success"] = false;
+		//Traemos los datos del post
+		$dataPost = (object) $this->request->getPost();
+		$prod = json_decode($dataPost->productos);
+		$valorTotal = 0;
+
+		$mProductos = new mProductos();
+		$mVentas = new mVentas();
+		$mVentasProductos = new mVentasProductos();
+		
+		if (count($prod) > 0) {
+			$this->db->transBegin();
+			$dataSave = array(
+				"id" => $dataPost->idVenta,
+				"id_cliente" => $dataPost->idCliente,
+				"id_vendedor" => $dataPost->idUsuario,
+				"impuesto" => 0,
+				"neto" => 0,
+				"total" => 0,
+				"metodo_pago" => $dataPost->metodoPago,
+				"observacion" => $dataPost->observacion
+			);
+
+			if($mVentas->save($dataSave)){
+				//Tramos los productos actuales para comparalos con los que ingresan
+				$productoActuales = $mVentasProductos->asArray()->where("id_venta", $dataPost->idVenta)->findAll();
+
+				foreach ($prod as $it) {
+					$it->idProductoVenta = isset($it->idProductoVenta) ? $it->idProductoVenta : 0;
+					$productoAct = array_search($it->idProductoVenta, array_column($productoActuales, 'id'));
+					//Si el producto no existe se debe de agregar
+					if($productoAct !== false){
+						//Validamos si los valores y las cantidades cambian
+						if($it->cantidad != $productoActuales[$productoAct]["cantidad"] || $it->valorUnitario != $productoActuales[$productoAct]["valor"]) {
+							$cantidadNueva = $productoActuales[$productoAct]["cantidad"] - $it->cantidad;
+							
+							$dataProductoVenta = [
+								"id" => $it->idProductoVenta,
+								"cantidad" => $it->cantidad,
+								"valor" => $it->valorUnitario,
+							];
+
+							if (!$mVentasProductos->save($dataProductoVenta)) {
+								$resp["msj"] = "Ha ocurrido un error al actualizar los productos." . listErrors($mVentasProductos->errors());
+								break;
+							}
+
+							$product = $mProductos->find($it->id);
+							$product["stock"] = $product["stock"] + $cantidadNueva;
+
+							if(!$mProductos->save($product)){
+								$resp["msj"] = "Error al guardar al actualizar el producto. " . listErrors($mProductos->errors());
+								break;
+							}
+						}
+
+						$valorTotal = $valorTotal + ($it->cantidad * $it->valorUnitario);
+						unset($productoActuales[$productoAct]);
+						$productoActuales = array_values($productoActuales);
+					} else {
+						$dataProductoVenta = [
+							"id_venta" => $dataPost->idVenta,
+							"id_producto" => $it->id,
+							"cantidad" => $it->cantidad,
+							"valor" => $it->valorUnitario,
+							"valor_original" => $it->precio_venta
+						];
+	
+						$valorTotal = $valorTotal + ($it->cantidad * $it->valorUnitario);
+	
+						$product = $mProductos->find($it->id);
+						$product["stock"] = $product["stock"] - $it->cantidad;
+	
+						if (!$mVentasProductos->save($dataProductoVenta)) {
+							$resp["msj"] = "Ha ocurrido un error al guardar los productos." . listErrors($mVentasProductos->errors());
+							break;
+						}
+	
+						if(!$mProductos->save($product)){
+							$resp["msj"] = "Error al guardar al actualizar el producto. " . listErrors($mProductos->errors());
+							break;
+						}
+					}
+				}
+
+				//Eliminamos los productos restantes de la venta
+				foreach ($productoActuales as $it) {
+					if($mVentasProductos->delete($it["id"])) {
+
+						$product = $mProductos->find($it["id_producto"]);
+						$product["stock"] = $product["stock"] + $it["cantidad"];
+	
+						if(!$mProductos->save($product)){
+							$resp["msj"] = "Error al guardar al actualizar el inventario del producto eliminado. " . listErrors($mProductos->errors());
+							break;
+						}
+					} else {
+						$resp["msj"] = "Error al guardar al eliminar el producto de la factura. " . listErrors($mVentasProductos->errors());
+							break;
+					}
+				}
+
+				if ($this->db->transStatus() !== false) {
+					$resp["success"] = true;
+					$dataSave["total"] = $valorTotal;
+					$dataSave["neto"] = $valorTotal;
+
+					if ($mVentas->save($dataSave)) {
+						$resp["msj"] = $dataSave;
+					} else {
+						$resp["msj"] = "Ha ocurrido un error al guardar la venta." . listErrors($mVentas->errors());
+					}
+				}
+			} else {
+				$resp["msj"] = "Ha ocurrido un error al guardar la venta." . listErrors($mVentas->errors());
+			}
+
+			if($resp["success"] == false || $this->db->transStatus() === false) {
+				$this->db->transRollback();
+			} else {
+				$this->db->transCommit();
+			}
+
+		} else {
+			$resp['msj'] = "No se puede generar la venta si no hay productos seleccionados";
+		}
+
+		return $this->response->setJSON($resp);
+	}
+
 	public function cantidadVendedores(){
 		$mUsuarios = new mUsuarios();
 
@@ -228,9 +423,5 @@ class cVentas extends BaseController {
 											->countAllResults();
 		
 		return $vendedores;
-	}
-
-	private function cargarVenta(){
-
 	}
 }

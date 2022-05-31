@@ -98,7 +98,8 @@ $routes->group('Ventas', ['filter' => 'authGuard:6'], function ($routes) {
     $routes->get('Editar/(:num)', 'cVentas::editar/$1');
     $routes->post('Eliminar', 'cVentas::eliminar', ['filter' => 'ajax']);
     $routes->post('Crear', 'cVentas::crearEditar', ['filter' => 'ajax']);
-    $routes->post('Editar', 'cVentas::crearEditar', ['filter' => 'ajax']);
+    $routes->post('Editar', 'cVentas::guardarEditar', ['filter' => 'ajax']);
+    $routes->get('Cargar/(:num)', 'cVentas::cargarVenta/$1', ['filter' => 'ajax']);
 });
 
 //Ventas

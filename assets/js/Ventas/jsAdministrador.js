@@ -25,8 +25,6 @@ let DT = $("#table").DataTable({
       className: 'text-center',
       render: function(meta, type, data, meta) {
         return `<div class="btn-group btn-group-sm" role="group">
-                  <button type="button" class="btn btn-info" title="Imprimir Factura"><i class="fa-solid fa-print"></i></button>
-                  <button type="button" class="btn btn-success" title="Imprimir Pedido"><i class="fa-solid fa-file-pdf"></i></button>
                   <button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>
                   <button type="button" class="btn btn-danger btnEliminar" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button>
                 </div>`;

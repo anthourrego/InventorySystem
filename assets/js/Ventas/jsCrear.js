@@ -333,7 +333,7 @@ $(function(){
         form.append("productos", JSON.stringify(productosVentas));
         
         $.ajax({ 
-          url: rutaBase + "Crear",
+          url: rutaBase + ($DATOSVENTA == '' ? "Crear" : 'Editar'),
           type:'POST',
           dataType: 'json',
           processData: false,
@@ -342,20 +342,24 @@ $(function(){
           data: form,
           success: function(resp){
             if (resp.success) {
-              alertify.confirm("Venta creada correctamente", `Nro de venta: <b>${resp.msj.codigo}</b> por valor de <b>${formatoPesos.format(resp.msj.total)}</b><br>Quiere crear una nueva venta?`, 
-                function(){
-                  productosVentas = [];
-                  $("#nroVenta").val(resp.msj.codigo + 1);
-                  $("#cliente, #vendedor").data("id", "").closest(".input-group").find(".input-group-text").text("");
-                  $("#observacion").val("");
-                  $("#total").val(0)
-                  DTProductos.ajax.reload();
-                  DTProductosVenta.clear().rows.add(productosVentas).draw();
-                  resetForm("#formVenta");
-                }, 
-                function(){ 
-                  window.location.href = base_url() + 'Ventas/Administrar';
-                });
+              if ($DATOSVENTA == '') {
+                alertify.confirm("Venta creada correctamente", `Nro de venta: <b>${resp.msj.codigo}</b> por valor de <b>${formatoPesos.format(resp.msj.total)}</b><br>Quiere crear una nueva venta?`, 
+                  function(){
+                    productosVentas = [];
+                    $("#nroVenta").val(resp.msj.codigo + 1);
+                    $("#cliente, #vendedor").data("id", "").closest(".input-group").find(".input-group-text").text("");
+                    $("#observacion").val("");
+                    $("#total").val(0)
+                    DTProductos.ajax.reload();
+                    DTProductosVenta.clear().rows.add(productosVentas).draw();
+                    resetForm("#formVenta");
+                  }, 
+                  function(){ 
+                    window.location.href = base_url() + 'Ventas/Administrar';
+                  });
+              } else {
+                alertify.alert('¡Advertencia!', "Venta editada correctamente", function(){ window.location.href = base_url() + 'Ventas/Administrar'; });
+              }
             } else {
               alertify.alert('¡Advertencia!', resp.msj);
             }

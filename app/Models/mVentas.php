@@ -10,7 +10,7 @@ class mVentas extends Model {
 	protected $primaryKey       = 'id';
 	protected $useAutoIncrement = true;
 	protected $insertID         = 0;
-	protected $returnType       = 'array';
+	protected $returnType       = 'object';
 	protected $useSoftDeletes   = false;
 	protected $protectFields    = true;
 	protected $allowedFields    = [
@@ -70,11 +70,11 @@ class mVentas extends Model {
 				C.documento AS NroDocumentoCliente,
 				C.nombre AS NombreCliente,
 				V.id_vendedor,
-				U.usuario AS UsuarioCliente,
+				U.usuario AS Vendedor,
 				U.nombre AS NombreVendedor,
-				V.productos,
 				V.total,
-				V.metodo_pago
+				V.metodo_pago,
+				V.observacion
 			")->join("clientes AS C", "V.id_cliente = C.id", "left")
 			->join("usuarios AS U", "V.id_vendedor = U.id", "left")
 			->where("V.id", $id)

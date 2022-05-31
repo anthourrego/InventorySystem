@@ -3,6 +3,7 @@
     <div class="card">
       <div class="card-body">
         <form id="formVenta" class="formValid form-row">
+          <input type="hidden" name="idVenta" id="idVenta">
           <div class="col-4 form-group mb-1">
             <label class="mb-0">Nro venta<span class="text-danger">*</span></label>
             <input type="text" id="nroVenta" name="nroVenta" class="form-control form-control-sm" disabled value="<?= $nroVenta ?>">
@@ -98,4 +99,6 @@
   $INVENTARIONEGATIVO = "<?= $inventario_negativo ?>";
   $CANTIDADVENDEDORES ="<?= $cantidadVendedores ?>";
   $CANTIDADCLIENTES ="<?= $cantidadClientes ?>";
+  $NROVENTA = "<?= $nroVenta ?>";
+  $DATOSVENTA = '<?= is_null($venta) ? '' : json_encode($venta) ?>';
 </script>
