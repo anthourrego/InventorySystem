@@ -86,7 +86,7 @@ class Autoload extends AutoloadConfig {
      */
     public $files = [
         'app/Helpers/404.php'
-        ,'APP/Helpers/listErrors.php'
-        ,'APP/Helpers/validPermissions.php'
+        ,'app/Helpers/listErrors.php'
+        ,'app/Helpers/validPermissions.php'
     ];
 }
