@@ -47,7 +47,7 @@ class cProductos extends BaseController {
 												P.imagen,
 												P.stock,
 												P.precio_venta,
-												p.costo,
+												P.costo,
 												P.ubicacion,
 												P.id_manifiesto AS manifiesto,
 												P.ventas, 
