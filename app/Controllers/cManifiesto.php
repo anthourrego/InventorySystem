@@ -287,6 +287,7 @@ class cManifiesto extends BaseController {
 	public function listaDTProds() {
 
 		$manifiesto = $this->request->getPost("manifiesto");
+		$ver = $this->request->getPost("ver");
 		
 		$query = $this->db->table('productos AS P')
 			->select("
@@ -295,11 +296,14 @@ class cManifiesto extends BaseController {
 					P.descripcion,
 					P.imagen,
 					P.id_manifiesto
-			")->join('categorias AS C', 'P.id_categoria = C.id', 'left')
-			->where("P.id_manifiesto IS NULL")
-			->where("P.estado = 1");
+			");
 
-		if (!is_null($manifiesto)) {
+		if (is_null($ver)) {
+			$query = $query->where("P.id_manifiesto IS NULL")->where("P.estado = 1");
+			if (!is_null($manifiesto)) {
+				$query = $query->orWhere("P.id_manifiesto = '$manifiesto'");
+			}
+		} else {
 			$query = $query->orWhere("P.id_manifiesto = '$manifiesto'");
 		}
 

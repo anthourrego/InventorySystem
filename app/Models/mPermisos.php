@@ -204,6 +204,10 @@ class mPermisos extends Model {
 					[
 						"id" => 87,
 						"text" => "Eliminar Multiple"
+					],
+					[
+						"id" => 88,
+						"text" => "Ver Productos"
 					]
 				]
 			]

@@ -3,6 +3,8 @@ let manifiestoActual = null;
 let seleccionoTodo = 0;
 let selecciones = [];
 let totalRegistros = 0;
+let DTVerProductos = null;
+let DTProductos = null;
 
 let DTManifiestos = $("#table").DataTable({
   ajax: {
@@ -56,12 +58,15 @@ let DTManifiestos = $("#table").DataTable({
 
         btnDescargarArhivo = validPermissions(85) ? `<a href="${rutaBase}Descargar/${data.id}" type="button" class="btn btn-dark btnDescargarArhivo" title="Descargar Archivo"><i class="fa-solid fa-download"></i></a>` : '';
 
+        btnVerProdsManif = validPermissions(88) ? `<button type="button" class="btn btn-primary btnVerProdsManif" title="Ver Productos"><i class="fa-solid fa-eye"></i></button>` : '';
+
         return `<div class="btn-group btn-group-sm group-actions" role="group">
           ${btnEditar}
           ${btnCambiarEstado}
           ${btnAsignarProductos}
           ${btnVerArchivo}
           ${btnDescargarArhivo}
+          ${btnVerProdsManif}
         </div>`;
       }
     },
@@ -115,8 +120,25 @@ let DTManifiestos = $("#table").DataTable({
     $(row).find(".btnAsignarProductos").on("click", function () {
       $("#cardManifiestos").removeClass('col-md-12').addClass('col-md-6');
       $("#cardProds").show();
+      $('.bg-selected-tb').removeClass('bg-selected-tb');
+      $(row).addClass('bg-selected-tb');
       manifiestoActual = data.id;
-      DTProductos.ajax.reload();
+      if (!DTProductos) {
+        DTProductos = $("#tableProds").DataTable(DTProductosStruc)
+      } else {
+        DTProductos.ajax.reload();
+      }
+    });
+
+    $(row).find(".btnVerProdsManif").on("click", function () {
+      console.log(data);
+      $("#modalProdsManifiesto").modal('show');
+      manifiestoActual = data.id;
+      if (!DTVerProductos) {
+        DTVerProductos = $("#tableProdsManif").DataTable(DTVerProductosStruc);
+      } else {
+        DTVerProductos.ajax.reload();
+      }
     });
   },
   drawCallback: function (settings) {
@@ -179,7 +201,7 @@ let DTManifiestos = $("#table").DataTable({
 
 });
 
-let DTProductos = $("#tableProds").DataTable({
+let DTProductosStruc = {
   ajax: {
     url: rutaBase + "DTProductos",
     type: "POST",
@@ -250,7 +272,41 @@ let DTProductos = $("#tableProds").DataTable({
       });
     });
   }
-});
+};
+
+let DTVerProductosStruc = {
+  ajax: {
+    url: rutaBase + "DTProductos",
+    type: "POST",
+    data: function (d) {
+      return $.extend(d, { manifiesto: manifiestoActual, ver: true })
+    }
+  },
+  dom: domlftrip,
+  order: [[2, "asc"]],
+  columns: [
+    {
+      orderable: false,
+      searchable: false,
+      defaultContent: '',
+      className: "text-center",
+      render: function (meta, type, data, meta) {
+        return `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
+          <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
+        </a>`;
+      }
+    },
+    { data: 'item' },
+    {
+      data: 'descripcion',
+      width: "30%",
+      render: function (meta, type, data, meta) {
+        return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
+      }
+    }
+  ],
+  createdRow: function (row, data, dataIndex) { }
+};
 
 $(function () {
   $("#selectEstado").on("change", function () {
@@ -324,7 +380,7 @@ $(function () {
         data: new FormData(this),
         success: function (resp) {
           if (resp.success) {
-            DTManifiestos.ajax.reload();
+            $("#btnFinalizarAgregarProds").click();
             $("#modalManifiesto").modal("hide");
             alertify.success(resp.msj);
           } else {
@@ -382,6 +438,11 @@ $(function () {
       $(".checkManifiesto").prop("checked", false);
       DTManifiestos.rows().deselect();
     }
+  });
+
+  $("#modalProdsManifiesto").on('hidden.bs.modal', function () {
+    $("#modalProdsManifiesto").modal('hide');
+    DTManifiestos.ajax.reload();
   });
 
 });

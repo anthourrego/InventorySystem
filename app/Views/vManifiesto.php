@@ -124,6 +124,34 @@
   </div>
 </div>
 
+<div class="modal fade modalFormulario" id="modalProdsManifiesto" data-backdrop="static" data-keyboard="false" aria-labelledby="modalVerProdsManifiestoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalVerProdsManifiestoLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table id="tableProdsManif" class="table table-sm table-striped table-hover table-bordered w-100">
+          <thead> 
+            <tr>
+              <th>Imagen</th>
+              <th>Item</th>
+              <th>Descripción</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" data-dismiss="modal" class="btn btn-success btnAceptarVistaProds"><i class="fas fa-save"></i> Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   let $permisoEliminarMultiple = <?= validPermissions([87], true) ? 'true' : 'false' ?>
 </script>
