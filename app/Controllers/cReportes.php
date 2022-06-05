@@ -24,7 +24,7 @@ class cReportes extends BaseController {
 														ventasproductos.cantidad,
 														ventasproductos.valor,
 														(ventasproductos.cantidad * ventasproductos.valor) AS Total
-													")->join("productos AS P", "ventasproductos.id_producto = p.id", "left")
+													")->join("productos AS P", "ventasproductos.id_producto = P.id", "left")
 													->where("id_venta", $id)
 													->findAll();
 
@@ -208,7 +208,7 @@ class cReportes extends BaseController {
 														ventasproductos.cantidad,
 														ventasproductos.valor,
 														(ventasproductos.cantidad * ventasproductos.valor) AS Total
-													")->join("productos AS P", "ventasproductos.id_producto = p.id", "left")
+													")->join("productos AS P", "ventasproductos.id_producto = P.id", "left")
 													->join("manifiestos AS M", "P.id_manifiesto = M.id", "left")
 													->where("id_venta", $id)
 													->findAll();
