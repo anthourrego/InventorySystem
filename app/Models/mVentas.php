@@ -74,7 +74,10 @@ class mVentas extends Model {
 				U.nombre AS NombreVendedor,
 				V.total,
 				V.metodo_pago,
-				V.observacion
+				V.observacion,
+				V.created_at,
+				C.direccion AS Direccion,
+				C.telefono
 			")->join("clientes AS C", "V.id_cliente = C.id", "left")
 			->join("usuarios AS U", "V.id_vendedor = U.id", "left")
 			->where("V.id", $id)
