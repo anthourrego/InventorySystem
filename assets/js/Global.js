@@ -7,18 +7,18 @@ const formatoPesos = new Intl.NumberFormat('es-CO', {
 	minimumFractionDigits: 2
 });
 
-$(function(){
-	$(document).on("click", ".inputFocusSelect", function(e) {
+$(function () {
+	$(document).on("click", ".inputFocusSelect", function (e) {
 		e.preventDefault();
-    $(this).trigger("select");
-  }).on("focus", function(){
-    $(this).trigger("select");
-  });
+		$(this).trigger("select");
+	}).on("focus", function () {
+		$(this).trigger("select");
+	});
 
-	$(document).on("focusin, click", ".lastFocus", function(){
+	$(document).on("focusin, click", ".lastFocus", function () {
 		lastFocus = $(this);
 		lastFocusValue = $(this).val().trim();
-		if(lastFocusValue == null){
+		if (lastFocusValue == null) {
 			lastFocusValue = '';
 			lastFocus = null;
 		}
@@ -56,61 +56,61 @@ $(document).on('keydown', "input:not(button, [type=search], .flexdatalist-alias,
 });
 
 document.addEventListener('DOMContentLoaded', function (e) {
-  alertify.defaults.theme.ok = "btn btn-primary";
-  alertify.defaults.theme.cancel = "btn btn-danger";
-  alertify.defaults.theme.input = "form-control";
-  alertify.defaults.glossary.ok = '<i class="fas fa-check"></i> Aceptar';
-  alertify.defaults.glossary.cancel = '<i class="fas fa-times"></i> Cancelar';
+	alertify.defaults.theme.ok = "btn btn-primary";
+	alertify.defaults.theme.cancel = "btn btn-danger";
+	alertify.defaults.theme.input = "form-control";
+	alertify.defaults.glossary.ok = '<i class="fas fa-check"></i> Aceptar';
+	alertify.defaults.glossary.cancel = '<i class="fas fa-times"></i> Cancelar';
 
-  $(document).on({
-    ajaxStart: function() {
-      $("#cargandoAjax").removeClass('d-none');
-    },
-    ajaxStop: function() {
-      $("#cargandoAjax").addClass('d-none');
-    },
-    ajaxError: function(funcion, request, settings){
-      $("#cargandoAjax").removeClass('d-none');
-      alertify.globalAlert('Error', request.responseText, function(){
-        this.destroy();
-      });
-      console.error(funcion);
-      console.error(request);
-      console.error(settings);
-    }
-  });
+	$(document).on({
+		ajaxStart: function () {
+			$("#cargandoAjax").removeClass('d-none');
+		},
+		ajaxStop: function () {
+			$("#cargandoAjax").addClass('d-none');
+		},
+		ajaxError: function (funcion, request, settings) {
+			$("#cargandoAjax").removeClass('d-none');
+			alertify.globalAlert('Error', request.responseText, function () {
+				this.destroy();
+			});
+			console.error(funcion);
+			console.error(request);
+			console.error(settings);
+		}
+	});
 
-  window.onerror = function() {
-    $("#cargando").addClass('d-none');
-  };
+	window.onerror = function () {
+		$("#cargando").addClass('d-none');
+	};
 
-  $("#cerrarSesion").click(function (e) {
-    e.preventDefault();
-    alertify.globalConfirm(`<i class="fas fa-sign-out-alt nav-icon"></i> Cerrar sesión`, '¿Está seguro de cerrar sesión?', function () {
-      $.ajax({
-        type: "POST",
-        url: base_url() + "cerrarSesion",
-        cache: false,
-        contentType: false,
-        dataType: 'json',
-        processData: false,
-        data: {},
-        beforeSend: function () { },
-        success: function (data) {
-          if (data.success) {
-            window.location.href = base_url();
-          } else {
-            alertify.warning(data.msj);
-          }
-        },
-        error: () => alertify.error("Error al cerrar sesion."),
-        complete: function () { }
-      });
-    }, function () { });
-  });
+	$("#cerrarSesion").click(function (e) {
+		e.preventDefault();
+		alertify.globalConfirm(`<i class="fas fa-sign-out-alt nav-icon"></i> Cerrar sesión`, '¿Está seguro de cerrar sesión?', function () {
+			$.ajax({
+				type: "POST",
+				url: base_url() + "cerrarSesion",
+				cache: false,
+				contentType: false,
+				dataType: 'json',
+				processData: false,
+				data: {},
+				beforeSend: function () { },
+				success: function (data) {
+					if (data.success) {
+						window.location.href = base_url();
+					} else {
+						alertify.warning(data.msj);
+					}
+				},
+				error: () => alertify.error("Error al cerrar sesion."),
+				complete: function () { }
+			});
+		}, function () { });
+	});
 
 	$("#sincronizarPermisos").click(function (e) {
-    e.preventDefault();
+		e.preventDefault();
 		$.ajax({
 			type: "POST",
 			url: base_url() + "Permisos/Sincronizar",
@@ -119,19 +119,23 @@ document.addEventListener('DOMContentLoaded', function (e) {
 				window.location.reload();
 			},
 		});
-  });
+	});
+
+	$("#miPerfil").on('click', function () {
+		console.log("Funciona");
+	});
 
 	//Validamos si el menú esta abierto o cerrado
-	$("[data-widget='pushmenu']").on("click", function(e) {
+	$("[data-widget='pushmenu']").on("click", function (e) {
 		e.preventDefault();
 		let sidebarEstado = $("body").hasClass("sidebar-collapse");
 		$.ajax({
 			type: "POST",
 			url: base_url() + "sidebar",
 			dataType: "json",
-			data: {sidebarEstado},
-			success: function(data){
-				if(!data.success){
+			data: { sidebarEstado },
+			success: function (data) {
+				if (!data.success) {
 					alertify.warning("Error al actualizar el estado del menú");
 				}
 			}
@@ -139,90 +143,90 @@ document.addEventListener('DOMContentLoaded', function (e) {
 	})
 
 	//Solo deja escribir números
-	$(".soloNumeros").keypress(function(e){
+	$(".soloNumeros").keypress(function (e) {
 		var keynum = window.event ? window.event.keyCode : e.which;
 		if ((keynum == 8) || (keynum == 46))
 			return true;
-			return /\d/.test(String.fromCharCode(keynum));
+		return /\d/.test(String.fromCharCode(keynum));
 	});
 
-	$(".soloNumerosNegativo").keypress(function(e){
+	$(".soloNumerosNegativo").keypress(function (e) {
 		key = e.keyCode || e.which;
 		tecla = String.fromCharCode(key).toLowerCase();
 		letras = "-1234567890";
 		especiales = "8-37-39-46";
-	
+
 		tecla_especial = false
-		for(var i in especiales){
-				 if(key == especiales[i]){
-						 tecla_especial = true;
-						 break;
-				 }
-		 }
-	
-		 if(letras.indexOf(tecla)==-1 && !tecla_especial){
-				 return false;
-		 }
+		for (var i in especiales) {
+			if (key == especiales[i]) {
+				tecla_especial = true;
+				break;
+			}
+		}
+
+		if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+			return false;
+		}
 	});
-	
+
 	//Solo permite alfanumerico
-	$(".soloLetras").keypress(function(e){
+	$(".soloLetras").keypress(function (e) {
 		key = e.keyCode || e.which;
 		tecla = String.fromCharCode(key).toLowerCase();
 		letras = "abcdefghijklmnopqrstuvwxyz-_1234567890";
 		especiales = "8-37-39-46";
-	
+
 		tecla_especial = false
-		for(var i in especiales){
-				 if(key == especiales[i]){
-						 tecla_especial = true;
-						 break;
-				 }
-		 }
-	
-		 if(letras.indexOf(tecla)==-1 && !tecla_especial){
-				 return false;
-		 }
+		for (var i in especiales) {
+			if (key == especiales[i]) {
+				tecla_especial = true;
+				break;
+			}
+		}
+
+		if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+			return false;
+		}
 	});
 
-	$(".soloLetrasEspacio").keypress(function(e){
+	$(".soloLetrasEspacio").keypress(function (e) {
 		key = e.keyCode || e.which;
 		tecla = String.fromCharCode(key).toLowerCase();
 		letras = "abcdefghijklmnopqrstuvwxyz1234567890 ";
 		especiales = "8-37-39-46";
-	
+
 		tecla_especial = false
-		for(var i in especiales){
-				 if(key == especiales[i]){
-						 tecla_especial = true;
-						 break;
-				 }
-		 }
-	
-		 if(letras.indexOf(tecla)==-1 && !tecla_especial){
-				 return false;
-		 }
+		for (var i in especiales) {
+			if (key == especiales[i]) {
+				tecla_especial = true;
+				break;
+			}
+		}
+
+		if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+			return false;
+		}
 	});
 
-	$(".soloLetrasEspacioCaracteres").keypress(function(e){
+	$(".soloLetrasEspacioCaracteres").keypress(function (e) {
 		key = e.keyCode || e.which;
 		tecla = String.fromCharCode(key).toLowerCase();
 		letras = "abcdefghijklmnopqrstuvwxyz1234567890 -_#|";
 		especiales = "8-37-39-46";
-	
+
 		tecla_especial = false
-		for(var i in especiales){
-				 if(key == especiales[i]){
-						 tecla_especial = true;
-						 break;
-				 }
-		 }
-	
-		 if(letras.indexOf(tecla)==-1 && !tecla_especial){
-				 return false;
-		 }
+		for (var i in especiales) {
+			if (key == especiales[i]) {
+				tecla_especial = true;
+				break;
+			}
+		}
+
+		if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+			return false;
+		}
 	});
-	
+
 });
 
 alertify.globalConfirm || alertify.dialog('globalConfirm', function () {
@@ -277,24 +281,24 @@ alertify.globalConfirm || alertify.dialog('globalConfirm', function () {
 		main: function (_title, _message, _onok, _oncancel) {
 			var title, message, onok, oncancel;
 			switch (arguments.length) {
-			case 1:
-				message = _title;
-				break;
-			case 2:
-				message = _title;
-				onok = _message;
-				break;
-			case 3:
-				message = _title;
-				onok = _message;
-				oncancel = _onok;
-				break;
-			case 4:
-				title = _title;
-				message = _message;
-				onok = _onok;
-				oncancel = _oncancel;
-				break;
+				case 1:
+					message = _title;
+					break;
+				case 2:
+					message = _title;
+					onok = _message;
+					break;
+				case 3:
+					message = _title;
+					onok = _message;
+					oncancel = _onok;
+					break;
+				case 4:
+					title = _title;
+					message = _message;
+					onok = _onok;
+					oncancel = _oncancel;
+					break;
 			}
 			this.set('title', title);
 			this.set('message', message);
@@ -346,56 +350,56 @@ alertify.globalConfirm || alertify.dialog('globalConfirm', function () {
 		},
 		settingUpdated: function (key, oldValue, newValue) {
 			switch (key) {
-			case 'message':
-				this.setMessage(newValue);
-				break;
-			case 'labels':
-				if ('ok' in newValue && this.__internal.buttons[0].element) {
-					this.__internal.buttons[0].text = newValue.ok;
-					this.__internal.buttons[0].element.innerHTML = newValue.ok;
-				}
-				if ('cancel' in newValue && this.__internal.buttons[1].element) {
-					this.__internal.buttons[1].text = newValue.cancel;
-					this.__internal.buttons[1].element.innerHTML = newValue.cancel;
-				}
-				break;
-			case 'reverseButtons':
-				if (newValue === true) {
-					this.elements.buttons.primary.appendChild(this.__internal.buttons[0].element);
-				} else {
-					this.elements.buttons.primary.appendChild(this.__internal.buttons[1].element);
-				}
-				break;
-			case 'defaultFocus':
-				this.__internal.focus.element = newValue === 'ok' ? 0 : 1;
-				break;
+				case 'message':
+					this.setMessage(newValue);
+					break;
+				case 'labels':
+					if ('ok' in newValue && this.__internal.buttons[0].element) {
+						this.__internal.buttons[0].text = newValue.ok;
+						this.__internal.buttons[0].element.innerHTML = newValue.ok;
+					}
+					if ('cancel' in newValue && this.__internal.buttons[1].element) {
+						this.__internal.buttons[1].text = newValue.cancel;
+						this.__internal.buttons[1].element.innerHTML = newValue.cancel;
+					}
+					break;
+				case 'reverseButtons':
+					if (newValue === true) {
+						this.elements.buttons.primary.appendChild(this.__internal.buttons[0].element);
+					} else {
+						this.elements.buttons.primary.appendChild(this.__internal.buttons[1].element);
+					}
+					break;
+				case 'defaultFocus':
+					this.__internal.focus.element = newValue === 'ok' ? 0 : 1;
+					break;
 			}
 		},
 		callback: function (closeEvent) {
 			clearAutoConfirm(this);
 			var returnValue;
 			switch (closeEvent.index) {
-			case 0:
-				if (typeof this.get('onok') === 'function') {
-					returnValue = this.get('onok').call(this, closeEvent);
-					if (typeof returnValue !== 'undefined') {
-						closeEvent.cancel = !returnValue;
+				case 0:
+					if (typeof this.get('onok') === 'function') {
+						returnValue = this.get('onok').call(this, closeEvent);
+						if (typeof returnValue !== 'undefined') {
+							closeEvent.cancel = !returnValue;
+						}
 					}
-				}
-				break;
-			case 1:
-				if (typeof this.get('oncancel') === 'function') {
-					returnValue = this.get('oncancel').call(this, closeEvent);
-					if (typeof returnValue !== 'undefined') {
-						closeEvent.cancel = !returnValue;
+					break;
+				case 1:
+					if (typeof this.get('oncancel') === 'function') {
+						returnValue = this.get('oncancel').call(this, closeEvent);
+						if (typeof returnValue !== 'undefined') {
+							closeEvent.cancel = !returnValue;
+						}
 					}
-				}
-				break;
+					break;
 			}
 		},
-		hooks:{
-			onshow: function(){
-				this.elements.footer.style.display="block";
+		hooks: {
+			onshow: function () {
+				this.elements.footer.style.display = "block";
 				this.elements.header.setAttribute("style", "border: 1px solid #e5e5e5 !important;");
 				this.elements.content.setAttribute("style", "padding: 16px 24px 16px 16px !important;");
 			}
@@ -411,28 +415,28 @@ alertify.globalConfirm || alertify.dialog('globalConfirm', function () {
 	};
 });
 
-alertify.globalAlert ||  alertify.dialog('globalAlert', function () {
+alertify.globalAlert || alertify.dialog('globalAlert', function () {
 	return {
 		main: function (_title, _message, _onok) {
 			var title, message, onok;
 			switch (arguments.length) {
-			case 1:
-				message = _title;
-				break;
-			case 2:
-				if (typeof _message === 'function') {
+				case 1:
 					message = _title;
-					onok = _message;
-				} else {
+					break;
+				case 2:
+					if (typeof _message === 'function') {
+						message = _title;
+						onok = _message;
+					} else {
+						title = _title;
+						message = _message;
+					}
+					break;
+				case 3:
 					title = _title;
 					message = _message;
-				}
-				break;
-			case 3:
-				title = _title;
-				message = _message;
-				onok = _onok;
-				break;
+					onok = _onok;
+					break;
 			}
 			this.set('title', title);
 			this.set('message', message);
@@ -475,14 +479,14 @@ alertify.globalAlert ||  alertify.dialog('globalAlert', function () {
 		},
 		settingUpdated: function (key, oldValue, newValue) {
 			switch (key) {
-			case 'message':
-				this.setMessage(newValue);
-				break;
-			case 'label':
-				if (this.__internal.buttons[0].element) {
-					this.__internal.buttons[0].element.innerHTML = newValue;
-				}
-				break;
+				case 'message':
+					this.setMessage(newValue);
+					break;
+				case 'label':
+					if (this.__internal.buttons[0].element) {
+						this.__internal.buttons[0].element.innerHTML = newValue;
+					}
+					break;
 			}
 		},
 		callback: function (closeEvent) {
@@ -493,9 +497,9 @@ alertify.globalAlert ||  alertify.dialog('globalAlert', function () {
 				}
 			}
 		},
-		hooks:{
-			onshow: function(){
-				this.elements.footer.style.display="block";
+		hooks: {
+			onshow: function () {
+				this.elements.footer.style.display = "block";
 				this.elements.header.setAttribute("style", "border: 1px solid #e5e5e5 !important;");
 				this.elements.content.setAttribute("style", "padding: 16px 24px 16px 16px !important;");
 			}
@@ -503,37 +507,37 @@ alertify.globalAlert ||  alertify.dialog('globalAlert', function () {
 	};
 });
 
-alertify.busquedaAlert || alertify.dialog('busquedaAlert',function factory(){
+alertify.busquedaAlert || alertify.dialog('busquedaAlert', function factory() {
 	return {
-		main:function(content){
+		main: function (content) {
 			this.setContent(content);
 		},
-		setup:function(){
+		setup: function () {
 			return {
-				options:{
-					maximizable:false,
-					resizable:false,
-					padding:false,
+				options: {
+					maximizable: false,
+					resizable: false,
+					padding: false,
 					title: 'Búsqueda'
 				}
 			};
 		},
-		hooks:{
-			onshow: function(){
+		hooks: {
+			onshow: function () {
 				busquedaModal = true;
-				this.elements.footer.style.display="none";
+				this.elements.footer.style.display = "none";
 			},
-			onclose:function(){
+			onclose: function () {
 				if (busquedaModal) {
 					lastFocus.val(lastFocusValue).change();
 				}
-				alertify.busquedaAlert().set({onshow:null});
+				alertify.busquedaAlert().set({ onshow: null });
 				$(".ajs-modal").unbind();
 				delete alertify.ajaxAlert;
 				$("#tblBusqueda").unbind().remove();
-				setTimeout(function(){
+				setTimeout(function () {
 					alertify.busquedaAlert().destroy();
-				},300);
+				}, 300);
 				busquedaModal = false;
 			}
 		}

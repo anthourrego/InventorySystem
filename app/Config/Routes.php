@@ -140,8 +140,8 @@ $routes->group('Manifiesto', ['filter' => 'authGuard:8'], function ($routes) {
     $routes->post('Eliminar', 'cManifiesto::eliminar', ['filter' => ['authGuard:83', 'ajax']]);
 });
 
-$routes->group('ConfiguracionUsuario', ['filter' => 'authGuard:9'], function ($routes) {
-    $routes->get('/', 'cManifiesto::index');
+$routes->group('Perfil', ['filter' => 'authGuard'], function ($routes) {
+    $routes->get('/', 'cMiPerfil::index');
 });
 
 //Reportes

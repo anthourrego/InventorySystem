@@ -38,6 +38,12 @@
 							</a>
 							<ul class="nav nav-treeview">
 								<li class="nav-item">
+									<a id="miPerfil" href="#" class="nav-link">
+										<i class="fa-solid fa-user nav-icon"></i>
+										<p>Mi Perfil</p>
+									</a>
+								</li>
+								<li class="nav-item">
 									<a id="sincronizarPermisos" href="#" class="nav-link">
 										<i class="fa-solid fa-rotate nav-icon"></i>
 										<p>Sincronizar</p>

@@ -210,11 +210,7 @@ class mPermisos extends Model {
 						"text" => "Ver Productos"
 					]
 				]
-			],
-			[
-				"id" => 9,
-				"text" => "Configuración Usuario"
-			],
+			]
 		];
 
 		return $permisos;
