@@ -135,9 +135,13 @@ $routes->group('Manifiesto', ['filter' => 'authGuard:8'], function ($routes) {
     $routes->post('AgregarProducto', 'cManifiesto::actualizarManifiesto');
     $routes->get('Descargar/(:any)', 'cManifiesto::descargarVerArchivo/$1/0');
     $routes->get('Ver/(:any)', 'cManifiesto::descargarVerArchivo/$1/1');
-    $routes->post('Crear', 'cManifiesto::crearEditar', ['filter' => ['authGuard:11', 'ajax']]);
-    $routes->post('Editar', 'cManifiesto::crearEditar', ['filter' => ['authGuard:12', 'ajax']]);
-    $routes->post('Eliminar', 'cManifiesto::eliminar', ['filter' => ['authGuard:14', 'ajax']]);
+    $routes->post('Crear', 'cManifiesto::crearEditar', ['filter' => ['authGuard:81', 'ajax']]);
+    $routes->post('Editar', 'cManifiesto::crearEditar', ['filter' => ['authGuard:82', 'ajax']]);
+    $routes->post('Eliminar', 'cManifiesto::eliminar', ['filter' => ['authGuard:83', 'ajax']]);
+});
+
+$routes->group('ConfiguracionUsuario', ['filter' => 'authGuard:8'], function ($routes) {
+    $routes->get('/', 'cManifiesto::index');
 });
 
 
