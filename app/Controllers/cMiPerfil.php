@@ -15,7 +15,7 @@ class cMiPerfil extends BaseController {
 
     $this->Lgijgo();
 
-		return view('UI/viewDefault', $this->content);
+		return view('vMiPerfil', $this->content);
 	}
 
 }

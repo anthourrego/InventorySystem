@@ -25,7 +25,7 @@
       <table id="table" class="table table-sm table-striped table-hover table-bordered w-100">
         <thead> 
           <tr>
-            <th>Imagen</th>
+            <?= $imagenProd ? "<th>Imagen</th>" : "" ?>
             <th>Referencia</th>
             <th>Item</th>
             <th>Descripción</th>
@@ -154,4 +154,5 @@
   $CATEGORIAS = <?= COUNT($categorias) ?>;
   $COSTO = "<?= $costo ?>";
   $INVENTARIONEGATIVO = "<?= $inventario_negativo ?>";
+  $imagenProd = <?= $imagenProd ?>
 </script>

@@ -23,6 +23,8 @@ class cManifiesto extends BaseController {
 			'cssManifiesto.css'
 		];
 
+		$this->content['imagenProd'] = (session()->has("imagenProducto") ? session()->get("imagenProducto") : 0);
+
 		return view('UI/viewDefault', $this->content);
 	}
 

@@ -26,6 +26,8 @@ class cProductos extends BaseController {
 
 		$manifiestos = new mManifiesto();
 		$this->content["manifiestos"] = $manifiestos->asObject()->where("estado", 1)->findAll();
+
+		$this->content['imagenProd'] = (session()->has("imagenProducto") ? session()->get("imagenProducto") : 0);
 		
 		$this->content['js_add'][] = [
 			'jsProductos.js'

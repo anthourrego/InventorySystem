@@ -80,7 +80,9 @@
           <table id="table" class="table table-sm table-striped table-hover table-bordered w-100">
             <thead> 
               <tr>
-                <th>Imagen</th>
+                <?php if ($imagenProd) { ?>
+                  <th>Imagen</th>
+                <?php } ?>
                 <th>Item</th>
                 <th>Descripción</th>
                 <th>Stock</th>
@@ -101,4 +103,5 @@
   $CANTIDADCLIENTES ="<?= $cantidadClientes ?>";
   $NROVENTA = "<?= $nroVenta ?>";
   $DATOSVENTA = '<?= is_null($venta) ? '' : json_encode($venta) ?>';
+  $IMAGENPROD = <?= $imagenProd ?>
 </script>

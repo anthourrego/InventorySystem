@@ -1,14 +1,14 @@
-let rutaBase = base_url() + "ConfiguracionUsuario/";
+let baseRuta = base_url() + "Perfil/";
 
-var arbolPermisos = $('#tree').tree({
-  primaryKey: 'id',
+var arbolModulos = $('#tree').tree({
+  primaryKey: 'campo',
   uiLibrary: 'bootstrap4',
   checkboxes: true,
   select: false,
   cascadeCheck: false,
-  dataSource: $PERMISOS
+  dataSource: modulos
 });
 
 $(function () {
-
+  console.log("Carga");
 });

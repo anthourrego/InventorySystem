@@ -1,13 +1,13 @@
 let rutaBase = base_url() + "Configuracion/";
 
-$(function(){
+$(function () {
   //Traemos los datos
   $.ajax({
     url: rutaBase + "Datos",
     type: "GET",
     dataType: "json",
     async: false,
-    success: function(resp){
+    success: function (resp) {
       if (resp.msj.length > 0) {
         let datos = resp.msj;
         datos.forEach(it => {
@@ -21,7 +21,7 @@ $(function(){
     }
   });
 
-  $(".configAct").on("change", function(e){
+  $(".configAct").on("change", function (e) {
     e.preventDefault();
     let campo = $(this).attr("name");
     let valor = $(this).val();
@@ -31,13 +31,9 @@ $(function(){
       url: rutaBase + "Actualizar",
       type: "POST",
       dataType: "json",
-      data: {
-        campo,
-        valor,
-        nombre
-      },
-      success: function(resp){
-        if(resp.success){
+      data: { campo, valor, nombre },
+      success: function (resp) {
+        if (resp.success) {
           alertify.success(resp.msj);
         } else {
           alertify.error(resp.msj);

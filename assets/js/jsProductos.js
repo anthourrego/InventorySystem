@@ -1,89 +1,93 @@
 let rutaBase = base_url() + "Productos/";
+let columnsProd = [
+  { data: 'referencia' },
+  { data: 'item' },
+  {
+    data: 'descripcion',
+    width: "30%",
+    render: function (meta, type, data, meta) {
+      return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
+    }
+  },
+  { data: 'nombreCategoria' },
+  {
+    data: 'stock',
+    render: function (meta, type, data, meta) {
+      //Se coloca el color según el stock
+      let btnColor = "success";
+      if (data.stock <= 0) {
+        btnColor = "danger";
+      } else if (data.stock > 0 && data.stock <= 24) {
+        btnColor = "warning";
+      }
+
+      return `<button class="btn btn-${btnColor}">${data.stock}</button>`;
+    }
+  },
+  {
+    data: 'costo',
+    className: 'text-right',
+    visible: ($COSTO == '1' ? true : false),
+    render: function (meta, type, data, meta) {
+      return formatoPesos.format(data.costo);
+    }
+  },
+  {
+    data: 'precio_venta',
+    className: 'text-right',
+    render: function (meta, type, data, meta) {
+      return formatoPesos.format(data.precio_venta);
+    }
+  },
+  { data: 'ubicacion' },
+  { data: 'manifiesto' },
+  {
+    data: 'created_at',
+    render: function (meta, type, data, meta) {
+      return moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A");
+    }
+  },
+  {
+    orderable: false,
+    searchable: false,
+    defaultContent: '',
+    className: 'text-center',
+    render: function (meta, type, data, meta) {
+      btnEditar = validPermissions(52) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
+      btnCambiarEstado = validPermissions(53) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
+
+      return `<div class="btn-group btn-group-sm" role="group">
+                ${btnEditar}
+                ${btnCambiarEstado}
+              </div>`;
+    }
+  },
+];
+
+if ($imagenProd) {
+  columnsProd.unshift({
+    orderable: false,
+    searchable: false,
+    defaultContent: '',
+    className: "text-center",
+    render: function (meta, type, data, meta) {
+      return `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
+                <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
+              </a>`;
+    }
+  });
+}
 
 let DTProductos = $("#table").DataTable({
   ajax: {
     url: rutaBase + "DT",
     type: "POST",
     data: function (d) {
-      return $.extend(d, { "estado": $("#selectEstado").val() })
+      return $.extend(d, { "estado": $("#selectEstado").val(), imagenProd: $imagenProd })
     }
   },
   order: [[2, "asc"]],
-  columns: [
-    {
-      orderable: false,
-      searchable: false,
-      defaultContent: '',
-      className: "text-center",
-      render: function (meta, type, data, meta) {
-        return `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
-                  <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
-                </a>`;
-      }
-    },
-    { data: 'referencia' },
-    { data: 'item' },
-    {
-      data: 'descripcion',
-      width: "30%",
-      render: function (meta, type, data, meta) {
-        return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
-      }
-    },
-    { data: 'nombreCategoria' },
-    {
-      data: 'stock',
-      render: function (meta, type, data, meta) {
-        //Se coloca el color según el stock
-        let btnColor = "success";
-        if (data.stock <= 0) {
-          btnColor = "danger";
-        } else if (data.stock > 0 && data.stock <= 24) {
-          btnColor = "warning";
-        }
-
-        return `<button class="btn btn-${btnColor}">${data.stock}</button>`;
-      }
-    },
-    {
-      data: 'costo',
-      className: 'text-right',
-      visible: ($COSTO == '1' ? true : false),
-      render: function (meta, type, data, meta) {
-        return formatoPesos.format(data.costo);
-      }
-    },
-    {
-      data: 'precio_venta',
-      className: 'text-right',
-      render: function (meta, type, data, meta) {
-        return formatoPesos.format(data.precio_venta);
-      }
-    },
-    { data: 'ubicacion' },
-    { data: 'manifiesto' },
-    {
-      data: 'created_at',
-      render: function (meta, type, data, meta) {
-        return moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A");
-      }
-    },
-    {
-      orderable: false,
-      searchable: false,
-      defaultContent: '',
-      className: 'text-center',
-      render: function (meta, type, data, meta) {
-        btnEditar = validPermissions(52) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
-        btnCambiarEstado = validPermissions(53) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
-
-        return `<div class="btn-group btn-group-sm" role="group">
-                  ${btnEditar}
-                  ${btnCambiarEstado}
-                </div>`;
-      }
-    },
-  ],
+  columns: columnsProd,
   createdRow: function (row, data, dataIndex) {
 
     if (!data.manifiesto) $(row).addClass('bg-delete-tb');

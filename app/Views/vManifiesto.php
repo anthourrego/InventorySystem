@@ -59,7 +59,9 @@
           <table id="tableProds" class="table table-sm table-striped table-hover table-bordered w-100">
             <thead> 
               <tr>
-                <th>Imagen</th>
+                <?php if ($imagenProd) { ?>
+                  <th>Imagen</th>
+                <?php } ?>
                 <th>Item</th>
                 <th>Descripción</th>
                 <th>Acciones</th>
@@ -137,7 +139,9 @@
         <table id="tableProdsManif" class="table table-sm table-striped table-hover table-bordered w-100">
           <thead> 
             <tr>
-              <th>Imagen</th>
+              <?php if ($imagenProd) { ?>
+                <th>Imagen</th>
+              <?php } ?>
               <th>Item</th>
               <th>Descripción</th>
             </tr>
@@ -153,5 +157,6 @@
 </div>
 
 <script>
-  let $permisoEliminarMultiple = <?= validPermissions([87], true) ? 'true' : 'false' ?>
+  let $permisoEliminarMultiple = <?= validPermissions([87], true) ? 'true' : 'false' ?>;
+  let $imagenProd = <?= $imagenProd ?>
 </script>

@@ -131,7 +131,6 @@ let DTManifiestos = $("#table").DataTable({
     });
 
     $(row).find(".btnVerProdsManif").on("click", function () {
-      console.log(data);
       $("#modalProdsManifiesto").modal('show');
       manifiestoActual = data.id;
       if (!DTVerProductos) {
@@ -201,6 +200,48 @@ let DTManifiestos = $("#table").DataTable({
 
 });
 
+let columnsProd = [
+  { data: 'item' },
+  {
+    data: 'descripcion',
+    width: "30%",
+    render: function (meta, type, data, meta) {
+      return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
+    }
+  },
+  {
+    orderable: false,
+    searchable: false,
+    defaultContent: '',
+    className: 'text-center',
+    render: function (meta, type, data, meta) {
+      if (data.id_manifiesto == manifiestoActual) {
+        return `<div class="btn-group btn-group-sm" role="group">
+          <button type="button" class="btn btn-danger btnRemove" title="Agregar a manifiesto"><i class="fa-solid fa-circle-minus"></i></button>
+        </div>`;
+      } else {
+        return `<div class="btn-group btn-group-sm" role="group">
+          <button type="button" class="btn btn-success btnAdd" title="Eliminar de manifiesto"><i class="fa-solid fa-plus"></i></button>
+        </div>`;
+      }
+    }
+  },
+];
+
+if ($imagenProd) {
+  columnsProd.unshift({
+    orderable: false,
+    searchable: false,
+    defaultContent: '',
+    className: "text-center",
+    render: function (meta, type, data, meta) {
+      return `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
+      <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
+    </a>`;
+    }
+  });
+}
+
 let DTProductosStruc = {
   ajax: {
     url: rutaBase + "DTProductos",
@@ -211,44 +252,7 @@ let DTProductosStruc = {
   },
   dom: domlftrip,
   order: [[2, "asc"]],
-  columns: [
-    {
-      orderable: false,
-      searchable: false,
-      defaultContent: '',
-      className: "text-center",
-      render: function (meta, type, data, meta) {
-        return `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
-          <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
-        </a>`;
-      }
-    },
-    { data: 'item' },
-    {
-      data: 'descripcion',
-      width: "30%",
-      render: function (meta, type, data, meta) {
-        return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
-      }
-    },
-    {
-      orderable: false,
-      searchable: false,
-      defaultContent: '',
-      className: 'text-center',
-      render: function (meta, type, data, meta) {
-        if (data.id_manifiesto == manifiestoActual) {
-          return `<div class="btn-group btn-group-sm" role="group">
-            <button type="button" class="btn btn-danger btnRemove" title="Agregar a manifiesto"><i class="fa-solid fa-circle-minus"></i></button>
-          </div>`;
-        } else {
-          return `<div class="btn-group btn-group-sm" role="group">
-            <button type="button" class="btn btn-success btnAdd" title="Eliminar de manifiesto"><i class="fa-solid fa-plus"></i></button>
-          </div>`;
-        }
-      }
-    },
-  ],
+  columns: columnsProd,
   createdRow: function (row, data, dataIndex) {
     $(row).find(".btnAdd, .btnRemove").on("click", function () {
 
@@ -274,6 +278,31 @@ let DTProductosStruc = {
   }
 };
 
+let columnsProdVer = [
+  { data: 'item' },
+  {
+    data: 'descripcion',
+    width: "30%",
+    render: function (meta, type, data, meta) {
+      return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
+    }
+  }
+]
+
+if ($imagenProd) {
+  columnsProdVer.unshift({
+    orderable: false,
+    searchable: false,
+    defaultContent: '',
+    className: "text-center",
+    render: function (meta, type, data, meta) {
+      return `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
+        <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
+      </a>`;
+    }
+  });
+}
+
 let DTVerProductosStruc = {
   ajax: {
     url: rutaBase + "DTProductos",
@@ -283,28 +312,8 @@ let DTVerProductosStruc = {
     }
   },
   dom: domlftrip,
-  order: [[2, "asc"]],
-  columns: [
-    {
-      orderable: false,
-      searchable: false,
-      defaultContent: '',
-      className: "text-center",
-      render: function (meta, type, data, meta) {
-        return `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
-          <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
-        </a>`;
-      }
-    },
-    { data: 'item' },
-    {
-      data: 'descripcion',
-      width: "30%",
-      render: function (meta, type, data, meta) {
-        return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
-      }
-    }
-  ],
+  order: [],
+  columns: columnsProdVer,
   createdRow: function (row, data, dataIndex) { }
 };
 

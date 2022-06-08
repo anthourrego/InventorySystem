@@ -1,4 +1,7 @@
 </body>
+
+<div class="modal fade" id="modalMiPerfil" data-backdrop="static" data-keyboard="false" aria-labelledby="modalMiPerfilLabel" aria-hidden="true"></div>
+
 <script>
   function base_url(){
     return "<?= base_url(); ?>/";
