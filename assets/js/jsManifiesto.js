@@ -251,7 +251,7 @@ let DTProductosStruc = {
     }
   },
   dom: domlftrip,
-  order: [[2, "asc"]],
+  order: [[1, "asc"]],
   columns: columnsProd,
   createdRow: function (row, data, dataIndex) {
     $(row).find(".btnAdd, .btnRemove").on("click", function () {

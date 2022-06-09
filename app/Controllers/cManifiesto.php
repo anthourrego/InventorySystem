@@ -300,14 +300,17 @@ class cManifiesto extends BaseController {
 					P.id_manifiesto
 			");
 
+		$where = "";
 		if (is_null($ver)) {
-			$query = $query->where("P.id_manifiesto IS NULL")->where("P.estado = 1");
+			$where = "(P.id_manifiesto IS NULL AND P.estado = 1";
 			if (!is_null($manifiesto)) {
-				$query = $query->orWhere("P.id_manifiesto = '$manifiesto'");
+				$where .= " OR P.id_manifiesto = '$manifiesto'";
 			}
+			$where .= ")";
 		} else {
-			$query = $query->orWhere("P.id_manifiesto = '$manifiesto'");
+			$where = "P.id_manifiesto = '$manifiesto'";
 		}
+		$query = $query->where($where);
 
 		return DataTable::of($query)->toJson(true);
 	}
