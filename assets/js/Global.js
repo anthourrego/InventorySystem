@@ -122,9 +122,9 @@ document.addEventListener('DOMContentLoaded', function (e) {
 	});
 
 	$("#miPerfil").on('click', function () {
-		/* $("#modalMiPerfil").load(base_url() + 'Perfil/', {}, function () {
+		$("#modalMiPerfil").load(base_url() + 'Perfil/', {}, function () {
 			$("#modalMiPerfil").modal('show');
-		}); */
+		});
 	});
 
 	//Validamos si el menú esta abierto o cerrado
