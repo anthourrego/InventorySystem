@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Controllers;
-use Dompdf\Dompdf;
 use TCPDF;
 use App\Models\mVentas;
 use App\Models\mVentasProductos;
