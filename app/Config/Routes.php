@@ -153,6 +153,15 @@ $routes->group('Reportes', ['filter' => 'authGuard'], function ($routes) {
 	//$routes->get('DT', 'cManifiesto::listaDT');
 });
 
+//Almacenes
+$routes->group('Almacen', ['filter' => 'authGuard'], function ($routes) {
+	$routes->get('/', 'cAlmacen::index');
+	$routes->post('DT', 'cAlmacen::listaDT');
+	$routes->post('Crear', 'cAlmacen::crearEditar', ['filter' => ['authGuard', 'ajax']]);
+	$routes->post('Editar', 'cAlmacen::crearEditar', ['filter' => ['authGuard', 'ajax']]);
+	$routes->post('Eliminar', 'cAlmacen::eliminar', ['filter' => ['authGuard', 'ajax']]);
+});
+
 
 
 /*

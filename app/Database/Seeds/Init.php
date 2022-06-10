@@ -9,5 +9,6 @@ class Init extends Seeder {
 		$this->call('PerfilSeeder');
 		$this->call('UsuarioSeeder');
 		$this->call('PermisosSeeder');
+		$this->call('AlmacenSeeder');
 	}
 }

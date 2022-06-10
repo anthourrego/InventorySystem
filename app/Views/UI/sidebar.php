@@ -144,6 +144,14 @@
               </a>
             </li>
 						<?php } ?>
+						<?php if ((ENVIRONMENT !== 'production')) { ?> 
+						<li class="nav-item">
+              <a href="<?= base_url("Almacen") ?>" class="nav-link <?= current_url(true)->getSegment(3) == 'Almacen' ? 'active' : '' ?>">
+								<i class="nav-icon fa-solid fa-swatchbook"></i>
+                <p>Almacenes</p>
+              </a>
+            </li>
+						<?php } ?>
 					</ul>
 				</nav>
 				<!-- /.sidebar-menu -->
