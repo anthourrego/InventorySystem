@@ -13,15 +13,7 @@ let columnsProd = [
   {
     data: 'stock',
     render: function (meta, type, data, meta) {
-      //Se coloca el color según el stock
-      let btnColor = "success";
-      if (data.stock <= 0) {
-        btnColor = "danger";
-      } else if (data.stock > 0 && data.stock <= 24) {
-        btnColor = "warning";
-      }
-
-      return `<button class="btn btn-${btnColor}">${data.stock}</button>`;
+      return `<button class="btn btn-${data.ColorStock}">${data.stock}</button>`;
     }
   },
   {

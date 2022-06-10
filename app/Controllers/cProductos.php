@@ -39,29 +39,37 @@ class cProductos extends BaseController {
 	public function listaDT() {
 		$postData = (object) $this->request->getPost();
 
-		$query = $this->db->table('productos AS P')
-										->select("
-												P.id,
-												P.id_categoria,
-												P.referencia,
-												P.item,
-												P.descripcion,
-												P.imagen,
-												P.stock,
-												P.precio_venta,
-												P.costo,
-												P.ubicacion,
-												P.id_manifiesto AS manifiesto,
-												P.ventas, 
-												P.estado, 
-												P.created_at,
-												P.updated_at,
-												C.nombre AS nombreCategoria,
-												CASE 
-														WHEN P.estado = 1 THEN 'Activo' 
-														ELSE 'Inactivo' 
-												END AS Estadito
-										")->join('categorias AS C', 'P.id_categoria = C.id', 'left');
+		$query = $this->db
+				->table('productos AS P')
+				->select("
+						P.id,
+						P.id_categoria,
+						P.referencia,
+						P.item,
+						P.descripcion,
+						P.imagen,
+						CASE 
+								WHEN P.stock <= " . ((int) (session()->has("inventarioBajo") ? session()->get("inventarioBajo") : '0')) . "
+									THEN 'danger'
+								WHEN P.stock > " . ((int) (session()->has("inventarioBajo") ? session()->get("inventarioBajo") : '0')) . " AND P.stock <= " . ((int) (session()->has("inventarioMedio") ? session()->get("inventarioMedio") : '24')) . "
+									THEN 'warning'
+								ELSE 'success' 
+						END AS ColorStock,
+						P.stock,
+						P.precio_venta,
+						P.costo,
+						P.ubicacion,
+						P.id_manifiesto AS manifiesto,
+						P.ventas, 
+						P.estado, 
+						P.created_at,
+						P.updated_at,
+						C.nombre AS nombreCategoria,
+						CASE 
+								WHEN P.estado = 1 THEN 'Activo' 
+								ELSE 'Inactivo' 
+						END AS Estadito
+				")->join('categorias AS C', 'P.id_categoria = C.id', 'left');
 
 		if($postData->estado != "-1"){
 			$query->where("P.estado", $postData->estado);

@@ -14,6 +14,10 @@ class cConfiguracion extends BaseController {
 
 		$this->content["editar"] = validPermissions([71], true);
 
+		$this->content['css_add'][] = [
+			'cssConfiguracion.css'
+		];
+
 		$this->content['js_add'][] = [
 			'jsConfiguracion.js'
 		];
