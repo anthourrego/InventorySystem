@@ -145,14 +145,14 @@ document.addEventListener('DOMContentLoaded', function (e) {
 	})
 
 	//Solo deja escribir números
-	$(".soloNumeros").keypress(function (e) {
+	$(document).on("keypress", ".soloNumeros", function (e) {
 		var keynum = window.event ? window.event.keyCode : e.which;
 		if ((keynum == 8) || (keynum == 46))
 			return true;
 		return /\d/.test(String.fromCharCode(keynum));
 	});
 
-	$(".soloNumerosNegativo").keypress(function (e) {
+	$(document).on("keypress", ".soloNumerosNegativo", function (e) {
 		key = e.keyCode || e.which;
 		tecla = String.fromCharCode(key).toLowerCase();
 		letras = "-1234567890";
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 	});
 
 	//Solo permite alfanumerico
-	$(".soloLetras").keypress(function (e) {
+	$(document).on("keypress", ".soloLetras", function (e) {
 		key = e.keyCode || e.which;
 		tecla = String.fromCharCode(key).toLowerCase();
 		letras = "abcdefghijklmnopqrstuvwxyz-_1234567890";
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 		}
 	});
 
-	$(".soloLetrasEspacio").keypress(function (e) {
+	$(document).on("keypress", ".soloLetrasEspacio", function (e) {
 		key = e.keyCode || e.which;
 		tecla = String.fromCharCode(key).toLowerCase();
 		letras = "abcdefghijklmnopqrstuvwxyz1234567890 ";
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 		}
 	});
 
-	$(".soloLetrasEspacioCaracteres").keypress(function (e) {
+	$(document).on("keypress", ".soloLetrasEspacioCaracteres", function (e) {
 		key = e.keyCode || e.which;
 		tecla = String.fromCharCode(key).toLowerCase();
 		letras = "abcdefghijklmnopqrstuvwxyz1234567890 -_#|";

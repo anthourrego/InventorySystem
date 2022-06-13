@@ -9,13 +9,17 @@ class cMiPerfil extends BaseController {
 		$this->content['title'] = "Mi Perfil";
 		$this->content['view'] = "vMiPerfil";
 
+		
+		unset($this->content['css']);
+		unset($this->content['css_add']);
+		unset($this->content['js']);
+		unset($this->content['js_add']);
+		
 		$this->LJQueryValidation();
 
 		$this->content['jsMiP'] = $this->content['js'];
-		unset($this->content['js']);
 		
 		$this->content['js_addMiP'] = $this->content['js_add'];
-		unset($this->content['js_add']);
 
 		$this->content['js_addMiP'][] = [
 			'jsMiPerfil.js'

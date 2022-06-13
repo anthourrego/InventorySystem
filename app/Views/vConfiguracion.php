@@ -49,19 +49,19 @@
               <label class="col-11 text-center">Rangos Inventario:</label>
               <div class="col-1 text-right"><i class="fas fa-info text-center p-2 bg-secondary w-25 infobtn"></i></div>
               <div class="col-11 col-md-3 input-group mb-3">
-                <input data-nombre="Rango Bajo" value="0" id="inventarioBajo" name="inventarioBajo" <?= !$editar ? 'disabled' : '' ?> type="text" class="focusInput form-control bg-danger text-center">
+                <input data-nombre="Rango Bajo" value="0" id="inventarioBajo" name="inventarioBajo" <?= !$editar ? 'disabled' : '' ?> type="text" class="configAct form-control bg-danger text-center inputFocusSelect lastFocus">
               </div>
               <div class="col-1 input-group mb-3">
                 <input readonly disabled value="<" type="text" class="form-control text-center">
               </div>
               <div class="col-12 col-md-4 input-group mb-3">
-                <input data-nombre="Rango Medio" value="25" id="inventarioMedio" name="inventarioMedio" <?= !$editar ? 'disabled' : '' ?> type="text" class="focusInput form-control bg-warning text-center">
+                <input data-nombre="Rango Medio" value="25" id="inventarioMedio" name="inventarioMedio" <?= !$editar ? 'disabled' : '' ?> type="text" class="configAct form-control bg-warning text-center inputFocusSelect">
               </div>
               <div class="col-1 input-group mb-3">
                 <input readonly disabled value=">" type="text" class="form-control text-center">
               </div>
               <div class="col-11 col-md-3 input-group mb-3">
-                <input disabled type="text" data-nombre="Rango Alto" id="inventarioAlto" name="inventarioAlto" value="25" class="focusInput form-control bg-success text-center">
+                <input disabled type="text" data-nombre="Rango Alto" id="inventarioAlto" name="inventarioAlto" value="25" class="configAct form-control bg-success text-center inputFocusSelect">
               </div>
               <div class="col-12 alert-info-data" style="display: none;">
                 <div class="alert alert-info text-center" role="alert"></div>
