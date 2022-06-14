@@ -82,6 +82,7 @@ class cClientes extends BaseController {
 		if ($clienteModel->save($datosSave)) {
 			$resp["success"] = true;
 			$resp["msj"] = "El cliente <b>{$datosSave["nombre"]}</b> se " . (empty($postData['id']) ? 'creo' : 'actualizo') . " correctamente.";
+			$resp['id'] = (empty($postData['id']) ? $clienteModel->getInsertID() : $postData['id']);
 		} else {
 			$resp["msj"] = "No puede " . (empty($postData['id']) ? 'crear' : 'actualizar') . " el cliente." . listErrors($clienteModel->errors());
 		}

@@ -126,6 +126,7 @@ class cUsuarios extends BaseController {
 			,"usuario" => trim($this->request->getPost("usuario"))
 			,"nombre" => trim($this->request->getPost("nombre"))
 			,"perfil" => trim($this->request->getPost("perfil")) == 0 ? null : trim($this->request->getPost("perfil"))
+			,"id_almacen" => 1
 		);
 
 		if (empty($this->request->getPost("id"))) {

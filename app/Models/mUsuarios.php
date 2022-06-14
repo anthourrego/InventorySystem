@@ -17,7 +17,8 @@ class mUsuarios extends Model {
     'foto',
     'estado',
     'ultimo_login',
-    'fecha'
+    'fecha',
+    'id_almacen'
   ];
 
   protected $useTimestamps = true;

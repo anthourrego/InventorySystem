@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\mPermisos;
 use App\Models\mUsuarios;
 use App\Models\mConfiguracion;
+use App\Models\mAlmacen;
 
 class cPermisos extends BaseController {
 	public function Permisos($id, $campo) {
@@ -88,6 +89,14 @@ class cPermisos extends BaseController {
 
 		foreach ($config as $it) {
 			$userdata[$it->campo] = $it->valor;
+		}
+
+		if (!is_null($usuario->id_almacen)) {
+			$mAlmacen = new mAlmacen();
+			$dataAlmacen = $mAlmacen->find($usuario->id_almacen);
+	
+			$userdata['almacenId'] = $dataAlmacen['id'];
+			$userdata['nombreAlmacen'] = $dataAlmacen['nombre'];
 		}
 
 		session()->set($userdata);

@@ -162,6 +162,14 @@ $routes->group('Almacen', ['filter' => 'authGuard'], function ($routes) {
 	$routes->post('Eliminar', 'cAlmacen::eliminar', ['filter' => ['authGuard', 'ajax']]);
 });
 
+//Sucursales
+$routes->group('Sucursales', ['filter' => 'authGuard:4'], function ($routes) {
+	$routes->post('DT', 'cSucursales::listaDT');
+	$routes->post('Crear', 'cSucursales::crearEditar', ['filter' => ['authGuard:41', 'ajax']]);
+	$routes->post('Editar', 'cSucursales::crearEditar', ['filter' => ['authGuard:42', 'ajax']]);
+	$routes->post('Eliminar', 'cSucursales::eliminar', ['filter' => ['authGuard:43', 'ajax']]);
+});
+
 
 
 /*

@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Models\mUsuarios;
 use App\Models\mPermisos;
 use App\Models\mConfiguracion;
+use App\Models\mAlmacen;
 
 class Home extends BaseController {
 
@@ -77,6 +78,14 @@ class Home extends BaseController {
 
 					foreach ($config as $it) {
 						$userdata[$it->campo] = $it->valor;
+					}
+
+					if (!is_null($usuario->id_almacen)) {
+						$mAlmacen = new mAlmacen();
+						$dataAlmacen = $mAlmacen->find($usuario->id_almacen);
+	
+						$userdata['almacenId'] = $dataAlmacen['id'];
+						$userdata['nombreAlmacen'] = $dataAlmacen['nombre'];
 					}
 
 					session()->set($userdata);
