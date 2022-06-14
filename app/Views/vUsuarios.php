@@ -102,7 +102,7 @@
             <div class="col-6 form-group form-valid">
               <label class="mb-0" for="RePass">Confirmar Contraseña <span class="text-danger">*</span></label>
               <div class="input-group">
-                <input type="password" required id="RePass" placeholder="******" minlength="1" maxlength="255" name="RePass" class="form-control" autocomplete="off">
+                <input type="password" required id="RePass" placeholder="******" minlength="1" maxlength="255" name="RePass" class="form-control soloLetras" autocomplete="off">
                 <div class="input-group-append">
                   <button class="btn btn-secondary btn-pass" type="button"><i class="fas fa-eye"></i></button>
                 </div>

@@ -12,6 +12,7 @@ let columnsProd = [
   { data: 'nombreCategoria' },
   {
     data: 'stock',
+    className: 'text-center align-middle',
     render: function (meta, type, data, meta) {
       return `<button class="btn btn-${data.ColorStock}">${data.stock}</button>`;
     }
