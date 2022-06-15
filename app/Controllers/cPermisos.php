@@ -80,7 +80,8 @@ class cPermisos extends BaseController {
 			'perfil'     => $usuario->perfil,
 			'foto'     => $usuario->foto,
 			'logged_in' => true,
-			'permisos' => $per
+			'permisos' => $per,
+			'imageProd' => (is_null($usuario->imageProd) ? '' : $usuario->imageProd)
 		];
 
 		$mConfiguracion = new mConfiguracion();
@@ -89,6 +90,10 @@ class cPermisos extends BaseController {
 
 		foreach ($config as $it) {
 			$userdata[$it->campo] = $it->valor;
+		}
+
+		if (!is_null($usuario->imageProd)) {
+			$userdata['imagenProducto'] = $usuario->imageProd;
 		}
 
 		if (!is_null($usuario->id_almacen)) {

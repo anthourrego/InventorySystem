@@ -52,6 +52,7 @@ $(function () {
       let form = new FormData(this);
       form.set('id', $USUARIOID);
       form.set('editFoto', editFoto);
+      form.set('nombre', $("#nombreUser").val());
       $.ajax({
         url: baseRutaMiPerfil + "Editar",
         type: 'POST',
@@ -79,10 +80,6 @@ $(function () {
       $(this).closest('.input-group').find('input').attr('type', 'password');
       $(this).find('i').removeClass('fa-eye-slash').addClass('fa-eye');
     }
-  });
-
-  $('.tab-mi-perfil').on('click', function (event) {
-    $("#btn-guardar").attr('form', $(this).data('form'));
   });
 
   $("#formPassword").validate({
@@ -123,6 +120,35 @@ $(function () {
         alertify.warning("La contraseñas no coinciden, intentelo de nuevo");
         $(this).find("input[name='pass']").trigger("focus");
       }
+    }
+  });
+
+  $(".configPerfil").on("change", function (e) {
+    e.preventDefault();
+    let campo = $(this).attr("name");
+    let valor = $(this).val();
+    let nombre = $(this).data("nombre");
+    $.ajax({
+      url: baseRutaMiPerfil + "ActualizarConfig",
+      type: "POST",
+      dataType: "json",
+      data: { campo, valor, nombre },
+      success: function (resp) {
+        if (resp.success) {
+          alertify.success(resp.msj);
+        } else {
+          alertify.error(resp.msj);
+        }
+      }
+    });
+  });
+
+  $('.tab-mi-perfil').on('shown.bs.tab', function (event) {
+    $(".buttons-modal").show();
+    if ($(this).attr('id') == 'config-tab') {
+      $(".buttons-modal").hide();
+    } else {
+      $("#btn-guardar").attr('form', $(this).data('form'));
     }
   });
 });

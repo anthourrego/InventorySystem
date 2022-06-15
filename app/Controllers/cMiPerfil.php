@@ -9,13 +9,15 @@ class cMiPerfil extends BaseController {
 		$this->content['title'] = "Mi Perfil";
 		$this->content['view'] = "vMiPerfil";
 
-		
 		unset($this->content['css']);
 		unset($this->content['css_add']);
 		unset($this->content['js']);
 		unset($this->content['js_add']);
 		
 		$this->LJQueryValidation();
+		$this->LSelect2();
+
+		$this->content['cssMiP'] = $this->content['css'];
 
 		$this->content['jsMiP'] = $this->content['js'];
 		
@@ -160,6 +162,25 @@ class cMiPerfil extends BaseController {
 			$this->db->transRollback();
 		}
 
+		return $this->response->setJSON($resp);
+	}
+
+	public function actualizar() {
+		$resp["success"] = false;
+		$dataPost = $this->request->getPost();
+
+		$builder = $this->db->table('usuarios');
+		
+		$builder = $builder->set($dataPost["campo"], ($dataPost["valor"] == -1 ? null : $dataPost["valor"]));
+		
+		$builder = $builder->where('id', session()->get("id_user"));
+		
+		if($builder->update()) {
+			$resp["success"] = true;
+			$resp["msj"] = "<b>{$dataPost['nombre']}</b> se actualizo correctamente.";
+		}	else {
+			$resp["msj"] = "Error al actualizar <b>{$dataPost['nombre']}</b>.";
+		}
 		return $this->response->setJSON($resp);
 	}
 

@@ -53,7 +53,7 @@ class cConfiguracion extends BaseController {
 
 		if($mConfiguracion->save($dataSave)) {
 			$resp["success"] = true;
-			$resp["msj"] = "<b>{$dataPost['nombre']}</b> se actualizo corractamente.";
+			$resp["msj"] = "<b>{$dataPost['nombre']}</b> se actualizo correctamente.";
 		}	else {
 			$resp["msj"] = "Error al actualizar <b>{$dataPost['nombre']}</b>.";
 		}	

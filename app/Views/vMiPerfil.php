@@ -1,3 +1,29 @@
+<?php 
+  if(isset($cssMiP)){
+    foreach ($cssMiP as $cssP1) {
+      if(is_array($cssP1)) {
+        foreach ($cssP1 as $cssP2) {
+          printf('<link href="%s" rel="stylesheet"/>', base_url(esc($cssP2)));
+        }
+      } else {
+        printf('<link href="%s" rel="stylesheet"/>', base_url(esc($cssP1)));
+      }
+    }
+  }
+
+  if(isset($css_add_P)){
+    foreach ($css_add_P as $css_addP1) {
+      if(is_array($css_addP1)) {
+        foreach ($css_addP1 as $css_addP2) {
+          printf('<link href="%s" rel="stylesheet"/>', base_url("assets/css/" . $css_addP2 . "?" . rand()));
+        }
+      } else {
+        printf('<link href="%s" rel="stylesheet"/>', base_url("assets/css/" . $css_addP1 . "?" . rand() ));
+      }
+    }
+  }
+?>
+
 <div class="modal-dialog">
   <div class="modal-content">
     <div class="modal-header">
@@ -11,6 +37,7 @@
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
           <a class="nav-link tab-mi-perfil active" id="data-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" data-form="formMiperfil" aria-selected="true">Datos Basicos</a>
           <a class="nav-link tab-mi-perfil" id="segur-tab" data-form="formPassword" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Seguridad</a>
+          <a class="nav-link tab-mi-perfil" id="config-tab" data-form="formPassword" data-toggle="tab" href="#config-user" role="tab" aria-controls="config-user" aria-selected="false">Configuración</a>
         </div>
       </nav>
       <div class="tab-content" id="nav-tabContent">
@@ -38,8 +65,8 @@
                   <input placeholder="Usuario" value="<?= $usuario->usuario ?>" class="form-control soloLetras inputVer" id="usuario" name="usuario" type="text" minlength="3" maxlength="255" required autocomplete="off">
                 </div>
                 <div class="form-group form-valid">
-                  <label class="mb-0" for="nombre">Nombre <span class="text-danger">*</span></label>
-                  <input value="<?= $usuario->nombre ?>" type="text" id="nombre" name="nombre" class="form-control soloLetrasEspacio inputVer" minlength="1" maxlength="300" required placeholder="Nombre" autocomplete="off">
+                  <label class="mb-0" for="nombreUser">Nombre <span class="text-danger">*</span></label>
+                  <input value="<?= $usuario->nombre ?>" type="text" id="nombreUser" name="nombreUser" class="form-control soloLetrasEspacio inputVer" minlength="1" maxlength="300" required placeholder="Nombre" autocomplete="off">
                 </div>
               </div>
               <div class="col-12 form-group form-group-edit">
@@ -82,9 +109,21 @@
             </div>
           </form>
         </div>
+        <div class="tab-pane p-2 fade" id="config-user" role="tabpanel" aria-labelledby="config-tab">
+          <div class="form-row">
+            <div class="col-12">
+              <label for="imageProd">Imagen Producto:</label>
+              <select id="imageProd" data-nombre="Imagen Producto" name="imageProd" data-placeholder="Seleccione una opción" class="custom-select select2 configPerfil">
+                <option value="-1" <?= session()->get('imageProd') == "" ? 'selected' : '' ?>>Por Defecto</option>
+                <option value="1" <?= session()->get('imageProd') == 1 ? 'selected' : '' ?>>Si</option>
+                <option value="0" <?= session()->get('imageProd') == 0 ? 'selected' : '' ?>>No</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="modal-footer">
+    <div class="modal-footer buttons-modal">
       <button type="submit" class="btn btn-success" id="btn-guardar" form="formMiperfil"><i class="fas fa-save"></i> Guardar</button>
       <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
     </div>

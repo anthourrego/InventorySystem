@@ -141,9 +141,10 @@ $routes->group('Manifiesto', ['filter' => 'authGuard:8'], function ($routes) {
 });
 
 $routes->group('Perfil', ['filter' => 'authGuard'], function ($routes) {
-    $routes->get('/', 'cMiPerfil::index');
-		$routes->post('Editar', 'cMiPerfil::editar', ['filter' => ['authGuard', 'ajax']]);
-		$routes->post('Password', 'cMiPerfil::password', ['filter' => ['authGuard', 'ajax']]);
+	$routes->get('/', 'cMiPerfil::index');
+	$routes->post('Editar', 'cMiPerfil::editar', ['filter' => ['authGuard', 'ajax']]);
+	$routes->post('Password', 'cMiPerfil::password', ['filter' => ['authGuard', 'ajax']]);
+	$routes->post('ActualizarConfig', 'cMiPerfil::actualizar', ['filter' => ['authGuard', 'ajax']]);
 });
 
 //Reportes
