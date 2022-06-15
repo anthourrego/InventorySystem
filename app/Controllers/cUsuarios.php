@@ -5,6 +5,7 @@ use App\Models\mUsuarios;
 use App\Models\mPerfiles;
 use \Hermawan\DataTables\DataTable;
 use App\Models\mPermisos;
+use App\Models\mAlmacen;
 
 class cUsuarios extends BaseController {
 
@@ -120,13 +121,16 @@ class cUsuarios extends BaseController {
 		$resp["success"] = false;
 		$filenameDelete = "";
 		$user = new mUsuarios();
+		//Traemos el primer almacen encontrado en la DB
+		$mAlmacen = new mAlmacen();
+		$almacen = $mAlmacen->where("estado", 1)->first()->id;
 		//Creamos el usuario y llenamos los datos
 		$usuario = array(
 			"id" => $this->request->getPost("id")
 			,"usuario" => trim($this->request->getPost("usuario"))
 			,"nombre" => trim($this->request->getPost("nombre"))
 			,"perfil" => trim($this->request->getPost("perfil")) == 0 ? null : trim($this->request->getPost("perfil"))
-			,"id_almacen" => 1
+			,"id_almacen" => $almacen
 		);
 
 		if (empty($this->request->getPost("id"))) {
@@ -210,7 +214,6 @@ class cUsuarios extends BaseController {
 
 	public function cambiarPass(){
 		$resp['success'] = false;
-		$resp['msj'] = "Funca";
 
 		$dataPost = $this->request->getPost();
 

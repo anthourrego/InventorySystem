@@ -53,12 +53,12 @@ class cAlmacen extends BaseController {
 			"nombre" => trim($postData["nombre"])
 		);
 
-		$perfil = new mAlmacen();
-		if ($perfil->save($datosSave)) {
+		$mAlmacen = new mAlmacen();
+		if ($mAlmacen->save($datosSave)) {
 			$resp["success"] = true;
 			$resp["msj"] = "El almacen <b>{$datosSave["nombre"]}</b> se " . (empty($postData['id']) ? 'creo' : 'actualizo') . " correctamente.";
 		} else {
-			$resp["msj"] = "No puede " . (empty($postData['id']) ? 'crear' : 'actualizar') . " el almacen." . listErrors($perfil->errors());
+			$resp["msj"] = "No puede " . (empty($postData['id']) ? 'crear' : 'actualizar') . " el almacen." . listErrors($mAlmacen->errors());
 		}
 
 		return $this->response->setJSON($resp);
@@ -70,14 +70,14 @@ class cAlmacen extends BaseController {
 		$id = $this->request->getPost("id");
 		$estado = $this->request->getPost("estado");
 
-		$perfil = new mAlmacen();
+		$mAlmacen = new mAlmacen();
 		
 		$data = [
 			"id" => $id,
 			"estado" => $estado
 		];
 
-		if($perfil->save($data)) {
+		if($mAlmacen->save($data)) {
 			$resp["success"] = true;
 				$resp['msj'] = "Almacen actualizado correctamente";
 		} else {
