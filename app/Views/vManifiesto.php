@@ -136,18 +136,20 @@
         </button>
       </div>
       <div class="modal-body">
-        <table id="tableProdsManif" class="table table-sm table-striped table-hover table-bordered w-100">
-          <thead> 
-            <tr>
-              <?php if ($imagenProd) { ?>
-                <th>Imagen</th>
-              <?php } ?>
-              <th>Item</th>
-              <th>Descripción</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <div class="table-responsive">
+          <table id="tableProdsManif" class="table table-sm table-striped table-hover table-bordered w-100">
+            <thead> 
+              <tr>
+                <?php if ($imagenProd) { ?>
+                  <th>Imagen</th>
+                <?php } ?>
+                <th>Item</th>
+                <th>Descripción</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" data-dismiss="modal" class="btn btn-success btnAceptarVistaProds"><i class="fas fa-save"></i> Aceptar</button>

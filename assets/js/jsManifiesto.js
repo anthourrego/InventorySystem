@@ -131,13 +131,14 @@ let DTManifiestos = $("#table").DataTable({
     });
 
     $(row).find(".btnVerProdsManif").on("click", function () {
-      $("#modalProdsManifiesto").modal('show');
       manifiestoActual = data.id;
       if (!DTVerProductos) {
         DTVerProductos = $("#tableProdsManif").DataTable(DTVerProductosStruc);
       } else {
         DTVerProductos.ajax.reload();
       }
+      $("#modalVerProdsManifiestoLabel").html(`<i class="fa-solid fa-eye"></i> Productos de ${data.nombre}`);
+      $("#modalProdsManifiesto").modal('show');
     });
   },
   drawCallback: function (settings) {
@@ -314,7 +315,6 @@ let DTVerProductosStruc = {
   dom: domlftrip,
   order: [],
   columns: columnsProdVer,
-  createdRow: function (row, data, dataIndex) { }
 };
 
 $(function () {
@@ -362,7 +362,7 @@ $(function () {
       $("#nombre").trigger('focus');
     }
   });
-
+  
   //Formulario de Manifiesto
   $("#formManifiesto").on("submit", function (e) {
     e.preventDefault();
