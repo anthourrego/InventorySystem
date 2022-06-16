@@ -96,13 +96,16 @@ class cPermisos extends BaseController {
 			$userdata['imagenProducto'] = $usuario->imageProd;
 		}
 
+		$mAlmacen = new mAlmacen();
 		if (!is_null($usuario->id_almacen)) {
-			$mAlmacen = new mAlmacen();
 			$dataAlmacen = $mAlmacen->find($usuario->id_almacen);
-	
-			$userdata['almacenId'] = $dataAlmacen['id'];
-			$userdata['nombreAlmacen'] = $dataAlmacen['nombre'];
+		} else {
+			//Traemos el primer almacen encontrado en la DB
+			$dataAlmacen = $mAlmacen->where("estado", 1)->first();
 		}
+
+		$userdata['almacenId'] = $dataAlmacen->id;
+		$userdata['nombreAlmacen'] = $dataAlmacen->nombre;
 
 		session()->set($userdata);
 
