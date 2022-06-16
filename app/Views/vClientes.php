@@ -55,9 +55,11 @@
           <li class="nav-item" role="presentation">
             <a class="nav-link border-bottom active" id="cliente-tab" data-toggle="tab" href="#clienteTab" role="tab" aria-controls="clienteTab" aria-selected="true">Datos Basicos</a>
           </li>
-          <li class="nav-item" role="presentation">
-            <a class="nav-link border-bottom" id="sucursales-tab" data-toggle="tab" href="#sucursalesTab" role="tab" aria-controls="sucursalesTab" aria-selected="false">Sucursales</a>
-          </li>
+          <?php if (validPermissions([44], true)) { ?>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link border-bottom" id="sucursales-tab" data-toggle="tab" href="#sucursalesTab" role="tab" aria-controls="sucursalesTab" aria-selected="false">Sucursales</a>
+            </li>
+          <?php } ?>
         </ul>
           <div class="tab-content" id="contentTab">
             <div class="tab-pane fade show active" id="clienteTab" role="tabpanel" aria-labelledby="cliente-tab">
@@ -154,9 +156,11 @@
                             <label class="mb-0" for="telefonoCartSucursal">Teléfono cartera <span class="text-danger">*</span></label>
                             <input placeholder="Ingresar teléfono cartera" required class="form-control soloNumeros inputTel inputVer" id="telefonoCartSucursal" name="telefonoCartSucursal" type="tel" minlength="10" maxlength="50" autocomplete="off">
                           </div>
-                          <div class="col-12 text-right">
-                            <button type="submit" class="btn btn-primary" form="formSucursal"><i class="fas fa-plus"></i> Guardar</button>
-                          </div>
+                          <?php if (validPermissions([441], true)) { ?>
+                            <div class="col-12 text-right">
+                              <button type="submit" class="btn btn-primary" form="formSucursal"><i class="fas fa-plus"></i> Guardar</button>
+                            </div>
+                          <?php } ?>
                         </div>
                       </form>
                     </div>

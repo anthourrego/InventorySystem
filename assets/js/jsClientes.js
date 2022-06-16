@@ -2,6 +2,7 @@ let rutaBase = base_url() + "Clientes/";
 let rutaBaseSucursal = base_url() + "Sucursales/";
 let DTSucursales = null;
 let crearSucursal = false;
+let permiSucursales = validPermissions(44);
 
 let DTClientes = $("#table").DataTable({
   ajax: {
@@ -124,7 +125,7 @@ $(function () {
         success: function (resp) {
           if (resp.success) {
             $("#sucursales-tab").removeClass('disabled');
-            if (!id.length || crearSucursal) {
+            if (permiSucursales && (!id.length || crearSucursal)) {
               crearSucursal = false;
               $("#id").val(resp.id);
               $("#sucursales-tab").click();
@@ -265,9 +266,9 @@ function tablaSucursales() {
           defaultContent: '',
           className: 'text-center',
           render: function (meta, type, data, meta) {
-            btnEditar = validPermissions(42) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>' : '';
+            btnEditar = validPermissions(442) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>' : '';
 
-            btnCambiarEstado = validPermissions(43) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
+            btnCambiarEstado = validPermissions(443) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
 
             return `<div class="btn-group btn-group-sm" role="group">
               ${btnEditar}

@@ -132,6 +132,24 @@ class mPermisos extends Model {
 					[
 						"id" => 43,
 						"text" => "Activar/Inactivar"
+					],
+					[
+						"id" => 44,
+						"text" => "Sucursales",
+						"children" => [
+							[
+								"id" => 441,
+								"text" => "Crear"
+							],
+							[
+								"id" => 442,
+								"text" => "Editar"
+							],
+							[
+								"id" => 443,
+								"text" => "Activar/Inactivar"
+							],	
+						]
 					]
 				]
 			],
