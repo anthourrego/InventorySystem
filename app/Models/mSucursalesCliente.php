@@ -21,7 +21,9 @@ class mSucursalesCliente extends Model
 		"cartera",
 		"telefonocart",
 		"estado",
-    "id_cliente"
+    "id_cliente",
+		"id_depto",
+		"id_ciudad"
 	];
 
 	// Dates
@@ -39,6 +41,8 @@ class mSucursalesCliente extends Model
 		"cartera" => "permit_empty|alpha_numeric_space|min_length[1]|max_length[255]",
 		"telefonocart" => "permit_empty|string|min_length[10]|max_length[50]",
     "id_cliente"=> "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[clientes.id]",
+		"id_depto"=> "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[departamentos.id]",
+		"id_ciudad"=> "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[ciudades.id]",
 	];
 	protected $validationMessages   = [];
 	protected $skipValidation       = false;

@@ -24,9 +24,9 @@ let DTCiudades = $("#table").DataTable({
       defaultContent: '',
       className: 'text-center',
       render: function (meta, type, data, meta) {
-        btnEditar = validPermissions(922) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
+        btnEditar = validPermissions(932) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
 
-        btnCambiarEstado = validPermissions(923) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
+        btnCambiarEstado = validPermissions(933) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
 
         return `<div class="btn-group btn-group-sm" role="group">
                   ${btnEditar}
@@ -56,6 +56,7 @@ let DTCiudades = $("#table").DataTable({
       $("#id").val(data.id);
       $("#nombre").val(data.nombre);
       $("#codigo").val(data.codigo);
+      $("#id_depto").val(data.id_depto).change();
       $("#descripcion").val(data.descripcion);
       $("#fechaMod").val(moment(data.updated_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
       $("#fechaCre").val(moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));

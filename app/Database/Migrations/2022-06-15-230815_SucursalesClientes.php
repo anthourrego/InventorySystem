@@ -45,12 +45,24 @@ class SucursalesClientes extends Migration {
 				'constraint'     => 11,
 				'unsigned'       => true
 			],
+			'id_depto' => [
+				'type'           => 'INT',
+				'constraint'     => 11,
+				'unsigned'       => true
+			],
+			'id_ciudad' => [
+				'type'           => 'INT',
+				'constraint'     => 11,
+				'unsigned'       => true
+			],
 			'created_at datetime default current_timestamp',
 			'updated_at datetime default current_timestamp on update current_timestamp'
 		]);
 
 		$this->forge->addKey('id', true);
 		$this->forge->addForeignKey('id_cliente', 'clientes', 'id');
+		$this->forge->addForeignKey('id_depto', 'departamentos', 'id');
+		$this->forge->addForeignKey('id_ciudad', 'ciudades', 'id');
 		$this->forge->createTable('sucursales');
 	}
 

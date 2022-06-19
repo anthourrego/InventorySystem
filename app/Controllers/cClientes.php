@@ -13,6 +13,7 @@ class cClientes extends BaseController {
 		$this->LMoment();
 		$this->LJQueryValidation();
 		$this->LInputMask();
+		$this->LSelect2();
 
 		$this->content['js_add'][] = [
 			'jsClientes.js'

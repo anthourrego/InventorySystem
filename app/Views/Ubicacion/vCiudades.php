@@ -57,7 +57,7 @@
             </div>
             <div class="col-12 form-group form-valid">
               <label for="id_depto">Departamento:</label>
-              <select id="id_depto" name="id_depto" data-placeholder="Seleccione un departamento" required class="custom-select select2">
+              <select id="id_depto" name="id_depto" data-placeholder="Seleccione un departamento" required class="custom-select select2 inputVer">
                 <?php foreach($deptos as $depto) {
                   echo '<option value="' . $depto->codigo . '">' . $depto->nombre . '</option>';
                 } ?>

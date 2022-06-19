@@ -12,26 +12,30 @@ class cSucursales extends BaseController {
 		$estado = $this->request->getPost("estado");
     $cliente = $this->request->getPost("cliente");
 
-		$query = $this->db->table('sucursales')
+		$query = $this->db->table('sucursales s')
       ->select("
-          id, 
-          nombre, 
-          direccion, 
-          administrador, 
-          cartera, 
-          telefonocart, 
-          estado, 
-          created_at,
-          updated_at,
+          s.id, 
+          s.nombre, 
+          s.direccion, 
+          s.administrador, 
+          s.cartera, 
+          s.telefonocart, 
+          s.estado,
+          s.created_at,
+          s.updated_at,
+					s.id_depto,
+					s.id_ciudad,
+					c.nombre AS ciudad,
           CASE 
-              WHEN estado = 1 THEN 'Activo' 
+              WHEN s.estado = 1 THEN 'Activo' 
               ELSE 'Inactivo' 
           END AS Estadito,
       ")
-      ->where("id_cliente", $cliente);
+			->join("ciudades c", "s.id_ciudad = c.id", "LEFT")
+      ->where("s.id_cliente", $cliente);
 
 		if($estado != "-1"){
-			$query->where("estado", $estado);
+			$query->where("s.estado", $estado);
 		}
 
 		return DataTable::of($query)->toJson(true);
@@ -50,6 +54,8 @@ class cSucursales extends BaseController {
 			"cartera" => trim($postData["carteraSucursal"]),
 			"telefonocart" => trim($postData["telefonoCartSucursal"]),
       "id_cliente" => $postData["id_cliente"],
+			"id_depto" => $postData["id_deptoSucursal"],
+			"id_ciudad" => $postData["id_ciudadSucursal"],
 		);
 
 		$sucursal = new mSucursalesCliente();

@@ -43,7 +43,8 @@ class cCiudades extends BaseController {
             END AS Estadito,
             c.created_at,
             d.nombre AS Departamento,
-            c.updated_at
+            c.updated_at,
+						c.id_depto
         ")
         ->join("departamentos d", "c.id_depto = d.codigo", "LEFT");
 
@@ -96,6 +97,20 @@ class cCiudades extends BaseController {
 			$resp['msj'] = "Error al cambiar el estado";
 		}
 
+		return $this->response->setJSON($resp);
+	}
+
+	public function getCiudades($depto) {
+		$resp["success"] = true;
+		$mCiudades = new mCiudades();
+
+		$builder = $mCiudades->asObject()->select("nombre, id")->where("estado", 1);
+
+		if ($depto != 0) {
+			$builder = $builder->where("id_depto", $depto);
+		}
+
+		$resp["data"] = $builder->findAll();
 		return $this->response->setJSON($resp);
 	}
 }

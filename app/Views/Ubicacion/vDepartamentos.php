@@ -62,7 +62,7 @@
             </div>
             <div class="col-12 form-group form-valid">
               <label for="id_pais">Pais:</label>
-              <select id="id_pais" name="id_pais" data-placeholder="Seleccione un pais" required class="custom-select select2">
+              <select id="id_pais" name="id_pais" data-placeholder="Seleccione un pais" required class="custom-select select2 inputVer">
                 <?php foreach($paises as $pais) {
                   echo '<option value="' . $pais->id . '">' . $pais->nombre . '</option>';
                 } ?>

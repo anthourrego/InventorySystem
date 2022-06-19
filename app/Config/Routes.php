@@ -188,6 +188,7 @@ $routes->group('Ubicacion/Departamentos', ['filter' => 'authGuard:92', 'namespac
 	$routes->post('Editar', 'cDepartamentos::crearEditar', ['filter' => ['authGuard:922', 'ajax']]);
 	$routes->post('Eliminar', 'cDepartamentos::eliminar', ['filter' => ['authGuard:923', 'ajax']]);
 	$routes->get('ValidaDepto/(:any)/(:any)/(:num)', 'cDepartamentos::validarDepto/$1/$2/$3', ['filter' => ['authGuard:921,922', 'ajax']]);
+	$routes->get('Obtener/(:num)', 'cDepartamentos::getDeptos/$1');
 });
 
 
@@ -198,6 +199,7 @@ $routes->group('Ubicacion/Ciudades', ['filter' => 'authGuard:93', 'namespace' =>
 	$routes->post('Crear', 'cCiudades::crearEditar', ['filter' => ['authGuard:931', 'ajax']]);
 	$routes->post('Editar', 'cCiudades::crearEditar', ['filter' => ['authGuard:932', 'ajax']]);
 	$routes->post('Eliminar', 'cCiudades::eliminar', ['filter' => ['authGuard:933', 'ajax']]);
+	$routes->get('Obtener/(:num)', 'cCiudades::getCiudades/$1');
 });
 
 
