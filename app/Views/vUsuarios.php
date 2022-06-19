@@ -187,9 +187,21 @@
         </button>
       </div>
       <div class="modal-body">
-        <button class="btn btn-primary" id="checkAllPermisos"><i class="fa-regular fa-square-check"></i> Marcar Todo</button>
-        <button class="btn btn-danger" id="unCheckAllPermisos"><i class="fa-regular fa-square"></i> Desmarcar Todo</button>
-        <hr>
+        <div class="row">
+          <div class="col-6 my-1">
+            <button class="btn btn-primary w-100" id="checkAllPermisos"><i class="fa-regular fa-square-check"></i> Marcar Todo</button>
+          </div>
+          <div class="col-6 my-1">
+            <button class="btn btn-danger w-100" id="unCheckAllPermisos"><i class="fa-regular fa-square"></i> Desmarcar Todo</button>
+          </div>
+          <div class="col-6 my-1">
+            <button class="btn btn-success w-100" id="exapandAllPermisos"><i class="fa-solid fa-expand"></i> Expandir Todo</button>
+          </div>
+          <div class="col-6 my-1">
+            <button class="btn btn-info w-100" id="collapseAllPermisos"><i class="fa-solid fa-compress"></i> Colapsar Todo</button>
+          </div>
+        </div>
+        <hr class="my-3">
         <div id="tree"></div>
       </div>
       <div class="modal-footer">

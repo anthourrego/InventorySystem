@@ -161,6 +161,16 @@ $(function(){
     arbolPermisos.uncheckAll().collapseAll();
   });
 
+  $("#exapandAllPermisos").click(function(e){
+    e.preventDefault();
+    arbolPermisos.expandAll();
+  });
+
+  $("#collapseAllPermisos").click(function(e){
+    e.preventDefault();
+    arbolPermisos.collapseAll();
+  });
+
   $("#btnGuardarPermisos").click(function(e){
     e.preventDefault();
     let id = $(this).data("id");
