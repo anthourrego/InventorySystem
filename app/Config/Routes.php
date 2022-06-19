@@ -163,11 +163,40 @@ $routes->group('Almacen', ['filter' => 'authGuard'], function ($routes) {
 });
 
 //Sucursales
-$routes->group('Sucursales', ['filter' => 'authGuard:4'], function ($routes) {
+$routes->group('Sucursales', ['filter' => 'authGuard'], function ($routes) {
 	$routes->post('DT', 'cSucursales::listaDT');
-	$routes->post('Crear', 'cSucursales::crearEditar', ['filter' => ['authGuard:41', 'ajax']]);
-	$routes->post('Editar', 'cSucursales::crearEditar', ['filter' => ['authGuard:42', 'ajax']]);
-	$routes->post('Eliminar', 'cSucursales::eliminar', ['filter' => ['authGuard:43', 'ajax']]);
+	$routes->post('Crear', 'cSucursales::crearEditar', ['filter' => ['authGuard', 'ajax']]);
+	$routes->post('Editar', 'cSucursales::crearEditar', ['filter' => ['authGuard', 'ajax']]);
+	$routes->post('Eliminar', 'cSucursales::eliminar', ['filter' => ['authGuard', 'ajax']]);
+});
+
+//Paises
+$routes->group('Ubicacion/Paises', ['filter' => 'authGuard:91', 'namespace' => 'App\Controllers\Ubicacion'], function ($routes) {
+	$routes->get('/', 'cPaises::index');
+	$routes->post('DT', 'cPaises::listaDT');
+	$routes->post('Crear', 'cPaises::crearEditar', ['filter' => ['authGuard:911', 'ajax']]);
+	$routes->post('Editar', 'cPaises::crearEditar', ['filter' => ['authGuard:912', 'ajax']]);
+	$routes->post('Eliminar', 'cPaises::eliminar', ['filter' => ['authGuard:913', 'ajax']]);
+});
+
+//Departamentos
+$routes->group('Ubicacion/Departamentos', ['filter' => 'authGuard:92', 'namespace' => 'App\Controllers\Ubicacion'], function ($routes) {
+	$routes->get('/', 'cDepartamentos::index');
+	$routes->post('DT', 'cDepartamentos::listaDT');
+	$routes->post('Crear', 'cDepartamentos::crearEditar', ['filter' => ['authGuard:921', 'ajax']]);
+	$routes->post('Editar', 'cDepartamentos::crearEditar', ['filter' => ['authGuard:922', 'ajax']]);
+	$routes->post('Eliminar', 'cDepartamentos::eliminar', ['filter' => ['authGuard:923', 'ajax']]);
+	$routes->get('ValidaDepto/(:any)/(:any)/(:num)', 'cDepartamentos::validarDepto/$1/$2/$3', ['filter' => ['authGuard:921,922', 'ajax']]);
+});
+
+
+//Ciudades
+$routes->group('Ubicacion/Ciudades', ['filter' => 'authGuard:93', 'namespace' => 'App\Controllers\Ubicacion'], function ($routes) {
+	$routes->get('/', 'cCiudades::index');
+	$routes->post('DT', 'cCiudades::listaDT');
+	$routes->post('Crear', 'cCiudades::crearEditar', ['filter' => ['authGuard:931', 'ajax']]);
+	$routes->post('Editar', 'cCiudades::crearEditar', ['filter' => ['authGuard:932', 'ajax']]);
+	$routes->post('Eliminar', 'cCiudades::eliminar', ['filter' => ['authGuard:933', 'ajax']]);
 });
 
 

@@ -31,6 +31,10 @@ $(function () {
       $(this).val(lastFocusValue);
       return alertify.warning("El valor no puede superior al rango medio");
     }
+    if (campo == "inventarioMedio" && valor < +$("#inventarioBajo").val()) {
+      $(this).val(lastFocusValue);
+      return alertify.warning("El valor no puede inferior al rango bajo");
+    }
 
     $.ajax({
       url: rutaBase + "Actualizar",

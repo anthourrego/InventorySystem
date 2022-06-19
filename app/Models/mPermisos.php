@@ -132,6 +132,24 @@ class mPermisos extends Model {
 					[
 						"id" => 43,
 						"text" => "Activar/Inactivar"
+					],
+					[
+						"id" => 44,
+						"text" => "Sucursales",
+						"children" => [
+							[
+								"id" => 441,
+								"text" => "Crear"
+							],
+							[
+								"id" => 442,
+								"text" => "Editar"
+							],
+							[
+								"id" => 443,
+								"text" => "Activar/Inactivar"
+							],	
+						]
 					]
 				]
 			],
@@ -210,7 +228,67 @@ class mPermisos extends Model {
 						"text" => "Ver Productos"
 					]
 				]
-			]
+			],
+			[
+				"id" => 9,
+				"text" => "Ubicaciones",
+				"children" => [
+					[
+						"id" => 91,
+						"text" => "Paises",
+						"children" => [
+							[
+								"id" => 911,
+								"text" => "Crear"
+							],
+							[
+								"id" => 912,
+								"text" => "Editar"
+							],
+							[
+								"id" => 913,
+								"text" => "Activar/Inactivar"
+							]
+						]
+					],
+					[
+						"id" => 92,
+						"text" => "Departamentos",
+						"children" => [
+							[
+								"id" => 921,
+								"text" => "Crear"
+							],
+							[
+								"id" => 922,
+								"text" => "Editar"
+							],
+							[
+								"id" => 923,
+								"text" => "Activar/Inactivar"
+							]
+						]
+					],
+					[
+						"id" => 93,
+						"text" => "Ciudades",
+						"children" => [
+							[
+								"id" => 931,
+								"text" => "Crear"
+							],
+							[
+								"id" => 932,
+								"text" => "Editar"
+							],
+							[
+								"id" => 933,
+								"text" => "Activar/Inactivar"
+							]
+						]
+					]
+				]
+			],
 		];
 
 		return $permisos;

@@ -55,7 +55,7 @@
                 <input readonly disabled value="<" type="text" class="form-control text-center">
               </div>
               <div class="col-12 col-md-4 input-group mb-3">
-                <input data-nombre="Rango Medio" value="25" id="inventarioMedio" name="inventarioMedio" <?= !$editar ? 'disabled' : '' ?> type="text" class="configAct form-control bg-warning text-center inputFocusSelect">
+                <input data-nombre="Rango Medio" value="25" id="inventarioMedio" name="inventarioMedio" <?= !$editar ? 'disabled' : '' ?> type="text" class="configAct form-control bg-warning text-center inputFocusSelect lastFocus">
               </div>
               <div class="col-1 input-group mb-3">
                 <input readonly disabled value=">" type="text" class="form-control text-center">

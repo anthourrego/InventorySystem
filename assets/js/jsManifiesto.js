@@ -352,6 +352,7 @@ $(function () {
     $(".inputVer").val("").removeClass("disabled").prop("disabled", false).trigger('change');
     $("#modalManifiestoLabel").html(`<i class="fa-solid fa-user-plus"></i> Crear Manifiesto`);
     $(".form-group-edit").addClass("d-none");
+    $("#id").val("");
     $("#editFile").val(0);
     $("#labelInputFile").text('Seleccionar archivo...');
     $("#modalManifiesto").modal("show");
@@ -362,23 +363,32 @@ $(function () {
       $("#nombre").trigger('focus');
     }
   });
-  
+
   //Formulario de Manifiesto
   $("#formManifiesto").on("submit", function (e) {
     e.preventDefault();
 
-    if (!$("#fileUpload").prop('files').length) {
+    let id = $("#id").val().trim();
+
+    if (!id.length && !$("#fileUpload").prop('files').length) {
       return alertify.warning("No tiene archivo seleccionado");
     }
 
     const file = $("#fileUpload").prop('files')[0];
-    if (file.size >= 10000000) {
+    if (!id.length && file.size >= 10000000) {
       return alertify.error("El archivo es superior a 10Mb");
     }
 
-    let id = $("#id").val().trim();
+    let valido = true;
+    if (!id.length) {
+      valido = $(this).valid();
+    } else {
+      if (!$("#nombre").valid()) {
+        valido = $("#nombre").valid();
+      }
+    }
 
-    if ($(this).valid()) {
+    if (valido) {
       $.ajax({
         url: rutaBase + (id.length > 0 ? "Editar" : "Crear"),
         type: 'POST',
