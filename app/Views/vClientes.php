@@ -174,7 +174,7 @@
                           </div>
                           <?php if (validPermissions([441], true)) { ?>
                             <div class="col-12 text-right">
-                              <button type="button" class="btn btn-secondary" id="btnLimpiar"><i class="fas fa-broom"></i> Limpiar</button>
+                              <button type="button" style="display: none;" class="btn btn-secondary" id="btnLimpiar"><i class="fas fa-broom"></i> Limpiar</button>
                               <button type="submit" class="btn btn-primary" form="formSucursal"><i class="fas fa-plus"></i> Guardar</button>
                             </div>
                           <?php } ?>
