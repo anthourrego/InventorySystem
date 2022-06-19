@@ -121,7 +121,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
 		});
 	});
 
-	$("#miPerfil").on('click', function () {
+	$("#miPerfil").on('click', function (e) {
+		e.preventDefault();
 		$("#modalMiPerfil").load(base_url() + 'Perfil/', {}, function () {
 			$("#modalMiPerfil").modal('show');
 		});

@@ -70,7 +70,6 @@ class Home extends BaseController {
 						'foto'     => $usuario->foto,
 						'logged_in' => true,
 						'permisos' => $per,
-						'imageProd' => (is_null($usuario->imageProd) ? '' : $usuario->imageProd)
 					];
 
 					$mConfiguracion = new mConfiguracion();
@@ -82,7 +81,7 @@ class Home extends BaseController {
 					}
 
 					if (!is_null($usuario->imageProd)) {
-						$userdata['imagenProducto'] = $usuario->imageProd;
+						$userdata['imageProd'] = $usuario->imageProd;
 					}
 
 					$mAlmacen = new mAlmacen();
