@@ -20,6 +20,10 @@ class SucursalesClientes extends Migration {
 			'direccion' => [
 				'type'     => 'TEXT',
 			],
+			'telefono' => [
+				'type'        => 'VARCHAR',
+				'constraint'  => 50,
+			],
 			'administrador' => [
 				'type'        => 'VARCHAR',
 				'constraint'     => 255,

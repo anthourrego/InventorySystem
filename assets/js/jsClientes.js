@@ -127,13 +127,13 @@ $(function () {
         data: new FormData(this),
         success: function (resp) {
           if (resp.success) {
+            DTClientes.ajax.reload();
             $("#sucursales-tab").removeClass('disabled');
             if (permiSucursales && (!id.length || crearSucursal)) {
               crearSucursal = false;
               $("#id").val(resp.id);
               $("#sucursales-tab").click();
             } else {
-              DTClientes.ajax.reload();
               $("#modalClientes").modal("hide");
               alertify.success(resp.msj);
             }
@@ -228,6 +228,14 @@ $(function () {
       obtenerUbicacion('Ciudades/Obtener/' + cod, "#id_ciudadSucursal");
     }
   });
+
+  $("#btnLimpiar").click(function () {
+    $("button[form='formSucursal']").attr("disabled", false);
+    $(".inputVer").removeClass("disabled").prop("disabled", false);
+    $("#idSucursal, #nombreSucursal, #direccionSucursal, #administradorSucursal, #carteraSucursal, #telefonoCartSucursal").val('');
+    $("#id_ciudadSucursal, #id_deptoSucursal").val(0).change();
+    $(this).hide();
+  });
 });
 
 function eliminar(data, sucursal = false) {
@@ -274,6 +282,7 @@ function tablaSucursales() {
         { data: 'nombre' },
         { data: 'ciudad' },
         { data: 'direccion' },
+        { data: 'telefono' },
         { data: 'administrador' },
         { data: 'cartera' },
         { data: 'telefonocart' },
@@ -283,7 +292,7 @@ function tablaSucursales() {
           defaultContent: '',
           className: 'text-center',
           render: function (meta, type, data, meta) {
-            btnEditar = validPermissions(442) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>' : '';
+            btnEditar = validPermissions(442) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
 
             btnCambiarEstado = validPermissions(443) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
 
@@ -300,8 +309,19 @@ function tablaSucursales() {
           eliminar(data, true);
         });
 
-        $(row).find(".btnEditar").click(function (e) {
+        $(row).find(".btnEditar, .btnVer").click(function (e) {
           e.preventDefault();
+
+          if ($(this).hasClass("btnVer")) {
+            $(".inputVer").addClass("disabled").prop("disabled", true);
+            $("button[form='formSucursal']").attr("disabled", true);
+            $("#btnLimpiar").show();
+          } else {
+            $(".inputVer").removeClass("disabled").prop("disabled", false);
+            $("button[form='formSucursal']").attr("disabled", false);
+            $("#btnLimpiar").hide();
+          }
+
           $("#idSucursal").val(data.id);
           $("#id_deptoSucursal").val(data.id_depto).change();
           $("#nombreSucursal").val(data.nombre);
@@ -309,6 +329,7 @@ function tablaSucursales() {
           $("#administradorSucursal").val(data.administrador);
           $("#carteraSucursal").val(data.cartera);
           $("#telefonoCartSucursal").val(data.telefonocart);
+          $("#telefonoSucursal").val(data.telefono);
           dataSucursal = data;
           $('#collapseDatosBasicos').collapse('show');
         });

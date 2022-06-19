@@ -146,15 +146,19 @@
                               <option value=""></option>
                             </select>
                           </div>
-                          <div class="col-12 col-md-6 form-group form-valid">
+                          <div class="col-12 col-md-4 form-group form-valid">
                             <label for="id_ciudadSucursal" class="mb-0">Ciudad <span class="text-danger">*</span></label>
                             <select id="id_ciudadSucursal" name="id_ciudadSucursal" data-placeholder="Seleccione una ciudad" required class="custom-select select2 inputVer">
                               <option value=""></option>
                             </select>
                           </div>
-                          <div class="col-12 col-md-6 form-group form-valid mb-1">
+                          <div class="col-12 col-md-4 form-group form-valid mb-1">
                             <label class="mb-0" for="direccionSucursal">Dirección <span class="text-danger">*</span></label>
                             <input placeholder="Ingresar dirección" class="form-control soloLetrasEspacioCaracteres inputVer" id="direccionSucursal" name="direccionSucursal" type="text" minlength="1" maxlength="300" required autocomplete="off">
+                          </div>
+                          <div class="col-12 col-md-4 form-group form-valid mb-1">
+                            <label class="mb-0" for="telefonoSucursal">Teléfono <span class="text-danger">*</span></label>
+                            <input placeholder="Ingresar teléfono" class="form-control soloNumeros inputTel inputVer" id="telefonoSucursal" name="telefonoSucursal" type="tel" minlength="10" maxlength="50" required autocomplete="off">
                           </div>
                           <div class="col-12 col-md-4 form-group form-valid mb-1">
                             <label class="mb-0" for="administradorSucursal">Administrador <span class="text-danger">*</span></label>
@@ -170,6 +174,7 @@
                           </div>
                           <?php if (validPermissions([441], true)) { ?>
                             <div class="col-12 text-right">
+                              <button type="button" class="btn btn-secondary" id="btnLimpiar"><i class="fas fa-broom"></i> Limpiar</button>
                               <button type="submit" class="btn btn-primary" form="formSucursal"><i class="fas fa-plus"></i> Guardar</button>
                             </div>
                           <?php } ?>
@@ -186,6 +191,7 @@
                       <th>Nombre</th>
                       <th>Ciudad</th>
                       <th>Dirección</th>
+                      <th>Telefono</th>
                       <th>Administrador</th>
                       <th>Cartera</th>
                       <th>Telefono Cartera</th>

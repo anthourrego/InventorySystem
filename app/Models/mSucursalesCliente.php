@@ -17,6 +17,7 @@ class mSucursalesCliente extends Model
 	protected $allowedFields    = [
 		"nombre",
 		"direccion",
+		"telefono",
 		"administrador",
 		"cartera",
 		"telefonocart",
@@ -40,6 +41,7 @@ class mSucursalesCliente extends Model
 		"administrador" => "permit_empty|alpha_numeric_space|min_length[1]|max_length[255]",
 		"cartera" => "permit_empty|alpha_numeric_space|min_length[1]|max_length[255]",
 		"telefonocart" => "permit_empty|string|min_length[10]|max_length[50]",
+		"telefono" => "required|string|min_length[10]|max_length[50]",
     "id_cliente"=> "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[clientes.id]",
 		"id_depto"=> "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[departamentos.id]",
 		"id_ciudad"=> "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[ciudades.id]",
