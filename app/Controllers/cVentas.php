@@ -50,7 +50,7 @@ class cVentas extends BaseController {
 
 		$this->content["cantidadVendedores"] = $this->cantidadVendedores();
 
-		$this->content['imagenProd'] = (session()->has("imagenProducto") ? session()->get("imagenProducto") : 0);
+		$this->content['imagenProd'] = (session()->has("imageProd") ? session()->get("imageProd") : 0);
 
 		$this->content['js_add'][] = [
 			'Ventas/jsCrear.js'
@@ -107,7 +107,7 @@ class cVentas extends BaseController {
 		$this->content["cantidadVendedores"] = $this->cantidadVendedores();
 		$this->content["inventario_negativo"] = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
 
-		$this->content['imagenProd'] = (session()->has("imagenProducto") ? session()->get("imagenProducto") : 0);
+		$this->content['imagenProd'] = (session()->has("imageProd") ? session()->get("imageProd") : 0);
 
 		$this->content['js_add'][] = [
 			'Ventas/jsCrear.js',

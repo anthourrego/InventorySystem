@@ -27,7 +27,7 @@
 <div class="modal-dialog">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title" id="modalMiPerfilLabel"><?= $title ?></h5>
+      <h5 class="modal-title" id="modalMiPerfilLabel"><i class="fa-solid fa-user"></i> <?= $title ?></h5>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -123,8 +123,8 @@
         </div>
       </div>
     </div>
-    <div class="modal-footer buttons-modal">
-      <button type="submit" class="btn btn-success" id="btn-guardar" form="formMiperfil"><i class="fas fa-save"></i> Guardar</button>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-success buttons-modal" id="btn-guardar" form="formMiperfil"><i class="fas fa-save"></i> Guardar</button>
       <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
     </div>
   </div>

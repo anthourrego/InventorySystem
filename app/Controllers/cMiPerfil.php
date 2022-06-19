@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 use App\Models\mUsuarios;
+use App\Models\mConfiguracion;
 
 class cMiPerfil extends BaseController {
 
@@ -169,14 +170,21 @@ class cMiPerfil extends BaseController {
 		$resp["success"] = false;
 		$dataPost = $this->request->getPost();
 
-		$builder = $this->db->table('usuarios');
-		
-		$builder = $builder->set($dataPost["campo"], ($dataPost["valor"] == -1 ? null : $dataPost["valor"]));
-		
-		$builder = $builder->where('id', session()->get("id_user"));
+		$builder = $this->db->table('usuarios')
+												->set($dataPost["campo"], ($dataPost["valor"] == -1 ? null : $dataPost["valor"]))
+												->where('id', session()->get("id_user"));
 		
 		if($builder->update()) {
 			$resp["success"] = true;
+			$session[$dataPost["campo"]] = ($dataPost["valor"] == -1 ? 0 : $dataPost["valor"]);
+			if ($dataPost["valor"] == -1) {
+				$mConfiguracion = new mConfiguracion();
+				$config = $mConfiguracion->select("valor")->where("campo", $dataPost["campo"])->first();
+				if (!is_null($config)) {
+					$session[$dataPost["campo"]] = $config->valor;
+				}
+			}
+			session()->set($session);
 			$resp["msj"] = "<b>{$dataPost['nombre']}</b> se actualizo correctamente.";
 		}	else {
 			$resp["msj"] = "Error al actualizar <b>{$dataPost['nombre']}</b>.";
