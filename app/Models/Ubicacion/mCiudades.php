@@ -30,8 +30,8 @@ class mCiudades extends Model {
 
 	// Validation
 	protected $validationRules      = [
-		'nombre'       => "required|alpha_numeric_space|min_length[1]|max_length[255]|is_unique[ciudades.nombre]",
-    'id_depto'      => "required|numeric|min_length[1]|is_not_unique[departamentos.id]",
+		'nombre'       => "required|alpha_numeric_space|min_length[1]|max_length[255]|is_unique[ciudades.nombre, id, {id}]",
+    'id_depto'     => "required|numeric|min_length[1]|is_not_unique[departamentos.codigo]",
 	];
 	protected $validationMessages   = [
 		"nombre" => [

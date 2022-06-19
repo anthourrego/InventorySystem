@@ -1,8 +1,10 @@
 let rutaBase = base_url() + "Clientes/";
 let rutaBaseSucursal = base_url() + "Sucursales/";
+let rutaBaseUbicacion = base_url() + "Ubicacion/";
 let DTSucursales = null;
 let crearSucursal = false;
 let permiSucursales = validPermissions(44);
+let dataSucursal = {};
 
 let DTClientes = $("#table").DataTable({
   ajax: {
@@ -108,6 +110,7 @@ $(function () {
     if ($("#id").val().length <= 0) {
       $("#documento").trigger('focus');
     }
+    obtenerUbicacion('Departamentos/Obtener/0', "#id_deptoSucursal");
   });
 
   $("#formClientes").submit(function (e) {
@@ -180,7 +183,9 @@ $(function () {
           success: function (resp) {
             if (resp.success) {
               DTSucursales.ajax.reload();
-              $("#idSucursal, #idSucursal, #nombreSucursal, #direccionSucursal, #administradorSucursal, #carteraSucursal, #telefonoCartSucursal").val('');
+              $("#idSucursal, #nombreSucursal, #direccionSucursal, #administradorSucursal, #carteraSucursal, #telefonoCartSucursal").val('');
+              $("#id_ciudadSucursal, #id_deptoSucursal").val(0).change();
+              $('#collapseDatosBasicos').collapse('hide');
               alertify.success(resp.msj);
             } else {
               alertify.alert('¡Advertencia!', resp.msj);
@@ -202,6 +207,11 @@ $(function () {
   $('#sucursales-tab').on('shown.bs.tab', function (event) {
     $('#collapseDatosBasicos').collapse('hide');
     tablaSucursales();
+    $(".modal-width").removeClass('modal-lg').addClass('modal-xl');
+  });
+
+  $('#sucursales-tab').on('hidden.bs.tab', function (event) {
+    $(".modal-width").removeClass('modal-xl').addClass('modal-lg');
   });
 
   $('#collapseDatosBasicos').on('shown.bs.collapse', function () {
@@ -212,6 +222,12 @@ $(function () {
     $(".icono-collapse").removeClass('fa-arrow-up').addClass('fa-arrow-down');
   });
 
+  $("#id_deptoSucursal").change(function () {
+    if ($(this).val()) {
+      let cod = $("#id_deptoSucursal :selected").data('codigo');
+      obtenerUbicacion('Ciudades/Obtener/' + cod, "#id_ciudadSucursal");
+    }
+  });
 });
 
 function eliminar(data, sucursal = false) {
@@ -256,6 +272,7 @@ function tablaSucursales() {
       pageLength: 10,
       columns: [
         { data: 'nombre' },
+        { data: 'ciudad' },
         { data: 'direccion' },
         { data: 'administrador' },
         { data: 'cartera' },
@@ -285,17 +302,42 @@ function tablaSucursales() {
 
         $(row).find(".btnEditar").click(function (e) {
           e.preventDefault();
-          console.log("data ", data);
           $("#idSucursal").val(data.id);
+          $("#id_deptoSucursal").val(data.id_depto).change();
           $("#nombreSucursal").val(data.nombre);
           $("#direccionSucursal").val(data.direccion);
           $("#administradorSucursal").val(data.administrador);
           $("#carteraSucursal").val(data.cartera);
           $("#telefonoCartSucursal").val(data.telefonocart);
+          dataSucursal = data;
           $('#collapseDatosBasicos').collapse('show');
         });
       }
     });
     DTSucursales.draw();
   }
+}
+
+function obtenerUbicacion(extraUrl, input) {
+  $.ajax({
+    url: rutaBaseUbicacion + extraUrl,
+    type: 'GET',
+    dataType: 'json',
+    processData: false,
+    contentType: false,
+    cache: false,
+    success: function (resp) {
+      if (resp.success) {
+        let estructura = '';
+        resp.data.forEach(it => {
+          estructura += `<option value="${it.id}" data-codigo="${(it.codigo || '')}">${it.nombre}</option>`;
+        });
+        $(input).html(estructura).change();
+        let id = $("#idSucursal").val().trim();
+        if (id.length && dataSucursal.id_ciudad > 0) {
+          $(input).val(dataSucursal.id_ciudad).change();
+        }
+      }
+    }
+  });
 }

@@ -153,8 +153,8 @@
             </li>
 						<?php } ?>
 						<?php if (validPermissions([9], true)) { ?> 
-						<li class="nav-item <?= (current_url(true)->getSegment(3) == 'Ventas' && (current_url(true)->getSegment(4) == 'Crear' || current_url(true)->getSegment(4) == 'Administrar')) ? 'menu-is-opening menu-open' : '' ?>">
-              <a href="#" class="nav-link <?= current_url(true)->getSegment(3) == 'Ventas' ? 'active' : '' ?>">
+						<li class="nav-item <?= (current_url(true)->getSegment(3) == 'Ubicacion' && (current_url(true)->getSegment(4) == 'Paises' || current_url(true)->getSegment(4) == 'Departamentos' || current_url(true)->getSegment(4) == 'Ciudades')) ? 'menu-is-opening menu-open' : '' ?>">
+              <a href="#" class="nav-link <?= current_url(true)->getSegment(3) == 'Ubicacion' ? 'active' : '' ?>">
 								<i class="nav-icon fa-solid fa-map"></i>
                 <p>
 									Ubicación

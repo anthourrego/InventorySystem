@@ -42,7 +42,7 @@
 </div>
 
 <div class="modal fade modalFormulario" id="modalClientes" data-backdrop="static" data-keyboard="false" aria-labelledby="modalClientesLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-lg modal-width">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalClientesLabel"></h5>
@@ -140,6 +140,18 @@
                             <label class="mb-0" for="nombreSucursal">Nombre <span class="text-danger">*</span></label>
                             <input placeholder="Ingresar nombre" class="form-control soloLetrasEspacio inputVer" id="nombreSucursal" name="nombreSucursal" type="text" minlength="1" maxlength="255" required autocomplete="off">
                           </div>
+                          <div class="col-12 col-md-6 form-group form-valid">
+                            <label for="id_deptoSucursal" class="mb-0">Departamento <span class="text-danger">*</span></label>
+                            <select id="id_deptoSucursal" name="id_deptoSucursal" data-placeholder="Seleccione un departamento" required class="custom-select select2 inputVer">
+                              <option value=""></option>
+                            </select>
+                          </div>
+                          <div class="col-12 col-md-6 form-group form-valid">
+                            <label for="id_ciudadSucursal" class="mb-0">Ciudad <span class="text-danger">*</span></label>
+                            <select id="id_ciudadSucursal" name="id_ciudadSucursal" data-placeholder="Seleccione una ciudad" required class="custom-select select2 inputVer">
+                              <option value=""></option>
+                            </select>
+                          </div>
                           <div class="col-12 col-md-6 form-group form-valid mb-1">
                             <label class="mb-0" for="direccionSucursal">Dirección <span class="text-danger">*</span></label>
                             <input placeholder="Ingresar dirección" class="form-control soloLetrasEspacioCaracteres inputVer" id="direccionSucursal" name="direccionSucursal" type="text" minlength="1" maxlength="300" required autocomplete="off">
@@ -172,6 +184,7 @@
                   <thead>
                     <tr>
                       <th>Nombre</th>
+                      <th>Ciudad</th>
                       <th>Dirección</th>
                       <th>Administrador</th>
                       <th>Cartera</th>

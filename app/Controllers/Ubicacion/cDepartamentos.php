@@ -108,4 +108,18 @@ class cDepartamentos extends BaseController {
 
 		return $this->response->setJSON($depto2);
 	}
+
+	public function getDeptos($pais) {
+		$resp["success"] = true;
+		$mDepartamentos = new mDepartamentos();
+
+		$builder = $mDepartamentos->asObject()->select("nombre, codigo, id")->where("estado", 1);
+
+		if ($pais != 0) {
+			$builder = $builder->where("id_pais", $pais);
+		}
+
+		$resp["data"] = $builder->findAll();
+		return $this->response->setJSON($resp);
+	}
 }
