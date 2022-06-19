@@ -248,7 +248,7 @@ class cManifiesto extends BaseController {
 
 							if ($manifiesto->save($updateFile)) { 
 								$resp["success"] = true;
-								$resp["msj"] = "El manifiesto <b>{$manifiesto->nombre}</b> se creo correctamente.";
+								$resp["msj"] = "El manifiesto <b>{$manifiesto->nombre}</b> se " . (empty($this->request->getPost("id")) ? 'creo' : 'actualizo') . " correctamente.";
 							} else {
 								$resp["msj"] = "Ha ocurrido un error al actualizar los datos de el archivo.";
 							}
@@ -263,7 +263,7 @@ class cManifiesto extends BaseController {
 				}
 			} else {
 				$resp["success"] = true;
-				$resp["msj"] = "El manifiesto <b>{$manifiesto->nombre}</b> se creo correctamente.";
+				$resp["msj"] = "El manifiesto <b>{$manifiesto->nombre}</b> se " . (empty($this->request->getPost("id")) ? 'creo' : 'actualizo') . " correctamente.";
 			}
 		} else {
 			$resp["msj"] = "No puede " . (empty($this->request->getPost("id")) ? 'crear' : 'actualizar') . " el manifiesto." . listErrors($manifiesto->errors());

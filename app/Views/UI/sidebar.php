@@ -152,6 +152,43 @@
               </a>
             </li>
 						<?php } ?>
+						<?php if (validPermissions([9], true)) { ?> 
+						<li class="nav-item <?= (current_url(true)->getSegment(3) == 'Ventas' && (current_url(true)->getSegment(4) == 'Crear' || current_url(true)->getSegment(4) == 'Administrar')) ? 'menu-is-opening menu-open' : '' ?>">
+              <a href="#" class="nav-link <?= current_url(true)->getSegment(3) == 'Ventas' ? 'active' : '' ?>">
+								<i class="nav-icon fa-solid fa-map"></i>
+                <p>
+									Ubicación
+									<i class="fas fa-angle-left right"></i>
+								</p>
+              </a>
+							<ul class="nav nav-treeview">
+								<?php if (validPermissions([91], true)) { ?> 
+								<li	li class="nav-item">
+									<a href="<?= base_url("Ubicacion/Paises") ?>" class="nav-link <?= (current_url(true)->getSegment(3) == 'Ubicacion' && current_url(true)->getSegment(4) == 'Paises') ? 'active' : '' ?>">
+										<i class="fa-solid fa-flag nav-icon"></i>
+										<p>Paises</p>
+									</a>
+								</li>
+								<?php } ?>
+								<?php if (validPermissions([92], true)) { ?> 
+								<li	li class="nav-item">
+									<a href="<?= base_url("Ubicacion/Departamentos") ?>" class="nav-link <?= (current_url(true)->getSegment(3) == 'Ubicacion' && current_url(true)->getSegment(4) == 'Departamentos') ? 'active' : '' ?>">
+									<i class="fa-solid fa-earth-africa nav-icon"></i>
+										<p>Departamentos</p>
+									</a>
+								</li>
+								<?php } ?>
+								<?php if (validPermissions([93], true)) { ?> 
+								<li	li class="nav-item">
+									<a href="<?= base_url("Ubicacion/Ciudades") ?>" class="nav-link <?= (current_url(true)->getSegment(3) == 'Ubicacion' && current_url(true)->getSegment(4) == 'Ciudades') ? 'active' : '' ?>">
+									<i class="fa-solid fa-city nav-icon"></i>
+										<p>Ciudades</p>
+									</a>
+								</li>
+								<?php } ?>
+							</ul>
+            </li>
+						<?php } ?>
 					</ul>
 				</nav>
 				<!-- /.sidebar-menu -->
