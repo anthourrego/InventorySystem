@@ -204,7 +204,7 @@ $(function () {
           success: function (resp) {
             if (resp.success) {
               if ($DATOSVENTA == '') {
-                alertify.confirm("Venta creada correctamente", `Nro de venta: <b>${resp.msj.codigo}</b> por valor de <b>${formatoPesos.format(resp.msj.total)}</b><br>Quiere crear una nueva venta?`,
+                alertify.confirm("Venta creada correctamente", `Nro de venta: <b>${resp.msj.codigo}</b>, por valor de <b>${formatoPesos.format(resp.msj.total)}</b><br><br>Desea crear una nueva venta?`,
                   function () {
                     productosVentas = [];
                     $("#nroVenta").val(resp.msj.codigo + 1);
@@ -217,7 +217,7 @@ $(function () {
                   },
                   function () {
                     window.location.href = base_url() + 'Ventas/Administrar';
-                  });
+                  }).set('labels', {ok: `<i class="fas fa-check"></i> Si`, cancel: `<i class="fas fa-times"></i> No`});
               } else {
                 alertify.alert('¡Advertencia!', "Venta editada correctamente", function () { window.location.href = base_url() + 'Ventas/Administrar'; });
               }
