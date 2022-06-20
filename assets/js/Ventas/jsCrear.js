@@ -183,148 +183,13 @@ $(function () {
     alertify.alert('¡Advertencia!', `No hay ${$msj} disponibles.`);
   }
 
-  $("#vendedor").on("focusout, change", function (e) {
-    e.preventDefault();
-    selfi = this
-    selfValue = $(selfi).val().trim();
-    if (selfValue != lastFocusValue) {
-      if (selfValue.length > 0) {
-        $.ajax({
-          type: "POST",
-          url: base_url() + "Busqueda/Vendedor",
-          dataType: 'json',
-          data: {
-            buscar: selfValue,
-            vendedor: 1
-          },
-          success: function (resp) {
-            if (resp.success) {
-              $(selfi).val(resp.data.usuario).data("id", resp.data.id);
-              $(selfi).next(".input-group-append").find("span").text(resp.data.nombre);
-            } else {
-              selfValue = selfValue == "." ? "" : selfValue;
-              alertify.ajaxAlert = function (url) {
-                $.ajax({
-                  url: url,
-                  async: false,
-                  success: function (data) {
-                    alertify.busquedaAlert(data);
-                    $("#tblBusqueda").DataTable({
-                      ajax: {
-                        url: base_url() + "Busqueda/Vendedores",
-                        type: "POST",
-                        data: { estado: 1, vendedor: 1 }
-                      },
-                      dom: domSearch,
-                      oSearch: { sSearch: selfValue },
-                      columns: [
-                        { data: 'usuario' },
-                        { data: 'nombre' },
-                      ],
-                      deferRender: true,
-                      scrollY: screen.height - 500,
-                      scroller: {
-                        loadingIndicator: true
-                      },
-                      createdRow: function (row, data, dataIndex) {
-                        $(row).click(function () {
-                          busquedaModal = false;
-                          lastFocus.data("id", "");
-                          lastFocus.val(data.usuario).focusin().change();
-                          lastFocusValue = data.usuario;
-                          alertify.busquedaAlert().close();
-                        });
-                      },
-                    });
-                  }
-                });
-              }
-              var campos = encodeURIComponent(JSON.stringify(['Usuario', 'Nombre']));
-              alertify.ajaxAlert(base_url() + "Busqueda/DT?campos=" + campos);
-            }
-          }
-        });
-      } else {
-        $(selfi).val("").data("id", "");
-        $(selfi).next(".input-group-append").find("span").text("");
-      }
-    }
-  });
-
-  $("#cliente").on("focusout, change", function (e) {
-    e.preventDefault();
-    selfi = this
-    selfValue = $(selfi).val().trim();
-    if (selfValue != lastFocusValue) {
-      if (selfValue.length > 0) {
-        $.ajax({
-          type: "POST",
-          url: base_url() + "Busqueda/Cliente",
-          dataType: 'json',
-          data: {
-            buscar: selfValue,
-          },
-          success: function (resp) {
-            if (resp.success) {
-              $(selfi).val(resp.data.documento).data("id", resp.data.id);
-              $(selfi).next(".input-group-append").find("span").text(resp.data.nombre);
-            } else {
-              selfValue = selfValue == "." ? "" : selfValue;
-              alertify.ajaxAlert = function (url) {
-                $.ajax({
-                  url: url,
-                  async: false,
-                  success: function (data) {
-                    alertify.busquedaAlert(data);
-                    $("#tblBusqueda").DataTable({
-                      ajax: {
-                        url: base_url() + "Busqueda/Clientes",
-                        type: "POST",
-                        data: { estado: 1 }
-                      },
-                      dom: domSearch,
-                      oSearch: { sSearch: selfValue },
-                      columns: [
-                        { data: 'documento' },
-                        { data: 'nombre' },
-                      ],
-                      deferRender: true,
-                      scrollY: screen.height - 500,
-                      scroller: {
-                        loadingIndicator: true
-                      },
-                      createdRow: function (row, data, dataIndex) {
-                        $(row).click(function () {
-                          busquedaModal = false;
-                          lastFocus.data("id", "")
-                          lastFocus.val(data.documento).focusin().change();
-                          lastFocusValue = data.documento;
-                          alertify.busquedaAlert().close();
-                        });
-                      },
-                    });
-                  }
-                });
-              }
-              var campos = encodeURIComponent(JSON.stringify(['Nro Documento', 'Nombre']));
-              alertify.ajaxAlert(base_url() + "Busqueda/DT?campos=" + campos);
-            }
-          }
-        });
-      } else {
-        $(selfi).val("").data("id", "");
-        $(selfi).next(".input-group-append").find("span").text("");
-      }
-    }
-  });
-
   $("#formVenta").submit(function (e) {
     e.preventDefault();
     if ($(this).valid()) {
       if (productosVentas.length > 0) {
         form = new FormData(this);
-        form.append("idCliente", $("#cliente").data("id"));
-        form.append("idUsuario", $("#vendedor").data("id"));
+        form.append("idCliente", $("#cliente").val());
+        form.append("idUsuario", $("#vendedor").val());
         form.append("observacion", $("#observacion").val());
         form.append("productos", JSON.stringify(productosVentas));
 
@@ -366,6 +231,63 @@ $(function () {
       }
     }
   });
+
+  //Cargamos los vendedores
+  $("#vendedor").select2({
+    ajax: {
+      url: base_url() + "Busqueda/Vendedores",
+      type: "POST",
+      dataType: 'json',
+      delay: 250,
+      data: function (params) {
+        var query = {
+          search: params.term,
+          page: params.page || 1,
+          _type: "query_append",
+        }
+        return query;
+      },
+      processResults: function (data, params) {
+        params.page = params.page || 1;
+        return {
+          results: data.data,
+          pagination: {
+            more: (params.page * 10) < data.total_count
+          }
+        };
+      },
+      cache: true
+      // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+    }
+  });
+
+  $("#cliente").select2({
+    ajax: {
+      url: base_url() + "Busqueda/Clientes",
+      type: "POST",
+      dataType: 'json',
+      delay: 250,
+      data: function (params) {
+        var query = {
+          search: params.term,
+          page: params.page || 1,
+          _type: "query_append",
+        }
+        return query;
+      },
+      processResults: function (data, params) {
+        params.page = params.page || 1;
+        return {
+          results: data.data,
+          pagination: {
+            more: (params.page * 10) < data.total_count
+          }
+        };
+      },
+      cache: true
+      // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+    }
+  });
 });
 
 function calcularTotal() {
@@ -375,4 +297,15 @@ function calcularTotal() {
   });
 
   $("#total").val(sumTotal);
+}
+
+function formatRepo (repo) {
+  if (repo.loading) {
+    return repo.text;
+  }
+  return repo.full_name || repo.text;
+}
+
+function formatRepoSelection (repo) {
+  return repo.full_name || repo.text;
 }
