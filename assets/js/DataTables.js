@@ -75,25 +75,25 @@ $.extend(true, $.fn.dataTable.defaults, {
 				{
 					extend: 'copyHtml5',
 					exportOptions: {
-							columns: ':not(.noExport)'
+							columns: ':visible:not(.noExport)'
 					},
 				},
 				{
 					extend: 'excelHtml5',
 					exportOptions: {
-							columns: ':not(.noExport)'
+							columns: ':visible:not(.noExport)'
 					},
 				},
 				{
 					extend: 'csvHtml5',
 					exportOptions: {
-							columns: ':not(.noExport)'
+							columns: ':visible:not(.noExport)'
 					},
 				},
 				{
 					extend: 'pdfHtml5',
 					exportOptions: {
-							columns: ':not(.noExport)'
+							columns: ':visible:not(.noExport)'
 					},
 				},
 			],
@@ -107,7 +107,7 @@ $.extend(true, $.fn.dataTable.defaults, {
 				title: "Imprimir", "data-toggle":"tooltip" 
 			},
 			exportOptions: {
-				columns: ':not(.noExport)'
+				columns: ':visible:not(.noExport)'
 			},
 		},
 		{ extend: 'pageLength' },

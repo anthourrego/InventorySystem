@@ -31,6 +31,7 @@
             <th>Descripción</th>
             <th>Categoría</th>
             <th>Stock</th>
+            <th>Paca X</th>
             <th>Costo</th>
             <th>Precio venta</th>
             <th>Ubicación</th>
@@ -88,30 +89,34 @@
                 <label class="mb-0" for="referencia">Referencia <span class="text-danger">*</span></label>
                 <input placeholder="Ingrese la referencia" data-campo="referencia" class="form-control soloLetras validaCampo inputVer" id="referencia" name="referencia" type="text" minlength="1" maxlength="255" required autocomplete="off">
               </div>
-              <div class="form-group form-valid">
+              <div class="form-group form-valid <?= $camposProducto["item"] == "1" ? '' : 'd-none' ?>">
                 <label class="mb-0" for="item">Item <span class="text-danger">*</span></label>
-                <input placeholder="Ingrese el ítem" type="text" data-campo="item" id="item" name="item" class="form-control soloLetras inputVer" minlength="1" maxlength="300" required autocomplete="off">
+                <input placeholder="Ingrese el ítem" type="text" <?= $camposProducto["item"] == "1" ? '' : 'disabled' ?> data-campo="item" id="item" name="item" class="form-control soloLetras inputVer" minlength="1" maxlength="300" required autocomplete="off">
               </div>
             </div>
             <div class="col-6 form-group form-valid">
               <label class="mb-0" for="stock">Stock <span class="text-danger">*</span></label>
               <input class="form-control inputFocusSelect inputVer <?= $inventario_negativo == '1' ? 'soloNumerosNegativo' : 'soloNumeros' ?>" id="stock" name="stock" type="number" <?= $inventario_negativo == '1' ? '' : 'min="0"' ?> value="0" placeholder="Ingrese el stock" autocomplete="off" required autocomplete="off">
             </div>
+            <div class="col-6 form-group form-valid  <?= $camposProducto["paca"] == "1" ? '' : 'd-none' ?>">
+              <label class="mb-0" for="paca">Paca X <span class="text-danger">*</span></label>
+              <input class="form-control inputFocusSelect inputVer soloNumeros" <?= $camposProducto["paca"] == "1" ? '' : 'disabled' ?> id="paca" name="paca" type="number" min="1" value="1" placeholder="Ingrese # por paca" autocomplete="off" required autocomplete="off">
+            </div>
             <div class="col-6 form-group form-valid">
               <label class="mb-0" for="precioVent">Precio venta <span class="text-danger">*</span></label>
               <input class="form-control inputPesos inputVer" id="precioVent" name="precioVent" type="tel" value="0" placeholder="Ingrese el precio de venta" autocomplete="off" required autocomplete="off">
             </div>
-            <div class="col-6 form-group form-valid <?= $costo == "1" ? '' : 'd-none' ?>">
+            <div class="col-6 form-group form-valid <?= $camposProducto["costo"] == "1" ? '' : 'd-none' ?>">
               <label class="mb-0" for="costo">Costo <span class="text-danger">*</span></label>
-              <input class="form-control inputPesos inputVer" id="costo" <?= $costo == "1" ? '' : 'disabled' ?> name="costo" type="tel" value="0" placeholder="Ingrese el costo" autocomplete="off" required autocomplete="off">
+              <input class="form-control inputPesos inputVer" id="costo" <?= $camposProducto["costo"] == "1" ? '' : 'disabled' ?> name="costo" type="tel" value="0" placeholder="Ingrese el costo" autocomplete="off" required autocomplete="off">
             </div>
-            <div class="col-6 form-group form-valid">
+            <div class="col-6 form-group form-valid <?= $camposProducto["ubicacion"] == "1" ? '' : 'd-none' ?>">
               <label class="mb-0" for="ubicacion">Ubicación</label>
-              <input class="form-control inputVer" id="ubicacion" name="ubicacion" type="text" minlength="0" maxlength="255" placeholder="Ingrese la ubicación" autocomplete="off">
+              <input class="form-control inputVer" id="ubicacion" <?= $camposProducto["ubicacion"] == "1" ? '' : 'disabled' ?> name="ubicacion" type="text" minlength="0" maxlength="255" placeholder="Ingrese la ubicación" autocomplete="off">
             </div>
-            <div class="col-6 form-group form-valid">
+            <div class="col-6 form-group form-valid <?= $camposProducto["manifiesto"] == "1" ? '' : 'd-none' ?>">
               <label class="mb-0" for="manifiesto">Manifiesto</label>
-              <select id="manifiesto" name="manifiesto" class="custom-select select2 inputVer" data-placeholder="Seleccione..." data-allow-clear="1">
+              <select id="manifiesto" name="manifiesto" class="custom-select select2 inputVer" <?= $camposProducto["manifiesto"] == "1" ? '' : 'disabled' ?> data-placeholder="Seleccione..." data-allow-clear="1">
                 <option></option>
                 <?php foreach ($manifiestos as $it) : ?>
                   <option value="<?=  $it->id?>"><?= $it->nombre ?></option>
@@ -152,7 +157,7 @@
 
 <script>
   $CATEGORIAS = <?= COUNT($categorias) ?>;
-  $COSTO = "<?= $costo ?>";
+  $CAMPOSPRODUCTO = <?= json_encode($camposProducto) ?>;
   $INVENTARIONEGATIVO = "<?= $inventario_negativo ?>";
   $imagenProd = <?= $imagenProd ?>
 </script>

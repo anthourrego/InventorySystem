@@ -202,7 +202,8 @@ let DTManifiestos = $("#table").DataTable({
 });
 
 let columnsProd = [
-  { data: 'item' },
+  { data: 'referencia'},
+  { data: 'item', visible: ($CAMPOSPRODUCTO.item == '1' ? true : false)},
   {
     data: 'descripcion',
     width: "30%",
@@ -251,7 +252,10 @@ let DTProductosStruc = {
       return $.extend(d, { manifiesto: manifiestoActual })
     }
   },
-  dom: domlftrip,
+  dom: domBftrip,
+  buttons: [
+    'pageLength'
+  ],
   order: [[1, "asc"]],
   columns: columnsProd,
   createdRow: function (row, data, dataIndex) {
@@ -280,7 +284,8 @@ let DTProductosStruc = {
 };
 
 let columnsProdVer = [
-  { data: 'item' },
+  { data: 'referencia' },
+  { data: 'item', visible: ($CAMPOSPRODUCTO.item == '1' ? true : false) },
   {
     data: 'descripcion',
     width: "30%",
@@ -312,7 +317,10 @@ let DTVerProductosStruc = {
       return $.extend(d, { manifiesto: manifiestoActual, ver: true })
     }
   },
-  dom: domlftrip,
+  dom: domBftrip,
+  buttons: [
+    'pageLength'
+  ],
   order: [],
   columns: columnsProdVer,
 };

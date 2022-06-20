@@ -1,7 +1,8 @@
 let rutaBase = base_url() + "Ventas/";
 let productosVentas = [];
 let columnsProd = [
-  { data: 'item' },
+  { data: 'referencia' },
+  { data: 'item', visible: ($CAMPOSPRODUCTO.item == '1' ? true : false) },
   {
     data: 'descripcion',
     width: "30%",
@@ -11,6 +12,7 @@ let columnsProd = [
   },
   {
     data: 'stock',
+    className: 'text-center align-middle',
     render: function (meta, type, data, meta) {
       return `<button class="btn btn-${data.ColorStock}">${data.stock}</button>`;
     }
@@ -19,7 +21,7 @@ let columnsProd = [
     orderable: false,
     searchable: false,
     defaultContent: '',
-    className: 'text-center',
+    className: 'text-center align-middle noExport',
     render: function (meta, type, data, meta) {
       let btn = true;
       let resultado = productosVentas.find((it) => it.id == data.id);

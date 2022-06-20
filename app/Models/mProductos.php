@@ -25,7 +25,8 @@ class mProductos extends Model {
 		"ubicacion",
 		"id_manifiesto",
 		"ventas",
-		"estado"
+		"estado",
+		"cantPaca"
 	];
 
 	// Dates
@@ -39,7 +40,7 @@ class mProductos extends Model {
 	protected $validationRules      = [
 		'id_categoria' => "required|numeric|min_length[1]|is_not_unique[categorias.id]",
 		'referencia'   => "required|alpha_numeric_punct|min_length[1]|max_length[255]|is_unique[productos.referencia, id, {id}]",
-		'item'         => 'required|alpha_numeric_punct|min_length[1]|max_length[255]',
+		'item'         => 'permit_empty|alpha_numeric_punct|min_length[1]|max_length[255]',
 		'descripcion'  => 'permit_empty|alpha_numeric_punct|min_length[1]|max_length[500]',
 		'stock'        => 'required|numeric|min_length[1]|max_length[11]',
 		'precio_venta' => 'required|decimal|min_length[1]|max_length[20]',
@@ -48,6 +49,7 @@ class mProductos extends Model {
 		'id_manifiesto'=> 'permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[manifiestos.id]',
 		'ventas'       => 'permit_empty|integer|min_length[1]|max_length[11]',
 		'estado'       => 'permit_empty|integer|min_length[1]|max_length[1]',
+		'cantPaca'     => 'permit_empty|numeric|min_length[1]|max_length[11]'
 	];
 	protected $validationMessages   = [
 		"referencia" => [

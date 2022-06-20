@@ -77,6 +77,7 @@
 								<?php if ($imagenProd) { ?>
 									<th>Imagen</th>
 								<?php } ?>
+								<th>Referencia</th>
 								<th>Item</th>
 								<th>Descripción</th>
 								<th>Stock</th>
@@ -97,5 +98,6 @@
 	$CANTIDADCLIENTES ="<?= $cantidadClientes ?>";
 	$NROVENTA = "<?= $nroVenta ?>";
 	$DATOSVENTA = '<?= is_null($venta) ? '' : json_encode($venta) ?>';
-	$IMAGENPROD = <?= $imagenProd ?>
+	$IMAGENPROD = <?= $imagenProd ?>;
+	$CAMPOSPRODUCTO = <?= json_encode($camposProducto) ?>;
 </script>

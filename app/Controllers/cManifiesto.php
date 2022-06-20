@@ -10,6 +10,9 @@ class cManifiesto extends BaseController {
 	public function index() {
 		$this->content['title'] = "Manifiestos";
 		$this->content['view'] = "vManifiesto";
+		$this->content["camposProducto"] = [
+			"item" => (session()->has("itemProducto") ? session()->get("itemProducto") : '0'),
+ 		];
 
 		$this->LDataTables();
 		$this->LMoment();
@@ -294,6 +297,7 @@ class cManifiesto extends BaseController {
 		$query = $this->db->table('productos AS P')
 			->select("
 					P.id,
+					P.referencia,
 					P.item,
 					P.descripcion,
 					P.imagen,
@@ -375,7 +379,10 @@ class cManifiesto extends BaseController {
 
 					$mimeType = $file->getMimeType();;
 		
-					$this->response->setStatusCode(200)->setContentType($mimeType)->setBody($image)->send();
+					$this->response->setStatusCode(200)
+												->setContentType($mimeType)
+												->setBody($image)
+												->send();
 				}
 
 			} else {
