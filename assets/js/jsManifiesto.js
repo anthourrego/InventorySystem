@@ -25,7 +25,7 @@ let DTManifiestos = $("#table").DataTable({
       orderable: false,
       select: true,
       data: 'eliminar',
-      className: 'text-center',
+      className: 'text-center noExport',
       render: function (meta, type, data, meta) {
         return `<div class="custom-control custom-checkbox text-center">
           <input type="checkbox" class="custom-control-input checkManifiesto" value="1" id="check${data.id}">
@@ -45,7 +45,7 @@ let DTManifiestos = $("#table").DataTable({
       orderable: false,
       searchable: false,
       defaultContent: '',
-      className: 'text-center',
+      className: 'text-center noExport',
       render: function (meta, type, data, meta) {
 
         btnEditar = validPermissions(82) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-edit"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
@@ -214,7 +214,7 @@ let columnsProd = [
     orderable: false,
     searchable: false,
     defaultContent: '',
-    className: 'text-center',
+    className: 'text-center noExport',
     render: function (meta, type, data, meta) {
       if (data.id_manifiesto == manifiestoActual) {
         return `<div class="btn-group btn-group-sm" role="group">

@@ -7,7 +7,6 @@ $(function(){
     var vendedorOption = new Option($DATOSVENTA.NombreVendedor, $DATOSVENTA.id_vendedor, true, true);
     var clienteOption = new Option(($DATOSVENTA.NroDocumentoCliente + ' | ' + $DATOSVENTA.NombreCliente), $DATOSVENTA.id_cliente, true, true);
 
-    console.log($DATOSVENTA);
     $("#metodoPago").val($DATOSVENTA.metodo_pago).trigger('change');
     $("#observacion").val($DATOSVENTA.observacion);
     $("#total").val($DATOSVENTA.total);

@@ -57,9 +57,12 @@ let DTProductos = $("#table").DataTable({
       return $.extend(d, { "estado": 1, "ventas": 1 })
     }
   },
-  dom: domlftrip,
+  dom: domBftrip,
   order: [[2, "asc"]],
   columns: columnsProd,
+  buttons: [
+    'pageLength'
+  ],
   createdRow: function (row, data, dataIndex) {
     $(row).find(".btnAdd").on("click", function () {
       let result = productosVentas.find((it) => it.id == data.id);
@@ -93,7 +96,7 @@ let DTProductosVenta = $("#tblProductos").DataTable({
       orderable: false,
       searchable: false,
       defaultContent: '',
-      className: 'text-center',
+      className: 'text-center noExport',
       render: function (meta, type, data, meta) {
         return `<div class="btn-group btn-group-sm" role="group">
                   <button type="button" class="btn btn-danger btnBorrar" title="Borrar Producto"><i class="fa-solid fa-times"></i></button>

@@ -49,7 +49,7 @@ let DTUsuarios = $("#table").DataTable({
       orderable: false,
       searchable: false,
       defaultContent: '',
-      className: 'text-center',
+      className: 'text-center noExport',
       render: function(meta, type, data, meta) {
 
         btnEditar = validPermissions(12) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-user-pen"></i></button>': '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';

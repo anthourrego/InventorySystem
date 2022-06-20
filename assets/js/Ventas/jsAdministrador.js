@@ -34,7 +34,7 @@ let DT = $("#table").DataTable({
       orderable: false,
       searchable: false,
       defaultContent: '',
-      className: 'text-center',
+      className: 'text-center noExport',
       render: function(meta, type, data, meta) {
         return `<div class="btn-group btn-group-sm" role="group">
                   <a href="${base_url()}Reportes/Factura/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprmir factura"><i class="fa-solid fa-print"></i></a>
