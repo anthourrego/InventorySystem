@@ -10,8 +10,20 @@ let DT = $("#table").DataTable({
     {data: 'NombreCliente'},
     {data: 'NombreVendedor'},
     {data: 'metodo_pago'},
-    {data: 'neto'},
-    {data: 'total'},
+    {
+      data: 'neto',
+      className: 'text-right',
+      render: function (meta, type, data, meta) {
+        return formatoPesos.format(data.neto);
+      }
+    },
+    {
+      data: 'total',
+      className: 'text-right',
+      render: function (meta, type, data, meta) {
+        return formatoPesos.format(data.total);
+      }
+    },
     {
       data: 'created_at',
       render: function(meta, type, data, meta) {
