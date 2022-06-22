@@ -13,6 +13,14 @@ class Home extends BaseController {
 		if (session()->has("logged_in") && session()->get("logged_in")) {
 			$this->content['title'] = "Inicio";
 			$this->content['view'] = "vInicio";
+
+			$permisos = new mPermisos();
+
+			$this->content["accesos"] = $permisos->lista('uri');
+
+			$this->content['css_add'][] = [
+				'cssInicio.css'
+			];
 			
 			return view('UI/viewDefault', $this->content);
 

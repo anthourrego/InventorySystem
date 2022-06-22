@@ -49,11 +49,14 @@ class mPermisos extends Model {
 	protected $beforeDelete   = [];
 	protected $afterDelete    = [];
 
-	public function lista() {
+	public function lista($validar = '') {
 		$permisos = [
 			[
 				"id" => 1,
 				"text" => "Usuarios",
+				"uri" => "Usuarios",
+				"icon" => "fas fa-users",
+				"color" => "bg-primary",
 				"children" => [
 					[
 						"id" => 11,
@@ -80,6 +83,9 @@ class mPermisos extends Model {
 			[
 				"id" => 2,
 				"text" => "Perfiles",
+				"uri" => "Perfiles",
+				"icon" => "fa-solid fa-address-book",
+				"color" => "bg-secondary",
 				"children" => [
 					[
 						"id" => 21,
@@ -102,6 +108,9 @@ class mPermisos extends Model {
 			[
 				"id" => 3,
 				"text" => "Categorias",
+				"uri" => "Categorias",
+				"icon" => "fa-brands fa-buffer",
+				"color" => "bg-success",
 				"children" => [
 					[
 						"id" => 31,
@@ -120,6 +129,9 @@ class mPermisos extends Model {
 			[
 				"id" => 4,
 				"text" => "Clientes",
+				"uri" => "Clientes",
+				"icon" => "fa-solid fa-user-tie",
+				"color" => "bg-danger",
 				"children" => [
 					[
 						"id" => 41,
@@ -156,6 +168,9 @@ class mPermisos extends Model {
 			[
 				"id" => 5,
 				"text" => "Productos",
+				"uri" => "Productos",
+				"icon" => "fa-brands fa-product-hunt",
+				"color" => "bg-warning",
 				"children" => [
 					[
 						"id" => 51,
@@ -174,6 +189,9 @@ class mPermisos extends Model {
 			[
 				"id" => 6,
 				"text" => "Ventas",
+				"uri" => "Ventas/Administrar",
+				"icon" => "fa-solid fa-store",
+				"color" => "bg-info",
 				"children" => [
 					[
 						"id" => 61, //Para mostrar en la lista de vendedores
@@ -184,6 +202,9 @@ class mPermisos extends Model {
 			[
 				"id" => 7,
 				"text" => "Configuración",
+				"uri" => "Configuracion",
+				"icon" => "fa-solid fa-gear",
+				"color" => "bg-light",
 				"children" => [
 					[
 						"id" => 71,
@@ -194,6 +215,9 @@ class mPermisos extends Model {
 			[
 				"id" => 8,
 				"text" => "Manifiesto",
+				"uri" => "Manifiesto",
+				"icon" => "fa-solid fa-file",
+				"color" => "bg-dark",
 				"children" => [
 					[
 						"id" => 81,
@@ -232,10 +256,14 @@ class mPermisos extends Model {
 			[
 				"id" => 9,
 				"text" => "Ubicaciones",
+				"uri" => "",
 				"children" => [
 					[
 						"id" => 91,
 						"text" => "Paises",
+						"uri" => "Ubicacion/Paises",
+						"icon" => "fa-solid fa-flag",
+						"color" => "bg-primary",
 						"children" => [
 							[
 								"id" => 911,
@@ -254,6 +282,9 @@ class mPermisos extends Model {
 					[
 						"id" => 92,
 						"text" => "Departamentos",
+						"uri" => "Ubicacion/Departamentos",
+						"icon" => "fa-solid fa-earth-africa",
+						"color" => "bg-secondary",
 						"children" => [
 							[
 								"id" => 921,
@@ -272,6 +303,9 @@ class mPermisos extends Model {
 					[
 						"id" => 93,
 						"text" => "Ciudades",
+						"uri" => "Ubicacion/Ciudades",
+						"icon" => "fa-solid fa-city",
+						"color" => "bg-success",
 						"children" => [
 							[
 								"id" => 931,
@@ -291,6 +325,26 @@ class mPermisos extends Model {
 			],
 		];
 
+		if ($validar != '') {
+			$permisos = $this->validar($validar, $permisos, []);
+		}
+
 		return $permisos;
 	}
+
+	private function validar($llave, $permisos, $new) {
+			foreach ($permisos as $key => $value) {
+				if (isset($value[$llave]) && validPermissions([$value['id']], true)) {
+					$info = $value;
+					unset($info['children']);
+					$new[] = $info;
+					if (isset($value['children'])) {
+						$datos = $this->validar($llave, $value['children'], []);
+						$new = array_merge($new, $datos);
+					}
+				}
+			}
+			return $new;
+	}
+
 }
