@@ -242,22 +242,71 @@ class cUsuarios extends BaseController {
 		return $this->response->setJSON($resp);
 	}
 
-	public function getUsuario(){
+	public function getVendedores(){
 		$resp["success"] = false;
 		//Traemos los datos del post
 		$data = (object) $this->request->getPost();
-        
+		$limit = 10;
+		$offset = ($data->page - 1) * $limit;
 		$userModel = new mUsuarios();
 
-		$result = $userModel->like('usuario', $data->buscar)
-												->orLike('nombre', $data->buscar)
-												->find();
-        
-		if(count($result) == 1) {
-			$resp["success"] = true;
-			$resp["data"] = $result[0]; 
+		if (isset($data->search) && strlen(trim($data->search))) {
+			$data->search = trim($data->search);
+			$resp['data'] = $userModel->select("usuarios.id, usuarios.nombre as text")
+															->join("(
+																SELECT 
+																	usuarioId,
+																	perfilId, 
+																	COUNT(*) AS Vendedor 
+																FROM permisosusuarioperfil 
+																WHERE permiso = '61' 
+																GROUP BY usuarioId, perfilId) AS pup", 
+																"(CASE WHEN usuarios.perfil IS NULL THEN usuarios.id = pup.usuarioId ELSE usuarios.perfil = pup.perfilId END)", "inner", false)
+															->where("usuarios.estado", 1)
+															->like('usuarios.nombre', $data->search)
+															->findAll($limit, $offset);
+															
+			$resp['total_count'] = $userModel->where("usuarios.estado", 1)
+																			->join("(
+																				SELECT 
+																					usuarioId,
+																					perfilId, 
+																					COUNT(*) AS Vendedor 
+																				FROM permisosusuarioperfil 
+																				WHERE permiso = '61' 
+																				GROUP BY usuarioId, perfilId) AS pup", 
+																				"(CASE WHEN usuarios.perfil IS NULL THEN usuarios.id = pup.usuarioId ELSE usuarios.perfil = pup.perfilId END)", "inner", false)
+																			->like('usuarios.nombre', $data->search)
+																			->countAllResults();
+		} else {
+			$resp['data'] = $userModel->select("usuarios.id, usuarios.nombre as text")
+																->join("(
+																	SELECT 
+																		usuarioId,
+																		perfilId, 
+																		COUNT(*) AS Vendedor 
+																	FROM permisosusuarioperfil 
+																	WHERE permiso = '61' 
+																	GROUP BY usuarioId, perfilId) AS pup", 
+																	"(CASE WHEN usuarios.perfil IS NULL THEN usuarios.id = pup.usuarioId ELSE usuarios.perfil = pup.perfilId END)", "inner", false)
+																->where("usuarios.estado", 1)
+																->findAll($limit, $offset);
+				
+			$resp['total_count'] = $userModel->where("usuarios.estado", 1)
+																			->join("(
+																				SELECT 
+																					usuarioId,
+																					perfilId, 
+																					COUNT(*) AS Vendedor 
+																				FROM permisosusuarioperfil 
+																				WHERE permiso = '61' 
+																				GROUP BY usuarioId, perfilId) AS pup", 
+																				"(CASE WHEN usuarios.perfil IS NULL THEN usuarios.id = pup.usuarioId ELSE usuarios.perfil = pup.perfilId END)", "inner", false)
+																			->countAllResults();
 		}
 
 		return $this->response->setJSON($resp);
 	}
+
+
 }

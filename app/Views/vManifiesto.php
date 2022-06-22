@@ -62,6 +62,7 @@
                 <?php if ($imagenProd) { ?>
                   <th>Imagen</th>
                 <?php } ?>
+                <th>Referencia</th>
                 <th>Item</th>
                 <th>Descripción</th>
                 <th>Acciones</th>
@@ -143,6 +144,7 @@
                 <?php if ($imagenProd) { ?>
                   <th>Imagen</th>
                 <?php } ?>
+                <th>Referencia</th>
                 <th>Item</th>
                 <th>Descripción</th>
               </tr>
@@ -160,5 +162,6 @@
 
 <script>
   let $permisoEliminarMultiple = <?= validPermissions([87], true) ? 'true' : 'false' ?>;
-  let $imagenProd = <?= $imagenProd ?>
+  let $imagenProd = <?= $imagenProd ?>;
+  $CAMPOSPRODUCTO = <?= json_encode($camposProducto) ?>;
 </script>

@@ -186,7 +186,8 @@ class cReportes extends BaseController {
 
 		$pdf->writeHTML($bloque5, false, false, false, false, '');
 
-		$pdf->Output("GOM00{$datosFactura->codigo}.pdf", 'D');
+		$pdf->Output("GOM00{$datosFactura->codigo}.pdf", 'I');
+		exit;
 	}
 
 	public function pedido($id){
@@ -364,8 +365,8 @@ class cReportes extends BaseController {
 			// ---------------------------------------------------------
 
 			//SALIDA DEL ARCHIVO 
-
-			$pdf->Output("'Pedido00$datosFactura->codigo.pdf'", 'D');
+			$pdf->Output("'Pedido00$datosFactura->codigo.pdf'", 'I');
+			exit;
 		}
 	}
 }

@@ -114,20 +114,35 @@ class cClientes extends BaseController {
 		return $this->response->setJSON($resp);
 	}
 
-	public function getCliente(){
+	public function getClientes(){
 		$resp["success"] = false;
 		//Traemos los datos del post
 		$data = (object) $this->request->getPost();
-        
+		$limit = 10;
+		$offset = ($data->page - 1) * $limit;  
 		$clienteModel = new mClientes();
 
-		$result = $clienteModel->like('documento', $data->buscar)
-													->orLike('nombre', $data->buscar)
-													->find();
+		if (isset($data->search) && strlen(trim($data->search))) {
+			$resp['data'] = $clienteModel->select("
+															id,
+															CONCAT(documento, ' | ', nombre) AS text
+														")->where("estado", 1)
+														->like('documento', $data->search)
+														->orLike('nombre', $data->search)
+														->findAll($limit, $offset);
 
-		if(count($result) == 1) {
-			$resp["success"] = true;
-			$resp["data"] = $result[0]; 
+			$resp['total_count'] = $clienteModel->like('documento', $data->search)
+																					->orLike('nombre', $data->search)
+																					->where("estado", 1)
+																					->countAllResults();
+		} else {
+			$resp['data'] = $clienteModel->select("
+															id,
+															CONCAT(documento, ' | ', nombre) AS text
+														")->where("estado", 1)
+														->findAll($limit, $offset);
+
+			$resp['total_count'] = $clienteModel->where("estado", 1)->countAllResults();
 		}
 
 		return $this->response->setJSON($resp);

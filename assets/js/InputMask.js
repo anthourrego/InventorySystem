@@ -8,10 +8,10 @@ function inputPesos(){
     alias: 'decimal', 
     groupSeparator: '.',
     autoGroup: true, 
-    digits: 2, 
+    digits: 0, 
     digitsOptional: false, 
     prefix: '$ ', 
-    placeholder: '0,00'
+    placeholder: '0'
   }).focus(function(){
     $(this).trigger("select");
   });

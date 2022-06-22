@@ -1,7 +1,7 @@
 let rutaBase = base_url() + "Productos/";
 let columnsProd = [
-  { data: 'referencia' },
-  { data: 'item' },
+  { data: 'referencia'},
+  { data: 'item', visible: ($CAMPOSPRODUCTO.item == '1' ? true : false) },
   {
     data: 'descripcion',
     width: "30%",
@@ -18,9 +18,14 @@ let columnsProd = [
     }
   },
   {
+    data: 'cantPaca', 
+    className: 'text-center',
+    visible: ($CAMPOSPRODUCTO.paca == '1' ? true : false),
+  },
+  {
     data: 'costo',
     className: 'text-right',
-    visible: ($COSTO == '1' ? true : false),
+    visible: ($CAMPOSPRODUCTO.costo == '1' ? true : false),
     render: function (meta, type, data, meta) {
       return formatoPesos.format(data.costo);
     }
@@ -32,8 +37,8 @@ let columnsProd = [
       return formatoPesos.format(data.precio_venta);
     }
   },
-  { data: 'ubicacion' },
-  { data: 'manifiesto' },
+  { data: 'ubicacion', visible: ($CAMPOSPRODUCTO.ubicacion == '1' ? true : false) },
+  { data: 'nombreManifiesto', visible: ($CAMPOSPRODUCTO.manifiesto == '1' ? true : false) },
   {
     data: 'created_at',
     render: function (meta, type, data, meta) {
@@ -44,7 +49,7 @@ let columnsProd = [
     orderable: false,
     searchable: false,
     defaultContent: '',
-    className: 'text-center',
+    className: 'text-center noExport',
     render: function (meta, type, data, meta) {
       btnEditar = validPermissions(52) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
       btnCambiarEstado = validPermissions(53) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';

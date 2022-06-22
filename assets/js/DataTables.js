@@ -66,11 +66,50 @@ $.extend(true, $.fn.dataTable.defaults, {
 		}
 	},
 	buttons: [
-		/* { extend: 'copy', className: 'copyButton btn-warning', text:'<i class="fa-solid fa-copy"></i>', attr: { title: "Copiar", "data-toggle":"tooltip" } },
-		{ extend: 'csv', className: 'csvButton btn-light', text: '<i class="fa-solid fa-file-csv"></i>', attr: { title: "CSV", "data-toggle":"tooltip" } }, */
-		{ extend: 'excel', className: "btn-success", action: newExportAction, text: '<i class="fa-solid fa-file-excel"></i>', attr: { title: "Excel", "data-toggle":"tooltip" } },
-		{ extend: 'pdf', className: 'pdfButton btn-danger', text: '<i class="fa-solid fa-file-pdf"></i>', attr: { title: "PDF", "data-toggle":"tooltip" } },
-		{ extend: 'print', className: 'printButton btn-info', text: '<i class="fa-solid fa-print"></i>', attr: { title: "Imprimir", "data-toggle":"tooltip" } },
+		{
+			extend: 'collection',
+			text:'<i class="fa-solid fa-download"></i>',
+			className: 'btn-primary',
+			autoClose: true,
+			buttons: [
+				{
+					extend: 'copyHtml5',
+					exportOptions: {
+							columns: ':visible:not(.noExport)'
+					},
+				},
+				{
+					extend: 'excelHtml5',
+					exportOptions: {
+							columns: ':visible:not(.noExport)'
+					},
+				},
+				{
+					extend: 'csvHtml5',
+					exportOptions: {
+							columns: ':visible:not(.noExport)'
+					},
+				},
+				{
+					extend: 'pdfHtml5',
+					exportOptions: {
+							columns: ':visible:not(.noExport)'
+					},
+				},
+			],
+			attr: { title: "Exportar", "data-toggle":"tooltip" }
+		},
+		{ 
+			extend: 'print', 
+			className: 'printButton btn-info', 
+			text: '<i class="fa-solid fa-print"></i>', 
+			attr: { 
+				title: "Imprimir", "data-toggle":"tooltip" 
+			},
+			exportOptions: {
+				columns: ':visible:not(.noExport)'
+			},
+		},
 		{ extend: 'pageLength' },
 	],
 });

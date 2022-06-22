@@ -11,8 +11,15 @@ class cProductos extends BaseController {
 	public function index() {
 		$this->content['title'] = "Productos";
 		$this->content['view'] = "vProductos";
-		$this->content["costo"] = (session()->has("costoProducto") ? session()->get("costoProducto") : '0');
+		$this->content["camposProducto"] = [
+			"item" => (session()->has("itemProducto") ? session()->get("itemProducto") : '0'),
+			"ubicacion" => (session()->has("ubicacionProducto") ? session()->get("ubicacionProducto") : '0'),
+			"costo" => (session()->has("costoProducto") ? session()->get("costoProducto") : '0'),
+			"manifiesto" => (session()->has("manifiestoProducto") ? session()->get("manifiestoProducto") : '0'),
+			"paca" => (session()->has("pacaProducto") ? session()->get("pacaProducto") : '0')
+ 		];
 		$this->content["inventario_negativo"] = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
+		$this->content['imagenProd'] = (session()->has("imageProd") ? session()->get("imageProd") : 0);
 
 		$this->LDataTables();
 		$this->LMoment();
@@ -24,11 +31,13 @@ class cProductos extends BaseController {
 		$categorias = new mCategorias();
 		$this->content["categorias"] = $categorias->asObject()->where("estado", 1)->findAll();
 
-		$manifiestos = new mManifiesto();
-		$this->content["manifiestos"] = $manifiestos->asObject()->where("estado", 1)->findAll();
+		if ($this->content["camposProducto"]["manifiesto"] == "1") {
+			$manifiestos = new mManifiesto();
+			$this->content["manifiestos"] = $manifiestos->asObject()->where("estado", 1)->findAll();
+		} else {
+			$this->content["manifiestos"] = [];
+		}	
 
-		$this->content['imagenProd'] = (session()->has("imageProd") ? session()->get("imageProd") : 0);
-		
 		$this->content['js_add'][] = [
 			'jsProductos.js'
 		];
@@ -60,6 +69,7 @@ class cProductos extends BaseController {
 						P.costo,
 						P.ubicacion,
 						P.id_manifiesto AS manifiesto,
+						M.nombre AS nombreManifiesto,
 						P.ventas, 
 						P.estado, 
 						P.created_at,
@@ -68,8 +78,10 @@ class cProductos extends BaseController {
 						CASE 
 								WHEN P.estado = 1 THEN 'Activo' 
 								ELSE 'Inactivo' 
-						END AS Estadito
-				")->join('categorias AS C', 'P.id_categoria = C.id', 'left');
+						END AS Estadito,
+						P.cantPaca
+				")->join('categorias AS C', 'P.id_categoria = C.id', 'left')
+				->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left');
 
 		if($postData->estado != "-1"){
 			$query->where("P.estado", $postData->estado);
@@ -117,13 +129,14 @@ class cProductos extends BaseController {
 				"id" => $postData->id
 				,"id_categoria" => trim($postData->categoria)
 				,"referencia" => trim($postData->referencia)
-				,"item" => trim($postData->item)
+				,"item" => (session()->has("itemProducto") && session()->get("itemProducto") == '1' ? trim($postData->item) : null)
 				,"descripcion" => trim($postData->descripcion)
 				,"stock" => $postData->stock
 				,"precio_venta" => str_replace(",", "", trim(str_replace("$", "", $postData->precioVent)))
-				,"ubicacion" => trim($postData->ubicacion)
+				,"ubicacion" => (session()->has("ubicacionProducto") && session()->get("ubicacionProducto") == '1' ? trim($postData->ubicacion) : null)
 				,"id_manifiesto" => strlen(trim($postData->manifiesto)) == 0 ? null : trim($postData->manifiesto)
 				,"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $postData->costo))) : '0')
+				,"cantPaca" => (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($postData->paca) : 1)
 			);
 	
 			//Validamos si eliminar la foto de perfil y buscamos el usuario

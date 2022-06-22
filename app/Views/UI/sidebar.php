@@ -128,14 +128,6 @@
 							</ul>
             </li>
 						<?php } ?>
-						<?php if (validPermissions([7], true)) { ?> 
-						<li class="nav-item">
-              <a href="<?= base_url("Configuracion") ?>" class="nav-link <?= current_url(true)->getSegment(3) == 'Configuracion' ? 'active' : '' ?>">
-								<i class="nav-icon fa-solid fa-gear"></i>
-                <p>Configuración</p>
-              </a>
-            </li>
-						<?php } ?>
 						<?php if (validPermissions([8], true)) { ?> 
 						<li class="nav-item">
               <a href="<?= base_url("Manifiesto") ?>" class="nav-link <?= current_url(true)->getSegment(3) == 'Manifiesto' ? 'active' : '' ?>">
@@ -187,6 +179,14 @@
 								</li>
 								<?php } ?>
 							</ul>
+            </li>
+						<?php } ?>
+						<?php if (validPermissions([7], true)) { ?> 
+						<li class="nav-item">
+              <a href="<?= base_url("Configuracion") ?>" class="nav-link <?= current_url(true)->getSegment(3) == 'Configuracion' ? 'active' : '' ?>">
+								<i class="nav-icon fa-solid fa-gear"></i>
+                <p>Configuración</p>
+              </a>
             </li>
 						<?php } ?>
 					</ul>
