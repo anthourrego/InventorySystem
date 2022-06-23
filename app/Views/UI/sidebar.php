@@ -189,6 +189,32 @@
               </a>
             </li>
 						<?php } ?>
+
+						<?php if (validPermissions([10], true)) { ?> 
+						<li class="nav-item <?= (current_url(true)->getSegment(3) == 'Pedidos' && (current_url(true)->getSegment(4) == 'Crear' || current_url(true)->getSegment(4) == 'Administrar')) ? 'menu-is-opening menu-open' : '' ?>">
+              <a href="#" class="nav-link <?= current_url(true)->getSegment(3) == 'Pedidos' ? 'active' : '' ?>">
+								<i class="nav-icon fa-solid fa-boxes-stacked"></i>
+                <p>
+									Pedidos
+									<i class="fas fa-angle-left right"></i>
+								</p>
+              </a>
+							<ul class="nav nav-treeview">
+								<li	li class="nav-item">
+									<a href="<?= base_url("Pedidos/Crear") ?>" class="nav-link <?= (current_url(true)->getSegment(3) == 'Pedidos' && current_url(true)->getSegment(4) == 'Crear') ? 'active' : '' ?>">
+										<i class="far fa-circle nav-icon"></i>
+										<p>Crear Pedido</p>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="<?= base_url("Pedidos/Administrar") ?>" class="nav-link <?= (current_url(true)->getSegment(3) == 'Pedidos' && current_url(true)->getSegment(4) == 'Administrar') ? 'active' : '' ?>">
+										<i class="far fa-circle nav-icon"></i>
+										<p>Administrar Pedidos</p>
+									</a>
+								</li>
+							</ul>
+            </li>
+						<?php } ?>
 					</ul>
 				</nav>
 				<!-- /.sidebar-menu -->

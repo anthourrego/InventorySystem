@@ -323,6 +323,13 @@ class mPermisos extends Model {
 					]
 				]
 			],
+			[
+				"id" => 10,
+				"text" => "Pedidos",
+				"uri" => "Pedidos/Administrar",
+				"icon" => "fa-solid fa-box-check",
+				"color" => "bg-danger",
+			],
 		];
 
 		if ($validar != '') {

@@ -107,6 +107,7 @@ $routes->group('Busqueda', ['filter' => 'authGuard'], function ($routes) {
 	$routes->get('DT', 'cBusqueda::dataTables');
 	$routes->post('Vendedores', 'cUsuarios::getVendedores', ['filter' => 'ajax']);
 	$routes->post('Clientes', 'cClientes::getClientes', ['filter' => 'ajax']);
+	$routes->post('Sucursales', 'cSucursales::getSucursales', ['filter' => 'ajax']);
 });
 
 //Permisos
@@ -200,6 +201,18 @@ $routes->group('Ubicacion/Ciudades', ['filter' => 'authGuard:93', 'namespace' =>
 	$routes->get('Obtener/(:num)', 'cCiudades::getCiudades/$1');
 });
 
+//Pedidos
+$routes->group('Pedidos', ['filter' => 'authGuard:6'], function ($routes) {
+	$routes->get('Administrar', 'cPedidos::index');
+	$routes->post('DT', 'cPedidos::listaDT');
+	$routes->post('DTProductos', 'cProductos::listaDT');
+	$routes->get('Crear', 'cPedidos::crear');
+	$routes->get('Editar/(:num)', 'cPedidos::editar/$1');
+	$routes->post('Eliminar', 'cPedidos::eliminar', ['filter' => 'ajax']);
+	$routes->post('Crear', 'cPedidos::crearEditar', ['filter' => 'ajax']);
+	$routes->post('Editar', 'cPedidos::guardarEditar', ['filter' => 'ajax']);
+	$routes->get('Cargar/(:num)', 'cPedidos::cargarPedido/$1', ['filter' => 'ajax']);
+});
 
 
 /*

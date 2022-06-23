@@ -120,8 +120,8 @@
             <input type="text" id="prefijoFact" data-nombre="Prefijo Factura" name="prefijoFact" <?= !$editar ? 'disabled' : '' ?> class="soloLetras form-control configAct" required autocomplete="off"placeholder="Ingrese el Prefijo">
           </div>
           <div class="col-12 col-md-6 col-lg-3">
-            <label for="cosecutivoFact">Consecutivo:</label>
-            <input type="number" id="cosecutivoFact"  data-nombre="Consecutivo Factura" name="cosecutivoFact" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
+            <label for="consecutivoFact">Consecutivo:</label>
+            <input type="number" id="consecutivoFact"  data-nombre="Consecutivo Factura" name="consecutivoFact" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
           </div>
           <hr class="col-12 my-2">
           <h5 class="mb-1 col-12">Pedidos:</h5>
@@ -130,8 +130,8 @@
             <input type="text" id="prefijoPed" data-nombre="Prefijo Factura" name="prefijoPed" <?= !$editar ? 'disabled' : '' ?> class="soloLetras form-control configAct" required autocomplete="off"placeholder="Ingrese el Prefijo">
           </div>
           <div class="col-12 col-md-6 col-lg-3">
-            <label for="cosecutivoPed">Consecutivo:</label>
-            <input type="number" id="cosecutivoPed"  data-nombre="Consecutivo Factura" name="cosecutivoPed" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
+            <label for="consecutivoPed">Consecutivo:</label>
+            <input type="number" id="consecutivoPed"  data-nombre="Consecutivo Factura" name="consecutivoPed" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
           </div>
           <hr class="col-12 my-2">
         </div>

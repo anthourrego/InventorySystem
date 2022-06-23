@@ -94,4 +94,39 @@ class cSucursales extends BaseController {
 		return $this->response->setJSON($resp);
 	}
 
+	public function getSucursales(){
+		$resp["success"] = false;
+		//Traemos los datos del post
+		$data = (object) $this->request->getPost();
+		$limit = 10;
+		$offset = ($data->page - 1) * $limit;  
+		$sucursal = new mSucursalesCliente();
+		
+		$cliente = trim($data->cliente);
+
+		if (isset($data->search) && strlen(trim($data->search))) {
+			$resp['data'] = $sucursal->select("id, nombre AS text")
+					->where("estado", 1)
+					->where("id_cliente", $cliente)
+					->like('nombre', $data->search)
+					->findAll($limit, $offset);
+
+			$resp['total_count'] = $sucursal->like('nombre', $data->search)
+					->where("estado", 1)
+					->where("id_cliente", $cliente)
+					->countAllResults();
+		} else {
+			$resp['data'] = $sucursal->select("id, nombre AS text")
+					->where("estado", 1)
+					->where("id_cliente", $cliente)
+					->findAll($limit, $offset);
+
+			$resp['total_count'] = $sucursal->where("estado", 1)
+					->where("id_cliente", $cliente)
+					->countAllResults();
+		}
+
+		return $this->response->setJSON($resp);
+	}
+
 }
