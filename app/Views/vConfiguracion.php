@@ -7,6 +7,9 @@
       <li class="nav-item" role="presentation">
         <a class="nav-link" id="inventario-tab" data-toggle="tab" href="#inventarioTab" role="tab" aria-controls="inventarioTab" aria-selected="false">Inventario</a>
       </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="consecutivo-tab" data-toggle="tab" href="#consecutivoTab" role="tab" aria-controls="consecutivoTab" aria-selected="false">Consecutivo</a>
+      </li>
     </ul>
   </div>
   <div class="card-body">
@@ -107,6 +110,30 @@
             </div>
           </div>
           <hr class="col-12">
+        </div>
+      </div>
+      <div class="tab-pane fade" id="consecutivoTab" role="tabpanel" aria-labelledby="consecutivo-tab">
+        <div class="form-row">
+          <h5 class="mb-1 col-12">Factura:</h5>
+          <div class="col-12 col-md-6 col-lg-3">
+            <label for="prefijoFact">Prefijo:</label>
+            <input type="text" id="prefijoFact" data-nombre="Prefijo Factura" name="prefijoFact" <?= !$editar ? 'disabled' : '' ?> class="soloLetras form-control configAct" required autocomplete="off"placeholder="Ingrese el Prefijo">
+          </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <label for="cosecutivoFact">Consecutivo:</label>
+            <input type="number" id="cosecutivoFact"  data-nombre="Consecutivo Factura" name="cosecutivoFact" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
+          </div>
+          <hr class="col-12 my-2">
+          <h5 class="mb-1 col-12">Pedidos:</h5>
+          <div class="col-12 col-md-6 col-lg-3">
+            <label for="prefijoPed">Prefijo:</label>
+            <input type="text" id="prefijoPed" data-nombre="Prefijo Factura" name="prefijoPed" <?= !$editar ? 'disabled' : '' ?> class="soloLetras form-control configAct" required autocomplete="off"placeholder="Ingrese el Prefijo">
+          </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <label for="cosecutivoPed">Consecutivo:</label>
+            <input type="number" id="cosecutivoPed"  data-nombre="Consecutivo Factura" name="cosecutivoPed" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
+          </div>
+          <hr class="col-12 my-2">
         </div>
       </div>
     </div>

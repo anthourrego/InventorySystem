@@ -1,4 +1,4 @@
-<div class="row justify-content-center">
+<div class="row justify-content-start">
   <?php 
     foreach ($accesos as $key => $value) {
       if ($value['uri'] != '') {
