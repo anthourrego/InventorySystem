@@ -4,6 +4,8 @@ namespace App\Controllers;
 use TCPDF;
 use App\Models\mVentas;
 use App\Models\mVentasProductos;
+use App\Models\mPedidos;
+use App\Models\mPedidosProductos;
 
 class cReportes extends BaseController {
 
@@ -191,26 +193,26 @@ class cReportes extends BaseController {
 	}
 
 	public function pedido($id){
-		$mVentas = new mVentas();
-		$mVentasProductos = new mVentasProductos();
+		$mPedidos = new mPedidos();
+		$mPedidosProductos = new mPedidosProductos();
 		
 		$rutaLogo = base_url("assets/img/logo-negro-bloque.jpg");
 
 
-		$datosFactura = $mVentas->cargarVenta($id)[0];
+		$datosFactura = $mPedidos->cargarPedido($id)[0];
 
-		$productosFactura = $mVentasProductos->select("
+		$productosFactura = $mPedidosProductos->select("
 														P.referencia,
 														P.item,
 														P.descripcion,
 														P.ubicacion,
 														M.nombre AS manifiesto,
-														ventasproductos.cantidad,
-														ventasproductos.valor,
-														(ventasproductos.cantidad * ventasproductos.valor) AS Total
-													")->join("productos AS P", "ventasproductos.id_producto = P.id", "left")
+														pedidosproductos.cantidad,
+														pedidosproductos.valor,
+														(pedidosproductos.cantidad * pedidosproductos.valor) AS Total
+													")->join("productos AS P", "pedidosproductos.id_producto = P.id", "left")
 													->join("manifiestos AS M", "P.id_manifiesto = M.id", "left")
-													->where("id_venta", $id)
+													->where("id_pedido", $id)
 													->findAll();
 
 		$fecha = date("d/m/Y", strtotime($datosFactura->created_at));
@@ -236,7 +238,7 @@ class cReportes extends BaseController {
 							importadoragomari@gmail.com
 						</div>
 					</td>
-					<td style="background-color:white; width:150px; text-align:center; color:red"><br><br>PEDIDO N.<br>00$datosFactura->codigo</td>
+					<td style="background-color:white; width:150px; text-align:center; color:red"><br><br>PEDIDO N.<br>$datosFactura->pedido</td>
 				</tr>
 			</table>
 		EOF;
@@ -311,7 +313,6 @@ class cReportes extends BaseController {
 
 		$pdf->writeHTML($bloque3, false, false, false, false, '');
 
-
 		foreach ($productosFactura as $it) {
 			$bloque4 = <<<EOF
 				<table style="font-size:10px; padding:2px 7px;">
@@ -343,30 +344,30 @@ class cReportes extends BaseController {
 
 			// ---------------------------------------------------------
 
-			$bloque5 = <<<EOF
-				<table style="font-size:10px; padding:5px 10px;">
-					<tr>
-						<td style="color:#333; background-color:white; width:350px; text-align:center"></td>
-					</tr>
-
-					<tr>
-						<td style="border-right: 1px solid #666; color:#333; background-color:white; width:370px; text-align:center"></td>
-						<td style="border: 1px solid #666; background-color:white; width:110px; text-align:center">
-							Total Cajas:
-						</td>
-						<td style="border: 1px solid #666; color:#333; background-color:white; width:60px; text-align:right"></td>
-					</tr>
-
-				</table>
-			EOF;
-
-			$pdf->writeHTML($bloque5, false, false, false, false, '');
-
-			// ---------------------------------------------------------
-
-			//SALIDA DEL ARCHIVO 
-			$pdf->Output("'Pedido00$datosFactura->codigo.pdf'", 'I');
-			exit;
 		}
+		$bloque5 = <<<EOF
+			<table style="font-size:10px; padding:5px 10px;">
+				<tr>
+					<td style="color:#333; background-color:white; width:350px; text-align:center"></td>
+				</tr>
+
+				<tr>
+					<td style="border-right: 1px solid #666; color:#333; background-color:white; width:370px; text-align:center"></td>
+					<td style="border: 1px solid #666; background-color:white; width:110px; text-align:center">
+						Total Cajas:
+					</td>
+					<td style="border: 1px solid #666; color:#333; background-color:white; width:60px; text-align:right"></td>
+				</tr>
+
+			</table>
+		EOF;
+
+		$pdf->writeHTML($bloque5, false, false, false, false, '');
+
+		// ---------------------------------------------------------
+
+		//SALIDA DEL ARCHIVO 
+		$pdf->Output("'Pedido00$datosFactura->pedido.pdf'", 'I');
+		exit;
 	}
 }

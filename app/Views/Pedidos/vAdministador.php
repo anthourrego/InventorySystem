@@ -14,6 +14,7 @@
             <th>Nro Pedido</th>
             <th>Cliente</th>
             <th>Vendedor</th>
+            <th>Sucursal</th>
             <th>Dirección</th>
             <th>Estado</th>
             <th>Total</th>

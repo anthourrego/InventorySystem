@@ -41,10 +41,14 @@ class cPedidos extends BaseController {
 		$this->content["cantidadClientes"] = $mClientes->where("estado", 1)->countAllResults();
 
     $mConfiguracion = new mConfiguracion();
-    $dataPref = $mConfiguracion->select("valor")->where("campo", "prefijoPed")->first();
+
+		$dataPref = (session()->has("prefijoPed") ? session()->get("prefijoPed") : '');
+
     $dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoPed")->first();
 
-		$this->content["nroPedido"] = (is_null($dataPref) ? '' : $dataPref->valor) . (is_null($dataConse) ? 1 : ($dataConse->valor + 1));
+		$this->content["nroPedido"] = $dataPref . (is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1));
+
+		$this->content["prefijoValido"] = ($dataPref != '' ? 'S' : 'N');
 
 		$this->content["pedido"] = null;
 
@@ -78,28 +82,29 @@ class cPedidos extends BaseController {
 		$pedido = $pedido[0];
 		
 		$productos = $mPedidosProductos->select("
-											p.id,
-											pedidosproductos.id AS idProductoPedido,
-											p.referencia, 
-											p.item, 
-											p.descripcion,
-											(p.stock + pedidosproductos.cantidad) AS stock,
-											pedidosproductos.cantidad,
-											pedidosproductos.valor AS valorUnitario,
-											pedidosproductos.valor_original,
-											p.precio_venta,
-											(pedidosproductos.valor * pedidosproductos.cantidad) AS valorTotal
-										")->join("productos AS p", "pedidosproductos.id_producto = p.id")
-										->where("pedidosproductos.id_pedido", $pedido->id)
-										->findAll();
+				p.id,
+				pedidosproductos.id AS idProductoPedido,
+				p.referencia, 
+				p.item, 
+				p.descripcion,
+				(p.stock + pedidosproductos.cantidad) AS stock,
+				pedidosproductos.cantidad,
+				pedidosproductos.valor AS valorUnitario,
+				pedidosproductos.valor_original,
+				p.precio_venta,
+				(pedidosproductos.valor * pedidosproductos.cantidad) AS valorTotal
+			")->join("productos AS p", "pedidosproductos.id_producto = p.id")
+			->where("pedidosproductos.id_pedido", $pedido->id)
+			->findAll();
 
 		$pedido->productos = $productos;
 		
 		$this->content["pedido"] = $pedido;
+		$this->content["prefijoValido"] = 'S';
 
-		$this->content["nroPedido"] = $pedido->codigo;
+		$this->content["nroPedido"] = $pedido->pedido;
 
-		$this->content['title'] = "Editar pedido Nro " . $pedido->codigo;
+		$this->content['title'] = "Editar pedido Nro " . $pedido->pedido;
 		$this->content['view'] = "Pedidos/vCrear";
 
 		$this->LDataTables();
@@ -130,22 +135,24 @@ class cPedidos extends BaseController {
 
 	public function listaDT(){
 		$query = $this->db->table('pedidos AS P')
-											->select("
-												P.id,
-												P.pedido,
-												P.id_cliente,
-												C.nombre AS NombreCliente,
-												P.id_vendedor,
-												U.nombre AS NombreVendedor,
-												P.impuesto,
-												P.created_at,
-												P.updated_at,
-                        P.estado,
-                        P.estado AS NombreEstado,
-                        S.direccion
-											")->join('clientes AS C', 'P.id_cliente = C.id', 'left')
-                      ->join('sucursales AS S', 'P.id_sucursal = S.id', 'left')
-											->join('usuarios AS U', 'P.id_vendedor = U.id', 'left');
+			->select("
+				P.id,
+				P.pedido,
+				P.id_cliente,
+				C.nombre AS NombreCliente,
+				P.id_vendedor,
+				U.nombre AS NombreVendedor,
+				P.impuesto,
+				P.created_at,
+				P.updated_at,
+				P.estado,
+				CASE WHEN P.Estado = 0 THEN 'Pendiente' WHEN P.Estado = 1 THEN 'Alistamiento' ELSE 'Facturado' END AS NombreEstado,
+				P.total,
+				S.direccion,
+				S.nombre AS NombreSucursal
+			")->join('clientes AS C', 'P.id_cliente = C.id', 'left')
+			->join('sucursales AS S', 'P.id_sucursal = S.id', 'left')
+			->join('usuarios AS U', 'P.id_vendedor = U.id', 'left');
 
 		return DataTable::of($query)->toJson(true);
 	}
@@ -211,7 +218,7 @@ class cPedidos extends BaseController {
 		$dataPost = (object) $this->request->getPost();
 		$valorTotal = 0;
 		$prod = json_decode($dataPost->productos);
-        
+
 		$productoModel = new mProductos();
 		$pedidoModel = new mPedidos();
 		$mPedidosProductos = new mPedidosProductos();
@@ -219,7 +226,8 @@ class cPedidos extends BaseController {
 
     $dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoPed")->first();
 
-		$pedido = (is_null($dataConse) ? 1 : ($dataConse->valor + 1));
+		$numerPedido = (is_null($dataConse) ? 1 : ($dataConse->valor + 1));
+		$pedido = (session()->has("prefijoPed") ? session()->get("prefijoPed") : '') . $numerPedido;
 
 		if (count($prod) > 0) {
 			$this->db->transBegin();
@@ -283,7 +291,7 @@ class cPedidos extends BaseController {
 				$this->db->transRollback();
 			} else {
 
-        $builder = $this->db->table('configuracion')->set("valor", $pedido)->where('campo', "consecutivoPed");
+        $builder = $this->db->table('configuracion')->set("valor", $numerPedido)->where('campo', "consecutivoPed");
 
 		    if($builder->update()) {
           $this->db->transCommit();
@@ -310,6 +318,8 @@ class cPedidos extends BaseController {
 		$mProductos = new mProductos();
 		$mPedidos = new mPedidos();
 		$mPedidosProductos = new mPedidosProductos();
+
+		$pediOrigi = $mPedidos->asObject()->where("id", $dataPost->idPedido)->first();
 		
 		if (count($prod) > 0) {
 			$this->db->transBegin();
@@ -317,6 +327,7 @@ class cPedidos extends BaseController {
 				"id" => $dataPost->idPedido,
 				"id_cliente" => $dataPost->idCliente,
 				"id_vendedor" => $dataPost->idUsuario,
+				"id_sucursal" => $dataPost->idSucursal,
 				"impuesto" => 0,
 				"neto" => 0,
 				"total" => 0,
@@ -363,6 +374,7 @@ class cPedidos extends BaseController {
 					} else {
 						$dataProductoPedido = [
 							"id_pedido" => $dataPost->idPedido,
+							"pedido" => $pediOrigi->pedido,
 							"id_producto" => $it->id,
 							"cantidad" => $it->cantidad,
 							"valor" => $it->valorUnitario,
@@ -448,5 +460,27 @@ class cPedidos extends BaseController {
 											->countAllResults();
 		
 		return $vendedores;
+	}
+
+	public function estadoPedido(){
+		$resp["success"] = false;
+		//Traemos los datos del post
+		$data = (object) $this->request->getPost();
+        
+		$this->db->transBegin();
+
+		$builder = $this->db->table('pedidos')->set("estado", $data->estado)->where('id', $data->id);
+
+		//Ponemos en alistamiento el pedido
+		if($builder->update()) {
+			$this->db->transCommit();
+			$resp["success"] = true;
+			$resp['msj'] = "Pedido en proceso alistamiento";
+		} else {
+			$this->db->transRollback();
+			$resp['msj'] = "No fue posible guardar la información";
+		}
+
+		return $this->response->setJSON($resp);
 	}
 }

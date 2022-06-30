@@ -17,6 +17,7 @@ class mPedidos extends Model {
 		"pedido",
 		"id_cliente",
 		"id_vendedor",
+		"id_sucursal",
 		"observacion",
 		"impuesto",
 		"neto",
@@ -33,7 +34,7 @@ class mPedidos extends Model {
 
 	// Validation
 	protected $validationRules      = [
-		'pedido' => 'required|numeric|min_length[1]|max_length[11]',
+		'pedido' => 'required|min_length[1]|max_length[11]',
 		'id_cliente' => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[clientes.id]',
 		'id_vendedor' => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[usuarios.id]',
     'id_sucursal' => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[sucursales.id]',
@@ -74,9 +75,12 @@ class mPedidos extends Model {
 				P.observacion,
 				P.created_at,
 				C.direccion AS Direccion,
-				C.telefono
+				C.telefono,
+				P.id_sucursal,
+				S.nombre AS NombreSucursal
 			")->join("clientes AS C", "P.id_cliente = C.id", "left")
 			->join("usuarios AS U", "P.id_vendedor = U.id", "left")
+			->join("sucursales AS S", "P.id_sucursal = S.id", "left")
 			->where("P.id", $id)
 			->get()->getResultObject();
 

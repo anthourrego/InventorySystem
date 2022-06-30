@@ -45,13 +45,13 @@ if ($IMAGENPROD) {
     className: "text-center",
     render: function (meta, type, data, meta) {
       return `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
-                <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
-              </a>`;
+        <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
+      </a>`;
     }
   });
 }
 
-let DTProductos = $("#table").DataTable({
+let DTProductos = {
   ajax: {
     url: rutaBase + "DTProductos",
     type: "POST",
@@ -81,7 +81,7 @@ let DTProductos = $("#table").DataTable({
       calcularTotal();
     });
   }
-});
+};
 
 let DTProductosPedido = $("#tblProductos").DataTable({
   data: productosPedido,
@@ -178,18 +178,27 @@ let DTProductosPedido = $("#tblProductos").DataTable({
 });
 
 $(function () {
-  if ($CANTIDADVENDEDORES == 0 || $CANTIDADCLIENTES == 0) {
+  if ($CANTIDADVENDEDORES == 0 || $CANTIDADCLIENTES == 0 || $PREFIJOVALIDO == 'N') {
     if ($CANTIDADVENDEDORES == 0 && $CANTIDADCLIENTES == 0) {
       $msj = "vendedore y clientes";
+    } else if ($PREFIJOVALIDO == 'N') {
+      $msj = "prefijo de pedido disponible";
     } else {
-      $msj = $CANTIDADVENDEDORES == 0 ? "vendedores" : "clientes";
+      $msj = ($CANTIDADVENDEDORES == 0 ? "vendedores" : "clientes") + " disponibles";
     }
-
-    alertify.alert('¡Advertencia!', `No hay ${$msj} disponibles.`);
+    alertify.alert('¡Advertencia!', `No hay ${$msj}.`);
+  } else {
+    DTProductos = $("#table").DataTable(DTProductos);
   }
 
   $("#formPedido").submit(function (e) {
     e.preventDefault();
+
+    if ($PREFIJOVALIDO == 'N') {
+      alertify.alert('¡Advertencia!', `No hay prefijo de pedido disponible.`);
+      return;
+    }
+
     if ($(this).valid()) {
       if (productosPedido.length > 0) {
         form = new FormData(this);
@@ -223,7 +232,7 @@ $(function () {
                   },
                   function () {
                     window.location.href = base_url() + 'Pedidos/Administrar';
-                  }).set('labels', {ok: `<i class="fas fa-check"></i> Si`, cancel: `<i class="fas fa-times"></i> No`});
+                  }).set('labels', { ok: `<i class="fas fa-check"></i> Si`, cancel: `<i class="fas fa-times"></i> No` });
               } else {
                 alertify.alert('¡Advertencia!', "Pedido editado correctamente", function () { window.location.href = base_url() + 'Pedidos/Administrar'; });
               }
@@ -233,7 +242,7 @@ $(function () {
           }
         });
       } else {
-        alertify.alert("Advertencia", "Debe de elegiar minimo un producto para guardar el pedido.");
+        alertify.alert("Advertencia", "Debe de elegir minimo un producto para guardar el pedido.");
       }
     }
   });
@@ -263,7 +272,6 @@ $(function () {
         };
       },
       cache: true
-      // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
     }
   });
 
@@ -291,8 +299,9 @@ $(function () {
         };
       },
       cache: true
-      // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
     }
+  }).on("change", function () {
+    $("#sucursal").val('').trigger('change.select2');
   });
 
   $("#sucursal").select2({
@@ -320,7 +329,6 @@ $(function () {
         };
       },
       cache: true
-      // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
     }
   });
 });
@@ -334,13 +342,13 @@ function calcularTotal() {
   $("#total").val(sumTotal);
 }
 
-function formatRepo (repo) {
+function formatRepo(repo) {
   if (repo.loading) {
     return repo.text;
   }
   return repo.full_name || repo.text;
 }
 
-function formatRepoSelection (repo) {
+function formatRepoSelection(repo) {
   return repo.full_name || repo.text;
 }
