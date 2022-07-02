@@ -102,9 +102,9 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       render: function (meta, type, data, meta) {
         return `
           <div class="btn-group btn-group-sm" role="group">
-            ${($NROPEDIDO != 0 ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar Producto"><i class="fa-solid fa-pen-to-square"></i></button>' : '')}
-            ${($NROPEDIDO != 0 ? '<button style="display: none;" type="button" class="btn btn-success btnAceptarEdicion" title="Borrar Producto"><i class="fa-solid fa-check"></i></button>' : '')}
-            <button style="display: none;" type="button" class="btn btn-danger btnBorrar" title="Borrar Producto"><i class="fa-solid fa-xmark"></i></button>
+            ${($DATOSPEDIDO != '' ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar Producto"><i class="fa-solid fa-pen-to-square"></i></button>' : '')}
+            ${($DATOSPEDIDO != '' ? '<button style="display: none;" type="button" class="btn btn-success btnAceptarEdicion" title="Borrar Producto"><i class="fa-solid fa-check"></i></button>' : '')}
+            <button ${($DATOSPEDIDO != '' ? 'style="display: none;"' : '')} type="button" class="btn btn-danger btnBorrar" title="Borrar Producto"><i class="fa-solid fa-xmark"></i></button>
           </div>
         `;
       }
@@ -121,7 +121,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       searchable: false,
       data: 'cantidad',
       render: function (meta, type, data, meta) {
-        return `<input type="number" ${($NROPEDIDO != 0 ? 'disabled' : '')} class="form-control form-control-sm cantidadProduct inputFocusSelect soloNumeros" min="1" value="${data.cantidad}">`;
+        return `<input type="number" ${($DATOSPEDIDO != '' ? 'disabled' : '')} class="form-control form-control-sm cantidadProduct inputFocusSelect soloNumeros" min="1" value="${data.cantidad}">`;
       }
     },
     {
@@ -129,7 +129,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       searchable: false,
       data: 'valorUnitario',
       render: function (meta, type, data, meta) {
-        return `<input type="tel" ${($NROPEDIDO != 0 ? 'disabled' : '')} class="form-control form-control-sm inputPesos text-right inputFocusSelect soloNumeros valorUnitario" min="0" value="${data.valorUnitario}">`;
+        return `<input type="tel" ${($DATOSPEDIDO != '' ? 'disabled' : '')} class="form-control form-control-sm inputPesos text-right inputFocusSelect soloNumeros valorUnitario" min="0" value="${data.valorUnitario}">`;
       }
     },
     {
@@ -176,7 +176,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       calcularTotal();
     });
 
-    if ($NROPEDIDO != 0) {
+    if ($DATOSPEDIDO != '') {
       $(row).find(".btnEditar").click(function (e) {
         e.preventDefault();
         $(row).find('input').attr('disabled', false);

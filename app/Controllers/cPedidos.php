@@ -10,6 +10,7 @@ use App\Models\mUsuarios;
 use App\Models\mClientes;
 use App\Models\mPedidosProductos;
 use App\Models\mConfiguracion;
+use App\Models\mObservacionProductos;
 
 class cPedidos extends BaseController {
 	public function index() {
@@ -320,6 +321,7 @@ class cPedidos extends BaseController {
 		$mProductos = new mProductos();
 		$mPedidos = new mPedidos();
 		$mPedidosProductos = new mPedidosProductos();
+		$mObservacionProductos = new mObservacionProductos();
 
 		$pediOrigi = $mPedidos->asObject()->where("id", $dataPost->idPedido)->first();
 		
@@ -370,6 +372,22 @@ class cPedidos extends BaseController {
 							}
 						}
 
+						if (isset($it->observacionDiferencia) && $it->observacionDiferencia != '') {
+							$dataObserSave = array(
+								"id_pedido_producto" => $it->id,
+								"observacion" => $it->observacionDiferencia,
+								"cantidad_anterior" => $it->cantidadOriginal,
+								"cantidad_actual" => $it->cantidad,
+								"valor_anterior" => $it->valorUnitarioOriginal,
+								"valor_actual" => $it->valorUnitario,
+							);
+						
+							if(!$mObservacionProductos->save($dataObserSave)){
+								$resp["msj"] = "Error al guardar  la observación del producto. " . listErrors($mObservacionProductos->errors());
+								break;
+							}
+						}
+
 						$valorTotal = $valorTotal + ($it->cantidad * $it->valorUnitario);
 						unset($productoActuales[$productoAct]);
 						$productoActuales = array_values($productoActuales);
@@ -396,6 +414,22 @@ class cPedidos extends BaseController {
 						if(!$mProductos->save($product)){
 							$resp["msj"] = "Error al guardar al actualizar el producto. " . listErrors($mProductos->errors());
 							break;
+						}
+
+						if (isset($it->observacionDiferencia) && $it->observacionDiferencia != '') {
+							$dataObserSave = array(
+								"id_pedido_producto" => $it->id,
+								"observacion" => $it->observacionDiferencia,
+								"cantidad_anterior" => isset($it->cantidadOriginal) ? $it->cantidadOriginal : 0,
+								"cantidad_actual" => $it->cantidad,
+								"valor_anterior" => isset($it->valorUnitarioOriginal) ? $it->valorUnitarioOriginal : 0,
+								"valor_actual" => $it->valorUnitario,
+							);
+						
+							if(!$mObservacionProductos->save($dataObserSave)){
+								$resp["msj"] = "Error al guardar  la observación del producto. " . listErrors($mObservacionProductos->errors());
+								break;
+							}
 						}
 					}
 				}

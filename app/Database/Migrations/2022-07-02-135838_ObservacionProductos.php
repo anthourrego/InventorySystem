@@ -1,0 +1,60 @@
+<?php
+
+namespace App\Database\Migrations;
+
+use CodeIgniter\Database\Migration;
+
+class ObservacionProductos extends Migration
+{
+    public function up()
+    {
+        $this->forge->addField([
+			'id'   => [
+				'type'           => 'INT',
+				'constraint'     => 11,
+				'unsigned'       => true,
+				'auto_increment' => true,
+			],
+			'id_pedido_producto' => [
+				'type'           => 'INT',
+				'constraint'     => 11,
+				'unsigned'       => true
+			],
+			'observacion' => [
+				'type'        => 'TEXT',
+				"null"        => true
+			],
+			'cantidad_anterior' => [
+				'type'           => 'INT',
+				'constraint'     => 11,
+				'default'        => 0
+			],
+            'cantidad_actual' => [
+				'type'           => 'INT',
+				'constraint'     => 11,
+				'default'        => 0
+			],
+			'valor_anterior' => [
+				'type'        => 'DECIMAL',
+				'constraint'  => '20,2',
+				'default'     => 0
+			],
+			'valor_actual' => [
+				'type'        => 'DECIMAL',
+				'constraint'  => '20,2',
+				'default'     => 0
+			],
+			'created_at datetime default current_timestamp',
+			'updated_at datetime default current_timestamp on update current_timestamp'
+		]);
+
+		$this->forge->addKey('id', true);
+		$this->forge->addForeignKey('id_pedido_producto', 'pedidosproductos', 'id');
+		$this->forge->createTable('observacionproductos');
+    }
+
+    public function down()
+    {
+        $this->forge->dropTable('observacionproductos');
+    }
+}
