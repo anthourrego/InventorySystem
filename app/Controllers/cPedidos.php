@@ -238,7 +238,7 @@ class cPedidos extends BaseController {
 		$buscarPedido = $pedidoModel->select("id")->where("pedido", $pedido)->first();
 
 		if (!is_null($buscarPedido) && $buscarPedido->id > 0) {
-			$resp["msj"] = "El pedido ya se encuentra registrado.";
+			$resp["msj"] = "El pedido <strong>$pedido</strong> ya se encuentra registrado.";
 			return $this->response->setJSON($resp);
 		}
 
@@ -304,16 +304,29 @@ class cPedidos extends BaseController {
 				$this->db->transRollback();
 			} else {
 
-        $builder = $this->db->table('configuracion')->set("valor", $numerPedido)->where('campo', "consecutivoPed");
+				if (is_null($dataConse)) {
+					$mConfiguracion = new mConfiguracion();
+					$dataSave = [
+						"campo" => "consecutivoPed",
+						"valor" => $numerPedido
+					];
+					if(!$mConfiguracion->save($dataSave)) {
+						$this->db->transRollback();
+						$resp["msj"] = "Ha ocurrido un error al guardar el pedido." . listErrors($mConfiguracion->errors());
+					} else {
+						$this->db->transCommit();
+					}
+				} else {
+					$builder = $this->db->table('configuracion')->set("valor", $numerPedido)->where('campo', "consecutivoPed");
+					if($builder->update()) {
+						$this->db->transCommit();
+					} else {
+						$resp["success"] = false;
+						$this->db->transRollback();
+					}
+				}
 
 				$resp["nroPedido"] = (session()->has("prefijoPed") ? session()->get("prefijoPed") : '') . ($numerPedido + 1);
-
-		    if($builder->update()) {
-          $this->db->transCommit();
-        } else {
-          $resp["success"] = false;
-          $this->db->transRollback();
-        }
 			}
 
 		} else {
