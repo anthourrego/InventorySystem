@@ -229,7 +229,7 @@ class cPedidos extends BaseController {
 
     $dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoPed")->first();
 
-		$numerPedido = (is_null($dataConse) ? 1 : ($dataConse->valor + 1));
+		$numerPedido = (is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1));
 		$pedido = (session()->has("prefijoPed") ? session()->get("prefijoPed") : '') . $numerPedido;
 
 		if (count($prod) > 0) {
@@ -295,6 +295,8 @@ class cPedidos extends BaseController {
 			} else {
 
         $builder = $this->db->table('configuracion')->set("valor", $numerPedido)->where('campo', "consecutivoPed");
+
+				$resp["nroPedido"] = (session()->has("prefijoPed") ? session()->get("prefijoPed") : '') . ($numerPedido + 1);
 
 		    if($builder->update()) {
           $this->db->transCommit();
@@ -374,7 +376,7 @@ class cPedidos extends BaseController {
 
 						if (isset($it->observacionDiferencia) && $it->observacionDiferencia != '') {
 							$dataObserSave = array(
-								"id_pedido_producto" => $it->id,
+								"id_pedido_producto" => $it->idProductoPedido,
 								"observacion" => $it->observacionDiferencia,
 								"cantidad_anterior" => $it->cantidadOriginal,
 								"cantidad_actual" => $it->cantidad,
@@ -418,7 +420,7 @@ class cPedidos extends BaseController {
 
 						if (isset($it->observacionDiferencia) && $it->observacionDiferencia != '') {
 							$dataObserSave = array(
-								"id_pedido_producto" => $it->id,
+								"id_pedido_producto" => $mPedidosProductos->getInsertID(),
 								"observacion" => $it->observacionDiferencia,
 								"cantidad_anterior" => isset($it->cantidadOriginal) ? $it->cantidadOriginal : 0,
 								"cantidad_actual" => $it->cantidad,
@@ -436,6 +438,9 @@ class cPedidos extends BaseController {
 
 				//Eliminamos los productos restantes de la venta
 				foreach ($productoActuales as $it) {
+
+					$mObservacionProductos->where('id_pedido_producto', $it["id"])->delete();
+
 					if($mPedidosProductos->delete($it["id"])) {
 
 						$product = $mProductos->find($it["id_producto"]);
