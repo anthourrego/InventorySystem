@@ -210,6 +210,7 @@ $routes->group('Pedidos', ['filter' => 'authGuard:10'], function ($routes) {
 	$routes->get('Editar/(:num)', 'cPedidos::editar/$1');
 	$routes->post('Eliminar', 'cPedidos::eliminar', ['filter' => 'ajax']);
 	$routes->post('EstadoPedido', 'cPedidos::estadoPedido', ['filter' => 'ajax']);
+	$routes->post('FacturarPedido', 'cPedidos::facturarPedido', ['filter' => 'ajax']);
 	$routes->post('Crear', 'cPedidos::crearEditar', ['filter' => 'ajax']);
 	$routes->post('Editar', 'cPedidos::guardarEditar', ['filter' => 'ajax']);
 	$routes->get('Cargar/(:num)', 'cPedidos::cargarPedido/$1', ['filter' => 'ajax']);

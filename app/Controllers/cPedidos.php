@@ -547,4 +547,26 @@ class cPedidos extends BaseController {
 
 		return $this->response->setJSON($resp);
 	}
+
+	public function facturarPedido() {
+		$resp["success"] = false;
+		// Traemos los datos del post
+		$data = (object) $this->request->getPost();
+        
+		$this->db->transBegin();
+
+		$builder = $this->db->table('pedidos')->set("estado", $data->estado)->where('id', $data->id);
+
+		// Facturamos el pedido
+		if($builder->update()) {
+			$this->db->transCommit();
+			$resp["success"] = true;
+			$resp['msj'] = "Pedido Facturado correctamente";
+		} else {
+			$this->db->transRollback();
+			$resp['msj'] = "No fue posible guardar la información";
+		}
+
+		return $this->response->setJSON($resp);
+	}
 }

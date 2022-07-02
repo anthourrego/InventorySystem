@@ -33,19 +33,23 @@ let DT = $("#table").DataTable({
       render: function (meta, type, data, meta) {
         return `
           <div class="btn-group btn-group-sm" role="group">
-            <!-- <a href="${base_url()}Reportes/Factura/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprmir factura">
-              <i class="fa-solid fa-print"></i>
-            </a> -->
-            ${data.estado == 0
-            ? `<button type="button" class="btn btn-success btnConfirmarPedido" title="Alistar Pedido">
+            ${data.estado == 0 || data.estado == 1
+            ? `<button type="button" class="btn btn-${data.estado == 0 ? 'warning' : 'success'} btnConfirmarPedido" title="${data.estado == 0 ? 'Alistar' : 'Facturar'} Pedido">
                 <i class="fa-solid fa-check"></i>
               </button>`
-            : `<a href="${base_url()}Reportes/Pedido/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprmir pedido">
-                <i class="fa-solid fa-check-to-slot"></i>
-              </a>`}
-            <button type="button" class="btn btn-secondary btnEditar" title="Editar">
-              <i class="fa-solid fa-pen-to-square"></i>
-            </button>
+            : ``}
+            ${data.estado == 1 || data.estado == 2
+            ? `<a href="${base_url()}Reportes/Pedido/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprmir pedido">
+              <i class="fa-solid fa-check-to-slot"></i>
+            </a>`
+            : ``}
+            ${data.estado == 2
+              ? `<button type="button" class="btn btn-secondary btnEditar" title="Ver">
+                <i class="fa-solid fa-eye"></i>
+              </button>`
+              : `<button type="button" class="btn btn-secondary btnEditar" title="Editar">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>`}
             <button type="button" class="btn btn-danger btnEliminar" title="Eliminar">
               <i class="fa-regular fa-trash-can"></i>
             </button>
@@ -73,15 +77,16 @@ let DT = $("#table").DataTable({
 });
 
 function alistarPedido(data) {
-  alertify.confirm('Advertencia', `Esta seguro de iniciar alistamiento para el pedido <b>${data.pedido}</b>`,
+  let msj = (data.estado == 0 ? 'iniciar alistamiento para' : 'facturar');
+  alertify.confirm('Advertencia', `¿Esta seguro de ${msj} el pedido <b>${data.pedido}</b>?`,
     function () {
       $.ajax({
         type: "POST",
-        url: rutaBase + "EstadoPedido",
+        url: rutaBase + (data.estado == 0 ? "EstadoPedido" : "FacturarPedido"),
         dataType: 'json',
         data: {
           id: data.id,
-          estado: 1
+          estado: (data.estado == 0 ? 1 : 2)
         },
         success: function (resp) {
           if (resp.success) {

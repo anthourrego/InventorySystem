@@ -190,39 +190,46 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       $(row).find(".btnAceptarEdicion").click(function (e) {
         e.preventDefault();
 
-        let observacion = false;
-        let mensaje = '';
+        if ($DATOSPEDIDO.estado == 1) {
 
-        if (+data.valorUnitarioOriginal != +data.valorUnitario) {
-          observacion = true;
-          mensaje += '<li> ¿Por que el valor es ' + (+data.valorUnitarioOriginal > +data.valorUnitario ? 'menor' : 'mayor') + ' al orignal del pedido?</li>';
-        }
+          let observacion = false;
+          let mensaje = '';
 
-        if (+data.cantidadOriginal != +data.cantidad) {
-          observacion = true;
-          mensaje += '<li> ¿Por que la cantidad es ' + (+data.cantidadOriginal > +data.cantidad ? 'menor' : 'mayor') + ' a la inicial?</li>';
-        }
+          if (+data.valorUnitarioOriginal != +data.valorUnitario) {
+            observacion = true;
+            mensaje += '<li> ¿Por que el valor es ' + (+data.valorUnitarioOriginal > +data.valorUnitario ? 'menor' : 'mayor') + ' al orignal del pedido?</li>';
+          }
 
-        $(row).find('input').attr('disabled', true);
-        $(row).find('.btnAceptarEdicion, .btnBorrar').hide();
-        $(row).find(".btnEditar").show();
+          if (+data.cantidadOriginal != +data.cantidad) {
+            observacion = true;
+            mensaje += '<li> ¿Por que la cantidad es ' + (+data.cantidadOriginal > +data.cantidad ? 'menor' : 'mayor') + ' a la inicial?</li>';
+          }
 
-        $('#itemsModalObser').html(mensaje);
-        if (observacion) {
-          $("#modalObservacion").modal('show');
-          $("#observacionModal").val(data.observacionDiferencia);
-          $("#btnConfirmObser").unbind().on('click', function () {
-            if ($("#observacionModal").val() != '') {
-              let resultado = productosPedido.find((it) => it.id == data.id);
-              resultado.observacionDiferencia = $("#observacionModal").val();
-              $("#modalObservacion").modal('hide');
-            } else {
-              alertify.warning("No se ha diligencia la observación");
-            }
-          });
+          $(row).find('input').attr('disabled', true);
+          $(row).find('.btnAceptarEdicion, .btnBorrar').hide();
+          $(row).find(".btnEditar").show();
+
+          $('#itemsModalObser').html(mensaje);
+          if (observacion) {
+            $("#modalObservacion").modal('show');
+            $("#observacionModal").val(data.observacionDiferencia);
+            $("#btnConfirmObser").unbind().on('click', function () {
+              if ($("#observacionModal").val() != '') {
+                let resultado = productosPedido.find((it) => it.id == data.id);
+                resultado.observacionDiferencia = $("#observacionModal").val();
+                $("#modalObservacion").modal('hide');
+              } else {
+                alertify.warning("No se ha diligencia la observación");
+              }
+            });
+          } else {
+            let resultado = productosPedido.find((it) => it.id == data.id);
+            resultado.observacionDiferencia = '';
+          }
         } else {
-          let resultado = productosPedido.find((it) => it.id == data.id);
-          resultado.observacionDiferencia = '';
+          $(row).find('input').attr('disabled', true);
+          $(row).find('.btnAceptarEdicion, .btnBorrar').hide();
+          $(row).find(".btnEditar").show();
         }
       });
     }
@@ -257,7 +264,7 @@ $(function () {
 
     if ($(this).valid()) {
 
-      if ($NROPEDIDO != 0 && $('.btnAceptarEdicion:visible').length) {
+      if ($DATOSPEDIDO != '' && $DATOSPEDIDO.estado == 0 && $('.btnAceptarEdicion:visible').length) {
         alertify.warning(`Aún tiene productos pendientes por confirmar.`);
         return
       }
