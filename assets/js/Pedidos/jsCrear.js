@@ -221,6 +221,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
             }
           });
         } else {
+          let resultado = productosPedido.find((it) => it.id == data.id);
           resultado.observacionDiferencia = '';
         }
       });
