@@ -170,6 +170,7 @@ class cPedidos extends BaseController {
 
 		$mPedidosProductos = new mPedidosProductos();
 		$mProductos = new mProductos();
+		$mObservacionProductos = new mObservacionProductos();
 
 		$productosPedidos = $mPedidosProductos->where("id_pedido", $data->id)->findAll();
 
@@ -186,6 +187,8 @@ class cPedidos extends BaseController {
 				$contActProd = false;
 				break;
 			}
+
+			$mObservacionProductos->where('id_pedido_producto', $it->id)->delete();
 		}
 		
 		//Eliminamos todos los datos
@@ -231,6 +234,13 @@ class cPedidos extends BaseController {
 
 		$numerPedido = (is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1));
 		$pedido = (session()->has("prefijoPed") ? session()->get("prefijoPed") : '') . $numerPedido;
+
+		$buscarPedido = $pedidoModel->select("id")->where("pedido", $pedido)->first();
+
+		if (!is_null($buscarPedido) && $buscarPedido->id > 0) {
+			$resp["msj"] = "El pedido ya se encuentra registrado.";
+			return $this->response->setJSON($resp);
+		}
 
 		if (count($prod) > 0) {
 			$this->db->transBegin();
