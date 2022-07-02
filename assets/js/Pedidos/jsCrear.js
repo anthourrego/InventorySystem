@@ -100,9 +100,13 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       defaultContent: '',
       className: 'text-center noExport',
       render: function (meta, type, data, meta) {
-        return `<div class="btn-group btn-group-sm" role="group">
-                  <button type="button" class="btn btn-danger btnBorrar" title="Borrar Producto"><i class="fa-solid fa-times"></i></button>
-                </div>`;
+        return `
+          <div class="btn-group btn-group-sm" role="group">
+            ${($NROPEDIDO != 0 ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar Producto"><i class="fa-solid fa-pen-to-square"></i></button>' : '')}
+            ${($NROPEDIDO != 0 ? '<button style="display: none;" type="button" class="btn btn-success btnAceptarEdicion" title="Borrar Producto"><i class="fa-solid fa-check"></i></button>' : '')}
+            <button style="display: none;" type="button" class="btn btn-danger btnBorrar" title="Borrar Producto"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+        `;
       }
     },
     {
@@ -117,7 +121,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       searchable: false,
       data: 'cantidad',
       render: function (meta, type, data, meta) {
-        return `<input type="number" class="form-control form-control-sm cantidadProduct inputFocusSelect soloNumeros" min="1" value="${data.cantidad}">`;
+        return `<input type="number" ${($NROPEDIDO != 0 ? 'disabled' : '')} class="form-control form-control-sm cantidadProduct inputFocusSelect soloNumeros" min="1" value="${data.cantidad}">`;
       }
     },
     {
@@ -125,7 +129,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       searchable: false,
       data: 'valorUnitario',
       render: function (meta, type, data, meta) {
-        return `<input type="tel" class="form-control form-control-sm inputPesos text-right inputFocusSelect soloNumeros valorUnitario" min="0" value="${data.valorUnitario}">`;
+        return `<input type="tel" ${($NROPEDIDO != 0 ? 'disabled' : '')} class="form-control form-control-sm inputPesos text-right inputFocusSelect soloNumeros valorUnitario" min="0" value="${data.valorUnitario}">`;
       }
     },
     {
@@ -171,6 +175,57 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       $("#p" + data.id).removeClass("disabled").prop("disabled", false);
       calcularTotal();
     });
+
+    if ($NROPEDIDO != 0) {
+      $(row).find(".btnEditar").click(function (e) {
+        e.preventDefault();
+        $(row).find('input').attr('disabled', false);
+
+        $(row).find('.btnAceptarEdicion, .btnBorrar').show();
+
+        $(row).find(".btnEditar").hide();
+      });
+
+
+      $(row).find(".btnAceptarEdicion").click(function (e) {
+        e.preventDefault();
+
+        let observacion = false;
+        let mensaje = '';
+
+        if (+data.valorUnitarioOriginal != +data.valorUnitario) {
+          observacion = true;
+          mensaje += '<li> ¿Por que el valor es ' + (+data.valorUnitarioOriginal > +data.valorUnitario ? 'menor' : 'mayor') + ' al orignal del pedido?</li>';
+        }
+
+        if (+data.cantidadOriginal != +data.cantidad) {
+          observacion = true;
+          mensaje += '<li> ¿Por que la cantidad es ' + (+data.cantidadOriginal > +data.cantidad ? 'menor' : 'mayor') + ' a la inicial?</li>';
+        }
+
+        $(row).find('input').attr('disabled', true);
+        $(row).find('.btnAceptarEdicion, .btnBorrar').hide();
+        $(row).find(".btnEditar").show();
+
+        $('#itemsModalObser').html(mensaje);
+        if (observacion) {
+          $("#modalObservacion").modal('show');
+          $("#observacionModal").val(data.observacionDiferencia);
+          $("#btnConfirmObser").unbind().on('click', function () {
+            if ($("#observacionModal").val() != '') {
+              let resultado = productosPedido.find((it) => it.id == data.id);
+              resultado.observacionDiferencia = $("#observacionModal").val();
+              $("#modalObservacion").modal('hide');
+            } else {
+              alertify.warning("No se ha diligencia la observación");
+            }
+          });
+        } else {
+          resultado.observacionDiferencia = '';
+        }
+      });
+    }
+
   },
   drawCallback: function (settings) {
     inputPesos();
@@ -200,6 +255,12 @@ $(function () {
     }
 
     if ($(this).valid()) {
+
+      if ($NROPEDIDO != 0 && $('.btnAceptarEdicion:visible').length) {
+        alertify.warning(`Aún tiene productos pendientes por confirmar.`);
+        return
+      }
+
       if (productosPedido.length > 0) {
         form = new FormData(this);
         form.append("idCliente", $("#cliente").val());

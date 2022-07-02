@@ -89,7 +89,9 @@ class cPedidos extends BaseController {
 				p.descripcion,
 				(p.stock + pedidosproductos.cantidad) AS stock,
 				pedidosproductos.cantidad,
+				pedidosproductos.cantidad AS cantidadOriginal,
 				pedidosproductos.valor AS valorUnitario,
+				pedidosproductos.valor AS valorUnitarioOriginal,
 				pedidosproductos.valor_original,
 				p.precio_venta,
 				(pedidosproductos.valor * pedidosproductos.cantidad) AS valorTotal

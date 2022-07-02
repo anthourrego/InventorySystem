@@ -98,6 +98,32 @@
 	</div>
 </div>
 
+<div class="modal fade" id="modalObservacion" data-backdrop="static" data-keyboard="false" aria-labelledby="modalObservacionLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalObservacionLabel">Observación</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+				<ul id="itemsModalObser"></ul>
+				<div class="row">
+					<div class="col-12 form-group form-valid">
+						<label class="mb-0" for="observacionModal">Observación</label>
+						<textarea class="form-control inputVer" id="observacionModal" name="observacionModal" minlength="1" maxlength="500" placeholder="Observación" rows="3" autocomplete="off"></textarea>
+					</div>
+				</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="btnConfirmObser"><i class="fas fa-check"></i> Aceptar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 	$INVENTARIONEGATIVO = "<?= $inventario_negativo ?>";
 	$CANTIDADVENDEDORES ="<?= $cantidadVendedores ?>";
