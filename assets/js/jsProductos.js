@@ -1,7 +1,10 @@
 let rutaBase = base_url() + "Productos/";
 let columnsProd = [
   { data: 'referencia'},
-  { data: 'item', visible: ($CAMPOSPRODUCTO.item == '1' ? true : false) },
+  { 
+    data: 'item', 
+    visible: ($CAMPOSPRODUCTO.item == '1' ? true : false) 
+  },
   {
     data: 'descripcion',
     width: "30%",

@@ -2,7 +2,10 @@ let rutaBase = base_url() + "Pedidos/";
 let productosPedido = [];
 let columnsProd = [
   { data: 'referencia' },
-  { data: 'item', visible: ($CAMPOSPRODUCTO.item == '1' ? true : false) },
+  { 
+    data: 'item', 
+    visible: ($CAMPOSPRODUCTO.item == '1' ? true : false) 
+  },
   {
     data: 'descripcion',
     width: "30%",
@@ -98,13 +101,15 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       orderable: false,
       searchable: false,
       defaultContent: '',
+      visible: ($DATOSPEDIDO != '' && $DATOSPEDIDO.estado == '2' ? false : true),
       className: 'text-center noExport',
       render: function (meta, type, data, meta) {
+        let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "0";
         return `
+          ${(estadoPedido != 0 ? '<button type="button" class="btn btn-secondary btn-sm btnEditar" title="Editar Producto"><i class="fa-solid fa-pen-to-square"></i></button>' : '')}
           <div class="btn-group btn-group-sm" role="group">
-            ${($DATOSPEDIDO != '' ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar Producto"><i class="fa-solid fa-pen-to-square"></i></button>' : '')}
-            ${($DATOSPEDIDO != '' ? '<button style="display: none;" type="button" class="btn btn-success btnAceptarEdicion" title="Borrar Producto"><i class="fa-solid fa-check"></i></button>' : '')}
-            <button ${($DATOSPEDIDO != '' ? 'style="display: none;"' : '')} type="button" class="btn btn-danger btnBorrar" title="Borrar Producto"><i class="fa-solid fa-xmark"></i></button>
+            <button type="button" class="btn btn-danger btnBorrar ${(estadoPedido != 0 ? 'd-none' : '')}" title="Borrar Producto"><i class="fa-solid fa-trash"></i></button>
+            ${(estadoPedido != 0 ? '<button type="button" class="btn btn-success btnAceptarEdicion d-none" title="Guardar edicion"><i class="fa-solid fa-save"></i></button>' : '')}
           </div>
         `;
       }
@@ -121,7 +126,8 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       searchable: false,
       data: 'cantidad',
       render: function (meta, type, data, meta) {
-        return `<input type="number" ${($DATOSPEDIDO != '' ? 'disabled' : '')} class="form-control form-control-sm cantidadProduct inputFocusSelect soloNumeros" min="1" value="${data.cantidad}">`;
+        let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "0";
+        return `<input type="number" ${(estadoPedido != 0 ? 'disabled' : '')} class="form-control form-control-sm cantidadProduct inputFocusSelect soloNumeros" min="1" value="${data.cantidad}">`;
       }
     },
     {
@@ -129,7 +135,8 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       searchable: false,
       data: 'valorUnitario',
       render: function (meta, type, data, meta) {
-        return `<input type="tel" ${($DATOSPEDIDO != '' ? 'disabled' : '')} class="form-control form-control-sm inputPesos text-right inputFocusSelect soloNumeros valorUnitario" min="0" value="${data.valorUnitario}">`;
+        let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "0";
+        return `<input type="tel" ${(estadoPedido != 0 ? 'disabled' : '')} class="form-control form-control-sm inputPesos text-right inputFocusSelect soloNumeros valorUnitario" min="0" value="${data.valorUnitario}">`;
       }
     },
     {
@@ -181,9 +188,9 @@ let DTProductosPedido = $("#tblProductos").DataTable({
         e.preventDefault();
         $(row).find('input').attr('disabled', false);
 
-        $(row).find('.btnAceptarEdicion, .btnBorrar').show();
+        $(row).find('.btnAceptarEdicion, .btnBorrar').removeClass("d-none");
 
-        $(row).find(".btnEditar").hide();
+        $(row).find(".btnEditar").addClass("d-none");
       });
 
 
@@ -206,8 +213,8 @@ let DTProductosPedido = $("#tblProductos").DataTable({
           }
 
           $(row).find('input').attr('disabled', true);
-          $(row).find('.btnAceptarEdicion, .btnBorrar').hide();
-          $(row).find(".btnEditar").show();
+          $(row).find('.btnAceptarEdicion, .btnBorrar').addClass("d-none");
+          $(row).find(".btnEditar").removeClass("d-none");
 
           $('#itemsModalObser').html(mensaje);
           if (observacion) {
@@ -228,8 +235,8 @@ let DTProductosPedido = $("#tblProductos").DataTable({
           }
         } else {
           $(row).find('input').attr('disabled', true);
-          $(row).find('.btnAceptarEdicion, .btnBorrar').hide();
-          $(row).find(".btnEditar").show();
+          $(row).find('.btnAceptarEdicion, .btnBorrar').addClass("d-none");
+          $(row).find(".btnEditar").removeClass("d-none");
         }
       });
     }
@@ -264,7 +271,7 @@ $(function () {
 
     if ($(this).valid()) {
 
-      if ($DATOSPEDIDO != '' && $DATOSPEDIDO.estado == 0 && $('.btnAceptarEdicion:visible').length) {
+      if ($DATOSPEDIDO != '' && $DATOSPEDIDO.estado == 1 && $('.btnAceptarEdicion:visible').length) {
         alertify.warning(`Aún tiene productos pendientes por confirmar.`);
         return
       }

@@ -35,12 +35,12 @@ let DT = $("#table").DataTable({
           <div class="btn-group btn-group-sm" role="group">
             ${data.estado == 0 || data.estado == 1
             ? `<button type="button" class="btn btn-${data.estado == 0 ? 'warning' : 'success'} btnConfirmarPedido" title="${data.estado == 0 ? 'Alistar' : 'Facturar'} Pedido">
-                <i class="fa-solid fa-check"></i>
+              <i class="fa-solid ${data.estado == 0 ? 'fa-boxes-stacked' : 'fa-receipt'}"></i>
               </button>`
             : ``}
             ${data.estado == 1 || data.estado == 2
-            ? `<a href="${base_url()}Reportes/Pedido/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprmir pedido">
-              <i class="fa-solid fa-check-to-slot"></i>
+            ? `<a href="${base_url()}Reportes/Pedido/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprimir pedido">
+              <i class="fa-solid fa-print"></i>
             </a>`
             : ``}
             ${data.estado == 2
@@ -50,9 +50,14 @@ let DT = $("#table").DataTable({
               : `<button type="button" class="btn btn-secondary btnEditar" title="Editar">
                 <i class="fa-solid fa-pen-to-square"></i>
               </button>`}
-            <button type="button" class="btn btn-danger btnEliminar" title="Eliminar">
+
+            ${data.estado != 2 
+              ? `<button type="button" class="btn btn-danger btnEliminar" title="Eliminar">
               <i class="fa-regular fa-trash-can"></i>
-            </button>
+            </button>` :
+            ''
+            }
+            
           </div>
         `;
       }
@@ -92,12 +97,15 @@ function alistarPedido(data) {
           if (resp.success) {
             alertify.success(resp.msj);
             DT.ajax.reload();
+            window.open(base_url() + "Reportes/Pedido/" + data.id);
           } else {
             alertify.error(resp.msj);
           }
         }
       });
-    }, function () { });
+    }, function () {
+      window.open(base_url() + "Reportes/Pedido/" + data.id);
+    });
 }
 
 function eliminar(data) {

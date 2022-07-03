@@ -107,7 +107,7 @@ class cPedidos extends BaseController {
 
 		$this->content["nroPedido"] = $pedido->pedido;
 
-		$this->content['title'] = "Editar pedido Nro " . $pedido->pedido;
+		$this->content['title'] = ($pedido->estado == 2 ? "Ver" : "Editar") . " pedido " . $pedido->pedido;
 		$this->content['view'] = "Pedidos/vCrear";
 
 		$this->LDataTables();
