@@ -221,13 +221,10 @@ let DTProductosPedido = $("#tblProductos").DataTable({
             $("#modalObservacion").modal('show');
             $("#observacionModal").val(data.observacionDiferencia);
             $("#btnConfirmObser").unbind().on('click', function () {
-              if ($("#observacionModal").val() != '') {
-                let resultado = productosPedido.find((it) => it.id == data.id);
-                resultado.observacionDiferencia = $("#observacionModal").val();
-                $("#modalObservacion").modal('hide');
-              } else {
-                alertify.warning("No se ha diligencia la observación");
-              }
+              let resultado = productosPedido.find((it) => it.id == data.id);
+              resultado.motivoDiferencia = $("#motivoModal").val();
+              resultado.observacionDiferencia = $("#observacionModal").val();
+              $("#modalObservacion").modal('hide');
             });
           } else {
             let resultado = productosPedido.find((it) => it.id == data.id);
@@ -277,6 +274,7 @@ $(function () {
       }
 
       if (productosPedido.length > 0) {
+        console.log(productosPedido);
         form = new FormData(this);
         form.append("idCliente", $("#cliente").val());
         form.append("idSucursal", $("#sucursal").val());

@@ -397,9 +397,11 @@ class cPedidos extends BaseController {
 							}
 						}
 
-						if (isset($it->observacionDiferencia) && $it->observacionDiferencia != '') {
+						if (isset($it->motivoDiferencia) && $it->motivoDiferencia != '') {
+							
 							$dataObserSave = array(
 								"id_pedido_producto" => $it->idProductoPedido,
+								"motivo" => $it->motivoDiferencia,
 								"observacion" => $it->observacionDiferencia,
 								"cantidad_anterior" => $it->cantidadOriginal,
 								"cantidad_actual" => $it->cantidad,

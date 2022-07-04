@@ -15,6 +15,7 @@ class mObservacionProductos extends Model {
 	protected $protectFields    = true;
 	protected $allowedFields    = [
 		"id_pedido_producto",
+		"motivo",
     "observacion",
 		"cantidad_anterior",
 		"cantidad_actual",
@@ -31,7 +32,8 @@ class mObservacionProductos extends Model {
 
 	// Validation
 	protected $validationRules      = [
-		'id_pedido_producto' => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[pedidosproductos.id]',
+		'id_pedido_producto'  => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[pedidosproductos.id]',
+		'motivo'              => 'required|numeric|min_length[1]|max_length[11]',
 		'observacion' 	     	=> 'required|string|min_length[1]|max_length[500]',
 		'cantidad_anterior'  	=> 'required|numeric|min_length[1]|max_length[11]',
 		'cantidad_actual'    	=> 'required|numeric|min_length[1]|max_length[11]',

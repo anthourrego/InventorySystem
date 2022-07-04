@@ -111,6 +111,14 @@
       <div class="modal-body">
 				<ul id="itemsModalObser"></ul>
 				<div class="row">
+					<div class="col-12 form-valid">
+						<label for="motivoModal" class="mb-0">Motivo</label>
+						<select class="form-control" id="motivoModal">
+							<option value="1">Daño</option>
+							<option value="2">Devolución</option>
+							<option value="3">Perdida</option>
+						</select>
+					</div>
 					<div class="col-12 form-group form-valid">
 						<label class="mb-0" for="observacionModal">Observación</label>
 						<textarea class="form-control inputVer" id="observacionModal" name="observacionModal" minlength="1" maxlength="500" placeholder="Observación" rows="3" autocomplete="off"></textarea>

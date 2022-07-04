@@ -20,6 +20,11 @@ class ObservacionProductos extends Migration
 				'constraint'     => 11,
 				'unsigned'       => true
 			],
+			'motivo' => [
+				'type'        => 'INT',
+				'constraint'     => 11,
+				'default'        => 1
+			],
 			'observacion' => [
 				'type'        => 'TEXT',
 				"null"        => true
@@ -29,7 +34,7 @@ class ObservacionProductos extends Migration
 				'constraint'     => 11,
 				'default'        => 0
 			],
-            'cantidad_actual' => [
+			'cantidad_actual' => [
 				'type'           => 'INT',
 				'constraint'     => 11,
 				'default'        => 0
