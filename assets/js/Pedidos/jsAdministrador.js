@@ -38,11 +38,9 @@ let DT = $("#table").DataTable({
               <i class="fa-solid ${data.estado == 0 ? 'fa-boxes-stacked' : 'fa-receipt'}"></i>
               </button>`
             : ``}
-            ${data.estado == 1 || data.estado == 2
-            ? `<a href="${base_url()}Reportes/Pedido/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprimir pedido">
+            <a href="${base_url()}Reportes/Pedido/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprimir pedido">
               <i class="fa-solid fa-print"></i>
-            </a>`
-            : ``}
+            </a>
             ${data.estado == 2
               ? `<button type="button" class="btn btn-secondary btnEditar" title="Ver">
                 <i class="fa-solid fa-eye"></i>
@@ -107,11 +105,7 @@ function alistarPedido(data) {
           }
         }
       });
-    }, function () {
-      if (data.estado == 0) {
-        window.open(base_url() + "Reportes/Pedido/" + data.id);
-      }
-    });
+    }, function () {});
 }
 
 function eliminar(data) {
