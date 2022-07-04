@@ -13,7 +13,7 @@
 						<select <?= $prefijoValido == 'N' ? 'disabled' : '' ?> id="metodoPago" required name="metodoPago" class="custom-select custom-select-sm select2" data-placeholder="Seleccione..." data-allow-clear="1">
 							<option></option>
 							<option value="1">Contado</option>
-							<option value="2">Credito</option>
+							<option value="2" selected>Credito</option>
 						</select>
 					</div>
 					<div class="col-4 form-group mb-1 form-valid">
