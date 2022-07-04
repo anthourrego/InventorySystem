@@ -5,29 +5,29 @@ namespace App\Database\Migrations;
 use CodeIgniter\Database\Migration;
 
 class ProductosCampos extends Migration {
-    public function up() {
-        $fields = [
-            'item' => [
-                'name'        => 'item',
-                'type'        => 'VARCHAR',
+	public function up() {
+		$fields = [
+			'item' => [
+				'name'        => 'item',
+				'type'        => 'VARCHAR',
 				'constraint'  => 255,
-                'null'        => true
-            ],
-        ];
-        $this->forge->modifyColumn('productos', $fields);
+				'null'        => true
+			],
+		];
+		$this->forge->modifyColumn('productos', $fields);
 
-        $addFields = [
+		$addFields = [
 			'cantPaca' => [
 				'type'        => 'INT',
 				'constraint'  => 11,
 				'default'     => 1,
-                'null'        => true
-            ]
+				'null'        => true
+			]
 		];
 		$this->forge->addColumn('productos', $addFields);
-    }
+	}
 
-    public function down() {
-        $this->forge->dropColumn("productos", "cantPaca");
-    }
+	public function down() {
+		$this->forge->dropColumn("productos", "cantPaca");
+	}
 }

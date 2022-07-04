@@ -4,11 +4,9 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class ObservacionProductos extends Migration
-{
-    public function up()
-    {
-        $this->forge->addField([
+class ObservacionProductos extends Migration {
+	public function up() {
+		$this->forge->addField([
 			'id'   => [
 				'type'           => 'INT',
 				'constraint'     => 11,
@@ -56,10 +54,9 @@ class ObservacionProductos extends Migration
 		$this->forge->addKey('id', true);
 		$this->forge->addForeignKey('id_pedido_producto', 'pedidosproductos', 'id');
 		$this->forge->createTable('observacionproductos');
-    }
+	}
 
-    public function down()
-    {
-        $this->forge->dropTable('observacionproductos');
-    }
+	public function down() {
+		$this->forge->dropTable('observacionproductos');
+	}
 }

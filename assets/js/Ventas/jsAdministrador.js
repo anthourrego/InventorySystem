@@ -37,10 +37,15 @@ let DT = $("#table").DataTable({
       className: 'text-center noExport',
       render: function(meta, type, data, meta) {
         return `<div class="btn-group btn-group-sm" role="group">
-                  <a href="${base_url()}Reportes/Factura/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprmir factura"><i class="fa-solid fa-print"></i></a>
-                  <a href="${base_url()}Reportes/Pedido/${data.id}" target="_blank" type="button" class="btn btn-success" title="Imprmir pedido"><i class="fa-solid fa-check-to-slot"></i></a>
+                  <a href="${base_url()}Reportes/Factura/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprimir factura"><i class="fa-solid fa-print"></i></a>
+                  ${ data.id_pedido != null ?
+                    `<a href="${base_url()}Reportes/Pedido/${data.id_pedido}" target="_blank" type="button" class="btn btn-success" title="Imprimir pedido"><i class="fa-solid fa-check-to-slot"></i></a>` : ``
+                  }
                   <button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>
-                  <button type="button" class="btn btn-danger btnEliminar" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button>
+                  ${ data.id_pedido == null ?
+                    `<button type="button" class="btn btn-danger btnEliminar" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button>` : ``
+                  }
+                  
                 </div>`;
       }
     },

@@ -11,6 +11,8 @@ use App\Models\mClientes;
 use App\Models\mPedidosProductos;
 use App\Models\mConfiguracion;
 use App\Models\mObservacionProductos;
+use App\Models\mVentas;
+use App\Models\mVentasProductos;
 
 class cPedidos extends BaseController {
 	public function index() {
@@ -561,12 +563,91 @@ class cPedidos extends BaseController {
 
 		// Facturamos el pedido
 		if($builder->update()) {
-			$this->db->transCommit();
-			$resp["success"] = true;
-			$resp['msj'] = "Pedido Facturado correctamente";
+
+			$mConfiguracion = new mConfiguracion();
+			$pedidoModel = new mPedidos();
+			$mPedidosProductos = new mPedidosProductos();
+			$ventaModel = new mVentas();
+			$mVentasProductos = new mVentasProductos();
+
+			$dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoFact")->first();
+
+			$numerVenta = (is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1));
+			$codigo = (session()->has("prefijoFact") ? session()->get("prefijoFact") : '') . $numerVenta;
+
+			$pedido = $pedidoModel->find($data->id);
+			$pedidoProductos = $mPedidosProductos->where("id_pedido", $data->id)->findAll();
+
+			$ventaSave = [
+				"codigo" => $codigo,
+				"id_cliente" => $pedido->id_cliente,
+				"id_vendedor" => $pedido->id_vendedor,
+				"observacion" => $pedido->observacion,
+				"impuesto" => $pedido->impuesto,
+				"neto" => $pedido->neto,
+				"total" => $pedido->total,
+				"metodo_pago" => $pedido->metodo_pago,
+				"id_sucursal" => $pedido->id_sucursal,
+				"id_pedido" => $data->id
+			];
+
+			if($ventaModel->save($ventaSave)){
+				$ventaSave["id"] = $ventaModel->getInsertID();
+
+				foreach ($pedidoProductos as $it) {
+					$dataProductoVenta = [
+						"id_venta" => $ventaSave["id"],
+						"id_producto" => $it->id_producto,
+						"cantidad" => $it->cantidad,
+						"valor" => $it->valor,
+						"valor_original" => $it->valor_original
+					];
+
+					if (!$mVentasProductos->save($dataProductoVenta)) {
+						$resp["msj"] = "Ha ocurrido un error al guardar los productos." . listErrors($mVentasProductos->errors());
+						break;
+					}
+				}
+				if ($this->db->transStatus() !== false) {
+					$resp["success"] = true;
+					$resp['msj'] = "Pedido Facturado correctamente, Factura nro: " . $codigo;
+					$resp["id_factura"] = $ventaSave["id"];
+					$resp["nFactura"] = $codigo;
+				}
+			} else {
+				$resp["msj"] = "Ha ocurrido un error al guardar la venta." . listErrors($ventaModel->errors());
+			}
+
 		} else {
-			$this->db->transRollback();
 			$resp['msj'] = "No fue posible guardar la información";
+		}
+
+		if($resp["success"] == false || $this->db->transStatus() === false) {
+			$this->db->transRollback();
+		} else {
+			if (is_null($dataConse)) {
+				$mConfiguracion = new mConfiguracion();
+				$dataSave = [
+					"campo" => "consecutivoFact",
+					"valor" => $numerVenta
+				];
+				if(!$mConfiguracion->save($dataSave)) {
+					$this->db->transRollback();
+					$resp["msj"] = "Ha ocurrido un error al guardar la factura." . listErrors($mConfiguracion->errors());
+				} else {
+					$this->db->transCommit();
+				}
+			} else {
+				$builder = $this->db->table('configuracion')->set("valor", $numerVenta)->where('campo', "consecutivoFact");
+				if($builder->update()) {
+					$this->db->transCommit();
+				} else {
+					$resp["success"] = false;
+					$this->db->transRollback();
+				}
+			}
+
+			$this->db->transCommit();
 		}
 
 		return $this->response->setJSON($resp);

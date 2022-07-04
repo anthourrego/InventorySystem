@@ -34,7 +34,7 @@ class mPedidos extends Model {
 
 	// Validation
 	protected $validationRules      = [
-		'pedido' => 'required|min_length[1]|max_length[11]',
+		'pedido' => 'required|string|min_length[1]|max_length[20]|is_unique[pedidos.pedido, id, {id}]',
 		'id_cliente' => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[clientes.id]',
 		'id_vendedor' => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[usuarios.id]',
     'id_sucursal' => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[sucursales.id]',

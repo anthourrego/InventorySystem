@@ -54,7 +54,7 @@ class cReportes extends BaseController {
 						</div>
 					</td>
 
-					<td style="background-color:white; width:150px; text-align:center; color:red"><br><br>ORDEN DE COMPRA N.<br>00$datosFactura->codigo</td>
+					<td style="background-color:white; width:150px; text-align:center; color:red"><br><br>ORDEN DE COMPRA N.<br>$datosFactura->codigo</td>
 
 				</tr>
 			</table>
@@ -297,14 +297,11 @@ class cReportes extends BaseController {
 			<table style="font-size:10px; padding:3px 1px;">
 
 				<tr>
-				<td style="border: 1px solid #666; background-color:white; width:70px; text-align:center">Item</td>
-				<td style="border: 1px solid #666; background-color:white; width:260px; text-align:center">Descripcion</td>
-				<td style="border: 1px solid #666; background-color:white; width:40px; text-align:center">Und</td>
-				<td style="border: 1px solid #666; background-color:white; width:40px; text-align:center">Ubi</td>
-				<td style="border: 1px solid #666; background-color:white; width:40px; text-align:center">Man</td>
-				<td style="border: 1px solid #666; background-color:white; width:30px; text-align:center">Disp</td>
-				<td style="border: 1px solid #666; background-color:white; width:30px; text-align:center">Rev</td>
-				<td style="border: 1px solid #666; background-color:white; width:30px; text-align:center">Emp</td>
+					<td style="border: 1px solid #666; background-color:white; width:70px; text-align:center">Item</td>
+					<td style="border: 1px solid #666; background-color:white; width:290px; text-align:center">Descripcion</td>
+					<td style="border: 1px solid #666; background-color:white; width:60px; text-align:center">Und</td>
+					<td style="border: 1px solid #666; background-color:white; width:60px; text-align:center">Ubi</td>
+					<td style="border: 1px solid #666; background-color:white; width:60px; text-align:center">Man</td>
 				</tr>
 
 			</table>
@@ -320,21 +317,18 @@ class cReportes extends BaseController {
 						<td style="border: 1px solid #666; color:#333; background-color:white; width:70px; text-align:left">
 							$it->item
 						</td>
-						<td style="border: 1px solid #666; color:#333; background-color:white; width:260px; text-align:left">
+						<td style="border: 1px solid #666; color:#333; background-color:white; width:290px; text-align:left">
 							$it->referencia - $it->descripcion
 						</td>
-						<td style="border: 1px solid #666; color:#333; background-color:white; width:40px; text-align:center">
+						<td style="border: 1px solid #666; color:#333; background-color:white; width:60px; text-align:center">
 							$it->cantidad
 						</td>
-						<td style="border: 1px solid #666; color:#333; background-color:white; width:40px; text-align:center">
+						<td style="border: 1px solid #666; color:#333; background-color:white; width:60px; text-align:center">
 							$it->ubicacion
 						</td>
-						<td style="border: 1px solid #666; color:#333; background-color:white; width:40px; text-align:center">
+						<td style="border: 1px solid #666; color:#333; background-color:white; width:60px; text-align:center">
 							$it->manifiesto
 						</td>
-						<td style="border: 1px solid #666; color:#333; background-color:white; width:30px; text-align:center"></td>
-						<td style="border: 1px solid #666; color:#333; background-color:white; width:30px; text-align:center"></td>
-						<td style="border: 1px solid #666; color:#333; background-color:white; width:30px; text-align:center"> </td>
 					</tr>
 				</table>
 

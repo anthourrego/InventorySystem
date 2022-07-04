@@ -9,6 +9,7 @@ use App\Models\mProductos;
 use App\Models\mUsuarios;
 use App\Models\mClientes;
 use App\Models\mVentasProductos;
+use App\Models\mConfiguracion;
 
 class cVentas extends BaseController {
 	public function index() {
@@ -37,12 +38,18 @@ class cVentas extends BaseController {
 		$this->LFancybox();
 
 		$ventaModel = new mVentas();
-		$codigo = $ventaModel->asObject()->orderBy('id', 'desc')->first();
 
 		$mClientes = new mClientes();
 		$this->content["cantidadClientes"] = $mClientes->where("estado", 1)->countAllResults();
 
-		$this->content["nroVenta"] = is_null($codigo) ? 1 : ($codigo->codigo + 1);
+		$mConfiguracion = new mConfiguracion();
+		$dataPref = (session()->has("prefijoFact") ? session()->get("prefijoFact") : '');
+
+		$dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoFact")->first();
+
+		$this->content["nroVenta"] = $dataPref . (is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1));
+
+		$this->content["prefijoValido"] = ($dataPref != '' ? 'S' : 'N');
 
 		$this->content["venta"] = null;
 
@@ -94,6 +101,7 @@ class cVentas extends BaseController {
 		$venta->productos = $productos;
 		
 		$this->content["venta"] = $venta;
+		$this->content["prefijoValido"] = 'S';
 
 		$this->content["nroVenta"] = $venta->codigo;
 
@@ -143,7 +151,8 @@ class cVentas extends BaseController {
 													ELSE 'Credito'
 												END AS metodo_pago,
 												V.created_at,
-												V.updated_at
+												V.updated_at,
+												id_pedido
 											")->join('clientes AS C', 'V.id_cliente = C.id', 'left')
 											->join('usuarios AS U', 'V.id_vendedor = U.id', 'left');
 
@@ -215,9 +224,12 @@ class cVentas extends BaseController {
 		$productoModel = new mProductos();
 		$ventaModel = new mVentas();
 		$mVentasProductos = new mVentasProductos();
+		$mConfiguracion = new mConfiguracion();
 
-    $codigo = $ventaModel->orderBy('id', 'desc')->first();
-		$codigo = is_null($codigo) ? 1 : ($codigo->codigo + 1);
+		$dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoFact")->first();
+
+		$numerVenta = (is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1));
+		$codigo = (session()->has("prefijoFact") ? session()->get("prefijoFact") : '') . $numerVenta;
 
 		if (count($prod) > 0) {
 			$this->db->transBegin();
@@ -226,6 +238,7 @@ class cVentas extends BaseController {
 				"codigo" => $codigo,
 				"id_cliente" => $dataPost->idCliente,
 				"id_vendedor" => $dataPost->idUsuario,
+				"id_sucursal" => $dataPost->sucursal,
 				"impuesto" => 0,
 				"neto" => 0,
 				"total" => 0,
@@ -278,7 +291,29 @@ class cVentas extends BaseController {
 			if($resp["success"] == false || $this->db->transStatus() === false) {
 				$this->db->transRollback();
 			} else {
-				$this->db->transCommit();
+				if (is_null($dataConse)) {
+					$mConfiguracion = new mConfiguracion();
+					$dataSave = [
+						"campo" => "consecutivoFact",
+						"valor" => $numerVenta
+					];
+					if(!$mConfiguracion->save($dataSave)) {
+						$this->db->transRollback();
+						$resp["msj"] = "Ha ocurrido un error al guardar la factura." . listErrors($mConfiguracion->errors());
+					} else {
+						$this->db->transCommit();
+					}
+				} else {
+					$builder = $this->db->table('configuracion')->set("valor", $numerVenta)->where('campo', "consecutivoFact");
+					if($builder->update()) {
+						$this->db->transCommit();
+					} else {
+						$resp["success"] = false;
+						$this->db->transRollback();
+					}
+				}
+
+				$resp["nroPedido"] = (session()->has("prefijoFact") ? session()->get("prefijoFact") : '') . ($numerVenta + 1);
 			}
 
 		} else {

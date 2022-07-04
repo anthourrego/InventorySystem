@@ -68,7 +68,7 @@
 					</div>
 					<div class="offset-4 col-4 d-flex align-items-end justify-content-end">
 						<?php if(!(!is_null($pedido) && $pedido->estado == 2)) { ?>
-							<button <?= $prefijoValido == 'N' ? 'disabled' : '' ?> type="submit" form="formPedido" class="btn btn-success"><i class="fas fa-save"></i> Guardar Pedido</button>
+							<button <?= $prefijoValido == 'N' ? 'disabled' : '' ?> type="submit" form="formPedido" class="btn btn-success"><i class="fas fa-save"></i> Guardar</button>
 						<?php } ?>
 					</div>
 				</div> 

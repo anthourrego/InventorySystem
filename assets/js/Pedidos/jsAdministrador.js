@@ -97,14 +97,20 @@ function alistarPedido(data) {
           if (resp.success) {
             alertify.success(resp.msj);
             DT.ajax.reload();
-            window.open(base_url() + "Reportes/Pedido/" + data.id);
+            if (data.estado == 0) {
+              window.open(base_url() + "Reportes/Pedido/" + data.id);
+            } else {
+              window.open(base_url() + "Reportes/Factura/" + resp.id_factura);
+            }
           } else {
             alertify.error(resp.msj);
           }
         }
       });
     }, function () {
-      window.open(base_url() + "Reportes/Pedido/" + data.id);
+      if (data.estado == 0) {
+        window.open(base_url() + "Reportes/Pedido/" + data.id);
+      }
     });
 }
 

@@ -51,7 +51,7 @@ if ($IMAGENPROD) {
   });
 }
 
-let DTProductos = $("#table").DataTable({
+let DTProductos = {
   ajax: {
     url: rutaBase + "DTProductos",
     type: "POST",
@@ -81,7 +81,7 @@ let DTProductos = $("#table").DataTable({
       calcularTotal();
     });
   }
-});
+};
 
 let DTProductosVenta = $("#tblProductos").DataTable({
   data: productosVentas,
@@ -178,14 +178,18 @@ let DTProductosVenta = $("#tblProductos").DataTable({
 });
 
 $(function () {
-  if ($CANTIDADVENDEDORES == 0 || $CANTIDADCLIENTES == 0) {
+  if ($CANTIDADVENDEDORES == 0 || $CANTIDADCLIENTES == 0 || $PREFIJOVALIDO == 'N') {
     if ($CANTIDADVENDEDORES == 0 && $CANTIDADCLIENTES == 0) {
       $msj = "vendedore y clientes";
+    } else if ($PREFIJOVALIDO == 'N') {
+      $msj = "prefijo de pedido disponible";
     } else {
       $msj = $CANTIDADVENDEDORES == 0 ? "vendedores" : "clientes";
     }
 
     alertify.alert('¡Advertencia!', `No hay ${$msj} disponibles.`);
+  } else {
+    DTProductos = $("#table").DataTable(DTProductos);
   }
 
   $("#formVenta").submit(function (e) {
@@ -291,6 +295,36 @@ $(function () {
       },
       cache: true
       // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+    }
+  }).on("change", function () {
+    $("#sucursal").val('').trigger('change.select2');
+  });
+
+  $("#sucursal").select2({
+    ajax: {
+      url: base_url() + "Busqueda/Sucursales",
+      type: "POST",
+      dataType: 'json',
+      delay: 250,
+      data: function (params) {
+        var query = {
+          cliente: $("#cliente").val(),
+          search: params.term,
+          page: params.page || 1,
+          _type: "query_append",
+        }
+        return query;
+      },
+      processResults: function (data, params) {
+        params.page = params.page || 1;
+        return {
+          results: data.data,
+          pagination: {
+            more: (params.page * 10) < data.total_count
+          }
+        };
+      },
+      cache: true
     }
   });
 });

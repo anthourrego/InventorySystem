@@ -181,15 +181,6 @@
 							</ul>
             </li>
 						<?php } ?>
-						<?php if (validPermissions([7], true)) { ?> 
-						<li class="nav-item">
-              <a href="<?= base_url("Configuracion") ?>" class="nav-link <?= current_url(true)->getSegment(3) == 'Configuracion' ? 'active' : '' ?>">
-								<i class="nav-icon fa-solid fa-gear"></i>
-                <p>Configuración</p>
-              </a>
-            </li>
-						<?php } ?>
-
 						<?php if (validPermissions([10], true)) { ?> 
 						<li class="nav-item <?= (current_url(true)->getSegment(3) == 'Pedidos' && (current_url(true)->getSegment(4) == 'Crear' || current_url(true)->getSegment(4) == 'Administrar')) ? 'menu-is-opening menu-open' : '' ?>">
               <a href="#" class="nav-link <?= current_url(true)->getSegment(3) == 'Pedidos' ? 'active' : '' ?>">
@@ -213,6 +204,14 @@
 									</a>
 								</li>
 							</ul>
+            </li>
+						<?php } ?>
+						<?php if (validPermissions([7], true)) { ?> 
+						<li class="nav-item">
+              <a href="<?= base_url("Configuracion") ?>" class="nav-link <?= current_url(true)->getSegment(3) == 'Configuracion' ? 'active' : '' ?>">
+								<i class="nav-icon fa-solid fa-gear"></i>
+                <p>Configuración</p>
+              </a>
             </li>
 						<?php } ?>
 					</ul>
