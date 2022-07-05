@@ -7,8 +7,8 @@ use CodeIgniter\Database\Seeder;
 class Init extends Seeder {
 	public function run() {
 		$this->call('PerfilSeeder');
+		$this->call('AlmacenSeeder');
 		$this->call('UsuarioSeeder');
 		$this->call('PermisosSeeder');
-		$this->call('AlmacenSeeder');
 	}
 }
