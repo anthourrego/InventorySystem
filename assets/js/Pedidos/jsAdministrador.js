@@ -11,7 +11,19 @@ let DT = $("#table").DataTable({
     { data: 'NombreVendedor' },
     { data: 'NombreSucursal' },
     { data: 'direccion' },
-    { data: 'NombreEstado' },
+    { 
+      data: 'NombreEstado',
+      className: 'text-center align-middle',
+      render: function (meta, type, data, meta) {
+        let color = "success";
+        if (data.estado == 0) {
+          color = "primary";
+        } else if (data.estado == 1) {
+          color = "warning";
+        }
+        return `<button class="btn btn-${color}">${data.NombreEstado}</button>`;
+      }
+    },
     {
       data: 'total',
       className: 'text-right',
