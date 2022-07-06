@@ -45,23 +45,25 @@ let DT = $("#table").DataTable({
       render: function (meta, type, data, meta) {
         return `
           <div class="btn-group btn-group-sm" role="group">
-            ${data.estado == 0 || data.estado == 1
+            ${(data.estado == 0 && validPermissions(104)) || (data.estado == 1 && validPermissions(105))
             ? `<button type="button" class="btn btn-${data.estado == 0 ? 'warning' : 'success'} btnConfirmarPedido" title="${data.estado == 0 ? 'Alistar' : 'Facturar'} Pedido">
               <i class="fa-solid ${data.estado == 0 ? 'fa-boxes-stacked' : 'fa-receipt'}"></i>
               </button>`
             : ``}
-            <a href="${base_url()}Reportes/Pedido/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprimir pedido">
-              <i class="fa-solid fa-print"></i>
-            </a>
+            ${validPermissions(106) ? `<a href="${base_url()}Reportes/Pedido/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprimir pedido">
+            <i class="fa-solid fa-print"></i>
+          </a>` : ''}
             ${data.estado == 2
               ? `<button type="button" class="btn btn-secondary btnEditar" title="Ver">
                 <i class="fa-solid fa-eye"></i>
               </button>`
-              : `<button type="button" class="btn btn-secondary btnEditar" title="Editar">
+              : (validPermissions(102) ? `<button type="button" class="btn btn-secondary btnEditar" title="Editar">
                 <i class="fa-solid fa-pen-to-square"></i>
-              </button>`}
+              </button>` : `<button type="button" class="btn btn-secondary btnEditar" title="Ver">
+              <i class="fa-solid fa-eye"></i>
+            </button>`)}
 
-            ${data.estado != 2 
+            ${data.estado != 2 && validPermissions(103)
               ? `<button type="button" class="btn btn-danger btnEliminar" title="Eliminar">
               <i class="fa-regular fa-trash-can"></i>
             </button>` :
