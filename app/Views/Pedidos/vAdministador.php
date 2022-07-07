@@ -1,11 +1,13 @@
 <div class="card">
-  <div class="card-header">
-    <div class="row justify-content-between">
-      <div class="offset-8 offset-md-9 col-5 col-md-3 text-right">
-        <a href="<?= base_url("Pedidos/Crear") ?>" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Crear</a>
+  <?php if (validPermissions([101], true)) { ?>
+    <div class="card-header">
+      <div class="row justify-content-between">
+        <div class="offset-8 offset-md-9 col-5 col-md-3 text-right">
+          <a href="<?= base_url("Pedidos/Crear") ?>" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Crear</a>
+        </div>
       </div>
     </div>
-  </div>
+  <?php } ?>
   <div class="card-body">
     <div class="table-responsive">
       <table id="table" class="table table-sm table-striped table-hover table-bordered w-100">

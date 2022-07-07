@@ -1,10 +1,11 @@
 let rutaBase = base_url() + "Pedidos/";
 let productosPedido = [];
+let productosEliminados = [];
 let columnsProd = [
   { data: 'referencia' },
-  { 
-    data: 'item', 
-    visible: ($CAMPOSPRODUCTO.item == '1' ? true : false) 
+  {
+    data: 'item',
+    visible: ($CAMPOSPRODUCTO.item == '1' ? true : false)
   },
   {
     data: 'descripcion',
@@ -108,7 +109,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
         return `
           ${(estadoPedido != 0 ? '<button type="button" class="btn btn-secondary btn-sm btnEditar" title="Editar Producto"><i class="fa-solid fa-pen-to-square"></i></button>' : '')}
           <div class="btn-group btn-group-sm" role="group">
-            <button type="button" class="btn btn-danger btnBorrar ${(estadoPedido != 0 ? 'd-none' : '')}" title="Borrar Producto"><i class="fa-solid fa-trash"></i></button>
+            <button type="button" class="btn btn-danger btnBorrar ${(estadoPedido != 0 || $EDITARPEDIDO == 'N' ? 'd-none' : '')}" title="Borrar Producto"><i class="fa-solid fa-trash"></i></button>
             ${(estadoPedido != 0 ? '<button type="button" class="btn btn-success btnAceptarEdicion d-none" title="Guardar edicion"><i class="fa-solid fa-save"></i></button>' : '')}
           </div>
         `;
@@ -127,7 +128,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       data: 'cantidad',
       render: function (meta, type, data, meta) {
         let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "0";
-        return `<input type="number" ${(estadoPedido != 0 ? 'disabled' : '')} class="form-control form-control-sm cantidadProduct inputFocusSelect soloNumeros" min="1" value="${data.cantidad}">`;
+        return `<input type="number" ${(estadoPedido != 0 || $EDITARPEDIDO == 'N' ? 'disabled' : '')} class="form-control form-control-sm cantidadProduct inputFocusSelect soloNumeros" min="1" value="${data.cantidad}">`;
       }
     },
     {
@@ -136,7 +137,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       data: 'valorUnitario',
       render: function (meta, type, data, meta) {
         let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "0";
-        return `<input type="tel" ${(estadoPedido != 0 ? 'disabled' : '')} class="form-control form-control-sm inputPesos text-right inputFocusSelect soloNumeros valorUnitario" min="0" value="${data.valorUnitario}">`;
+        return `<input type="tel" ${(estadoPedido != 0 || $EDITARPEDIDO == 'N' ? 'disabled' : '')} class="form-control form-control-sm inputPesos text-right inputFocusSelect soloNumeros valorUnitario" min="0" value="${data.valorUnitario}">`;
       }
     },
     {
@@ -177,10 +178,33 @@ let DTProductosPedido = $("#tblProductos").DataTable({
 
     $(row).find(".btnBorrar").click(function (e) {
       e.preventDefault();
-      productosPedido = productosPedido.filter(it => it.id != data.id);
-      DTProductosPedido.clear().rows.add(productosPedido).draw();
-      $("#p" + data.id).removeClass("disabled").prop("disabled", false);
-      calcularTotal();
+      if ($DATOSPEDIDO.estado == 1) {
+        let mensaje = `<li> ¿Por que esta eliminando el producto (${data.item} - ${data.descripcion})?</li>`;
+
+        $(row).find('input').attr('disabled', true);
+        $(row).find('.btnAceptarEdicion, .btnBorrar').addClass("d-none");
+        $(row).find(".btnEditar").removeClass("d-none");
+
+        $('#itemsModalObser').html(mensaje);
+        $("#modalObservacion").modal('show');
+        $("#observacionModal").val(data.observacionDiferencia);
+        $("#btnConfirmObser").unbind().on('click', function () {
+          data.motivoDiferencia = $("#motivoModal").val();
+          data.observacionDiferencia = $("#observacionModal").val();
+          data.eliminado = true;
+          productosEliminados.push(data);
+          $("#modalObservacion").modal('hide');
+          productosPedido = productosPedido.filter(it => it.id != data.id);
+          DTProductosPedido.clear().rows.add(productosPedido).draw();
+          $("#p" + data.id).removeClass("disabled").prop("disabled", false);
+          calcularTotal();
+        });
+      } else {
+        productosPedido = productosPedido.filter(it => it.id != data.id);
+        DTProductosPedido.clear().rows.add(productosPedido).draw();
+        $("#p" + data.id).removeClass("disabled").prop("disabled", false);
+        calcularTotal();
+      }
     });
 
     if ($DATOSPEDIDO != '') {
@@ -276,6 +300,9 @@ $(function () {
       if (productosPedido.length > 0) {
         console.log(productosPedido);
         form = new FormData(this);
+        if ($DATOSPEDIDO != '') {
+          productosPedido = productosPedido.concat(productosEliminados);
+        }
         form.append("idCliente", $("#cliente").val());
         form.append("idSucursal", $("#sucursal").val());
         form.append("idUsuario", $("#vendedor").val());

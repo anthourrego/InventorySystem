@@ -101,12 +101,22 @@ class cPedidos extends BaseController {
 				(pedidosproductos.valor * pedidosproductos.cantidad) AS valorTotal
 			")->join("productos AS p", "pedidosproductos.id_producto = p.id")
 			->where("pedidosproductos.id_pedido", $pedido->id)
+			->where("pedidosproductos.cantidad > 0")
 			->findAll();
 
 		$pedido->productos = $productos;
 		
 		$this->content["pedido"] = $pedido;
 		$this->content["prefijoValido"] = 'S';
+
+		$this->content["editarPedido"] = 'S';
+		if (!validPermissions([102], true)) {
+			$this->content["editarPedido"] = 'N';
+		} else {
+			if (!is_null($pedido) && $pedido->estado == 2) {
+				$this->content["editarPedido"] = 'N';
+			}
+		}
 
 		$this->content["nroPedido"] = $pedido->pedido;
 
@@ -376,6 +386,11 @@ class cPedidos extends BaseController {
 					$productoAct = array_search($it->idProductoPedido, array_column($productoActuales, 'id'));
 					//Si el producto no existe se debe de agregar
 					if($productoAct !== false){
+
+						if (isset($it->eliminado) && $it->eliminado == true) {
+							$it->cantidad = 0;
+						}
+
 						//Validamos si los valores y las cantidades cambian
 						if($it->cantidad != $productoActuales[$productoAct]["cantidad"] || $it->valorUnitario != $productoActuales[$productoAct]["valor"]) {
 							$cantidadNueva = $productoActuales[$productoAct]["cantidad"] - $it->cantidad;

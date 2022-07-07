@@ -329,6 +329,32 @@ class mPermisos extends Model {
 				"uri" => "Pedidos/Administrar",
 				"icon" => "fa-solid fa-box-check",
 				"color" => "bg-danger",
+				"children" => [
+					[
+						"id" => 101,
+						"text" => "Crear"
+					],
+					[
+						"id" => 102,
+						"text" => "Editar"
+					],
+					[
+						"id" => 103,
+						"text" => "Eliminar"
+					],
+					[
+						"id" => 104,
+						"text" => "Enviar a Alistamiento"
+					],
+					[
+						"id" => 105,
+						"text" => "Facturar"
+					],
+					[
+						"id" => 106,
+						"text" => "Imprimir"
+					]
+				]
 			],
 		];
 
