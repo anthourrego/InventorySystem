@@ -123,6 +123,10 @@
             <label for="consecutivoFact">Consecutivo:</label>
             <input type="number" id="consecutivoFact"  data-nombre="Consecutivo Factura" name="consecutivoFact" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
           </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <label for="digitosFact">Cant digitos:</label>
+            <input type="number" id="digitosFact"  data-nombre="Digitos Factura" name="digitosFact" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad de digitos">
+          </div>
           <hr class="col-12 my-2">
           <h5 class="mb-1 col-12">Pedidos:</h5>
           <div class="col-12 col-md-6 col-lg-3">
@@ -132,6 +136,10 @@
           <div class="col-12 col-md-6 col-lg-3">
             <label for="consecutivoPed">Consecutivo:</label>
             <input type="number" id="consecutivoPed"  data-nombre="Consecutivo Factura" name="consecutivoPed" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
+          </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <label for="digitosPed">Cant digitos:</label>
+            <input type="number" id="digitosPed"  data-nombre="Consecutivo Factura" name="digitosPed" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad de digitos">
           </div>
           <hr class="col-12 my-2">
         </div>

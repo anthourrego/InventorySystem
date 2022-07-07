@@ -123,6 +123,7 @@ let DTProductos = $("#table").DataTable({
       $("#manifiesto").val(data.manifiesto).trigger('change');
       $("#descripcion").val(data.descripcion);
       $("#ventas").val(data.ventas);
+      $("#paca").val(data.cantPaca);
       $("#fechaLog").val(moment(data.ultimo_login, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
       $("#fechaMod").val(moment(data.updated_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
       $("#fechaCre").val(moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
