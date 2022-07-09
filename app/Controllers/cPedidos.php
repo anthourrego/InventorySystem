@@ -63,6 +63,8 @@ class cPedidos extends BaseController {
 			"paca" => (session()->has("pacaProducto") ? session()->get("pacaProducto") : '0')
  		];
 
+		 $this->content["editarPedido"] = 'S';
+
 		$this->content["cantidadVendedores"] = $this->cantidadVendedores();
 
 		$this->content['imagenProd'] = (session()->has("imageProd") ? session()->get("imageProd") : 0);

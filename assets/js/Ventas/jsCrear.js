@@ -1,6 +1,28 @@
 let rutaBase = base_url() + "Ventas/";
 let productosVentas = [];
-let columnsProd = [
+
+let DTProductos = {
+  ajax: {
+    url: rutaBase + "DTProductos",
+    type: "POST",
+    data: function (d) {
+      return $.extend(d, { "estado": 1, "ventas": 1 })
+    }
+  },
+  dom: domBftrip,
+  order: [[2, "asc"]],
+  columns: [{
+    orderable: false,
+    searchable: false,
+    visible: $IMAGENPROD,
+    defaultContent: '',
+    className: "text-center",
+    render: function (meta, type, data, meta) {
+      return $IMAGENPROD ? `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
+                  <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
+                </a>` : '';
+    }
+  },
   { data: 'referencia' },
   { data: 'item', visible: ($CAMPOSPRODUCTO.item == '1' ? true : false) },
   {
@@ -31,37 +53,10 @@ let columnsProd = [
       }
 
       return `<div class="btn-group btn-group-sm" role="group">
-                <button id="p${data.id}" type="button" class="btn btn-primary btnAdd ${(btn == true ? '' : 'disabled')}" ${(btn == true ? '' : 'disabled')} title="Agregar"><i class="fa-solid fa-plus"></i></button>
-              </div>`;
+                  <button id="p${data.id}" type="button" class="btn btn-primary btnAdd ${(btn == true ? '' : 'disabled')}" ${(btn == true ? '' : 'disabled')} title="Agregar"><i class="fa-solid fa-plus"></i></button>
+                </div>`;
     }
-  },
-];
-
-if ($IMAGENPROD) {
-  columnsProd.unshift({
-    orderable: false,
-    searchable: false,
-    defaultContent: '',
-    className: "text-center",
-    render: function (meta, type, data, meta) {
-      return `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
-                <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
-              </a>`;
-    }
-  });
-}
-
-let DTProductos = {
-  ajax: {
-    url: rutaBase + "DTProductos",
-    type: "POST",
-    data: function (d) {
-      return $.extend(d, { "estado": 1, "ventas": 1 })
-    }
-  },
-  dom: domBftrip,
-  order: [[2, "asc"]],
-  columns: columnsProd,
+  }],
   buttons: [
     'pageLength'
   ],
@@ -226,7 +221,7 @@ $(function () {
                   },
                   function () {
                     window.location.href = base_url() + 'Ventas/Administrar';
-                  }).set('labels', {ok: `<i class="fas fa-check"></i> Si`, cancel: `<i class="fas fa-times"></i> No`});
+                  }).set('labels', { ok: `<i class="fas fa-check"></i> Si`, cancel: `<i class="fas fa-times"></i> No` });
               } else {
                 alertify.alert('¡Advertencia!', "Venta editada correctamente", function () { window.location.href = base_url() + 'Ventas/Administrar'; });
               }
@@ -338,13 +333,13 @@ function calcularTotal() {
   $("#total").val(sumTotal);
 }
 
-function formatRepo (repo) {
+function formatRepo(repo) {
   if (repo.loading) {
     return repo.text;
   }
   return repo.full_name || repo.text;
 }
 
-function formatRepoSelection (repo) {
+function formatRepoSelection(repo) {
   return repo.full_name || repo.text;
 }

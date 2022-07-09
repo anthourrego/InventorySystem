@@ -1,16 +1,26 @@
-let columnImg = {
-  orderable: false,
-  searchable: false,
-  defaultContent: '',
-  className: "text-center imgProdTable",
-  render: function (meta, type, data, meta) {
-    return `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
-              <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
-            </a>`;
-  }
-};
 let rutaBase = base_url() + "Productos/";
-let columnsProd = [
+
+let DTProductos = $("#table").DataTable({
+  ajax: {
+    url: rutaBase + "DT",
+    type: "POST",
+    data: function (d) {
+      return $.extend(d, { "estado": $("#selectEstado").val(), imagenProd: $imagenProd })
+    }
+  },
+  order: [[2, "asc"]],
+  columns: [{
+    orderable: false,
+    searchable: false,
+    visible: $imagenProd,
+    defaultContent: '',
+    className: "text-center imgProdTb",
+    render: function (meta, type, data, meta) {
+      return $imagenProd ? `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
+                  <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
+                </a>` : '';
+    }
+  },
   { data: 'referencia' },
   {
     data: 'item',
@@ -69,26 +79,73 @@ let columnsProd = [
       btnCambiarEstado = validPermissions(53) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
 
       return `<div class="btn-group btn-group-sm" role="group">
-                ${btnEditar}
-                ${btnCambiarEstado}
-              </div>`;
+                  ${btnEditar}
+                  ${btnCambiarEstado}
+                </div>`;
     }
-  },
-];
+  }],
+  createdRow: function (row, data, dataIndex) {
 
-if ($imagenProd) {
-  columnsProd.unshift(columnImg);
-}
+    if (!data.manifiesto) $(row).addClass('bg-delete-tb');
 
-let DTProductos = null;
+    $(row).find(".btnCambiarEstado").click(function (e) {
+      e.preventDefault();
+      eliminar(data);
+    });
+
+    //Editar
+    $(row).find(".btnEditar, .btnVer").click(function (e) {
+      e.preventDefault();
+
+      if ($(this).hasClass("btnVer")) {
+        $("#modalCrearEditarLabel").html(`<i class="fa-solid fa-eye"></i> Ver producto`);
+        $(".inputVer").addClass("disabled").prop("disabled", true).trigger('change');
+        $(".btn-eliminar-foto, button[form='formCrearEditar']").addClass("d-none");
+      } else {
+        $("#modalCrearEditarLabel").html(`<i class="fa-solid fa-edit"></i> Editar producto`);
+        $(".inputVer").removeClass("disabled").prop("disabled", false).trigger('change');
+        $(".btn-eliminar-foto, button[form='formCrearEditar']").removeClass("d-none");
+      }
+
+      $("#id").val(data.id);
+      $("#categoria").val(data.id_categoria).trigger('change');
+      $("#referencia").val(data.referencia);
+      $("#item").val(data.item);
+      $("#stock").val(data.stock);
+      $("#precioVent").val(data.precio_venta);
+      $("#costo").val(data.costo);
+      $("#ubicacion").val(data.ubicacion);
+      $("#manifiesto").val(data.manifiesto).trigger('change');
+      $("#descripcion").val(data.descripcion);
+      $("#ventas").val(data.ventas);
+      $("#paca").val(data.cantPaca);
+      $("#fechaLog").val(moment(data.ultimo_login, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
+      $("#fechaMod").val(moment(data.updated_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
+      $("#fechaCre").val(moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
+      $("#estado").val(data.Estadito);
+
+      $("#editFoto").val(0);
+      $("#foto").val('');
+      if (data.imagen != null) {
+        $('#imgFoto').attr('src', base_url() + "Productos/Foto/" + data.id + "/" + data.imagen);
+        $("#content-preview").removeClass("d-none");
+        $("#content-upload").addClass("d-none");
+      } else {
+        $("#content-preview").addClass("d-none");
+        $("#content-upload").removeClass("d-none");
+      }
+      $(".form-group-edit").removeClass("d-none");
+      $("#modalCrearEditar").modal("show");
+    });
+  }
+});
 
 $(function () {
   //Se genera alerta informando que no hay ninguna categoria creada o habilitada
-  if ($CATEGORIAS <= 0) {S
+  if ($CATEGORIAS <= 0) {
+    S
     alertify.alert("¡Advertencia!", "No hay ninguna categoria creada y/o habilitada. Por favor cree una.");
   }
-
-  ejecutarTabla();
 
   $("#foto").on("change", function (event) {
     const file = this.files[0];
@@ -133,7 +190,7 @@ $(function () {
   });
 
   $("#selectEstado").on("change", function () {
-    ejecutarTabla();
+    DTProductos.ajax.reload();
   });
 
   $(".validaCampo").on("focusout", function () {
@@ -202,7 +259,7 @@ $(function () {
         data: new FormData(this),
         success: function (resp) {
           if (resp.success) {
-            ejecutarTabla();
+            DTProductos.ajax.reload();
             $("#modalCrearEditar").modal("hide");
             alertify.success(resp.msj);
           } else {
@@ -214,19 +271,13 @@ $(function () {
   });
 
   $("#verImg").change(function () {
-    DTProductos = null;
-    $(".imgProdTable").remove(); //Se remueve los de esta clase para que no se carguen de nuevo las imagenes
-    $("#table").DataTable().clear().destroy();
     if ($(this).is(':checked')) {
       $imagenProd = 1;
-      $("#imgProdColumn").show();
-      columnsProd.unshift(columnImg);
     } else {
       $imagenProd = 0;
-      $("#imgProdColumn").hide();
-      columnsProd.splice(0, 1);
     }
-    ejecutarTabla();
+    DTProductos.column('.imgProdTb').column().visible($imagenProd)
+    DTProductos.ajax.reload();
   });
 });
 
@@ -244,83 +295,11 @@ function eliminar(data) {
         success: function (resp) {
           if (resp.success) {
             alertify.success(resp.msj);
-            ejecutarTabla();
+            DTProductos.ajax.reload();
           } else {
             alertify.error(resp.msj);
           }
         }
       });
     }, function () { });
-}
-
-function ejecutarTabla() {
-  if (!DTProductos) {
-    DTProductos = $("#table").DataTable({
-      ajax: {
-        url: rutaBase + "DT",
-        type: "POST",
-        data: function (d) {
-          return $.extend(d, { "estado": $("#selectEstado").val(), imagenProd: $imagenProd })
-        }
-      },
-      order: [[2, "asc"]],
-      columns: columnsProd,
-      createdRow: function (row, data, dataIndex) {
-
-        if (!data.manifiesto) $(row).addClass('bg-delete-tb');
-
-        $(row).find(".btnCambiarEstado").click(function (e) {
-          e.preventDefault();
-          eliminar(data);
-        });
-
-        //Editar
-        $(row).find(".btnEditar, .btnVer").click(function (e) {
-          e.preventDefault();
-
-          if ($(this).hasClass("btnVer")) {
-            $("#modalCrearEditarLabel").html(`<i class="fa-solid fa-eye"></i> Ver producto`);
-            $(".inputVer").addClass("disabled").prop("disabled", true).trigger('change');
-            $(".btn-eliminar-foto, button[form='formCrearEditar']").addClass("d-none");
-          } else {
-            $("#modalCrearEditarLabel").html(`<i class="fa-solid fa-edit"></i> Editar producto`);
-            $(".inputVer").removeClass("disabled").prop("disabled", false).trigger('change');
-            $(".btn-eliminar-foto, button[form='formCrearEditar']").removeClass("d-none");
-          }
-
-          $("#id").val(data.id);
-          $("#categoria").val(data.id_categoria).trigger('change');
-          $("#referencia").val(data.referencia);
-          $("#item").val(data.item);
-          $("#stock").val(data.stock);
-          $("#precioVent").val(data.precio_venta);
-          $("#costo").val(data.costo);
-          $("#ubicacion").val(data.ubicacion);
-          $("#manifiesto").val(data.manifiesto).trigger('change');
-          $("#descripcion").val(data.descripcion);
-          $("#ventas").val(data.ventas);
-          $("#paca").val(data.cantPaca);
-          $("#fechaLog").val(moment(data.ultimo_login, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
-          $("#fechaMod").val(moment(data.updated_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
-          $("#fechaCre").val(moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
-          $("#estado").val(data.Estadito);
-
-          $("#editFoto").val(0);
-          $("#foto").val('');
-          if (data.imagen != null) {
-            $('#imgFoto').attr('src', base_url() + "Productos/Foto/" + data.id + "/" + data.imagen);
-            $("#content-preview").removeClass("d-none");
-            $("#content-upload").addClass("d-none");
-          } else {
-            $("#content-preview").addClass("d-none");
-            $("#content-upload").removeClass("d-none");
-          }
-          $(".form-group-edit").removeClass("d-none");
-          $("#modalCrearEditar").modal("show");
-        });
-      }
-    });
-  } else {
-    DTProductos.ajax.reload();
-  }
 }

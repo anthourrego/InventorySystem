@@ -1,59 +1,6 @@
 let rutaBase = base_url() + "Pedidos/";
 let productosPedido = [];
 let productosEliminados = [];
-let columnsProd = [
-  { data: 'referencia' },
-  {
-    data: 'item',
-    visible: ($CAMPOSPRODUCTO.item == '1' ? true : false)
-  },
-  {
-    data: 'descripcion',
-    width: "30%",
-    render: function (meta, type, data, meta) {
-      return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
-    }
-  },
-  {
-    data: 'stock',
-    className: 'text-center align-middle',
-    render: function (meta, type, data, meta) {
-      return `<button class="btn btn-${data.ColorStock}">${data.stock}</button>`;
-    }
-  },
-  {
-    orderable: false,
-    searchable: false,
-    defaultContent: '',
-    className: 'text-center align-middle noExport',
-    render: function (meta, type, data, meta) {
-      let btn = true;
-      let resultado = productosPedido.find((it) => it.id == data.id);
-
-      if (resultado) {
-        btn = false;
-      }
-
-      return `<div class="btn-group btn-group-sm" role="group">
-                <button id="p${data.id}" type="button" class="btn btn-primary btnAdd ${(btn == true ? '' : 'disabled')}" ${(btn == true ? '' : 'disabled')} title="Agregar"><i class="fa-solid fa-plus"></i></button>
-              </div>`;
-    }
-  },
-];
-
-if ($IMAGENPROD) {
-  columnsProd.unshift({
-    orderable: false,
-    searchable: false,
-    defaultContent: '',
-    className: "text-center",
-    render: function (meta, type, data, meta) {
-      return `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
-        <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
-      </a>`;
-    }
-  });
-}
 
 let DTProductos = {
   ajax: {
@@ -65,7 +12,57 @@ let DTProductos = {
   },
   dom: domBftrip,
   order: [[2, "asc"]],
-  columns: columnsProd,
+  columns: [
+    {
+      orderable: false,
+      searchable: false,
+      visible: $IMAGENPROD,
+      defaultContent: '',
+      className: "text-center",
+      render: function (meta, type, data, meta) {
+        return $IMAGENPROD ? `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
+          <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
+        </a>` : '';
+      }
+    },
+    { data: 'referencia' },
+    {
+      data: 'item',
+      visible: ($CAMPOSPRODUCTO.item == '1' ? true : false)
+    },
+    {
+      data: 'descripcion',
+      width: "30%",
+      render: function (meta, type, data, meta) {
+        return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
+      }
+    },
+    {
+      data: 'stock',
+      className: 'text-center align-middle',
+      render: function (meta, type, data, meta) {
+        return `<button class="btn btn-${data.ColorStock}">${data.stock}</button>`;
+      }
+    },
+    {
+      orderable: false,
+      searchable: false,
+      defaultContent: '',
+      className: 'text-center align-middle noExport',
+      render: function (meta, type, data, meta) {
+        let btn = true;
+        let resultado = productosPedido.find((it) => it.id == data.id);
+
+        if (resultado) {
+          btn = false;
+        }
+
+        return `<div class="btn-group btn-group-sm" role="group">
+                  <button id="p${data.id}" type="button" class="btn btn-primary btnAdd ${(btn == true ? '' : 'disabled')}" ${(btn == true ? '' : 'disabled')} title="Agregar"><i class="fa-solid fa-plus"></i></button>
+                </div>`;
+      }
+    },
+  ],
   buttons: [
     'pageLength'
   ],
