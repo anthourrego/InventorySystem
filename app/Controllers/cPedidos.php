@@ -46,10 +46,11 @@ class cPedidos extends BaseController {
     $mConfiguracion = new mConfiguracion();
 
 		$dataPref = (session()->has("prefijoPed") ? session()->get("prefijoPed") : '');
+		$cantDigitos = (session()->has("digitosPed") ? session()->get("digitosPed") : 0);
 
     $dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoPed")->first();
 
-		$this->content["nroPedido"] = $dataPref . (is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1));
+		$this->content["nroPedido"] = $dataPref . str_pad((is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1)), $cantDigitos, "0", STR_PAD_LEFT);
 
 		$this->content["prefijoValido"] = ($dataPref != '' ? 'S' : 'N');
 
@@ -588,8 +589,9 @@ class cPedidos extends BaseController {
 			$mVentasProductos = new mVentasProductos();
 
 			$dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoFact")->first();
+			$cantDigitos = (session()->has("digitosFact") ? session()->get("digitosFact") : 0);
 
-			$numerVenta = (is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1));
+			$numerVenta = str_pad((is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1)), $cantDigitos, "0", STR_PAD_LEFT);
 			$codigo = (session()->has("prefijoFact") ? session()->get("prefijoFact") : '') . $numerVenta;
 
 			$pedido = $pedidoModel->find($data->id);

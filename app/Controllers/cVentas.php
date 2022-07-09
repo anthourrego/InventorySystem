@@ -44,10 +44,11 @@ class cVentas extends BaseController {
 
 		$mConfiguracion = new mConfiguracion();
 		$dataPref = (session()->has("prefijoFact") ? session()->get("prefijoFact") : '');
+		$cantDigitos = (session()->has("digitosFact") ? session()->get("digitosFact") : 0);
 
 		$dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoFact")->first();
 
-		$this->content["nroVenta"] = $dataPref . (is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1));
+		$this->content["nroVenta"] = $dataPref . str_pad((is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1)), $cantDigitos, "0", STR_PAD_LEFT);
 
 		$this->content["prefijoValido"] = ($dataPref != '' ? 'S' : 'N');
 

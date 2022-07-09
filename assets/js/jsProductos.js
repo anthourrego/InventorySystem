@@ -84,7 +84,7 @@ let DTProductos = null;
 
 $(function () {
   //Se genera alerta informando que no hay ninguna categoria creada o habilitada
-  if ($CATEGORIAS <= 0) {
+  if ($CATEGORIAS <= 0) {S
     alertify.alert("¡Advertencia!", "No hay ninguna categoria creada y/o habilitada. Por favor cree una.");
   }
 
@@ -299,6 +299,7 @@ function ejecutarTabla() {
           $("#manifiesto").val(data.manifiesto).trigger('change');
           $("#descripcion").val(data.descripcion);
           $("#ventas").val(data.ventas);
+          $("#paca").val(data.cantPaca);
           $("#fechaLog").val(moment(data.ultimo_login, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
           $("#fechaMod").val(moment(data.updated_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
           $("#fechaCre").val(moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));

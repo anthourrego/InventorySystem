@@ -6,7 +6,7 @@ $(function(){
 function inputPesos(){
   $(".inputPesos").inputmask({
     alias: 'decimal', 
-    groupSeparator: '.',
+    groupSeparator: ',',
     autoGroup: true, 
     digits: 0, 
     digitsOptional: false, 
