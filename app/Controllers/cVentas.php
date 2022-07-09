@@ -154,7 +154,8 @@ class cVentas extends BaseController {
 												V.updated_at,
 												id_pedido
 											")->join('clientes AS C', 'V.id_cliente = C.id', 'left')
-											->join('usuarios AS U', 'V.id_vendedor = U.id', 'left');
+											->join('usuarios AS U', 'V.id_vendedor = U.id', 'left')
+											->orderby("V.id DESC");
 
 		return DataTable::of($query)->toJson(true);
 	}

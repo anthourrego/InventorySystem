@@ -79,7 +79,7 @@ let DTProductos = {
         data.cantidad = 1;
         data.valorUnitario = data.precio_venta;
         data.valorTotal = data.precio_venta;
-        productosPedido.push(data);
+        productosPedido.unshift(data);
         DTProductosPedido.clear().rows.add(productosPedido).draw();
       }
       calcularTotal();
@@ -92,7 +92,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
   dom: domSearch1,
   processing: false,
   serverSide: false,
-  order: [[1, "asc"]],
+  order: [],
   scrollY: screen.height - 750,
   scroller: {
     loadingIndicator: true
