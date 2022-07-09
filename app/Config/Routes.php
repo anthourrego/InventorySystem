@@ -123,6 +123,9 @@ $routes->group('Configuracion', ['filter' => 'authGuard'], function ($routes) {
 	$routes->get('/', 'cConfiguracion::index', ['filter' => 'authGuard:7']);
 	$routes->get('Datos', 'cConfiguracion::datos', ['filter' => ['ajax']]);
 	$routes->post('Actualizar', 'cConfiguracion::actualizar', ['filter' => ['authGuard:71', 'ajax']]);
+	$routes->get('Foto', 'cConfiguracion::foto');
+	$routes->get('Foto/(:any)', 'cConfiguracion::foto/$1');
+	$routes->post('Eliminar', 'cConfiguracion::eliminar');
 });
 
 //Manifiesto

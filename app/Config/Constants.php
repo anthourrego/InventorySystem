@@ -84,4 +84,5 @@ defined('UPLOADS_PATH')      || define('UPLOADS_PATH', WRITEPATH  . "uploads/");
 defined('UPLOADS_USER_PATH')      || define('UPLOADS_USER_PATH', WRITEPATH  . "uploads/usuarios/");
 defined('UPLOADS_PRODUCT_PATH')      || define('UPLOADS_PRODUCT_PATH', WRITEPATH  . "uploads/productos/");
 defined('UPLOADS_MANIFEST_PATH')      || define('UPLOADS_MANIFEST_PATH', WRITEPATH  . "uploads/manifiestos/");
+defined('UPLOADS_EMP_PATH')      || define('UPLOADS_EMP_PATH', WRITEPATH  . "uploads/empresa/");
 

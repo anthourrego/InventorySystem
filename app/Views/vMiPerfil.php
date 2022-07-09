@@ -114,9 +114,9 @@
             <div class="col-12">
               <label for="imageProd">Imagen Producto:</label>
               <select id="imageProd" data-nombre="Imagen Producto" name="imageProd" data-placeholder="Seleccione una opción" class="custom-select select2 configPerfil">
-                <option value="-1" <?= session()->get('imageProd') == "" ? 'selected' : '' ?>>Por Defecto</option>
-                <option value="1" <?= session()->get('imageProd') == 1 ? 'selected' : '' ?>>Si</option>
-                <option value="0" <?= session()->get('imageProd') == 0 ? 'selected' : '' ?>>No</option>
+                <option value="-1" <?= is_null($usuario->imageProd) ? 'selected' : '' ?>>Por Defecto</option>
+                <option value="1" <?= !is_null($usuario->imageProd) && session()->get('imageProd') == 1 ? 'selected' : '' ?>>Si</option>
+                <option value="0" <?= !is_null($usuario->imageProd) && session()->get('imageProd') == 0 ? 'selected' : '' ?>>No</option>
               </select>
             </div>
           </div>
