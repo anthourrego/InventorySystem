@@ -59,9 +59,7 @@
           <table id="tableProds" class="table table-sm table-striped table-hover table-bordered w-100">
             <thead> 
               <tr>
-                <?php if ($imagenProd) { ?>
-                  <th>Imagen</th>
-                <?php } ?>
+                <th>Imagen</th>
                 <th>Referencia</th>
                 <th>Item</th>
                 <th>Descripción</th>
@@ -141,9 +139,7 @@
           <table id="tableProdsManif" class="table table-sm table-striped table-hover table-bordered w-100">
             <thead> 
               <tr>
-                <?php if ($imagenProd) { ?>
-                  <th>Imagen</th>
-                <?php } ?>
+                <th>Imagen</th>
                 <th>Referencia</th>
                 <th>Item</th>
                 <th>Descripción</th>

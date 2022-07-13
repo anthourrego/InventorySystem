@@ -6,15 +6,22 @@ use App\Models\mVentas;
 use App\Models\mVentasProductos;
 use App\Models\mPedidos;
 use App\Models\mPedidosProductos;
+use App\Models\mConfiguracion;
 
 class cReportes extends BaseController {
 
 	public function factura($id){
 		$mVentas = new mVentas();
 		$mVentasProductos = new mVentasProductos();
-		
+		$mConfiguracion = new mConfiguracion();
+
+		$logo = $mConfiguracion->where('campo', 'logoEmpresa')->first();
+
 		$rutaLogo = base_url("assets/img/logo-negro-bloque.jpg");
 
+		if (!is_null($logo) && $logo->valor != '') {
+			$rutaLogo = UPLOADS_EMP_PATH . str_replace(' ', '.', $logo->valor);
+		}
 
 		$datosFactura = $mVentas->cargarVenta($id)[0];
 
@@ -195,9 +202,15 @@ class cReportes extends BaseController {
 	public function pedido($id){
 		$mPedidos = new mPedidos();
 		$mPedidosProductos = new mPedidosProductos();
-		
+		$mConfiguracion = new mConfiguracion();
+
+		$logo = $mConfiguracion->where('campo', 'logoEmpresa')->first();
+
 		$rutaLogo = base_url("assets/img/logo-negro-bloque.jpg");
 
+		if (!is_null($logo) && $logo->valor != '') {
+			$rutaLogo = UPLOADS_EMP_PATH . str_replace(' ', '.', $logo->valor);
+		}
 
 		$datosFactura = $mPedidos->cargarPedido($id)[0];
 

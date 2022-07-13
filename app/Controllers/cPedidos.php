@@ -63,6 +63,8 @@ class cPedidos extends BaseController {
 			"paca" => (session()->has("pacaProducto") ? session()->get("pacaProducto") : '0')
  		];
 
+		 $this->content["editarPedido"] = 'S';
+
 		$this->content["cantidadVendedores"] = $this->cantidadVendedores();
 
 		$this->content['imagenProd'] = (session()->has("imageProd") ? session()->get("imageProd") : 0);
@@ -168,7 +170,8 @@ class cPedidos extends BaseController {
 				S.nombre AS NombreSucursal
 			")->join('clientes AS C', 'P.id_cliente = C.id', 'left')
 			->join('sucursales AS S', 'P.id_sucursal = S.id', 'left')
-			->join('usuarios AS U', 'P.id_vendedor = U.id', 'left');
+			->join('usuarios AS U', 'P.id_vendedor = U.id', 'left')
+			->orderby("P.id DESC");
 
 		return DataTable::of($query)->toJson(true);
 	}

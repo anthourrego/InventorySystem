@@ -201,9 +201,33 @@ let DTManifiestos = $("#table").DataTable({
 
 });
 
-let columnsProd = [
-  { data: 'referencia'},
-  { data: 'item', visible: ($CAMPOSPRODUCTO.item == '1' ? true : false)},
+let DTProductosStruc = {
+  ajax: {
+    url: rutaBase + "DTProductos",
+    type: "POST",
+    data: function (d) {
+      return $.extend(d, { manifiesto: manifiestoActual })
+    }
+  },
+  dom: domBftrip,
+  buttons: [
+    'pageLength'
+  ],
+  order: [[1, "asc"]],
+  columns: [{
+    orderable: false,
+    searchable: false,
+    visible: $imagenProd,
+    defaultContent: '',
+    className: "text-center",
+    render: function (meta, type, data, meta) {
+      return $imagenProd ? `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
+        <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
+      </a>` : '';
+    }
+  },
+  { data: 'referencia' },
+  { data: 'item', visible: ($CAMPOSPRODUCTO.item == '1' ? true : false) },
   {
     data: 'descripcion',
     width: "30%",
@@ -219,45 +243,15 @@ let columnsProd = [
     render: function (meta, type, data, meta) {
       if (data.id_manifiesto == manifiestoActual) {
         return `<div class="btn-group btn-group-sm" role="group">
-          <button type="button" class="btn btn-danger btnRemove" title="Agregar a manifiesto"><i class="fa-solid fa-circle-minus"></i></button>
-        </div>`;
+            <button type="button" class="btn btn-danger btnRemove" title="Agregar a manifiesto"><i class="fa-solid fa-circle-minus"></i></button>
+          </div>`;
       } else {
         return `<div class="btn-group btn-group-sm" role="group">
-          <button type="button" class="btn btn-success btnAdd" title="Eliminar de manifiesto"><i class="fa-solid fa-plus"></i></button>
-        </div>`;
+            <button type="button" class="btn btn-success btnAdd" title="Eliminar de manifiesto"><i class="fa-solid fa-plus"></i></button>
+          </div>`;
       }
     }
-  },
-];
-
-if ($imagenProd) {
-  columnsProd.unshift({
-    orderable: false,
-    searchable: false,
-    defaultContent: '',
-    className: "text-center",
-    render: function (meta, type, data, meta) {
-      return `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
-      <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
-    </a>`;
-    }
-  });
-}
-
-let DTProductosStruc = {
-  ajax: {
-    url: rutaBase + "DTProductos",
-    type: "POST",
-    data: function (d) {
-      return $.extend(d, { manifiesto: manifiestoActual })
-    }
-  },
-  dom: domBftrip,
-  buttons: [
-    'pageLength'
-  ],
-  order: [[1, "asc"]],
-  columns: columnsProd,
+  }],
   createdRow: function (row, data, dataIndex) {
     $(row).find(".btnAdd, .btnRemove").on("click", function () {
 
@@ -283,32 +277,6 @@ let DTProductosStruc = {
   }
 };
 
-let columnsProdVer = [
-  { data: 'referencia' },
-  { data: 'item', visible: ($CAMPOSPRODUCTO.item == '1' ? true : false) },
-  {
-    data: 'descripcion',
-    width: "30%",
-    render: function (meta, type, data, meta) {
-      return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
-    }
-  }
-]
-
-if ($imagenProd) {
-  columnsProdVer.unshift({
-    orderable: false,
-    searchable: false,
-    defaultContent: '',
-    className: "text-center",
-    render: function (meta, type, data, meta) {
-      return `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
-        <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
-      </a>`;
-    }
-  });
-}
-
 let DTVerProductosStruc = {
   ajax: {
     url: rutaBase + "DTProductos",
@@ -322,7 +290,27 @@ let DTVerProductosStruc = {
     'pageLength'
   ],
   order: [],
-  columns: columnsProdVer,
+  columns: [{
+    orderable: false,
+    searchable: false,
+    defaultContent: '',
+    visible: $imagenProd,
+    className: "text-center",
+    render: function (meta, type, data, meta) {
+      return $imagenProd ? `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
+          <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
+        </a>` : '';
+    }
+  },
+  { data: 'referencia' },
+  { data: 'item', visible: ($CAMPOSPRODUCTO.item == '1' ? true : false) },
+  {
+    data: 'descripcion',
+    width: "30%",
+    render: function (meta, type, data, meta) {
+      return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
+    }
+  }]
 };
 
 $(function () {

@@ -1,9 +1,30 @@
 let rutaBase = base_url() + "Productos/";
-let columnsProd = [
-  { data: 'referencia'},
-  { 
-    data: 'item', 
-    visible: ($CAMPOSPRODUCTO.item == '1' ? true : false) 
+
+let DTProductos = $("#table").DataTable({
+  ajax: {
+    url: rutaBase + "DT",
+    type: "POST",
+    data: function (d) {
+      return $.extend(d, { "estado": $("#selectEstado").val(), imagenProd: $imagenProd })
+    }
+  },
+  order: [[2, "asc"]],
+  columns: [{
+    orderable: false,
+    searchable: false,
+    visible: $imagenProd,
+    defaultContent: '',
+    className: "text-center imgProdTb",
+    render: function (meta, type, data, meta) {
+      return $imagenProd ? `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
+                  <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
+                </a>` : '';
+    }
+  },
+  { data: 'referencia' },
+  {
+    data: 'item',
+    visible: ($CAMPOSPRODUCTO.item == '1' ? true : false)
   },
   {
     data: 'descripcion',
@@ -21,7 +42,7 @@ let columnsProd = [
     }
   },
   {
-    data: 'cantPaca', 
+    data: 'cantPaca',
     className: 'text-center',
     visible: ($CAMPOSPRODUCTO.paca == '1' ? true : false),
   },
@@ -58,37 +79,11 @@ let columnsProd = [
       btnCambiarEstado = validPermissions(53) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
 
       return `<div class="btn-group btn-group-sm" role="group">
-                ${btnEditar}
-                ${btnCambiarEstado}
-              </div>`;
+                  ${btnEditar}
+                  ${btnCambiarEstado}
+                </div>`;
     }
-  },
-];
-
-if ($imagenProd) {
-  columnsProd.unshift({
-    orderable: false,
-    searchable: false,
-    defaultContent: '',
-    className: "text-center",
-    render: function (meta, type, data, meta) {
-      return `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
-                <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
-              </a>`;
-    }
-  });
-}
-
-let DTProductos = $("#table").DataTable({
-  ajax: {
-    url: rutaBase + "DT",
-    type: "POST",
-    data: function (d) {
-      return $.extend(d, { "estado": $("#selectEstado").val(), imagenProd: $imagenProd })
-    }
-  },
-  order: [[2, "asc"]],
-  columns: columnsProd,
+  }],
   createdRow: function (row, data, dataIndex) {
 
     if (!data.manifiesto) $(row).addClass('bg-delete-tb');
@@ -151,6 +146,7 @@ $(function () {
 
   //Se genera alerta informando que no hay ninguna categoria creada o habilitada
   if ($CATEGORIAS <= 0) {
+    S
     alertify.alert("¡Advertencia!", "No hay ninguna categoria creada y/o habilitada. Por favor cree una.");
   }
 
@@ -275,6 +271,16 @@ $(function () {
         }
       });
     }
+  });
+
+  $("#verImg").change(function () {
+    if ($(this).is(':checked')) {
+      $imagenProd = 1;
+    } else {
+      $imagenProd = 0;
+    }
+    DTProductos.column('.imgProdTb').column().visible($imagenProd)
+    DTProductos.ajax.reload();
   });
 });
 

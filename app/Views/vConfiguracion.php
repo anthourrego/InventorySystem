@@ -10,6 +10,9 @@
       <li class="nav-item" role="presentation">
         <a class="nav-link" id="consecutivo-tab" data-toggle="tab" href="#consecutivoTab" role="tab" aria-controls="consecutivoTab" aria-selected="false">Consecutivo</a>
       </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="empresa-tab" data-toggle="tab" href="#empresaTab" role="tab" aria-controls="empresaTab" aria-selected="false">Empresa</a>
+      </li>
     </ul>
   </div>
   <div class="card-body">
@@ -121,7 +124,7 @@
           </div>
           <div class="col-12 col-md-6 col-lg-3">
             <label for="consecutivoFact">Consecutivo:</label>
-            <input type="number" id="consecutivoFact"  data-nombre="Consecutivo Factura" name="consecutivoFact" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
+            <input type="number" id="consecutivoFact" data-nombre="Consecutivo Factura" name="consecutivoFact" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
           </div>
           <div class="col-12 col-md-6 col-lg-3">
             <label for="digitosFact">Cant digitos:</label>
@@ -142,6 +145,25 @@
             <input type="number" id="digitosPed"  data-nombre="Consecutivo Factura" name="digitosPed" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad de digitos">
           </div>
           <hr class="col-12 my-2">
+        </div>
+      </div>
+      <div class="tab-pane fade" id="empresaTab" role="tabpanel" aria-labelledby="consecutivo-tab">
+        <div class="form-row">
+          <div class="col-3">
+            <div id="content-upload-logoEmpresa">
+              <div class="content-img rounded d-flex align-items-center justify-content-center">
+                <div class="text-center position-absolute w-90">
+                  <i class="fas fa-cloud-upload-alt"></i>
+                  <span> Selecciona o arrastre su imagen</span>
+                </div>
+                <input data-nombre="Logo Empresa" name="logoEmpresa" id="logoEmpresa" class="input-file-img configAct" accept=".png, .jpg, .jpeg" type="file">
+              </div>
+            </div>
+            <div id="content-preview-logoEmpresa" class="d-none text-center">
+              <img id="imgFotologoEmpresa" src="#" class="img-thumbnail h-100">
+              <button type="button" onclick="eliminarImagen('logoEmpresa', 'Logo Empresa')" class="btn btn-danger btn-sm btn-eliminar-foto"><i class="fas fa-times"></i></button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

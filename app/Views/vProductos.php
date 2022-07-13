@@ -1,7 +1,7 @@
 <div class="card">
   <div class="card-header">
     <div class="row justify-content-between">
-      <div class="col-8 col-md-3">
+      <div class="col-8 col-md-5 d-flex">
         <div class="input-group">
           <div class="input-group-prepend">
             <label class="input-group-text" for="selectEstado">Estado</label>
@@ -11,6 +11,14 @@
             <option value="0">Inactivo</option>
             <option value="-1">Todos</option>
           </select>
+        </div>
+        <div class="input-group ml-2">
+          <div class="input-group-prepend">
+            <div class="input-group-text">
+              <input id="verImg" type="checkbox" <?= $imagenProd == 1 ? 'checked' : '' ?>>
+            </div>
+          </div>
+          <label for="verImg" class="form-control">¿Ver Imagenes?</label>
         </div>
       </div>
       <?php if (validPermissions([54], true)) { ?>
@@ -35,7 +43,7 @@
       <table id="table" class="table table-sm table-striped table-hover table-bordered w-100">
         <thead> 
           <tr>
-            <?= $imagenProd ? "<th>Imagen</th>" : "" ?>
+            <th>Imagen</th>
             <th>Referencia</th>
             <th>Item</th>
             <th>Descripción</th>
