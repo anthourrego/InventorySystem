@@ -10,18 +10,24 @@ use App\Models\mConfiguracion;
 
 class cReportes extends BaseController {
 
+	private $mConfiguracion;
+
+	function __construct() {
+		$this->mConfiguracion = new mConfiguracion();
+	}
+
 	public function factura($id){
 		$mVentas = new mVentas();
 		$mVentasProductos = new mVentasProductos();
-		$mConfiguracion = new mConfiguracion();
 
-		$logo = $mConfiguracion->where('campo', 'logoEmpresa')->first();
-
-		$rutaLogo = base_url("assets/img/logo-negro-bloque.jpg");
-
-		if (!is_null($logo) && $logo->valor != '') {
-			$rutaLogo = UPLOADS_EMP_PATH . str_replace(' ', '.', $logo->valor);
-		}
+		$rutaLogo = $this->getValConfig('logoEmpresa');
+		$tipoDocumento = $this->getValConfig('tipoDocumentoEmpresa');
+		$documento = $this->getValConfig('documentoEmpresa');
+		$digitoVeri = $this->getValConfig('digitoVeriEmpresa');
+		$telefono = $this->getValConfig('telefonoEmpresa');
+		$nombre = $this->getValConfig('nombreEmpresa');
+		$direccion = $this->getValConfig('direccionEmpresa');
+		$email = $this->getValConfig('emailEmpresa');		
 
 		$datosFactura = $mVentas->cargarVenta($id)[0];
 
@@ -50,14 +56,15 @@ class cReportes extends BaseController {
 					<td style="width:130px"><img src="$rutaLogo"></td>
 					<td style="background-color:white; width:240px">
 						<div style="font-size:10px; text-align:center; line-height:15px;">
+							<strong>$nombre</strong>
 							<br>
-							NIT: 1088247875-1
+							NIT: $documento-$digitoVeri
 							<br>
-							Dirección: Carrera 12 sur # 8 - 51 Quebrada seca Guadalajara de Buga
+							Dirección: $direccion
 							<br>
-							Teléfono: 318 873 2564
+							Teléfono: $telefono
 							<br>
-							importadoragomari@gmail.com
+							$email
 						</div>
 					</td>
 
@@ -212,13 +219,14 @@ class cReportes extends BaseController {
 		$mPedidosProductos = new mPedidosProductos();
 		$mConfiguracion = new mConfiguracion();
 
-		$logo = $mConfiguracion->where('campo', 'logoEmpresa')->first();
-
-		$rutaLogo = base_url("assets/img/logo-negro-bloque.jpg");
-
-		if (!is_null($logo) && $logo->valor != '') {
-			$rutaLogo = UPLOADS_EMP_PATH . str_replace(' ', '.', $logo->valor);
-		}
+		$rutaLogo = $this->getValConfig('logoEmpresa');
+		$tipoDocumento = $this->getValConfig('tipoDocumentoEmpresa');
+		$documento = $this->getValConfig('documentoEmpresa');
+		$digitoVeri = $this->getValConfig('digitoVeriEmpresa');
+		$telefono = $this->getValConfig('telefonoEmpresa');
+		$nombre = $this->getValConfig('nombreEmpresa');
+		$direccion = $this->getValConfig('direccionEmpresa');
+		$email = $this->getValConfig('emailEmpresa');		
 
 		$datosFactura = $mPedidos->cargarPedido($id)[0];
 
@@ -249,14 +257,15 @@ class cReportes extends BaseController {
 					<td style="width:130px"><img src="$rutaLogo"></td>
 					<td style="background-color:white; width:240px">
 						<div style="font-size:10px; text-align:center; line-height:15px;">
+							<strong>$nombre</strong>
 							<br>
-							NIT: 1088247875-1
+							NIT: $documento-$digitoVeri
 							<br>
-							Dirección: Carrera 12 sur # 8 - 51 Quebrada seca Guadalajara de Buga
+							Dirección: $direccion
 							<br>
-							Teléfono: 318 873 2564
+							Teléfono: $telefono
 							<br>
-							importadoragomari@gmail.com
+							$email
 						</div>
 					</td>
 					<td style="background-color:white; width:150px; text-align:center; color:red"><br><br>PEDIDO N.<br>$datosFactura->pedido</td>
@@ -385,5 +394,17 @@ class cReportes extends BaseController {
 		//SALIDA DEL ARCHIVO 
 		$pdf->Output("{$datosFactura->pedido}.pdf", 'I');
 		exit;
+	}
+
+	public function getValConfig($campo) {
+		$dato = $this->mConfiguracion->where('campo', $campo)->first();
+		$valor = (!is_null($dato) && $dato->valor != '' ? $dato->valor : '');
+		if ($campo == 'logoEmpresa') {
+			$valor = base_url("assets/img/logo-negro-bloque.jpg");
+			if ($valor != '') {
+				$valor = UPLOADS_EMP_PATH . str_replace(' ', '.', $dato->valor);
+			}
+		}
+		return $valor; 
 	}
 }

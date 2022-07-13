@@ -86,3 +86,8 @@ defined('UPLOADS_PRODUCT_PATH')      || define('UPLOADS_PRODUCT_PATH', WRITEPATH
 defined('UPLOADS_MANIFEST_PATH')      || define('UPLOADS_MANIFEST_PATH', WRITEPATH  . "uploads/manifiestos/");
 defined('UPLOADS_EMP_PATH')      || define('UPLOADS_EMP_PATH', WRITEPATH  . "uploads/empresa/");
 
+defined('TIPODOCS')      || define('TIPODOCS', array(
+  0 => array("valor" => "NIT", "titulo" => "Nit")
+  , 1 => array("valor" => "CC", "titulo" => "Cedula Ciudadania")
+));// Tipos de documentos
+

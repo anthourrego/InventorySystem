@@ -51,10 +51,24 @@
 
   <div style="display: none;" class="col-12 col-md-6" id="cardProds">
     <div class="card">
-      <div class="card-body">
-        <div class="col-12 text-right">
-          <button type="button" class="btn btn-primary" id="btnFinalizarAgregarProds"><i class="fa-solid fa-check"></i> Finalizar</button>
+      <div class="card-header">
+        <div class="row">
+          <div class="col-12 col-md-5">
+            <div class="input-group ml-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <input class="verImg" id="verImg1" data-tipo="1" type="checkbox" <?= $imagenProd == 1 ? 'checked' : '' ?>>
+                </div>
+              </div>
+              <label for="verImg1" class="form-control">¿Ver Imagenes?</label>
+            </div>
+          </div>
+          <div class="col-12 col-md-7 text-right">
+            <button type="button" class="btn btn-primary" id="btnFinalizarAgregarProds"><i class="fa-solid fa-check"></i> Finalizar</button>
+          </div>
         </div>
+      </div>
+      <div class="card-body">
         <div class="table-responsive">
           <table id="tableProds" class="table table-sm table-striped table-hover table-bordered w-100">
             <thead> 
@@ -135,6 +149,18 @@
         </button>
       </div>
       <div class="modal-body">
+        <div class="row">
+          <div class="col-12 col-md-5">
+            <div class="input-group ml-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <input class="verImg" id="verImg2" data-tipo="2" type="checkbox" <?= $imagenProd == 1 ? 'checked' : '' ?>>
+                </div>
+              </div>
+              <label for="verImg2" class="form-control">¿Ver Imagenes?</label>
+            </div>
+          </div>
+        </div>
         <div class="table-responsive">
           <table id="tableProdsManif" class="table table-sm table-striped table-hover table-bordered w-100">
             <thead> 

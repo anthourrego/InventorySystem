@@ -78,6 +78,20 @@
 	<?php if ($editarPedido == 'S') { ?>
 		<div class="col-5">
 			<div class="card">
+				<div class="card-header">
+					<div class="row">
+						<div class="col-12 col-md-5">
+							<div class="input-group ml-2">
+								<div class="input-group-prepend">
+									<div class="input-group-text">
+										<input id="verImg" type="checkbox" <?= $imagenProd == 1 ? 'checked' : '' ?>>
+									</div>
+								</div>
+								<label for="verImg" class="form-control">¿Ver Imagenes?</label>
+							</div>
+						</div>
+					</div>
+				</div>
 				<div class="card-body">
 					<div class="table-responsive">
 						<table id="table" class="table table-sm table-striped table-hover table-bordered w-100">

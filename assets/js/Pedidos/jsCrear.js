@@ -18,7 +18,7 @@ let DTProductos = {
       searchable: false,
       visible: $IMAGENPROD,
       defaultContent: '',
-      className: "text-center",
+      className: "text-center imgProdTb",
       render: function (meta, type, data, meta) {
         return $IMAGENPROD ? `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
           <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
@@ -428,6 +428,16 @@ $(function () {
       },
       cache: true
     }
+  });
+
+  $("#verImg").change(function () {
+    if ($(this).is(':checked')) {
+      $IMAGENPROD = 1;
+    } else {
+      $IMAGENPROD = 0;
+    }
+    DTProductos.column('.imgProdTb').column().visible($IMAGENPROD)
+    DTProductos.ajax.reload();
   });
 });
 

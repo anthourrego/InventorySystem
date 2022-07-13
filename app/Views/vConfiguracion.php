@@ -164,6 +164,43 @@
               <button type="button" onclick="eliminarImagen('logoEmpresa', 'Logo Empresa')" class="btn btn-danger btn-sm btn-eliminar-foto"><i class="fas fa-times"></i></button>
             </div>
           </div>
+          <div class="col-9">
+            <div class="row">
+              <div class="col-12 col-md-6 col-lg-3">
+                <label for="tipoDocumentoEmpresa">Tipo documento:</label>
+                <select id="tipoDocumentoEmpresa" data-nombre="Tipo documento" <?= !$editar ? 'disabled' : '' ?> name="tipoDocumentoEmpresa" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
+                  <?php foreach (TIPODOCS as $key => $value) {
+                    echo '<option value="' . $value['valor'] . '">' . $value['titulo'] . '</option>';
+                  }
+                  ?>
+                </select>
+              </div>
+              <div class="col-12 col-md-6 col-lg-3">
+                <label for="documentoEmpresa">Identificación:</label>
+                <input type="text" id="documentoEmpresa" data-nombre="Identificación" name="documentoEmpresa" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese Identificación">
+              </div>
+              <div class="col-12 col-md-6 col-lg-2">
+                <label for="digitoVeriEmpresa">D.V:</label>
+                <input type="text" id="digitoVeriEmpresa" data-nombre="digito verificación" name="digitoVeriEmpresa" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" maxlength="1" required autocomplete="off"placeholder="Ingrese D.V">
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <label for="telefonoEmpresa">Teléfono:</label>
+                <input type="text" id="telefonoEmpresa" data-nombre="Teléfono" name="telefonoEmpresa" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off"placeholder="Ingrese Teléfono">
+              </div>
+              <div class="col-12 col-md-6 col-lg-6">
+                <label for="nombreEmpresa">Razón Social:</label>
+                <input type="text" id="nombreEmpresa" data-nombre="Razón Social" name="nombreEmpresa" <?= !$editar ? 'disabled' : '' ?> class="form-control configAct" required autocomplete="off"placeholder="Ingrese razón social">
+              </div>
+              <div class="col-12 col-md-6 col-lg-6">
+                <label for="direccionEmpresa">Dirección:</label>
+                <input type="text" id="direccionEmpresa" data-nombre="Dirección" name="direccionEmpresa" <?= !$editar ? 'disabled' : '' ?> class="form-control configAct" required autocomplete="off"placeholder="Ingrese dirección">
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <label for="emailEmpresa">Correo electrónico:</label>
+                <input type="text" id="emailEmpresa" data-nombre="Correo electrónico" name="emailEmpresa" <?= !$editar ? 'disabled' : '' ?> class="form-control configAct" required autocomplete="off"placeholder="Ingrese correo electrónico">
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

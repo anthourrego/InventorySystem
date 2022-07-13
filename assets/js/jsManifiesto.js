@@ -219,9 +219,9 @@ let DTProductosStruc = {
     searchable: false,
     visible: $imagenProd,
     defaultContent: '',
-    className: "text-center",
+    className: "text-center imgProdTb",
     render: function (meta, type, data, meta) {
-      return $imagenProd ? `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
+      return $imagenProd || $("#verImg1").is(':checked') ? `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
         <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
       </a>` : '';
     }
@@ -295,9 +295,9 @@ let DTVerProductosStruc = {
     searchable: false,
     defaultContent: '',
     visible: $imagenProd,
-    className: "text-center",
+    className: "text-center imgProdTb",
     render: function (meta, type, data, meta) {
-      return $imagenProd ? `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
+      return $imagenProd || $("#verImg2").is(':checked') ? `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
           <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
         </a>` : '';
     }
@@ -458,6 +458,22 @@ $(function () {
   $("#modalProdsManifiesto").on('hidden.bs.modal', function () {
     $("#modalProdsManifiesto").modal('hide');
     DTManifiestos.ajax.reload();
+  });
+
+  $(".verImg").change(function () {
+    if ($(this).is(':checked')) {
+      $imagenProd = 1;
+    } else {
+      $imagenProd = 0;
+    }
+    if ($(this).data('tipo') == '1') {
+      DTProductos.column('.imgProdTb').column().visible($imagenProd);
+      DTProductos.ajax.reload();
+    }
+    if ($(this).data('tipo') == '2') {
+      DTVerProductos.column('.imgProdTb').column().visible($imagenProd);
+      DTVerProductos.ajax.reload();
+    }
   });
 
 });
