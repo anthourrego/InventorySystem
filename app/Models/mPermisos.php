@@ -183,6 +183,10 @@ class mPermisos extends Model {
 					[
 						"id" => 53,
 						"text" => "Activar/Inactivar"
+					],
+					[
+						"id" => 54,
+						"text" => "Ver valor inventario"
 					]
 				]
 			],

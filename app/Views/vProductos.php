@@ -13,6 +13,16 @@
           </select>
         </div>
       </div>
+      <?php if (validPermissions([54], true)) { ?>
+      <div class="col-8 col-md-3">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="selectEstado">Valor Inventario</label>
+          </div>
+          <input type="text" id="valorInventarioActual" class="form-control" disabled value="$ 0">
+        </div>
+      </div>
+      <?php } ?>
       <?php if (validPermissions([51], true)) { ?>
         <div class="col-5 col-md-3 text-right">
           <button type="button" class="btn btn-primary" id="btnCrear"><i class="fa-solid fa-plus"></i> Crear</button>
@@ -159,5 +169,6 @@
   $CATEGORIAS = <?= COUNT($categorias) ?>;
   $CAMPOSPRODUCTO = <?= json_encode($camposProducto) ?>;
   $INVENTARIONEGATIVO = "<?= $inventario_negativo ?>";
-  $imagenProd = <?= $imagenProd ?>
+  $imagenProd = <?= $imagenProd ?>;
+  $valorInventarioActual = '<?= $valorInventarioActual ?>'
 </script>

@@ -146,6 +146,9 @@ let DTProductos = $("#table").DataTable({
 });
 
 $(function () {
+  //Enviamos el valor del inventario
+  $("#valorInventarioActual").val(formatoPesos.format($valorInventarioActual))
+
   //Se genera alerta informando que no hay ninguna categoria creada o habilitada
   if ($CATEGORIAS <= 0) {
     alertify.alert("¡Advertencia!", "No hay ninguna categoria creada y/o habilitada. Por favor cree una.");

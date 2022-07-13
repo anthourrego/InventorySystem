@@ -38,6 +38,14 @@ class cProductos extends BaseController {
 			$this->content["manifiestos"] = [];
 		}	
 
+		if (validPermissions([54], true)) {
+			$mProductos = new mProductos();
+			$this->content["valorInventarioActual"] = $mProductos->asObject()->select("SUM(stock * precio_venta) AS valorInventario", false)->where("estado", '1')->findAll();
+			$this->content["valorInventarioActual"] = $this->content["valorInventarioActual"][0]->valorInventario;
+		} else {
+			$this->content["valorInventarioActual"] = 0;
+		}
+		
 		$this->content['js_add'][] = [
 			'jsProductos.js'
 		];
@@ -176,7 +184,7 @@ class cProductos extends BaseController {
 	
 								if ($product->save($updateFoto)) { 
 									$resp["success"] = true;
-									$resp["msj"] = "El producto <b>{$product->referencia}</b> se creo correctamente.";
+									$resp["msj"] = "El producto <b>{$product->referencia}</b> se " . (empty($postData->id) ? 'creo' : 'actualizo') . " correctamente.";
 								} else {
 									$resp["msj"] = "Ha ocurrido un error al actualizar los datos de la foto.";
 								}
@@ -191,7 +199,7 @@ class cProductos extends BaseController {
 					}
 				} else {
 					$resp["success"] = true;
-					$resp["msj"] = "El producto <b>{$product->referencia}</b> se creo correctamente.";
+					$resp["msj"] = "El producto <b>{$product->referencia}</b> se " . (empty($postData->id) ? 'creo' : 'actualizo') . " correctamente.";
 				}
 			} else {
 				$resp["msj"] = "No puede " . (empty($postData->id) ? 'crear' : 'actualizar') . " el producto." . listErrors($product->errors());
