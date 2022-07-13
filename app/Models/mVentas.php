@@ -81,11 +81,16 @@ class mVentas extends Model {
 				V.observacion,
 				V.created_at,
 				C.direccion AS Direccion,
-				C.telefono,
-				S.nombre AS NombreSucursal
+				S.nombre AS NombreSucursal,
+				S.administrador AS AdministradorSucursal,
+				S.telefono,
+				CI.nombre AS Ciudad,
+				DEP.nombre AS Departamento  
 			")->join("clientes AS C", "V.id_cliente = C.id", "left")
 			->join("usuarios AS U", "V.id_vendedor = U.id", "left")
 			->join("sucursales AS S", "V.id_sucursal = S.id", "left")
+			->join("ciudades AS CI", "S.id_ciudad = CI.id", "left")
+			->join("departamentos AS DEP", "CI.id_depto = DEP.codigo", "left")
 			->where("V.id", $id)
 			->get()->getResultObject();
 

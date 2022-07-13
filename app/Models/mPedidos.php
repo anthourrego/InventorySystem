@@ -78,10 +78,16 @@ class mPedidos extends Model {
 				C.telefono,
 				P.id_sucursal,
 				P.estado,
-				S.nombre AS NombreSucursal
+				S.nombre AS NombreSucursal,
+				S.administrador AS AdministradorSucursal,
+				S.telefono,
+				CI.nombre AS Ciudad,
+				DEP.nombre AS Departamento  
 			")->join("clientes AS C", "P.id_cliente = C.id", "left")
 			->join("usuarios AS U", "P.id_vendedor = U.id", "left")
 			->join("sucursales AS S", "P.id_sucursal = S.id", "left")
+			->join("ciudades AS CI", "S.id_ciudad = CI.id", "left")
+			->join("departamentos AS DEP", "CI.id_depto = DEP.codigo", "left")
 			->where("P.id", $id)
 			->get()->getResultObject();
 

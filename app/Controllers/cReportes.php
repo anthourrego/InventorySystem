@@ -84,7 +84,7 @@ class cReportes extends BaseController {
 			
 				<tr>
 					<td style="border: 1px solid #666; background-color:white; width:390px">
-						Cliente: $datosFactura->NombreCliente
+						Cliente: $datosFactura->NombreSucursal - $datosFactura->NombreCliente
 					</td>
 
 					<td style="border: 1px solid #666; background-color:white; width:150px; text-align:left">
@@ -100,7 +100,12 @@ class cReportes extends BaseController {
 					</td>
 				</tr>
 				<tr>
-					<td style="border: 1px solid #666; background-color:white; width:540px">Vendedor: $datosFactura->NombreVendedor</td>
+					<td style="border: 1px solid #666; background-color:white; width:390px">
+						Ciudad: $datosFactura->Ciudad, $datosFactura->Departamento
+					</td>
+					<td style="border: 1px solid #666; background-color:white; width:150px">
+						Vendedor: $datosFactura->NombreVendedor
+					</td>
 				</tr>
 				<tr>
 					<td style="border-bottom: 1px solid #666; background-color:white; width:540px"></td>
@@ -134,6 +139,8 @@ class cReportes extends BaseController {
 
 
 		foreach ($productosFactura as $it) {
+			$valor = number_format($it->valor, 0, ',', '.');
+			$total = number_format($it->Total, 0, ',', '.');
 			$bloque4 = <<<EOF
 
 				<table style="font-size:10px; padding:3px 3px;">
@@ -152,12 +159,12 @@ class cReportes extends BaseController {
 							$it->cantidad
 						</td>
 
-						<td style="border: 1px solid #666; color:#333; background-color:white; width:60px; text-align:right">$ 
-							$it->valor
+						<td style="border: 1px solid #666; color:#333; background-color:white; width:60px; text-align:right">
+							$ $valor
 						</td>
 
-						<td style="border: 1px solid #666; color:#333; background-color:white; width:80px; text-align:right">$ 
-							$it->Total
+						<td style="border: 1px solid #666; color:#333; background-color:white; width:80px; text-align:right">
+							$ $total
 						</td>
 
 					</tr>
@@ -171,6 +178,7 @@ class cReportes extends BaseController {
 
 		// ---------------------------------------------------------
 
+		$total = number_format($datosFactura->total, 0, ',', '.');
 		$bloque5 = <<<EOF
 
 			<table style="font-size:10px; padding:5px 3px;">
@@ -184,8 +192,8 @@ class cReportes extends BaseController {
 					<td style="border: 1px solid #666; background-color:white; width:100px; text-align:center">
 						Total:
 					</td>
-					<td style="border: 1px solid #666; color:#333; background-color:white; width:80px; text-align:right">$ 
-						$datosFactura->total
+					<td style="border: 1px solid #666; color:#333; background-color:white; width:80px; text-align:right">
+						$ $total
 					</td>
 				</tr>
 
@@ -195,7 +203,7 @@ class cReportes extends BaseController {
 
 		$pdf->writeHTML($bloque5, false, false, false, false, '');
 
-		$pdf->Output("GOM00{$datosFactura->codigo}.pdf", 'I');
+		$pdf->Output("{$datosFactura->codigo}.pdf", 'I');
 		exit;
 	}
 
@@ -268,31 +276,32 @@ class cReportes extends BaseController {
 			</table>
 
 			<table style="font-size:10px; padding:5px 10px;">
-
+			
 				<tr>
 					<td style="border: 1px solid #666; background-color:white; width:390px">
-						Cliente: $datosFactura->NombreCliente
+						Cliente: $datosFactura->NombreSucursal - $datosFactura->NombreCliente
 					</td>
 
 					<td style="border: 1px solid #666; background-color:white; width:150px; text-align:left">
 						Fecha: $fecha
 					</td>
 				</tr>
-
 				<tr>
 					<td style="border: 1px solid #666; background-color:white; width:390px">
 						Direccion: $datosFactura->Direccion
 					</td>
-
 					<td style="border: 1px solid #666; background-color:white; width:150px; text-align:left">
 						Telefono: $datosFactura->telefono
 					</td>
 				</tr>
-
 				<tr>
-					<td style="border: 1px solid #666; background-color:white; width:540px">Vendedor: $datosFactura->NombreVendedor</td>
+					<td style="border: 1px solid #666; background-color:white; width:390px">
+						Ciudad: $datosFactura->Ciudad, $datosFactura->Departamento
+					</td>
+					<td style="border: 1px solid #666; background-color:white; width:150px">
+						Vendedor: $datosFactura->NombreVendedor
+					</td>
 				</tr>
-
 				<tr>
 					<td style="border-bottom: 1px solid #666; background-color:white; width:540px"></td>
 				</tr>
@@ -374,7 +383,7 @@ class cReportes extends BaseController {
 		// ---------------------------------------------------------
 
 		//SALIDA DEL ARCHIVO 
-		$pdf->Output("'Pedido00$datosFactura->pedido.pdf'", 'I');
+		$pdf->Output("{$datosFactura->pedido}.pdf", 'I');
 		exit;
 	}
 }
