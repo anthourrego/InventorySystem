@@ -12,15 +12,15 @@ $(function () {
         let datos = resp.msj;
         datos.forEach(it => {
           input = $("#" + it.campo);
-          if (input.hasClass("select2")) {
-            input.val(it.valor);
-            input.change();
+          if (it.campo == 'logoEmpresa' && it.valor != '') {
+            input.val('');
+            $('#imgFoto' + it.campo).attr('src', base_url() + "Configuracion/Foto/" + it.valor.replace(' ', '.'));
+            $("#content-preview-" + it.campo).removeClass("d-none");
+            $("#content-upload-" + it.campo).addClass("d-none");
           } else {
-            if (it.campo == 'logoEmpresa' && it.valor != '') {
-              input.val('');
-              $('#imgFoto' + it.campo).attr('src', base_url() + "Configuracion/Foto/" + it.valor.replace(' ', '.'));
-              $("#content-preview-" + it.campo).removeClass("d-none");
-              $("#content-upload-" + it.campo).addClass("d-none");
+            input.val(it.valor);
+            if (input.hasClass("select2")) {
+              input.change();
             }
           }
         });
@@ -102,6 +102,7 @@ function eliminarImagen(file, nombre) {
     data: { file, nombre },
     success: function (resp) {
       if (resp.success) {
+        $('#' + file).val('');
         $('#imgFoto' + file).attr('src', base_url() + "Configuracion/Foto");
         $("#content-preview-" + file).addClass("d-none");
         $("#content-upload-" + file).removeClass("d-none");

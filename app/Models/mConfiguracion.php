@@ -28,7 +28,7 @@ class mConfiguracion extends Model {
 	// Validation
 	protected $validationRules      = [
 		"campo" => "required|alpha_numeric_space|min_length[1]|max_length[100]|is_unique[configuracion.campo, id, {id}]",
-		"valor" => "required|alpha_numeric_space|min_length[1]|max_length[100]"
+		"valor" => "required|min_length[1]|max_length[100]"
 	];
 	protected $validationMessages   = [];
 	protected $skipValidation       = false;

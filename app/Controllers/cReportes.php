@@ -402,7 +402,7 @@ class cReportes extends BaseController {
 		if ($campo == 'logoEmpresa') {
 			$valor = base_url("assets/img/logo-negro-bloque.jpg");
 			if ($valor != '') {
-				$valor = UPLOADS_EMP_PATH . str_replace(' ', '.', $dato->valor);
+				$valor = UPLOADS_EMP_PATH . $dato->valor;
 			}
 		}
 		return $valor; 

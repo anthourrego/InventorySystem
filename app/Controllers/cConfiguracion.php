@@ -64,11 +64,10 @@ class cConfiguracion extends BaseController {
 				if ($validated) {
 					if ($file->isValid() && !$file->hasMoved()) {
 						//Validamos que la imagen suba correctamente
-						$dataSave['valor'] = $dataPost["campo"] . ' ' . $file->guessExtension();
-						$name = $dataPost["campo"] . '.' . $file->guessExtension();
-						if ($file->move(UPLOADS_EMP_PATH, $name, true)) {
+						$dataSave['valor'] = $dataPost["campo"] . '.' . $file->guessExtension();
+						if ($file->move(UPLOADS_EMP_PATH, $dataSave['valor'], true)) {
 							$resp["success"] = true;
-							$resp["file"] = $name;
+							$resp["file"] = $dataSave['valor'];
 							$resp["msj"] = "Archivo <b>{$dataPost['nombre']}</b> se creo correctamente.";
 						} else {
 							$resp["msj"] = "Ha ocurrido un error al subir el archivo <b>{$dataPost['nombre']}</b>.";
@@ -125,7 +124,7 @@ class cConfiguracion extends BaseController {
 
 		$validar = $mConfiguracion->where('campo', $dataPost["file"])->first();
 
-		$filenameDelete = UPLOADS_EMP_PATH . str_replace(' ', '.', $validar->valor);
+		$filenameDelete = UPLOADS_EMP_PATH . $validar->valor;
 		if ($filenameDelete != '' && file_exists($filenameDelete)) {
 			if(!@unlink($filenameDelete)) {
 				$resp["success"] = false;
