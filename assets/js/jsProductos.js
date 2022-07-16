@@ -156,7 +156,9 @@ $(function () {
       if (file.size <= 2000000) {
         let reader = new FileReader();
         reader.onload = function (event) {
-          $('#imgFoto').attr('src', event.target.result);
+          instanciarEditorImagen(event.target.result);
+          $("#modalCrearEditar").modal("hide");
+          $("#modalEditarImage").modal('show');
         }
         reader.readAsDataURL(file);
         $("#content-preview").removeClass("d-none");
@@ -305,4 +307,30 @@ function eliminar(data) {
         }
       });
     }, function () { });
+}
+
+function instanciarEditorImagen(image) {
+  const filerobotImageEditor = initEditorImg('#editor-image', image);
+  filerobotImageEditor.render({
+    onSave: async function (editedImageObject, designState) {
+      const file = await baseToFile(editedImageObject.imageBase64, editedImageObject.fullName, editedImageObject.mimeType);
+      if (file.size <= 2000000) {
+        var dt = new DataTransfer();
+        dt.items.add(file);
+        $("#foto").prop('files', dt.files);
+        $('#imgFoto').attr('src', editedImageObject.imageBase64);
+        $("#modalEditarImage").modal('hide');
+        $("#modalCrearEditar").modal("show");
+        filerobotImageEditor.terminate();
+      } else {
+        alertify.error("La imagen es superior a 2mb");
+      }
+    },
+  });
+}
+
+async function baseToFile(url, filename, mimeType) {
+  const res = await fetch(url);
+  const buf = await res.arrayBuffer();
+  return new File([buf], filename, { type: mimeType });
 }

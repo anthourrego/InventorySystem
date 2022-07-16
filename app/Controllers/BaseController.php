@@ -242,4 +242,13 @@ class BaseController extends Controller {
             'assets/Libraries/sweetAlert2/js/sweetalert2.min.js'
         ];
     }
+
+    public function LFileRobotImageEditor(){
+        $this->content['js'][] = [
+            'assets/Libraries/filerobot-image-editor/filerobot-image-editor.min.js'
+        ];
+        $this->content['js_add'][] = [
+            'jsImageEditor.js'
+        ];
+    }
 }
