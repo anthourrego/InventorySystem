@@ -153,27 +153,27 @@ $(function () {
   $("#foto").on("change", function (event) {
     const file = this.files[0];
     if (file) {
-      if (file.size <= 2000000) {
-        let reader = new FileReader();
-        reader.onload = function (event) {
-          instanciarEditorImagen(event.target.result);
-          $("#modalCrearEditar").modal("hide");
-          $("#modalEditarImage").modal('show');
-        }
-        reader.readAsDataURL(file);
-        $("#content-preview").removeClass("d-none");
-        $("#content-upload").addClass("d-none");
+      let reader = new FileReader();
+      reader.onload = function (event) {
+        instanciarEditorImagen(event.target.result);
+        $("#modalCrearEditar").modal("hide");
+        $("#modalEditarImage").modal('show');
+      }
+      reader.readAsDataURL(file);
+      $("#content-preview").removeClass("d-none");
+      $("#content-upload").addClass("d-none");
 
-        if ($("#id").val().length > 0) {
-          $("#editFoto").val(0);
-        }
+      if ($("#id").val().length > 0) {
+        $("#editFoto").val(0);
+      }
+      /* if (file.size <= 2000000) {
       } else {
         alertify.error("La imagen es superior a 2mb");
         $("#foto").val('');
         $('#imgFoto').attr('src', base_url() + "Usuarios/Foto");
         $("#content-preview").addClass("d-none");
         $("#content-upload").removeClass("d-none");
-      }
+      } */
     } else {
       $("#foto").val('');
       $('#imgFoto').attr('src', base_url() + "Usuarios/Foto");
