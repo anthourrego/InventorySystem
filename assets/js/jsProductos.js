@@ -156,7 +156,7 @@ $(function () {
       let reader = new FileReader();
       reader.onload = function (event) {
         instanciarEditorImagen(event.target.result);
-        $("#modalCrearEditar").modal("hide");
+        $("#modalCrearEditar").hide();
         $("#modalEditarImage").modal('show');
       }
       reader.readAsDataURL(file);
@@ -233,11 +233,11 @@ $(function () {
     $("#modalCrearEditar").modal("show");
   });
 
-  $('#modalCrearEditar').on('shown.bs.modal	', function (event) {
+  /* $('#modalCrearEditar').on('shown.bs.modal	', function (event) {
     if ($("#id").val().length <= 0) {
       $("#categoria").select2('open');
     }
-  });
+  }); */
 
   $("#formCrearEditar").submit(function (e) {
     e.preventDefault();
@@ -320,7 +320,7 @@ function instanciarEditorImagen(image) {
         $("#foto").prop('files', dt.files);
         $('#imgFoto').attr('src', editedImageObject.imageBase64);
         $("#modalEditarImage").modal('hide');
-        $("#modalCrearEditar").modal("show");
+        $("#modalCrearEditar").show();
         filerobotImageEditor.terminate();
       } else {
         alertify.error("La imagen es superior a 2mb");

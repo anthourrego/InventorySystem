@@ -77,7 +77,6 @@ class cProductos extends BaseController {
 						P.precio_venta,
 						P.costo,
 						P.ubicacion,
-						P.id_manifiesto AS manifiesto,
 						M.nombre AS nombreManifiesto,
 						P.ventas, 
 						P.estado, 
@@ -88,7 +87,12 @@ class cProductos extends BaseController {
 								WHEN P.estado = 1 THEN 'Activo' 
 								ELSE 'Inactivo' 
 						END AS Estadito,
-						P.cantPaca
+						P.cantPaca,
+						CASE 
+								WHEN 1 = "  . ((int) (session()->has("manifiestoProducto") ? session()->get("manifiestoProducto") : '0')) . "
+									THEN P.id_manifiesto
+								ELSE '0'
+						END AS manifiesto
 				")->join('categorias AS C', 'P.id_categoria = C.id', 'left')
 				->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left');
 
@@ -136,14 +140,14 @@ class cProductos extends BaseController {
 			//Creamos el producto y llenamos los datos
 			$producto = array(
 				"id" => $postData->id
-				,"id_categoria" => trim($postData->categoria)
+				,"id_categoria" => ($postData->categoria == '' ? null : trim($postData->categoria))
 				,"referencia" => trim($postData->referencia)
 				,"item" => (session()->has("itemProducto") && session()->get("itemProducto") == '1' ? trim($postData->item) : null)
 				,"descripcion" => trim($postData->descripcion)
 				,"stock" => $postData->stock
 				,"precio_venta" => str_replace(",", "", trim(str_replace("$", "", $postData->precioVent)))
 				,"ubicacion" => (session()->has("ubicacionProducto") && session()->get("ubicacionProducto") == '1' ? trim($postData->ubicacion) : null)
-				,"id_manifiesto" => strlen(trim($postData->manifiesto)) == 0 ? null : trim($postData->manifiesto)
+				,"id_manifiesto" => !isset($postData->manifiesto) || strlen(trim($postData->manifiesto)) == 0 ? null : trim($postData->manifiesto)
 				,"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $postData->costo))) : '0')
 				,"cantPaca" => (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($postData->paca) : 1)
 			);

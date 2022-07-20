@@ -65,7 +65,7 @@
 </div>
 
 <div class="modal fade modalFormulario" id="modalCrearEditar" data-backdrop="static" data-keyboard="false" aria-labelledby="modalCrearEditarLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalCrearEditarLabel"></h5>
@@ -95,8 +95,8 @@
             </div>
             <div class="col-6">
               <div class="form-group form-valid">
-                <label class="mb-0" for="categoria">Categoria <span class="text-danger">*</span></label>
-                <select id="categoria" required name="categoria" class="custom-select select2 inputVer" data-placeholder="Seleccione..." data-allow-clear="1">
+                <label class="mb-0" for="categoria">Categoria</label>
+                <select id="categoria" name="categoria" class="custom-select select2 inputVer" data-placeholder="Seleccione..." data-allow-clear="1">
                   <option></option>
                   <?php foreach ($categorias as $it) : ?>
                     <option value="<?=  $it->id?>"><?= $it->nombre ?></option>

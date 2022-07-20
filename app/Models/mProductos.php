@@ -38,7 +38,7 @@ class mProductos extends Model {
 
 	// Validation
 	protected $validationRules      = [
-		'id_categoria' => "required|numeric|min_length[1]|is_not_unique[categorias.id]",
+		'id_categoria' => "permit_empty|numeric|min_length[1]|is_not_unique[categorias.id]",
 		'referencia'   => "required|alpha_numeric_punct|min_length[1]|max_length[255]|is_unique[productos.referencia, id, {id}]",
 		'item'         => 'permit_empty|alpha_numeric_punct|min_length[1]|max_length[255]',
 		'descripcion'  => 'permit_empty|alpha_numeric_punct|min_length[1]|max_length[500]',
