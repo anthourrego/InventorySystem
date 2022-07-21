@@ -32,6 +32,7 @@ $routes->setAutoRoute(false);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
+$routes->get('Foto/(:any)', 'Home::foto/$1');
 $routes->post('/iniciarSesion', 'Home::iniciarSesion', ['filter' => 'ajax']);
 $routes->post('/cerrarSesion', 'Home::cerrarSesion', ['filter' => ['authGuard', 'ajax']]);
 $routes->post('sidebar', 'Home::sidebar', ['filter' => ['authGuard', 'ajax']]);

@@ -8,6 +8,12 @@ use App\Models\mAlmacen;
 
 class Home extends BaseController {
 
+	private $mConfiguracion;
+
+	function __construct() {
+		$this->mConfiguracion = new mConfiguracion();
+	}
+
 	public function index() {
         
 		if (session()->has("logged_in") && session()->get("logged_in")) {
@@ -26,6 +32,11 @@ class Home extends BaseController {
 
 		} else {
 			$this->LJQueryValidation();
+
+			$this->content['imagenes'] = array(
+				"fondo" => $this->getValConfig('logoFondoLogin', true),
+				"logo" => $this->getValConfig('logoLogin', true)
+			);
 							
 			$this->content['title'] = "Inicio Sesión";
 			$this->content['view'] = "vLogin";
@@ -80,9 +91,7 @@ class Home extends BaseController {
 						'permisos' => $per,
 					];
 
-					$mConfiguracion = new mConfiguracion();
-
-					$config = $mConfiguracion->select("campo, valor")->findAll(); 
+					$config = $this->mConfiguracion->select("campo, valor")->findAll(); 
 
 					foreach ($config as $it) {
 						$userdata[$it->campo] = $it->valor;
@@ -133,5 +142,28 @@ class Home extends BaseController {
 		session()->set("sidebar", $dataPost["sidebarEstado"]);
 
 		return $this->response->setJSON($resp);
+	}
+
+	public function foto($img = null){
+		$filename = UPLOADS_CONF_PATH ."{$img}"; //<-- specify the image  file
+		//Si la foto no existe la colocamos por defecto
+		if(is_null($img) || !file_exists($filename)) {
+			$filename = ASSETS_PATH . "img/" . $img . ".png";
+		}
+		$mime = mime_content_type($filename); //<-- detect file type
+		header('Content-Length: '.filesize($filename)); //<-- sends filesize header
+		header("Content-Type: {$mime}"); //<-- send mime-type header
+		header("Content-Disposition: inline; filename='{$filename}';"); //<-- sends filename header
+		readfile($filename); //<--reads and outputs the file onto the output buffer
+		exit(); // or die()
+	}
+
+	private function getValConfig($campo, $retCampo) {
+		$dato = $this->mConfiguracion->where('campo', $campo)->first();
+		$valor = (!is_null($dato) && $dato->valor != '' ? $dato->valor : '');
+		if ($retCampo == true && $valor == '') {
+			return $campo;
+		}
+		return $valor; 
 	}
 }

@@ -12,7 +12,7 @@ $(function () {
         let datos = resp.msj;
         datos.forEach(it => {
           input = $("#" + it.campo);
-          if (it.campo == 'logoEmpresa' && it.valor != '') {
+          if (it.campo.includes('logo') && it.valor != '') {
             input.val('');
             $('#imgFoto' + it.campo).attr('src', base_url() + "Configuracion/Foto/" + it.valor.replace(' ', '.'));
             $("#content-preview-" + it.campo).removeClass("d-none");

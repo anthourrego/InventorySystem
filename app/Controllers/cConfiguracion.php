@@ -45,7 +45,7 @@ class cConfiguracion extends BaseController {
 
 		if($this->request->getFile($dataPost["campo"])) {
 
-			$filenameDelete = UPLOADS_EMP_PATH . $dataPost["campo"];
+			$filenameDelete = UPLOADS_CONF_PATH . $dataPost["campo"];
 
 			$file = $this->request->getFile($dataPost["campo"]);
 
@@ -65,7 +65,7 @@ class cConfiguracion extends BaseController {
 					if ($file->isValid() && !$file->hasMoved()) {
 						//Validamos que la imagen suba correctamente
 						$dataSave['valor'] = $dataPost["campo"] . '.' . $file->guessExtension();
-						if ($file->move(UPLOADS_EMP_PATH, $dataSave['valor'], true)) {
+						if ($file->move(UPLOADS_CONF_PATH, $dataSave['valor'], true)) {
 							$resp["success"] = true;
 							$resp["file"] = $dataSave['valor'];
 							$resp["msj"] = "Archivo <b>{$dataPost['nombre']}</b> se creo correctamente.";
@@ -103,7 +103,7 @@ class cConfiguracion extends BaseController {
 	}
 
 	public function foto($img = null){
-		$filename = UPLOADS_EMP_PATH ."{$img}"; //<-- specify the image  file
+		$filename = UPLOADS_CONF_PATH ."{$img}"; //<-- specify the image  file
 		//Si la foto no existe la colocamos por defecto
 		if(is_null($img) || !file_exists($filename)){ 
 			$filename = ASSETS_PATH . "img/nofoto.png";
@@ -124,7 +124,7 @@ class cConfiguracion extends BaseController {
 
 		$validar = $mConfiguracion->where('campo', $dataPost["file"])->first();
 
-		$filenameDelete = UPLOADS_EMP_PATH . $validar->valor;
+		$filenameDelete = UPLOADS_CONF_PATH . $validar->valor;
 		if ($filenameDelete != '' && file_exists($filenameDelete)) {
 			if(!@unlink($filenameDelete)) {
 				$resp["success"] = false;
