@@ -116,7 +116,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       data: 'item',
       width: "30%",
       render: function (meta, type, data, meta) {
-        return `<span title="${data.item} - ${data.descripcion}" class="text-descripcion">${data.item} - ${data.descripcion}</span>`;
+        return `<span title="${data.referencia}" class="text-descripcion">${data.referencia}</span>`;
       }
     },
     {
