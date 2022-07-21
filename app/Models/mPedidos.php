@@ -74,7 +74,7 @@ class mPedidos extends Model {
 				P.metodo_pago,
 				P.observacion,
 				P.created_at,
-				C.direccion AS Direccion,
+				S.direccion AS Direccion,
 				C.telefono,
 				P.id_sucursal,
 				P.estado,

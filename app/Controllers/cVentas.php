@@ -153,7 +153,7 @@ class cVentas extends BaseController {
 												END AS metodo_pago,
 												V.created_at,
 												V.updated_at,
-												id_pedido
+												V.id_pedido
 											")->join('clientes AS C', 'V.id_cliente = C.id', 'left')
 											->join('usuarios AS U', 'V.id_vendedor = U.id', 'left')
 											->orderby("V.id DESC");
