@@ -6,6 +6,8 @@ use \Hermawan\DataTables\DataTable;
 use App\Models\mCategorias;
 use App\Models\mProductos;
 use App\Models\mManifiesto;
+use \Config\Services;
+use \PhpZip\ZipFile;
 
 class cProductos extends BaseController {
 	public function index() {
@@ -249,9 +251,9 @@ class cProductos extends BaseController {
 		//Traemos los datos del post
 		$data = (object) $this->request->getPost();
 
-		$perfil = new mProductos();
+		$producto = new mProductos();
 		
-		if($perfil->save($data)) {
+		if($producto->save($data)) {
 			$resp["success"] = true;
 			$resp['msj'] = "Producto actualizado correctamente";
 		} else {
@@ -259,5 +261,99 @@ class cProductos extends BaseController {
 		}
 
 		return $this->response->setJSON($resp);
+	}
+
+	public function convertirFoto($id, $img, $datos = null){
+		$filename = UPLOADS_PRODUCT_PATH ."{$id}/{$img}"; //<-- specify the image  file
+
+		//Si la foto no existe la colocamos por defecto
+		if(is_null($img) || !file_exists($filename)){ 
+			$filename = ASSETS_PATH . "img/nofoto.png";
+		}
+
+		if (!is_dir(UPLOADS_PRODUCT_PATH . 'convert/')) {
+			mkdir(UPLOADS_PRODUCT_PATH . 'convert/', 0777, TRUE);
+		}
+
+		if (is_null($datos)) {
+			$mProductos = new mProductos();
+	
+			$producto = $mProductos->asObject()->find($id);
+		} else {
+			$producto = $datos;
+		}
+
+		$servicios = new Services();
+		$servicios::image()
+    ->withFile($filename)
+    ->text($producto->referencia, [
+        'color'      => '#000',
+        'opacity'    => 0,
+				'hOffset'    => '10',
+				'vOffset'    => '-50',
+        'hAlign'     => 'left',
+        'vAlign'     => 'bottom',
+        'fontSize'   => 30,
+				'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
+    ])->text("$ " . number_format($producto->precio_venta, 0, ',', '.'), [
+			'color'      => '#000',
+			'opacity'    => 0,
+			'hOffset'    => '10',
+			'vOffset'    => '-10',
+			'hAlign'     => 'left',
+			'vAlign'     => 'bottom',
+			'fontSize'   => 30,
+			'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
+		])->text("Pac " . $producto->cantPaca, [
+			'color'      => '#000',
+			'opacity'    => 0,
+			'hOffset'    => '10',
+			'vOffset'    => '-35',
+			'hAlign'     => 'right',
+			'vAlign'     => 'bottom',
+			'fontSize'   => 17,
+			'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
+		])->text("Cant " . $producto->stock, [
+			'color'      => '#000',
+			'opacity'    => 0,
+			'hOffset'    => '10',
+			'vOffset'    => '-10',
+			'hAlign'     => 'right',
+			'vAlign'     => 'bottom',
+			'fontSize'   => 17,
+			'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
+		])->convert(IMAGETYPE_PNG)
+		->save(UPLOADS_PRODUCT_PATH ."convert/{$producto->id}.png");
+
+		if (is_null($datos)) {
+			return $this->response->download(UPLOADS_PRODUCT_PATH . "convert/{$producto->id}.png", null)->setFileName($producto->referencia . '.png');
+		}
+	}
+
+	public function descargarFoto($minimo, $maximo){
+
+		$mProducto = new mProductos();
+
+		if ($minimo > 0) {
+			$mProducto->where("precio_venta >=", $minimo);
+		}
+
+		if ($maximo > 0) {
+			$mProducto->where("precio_venta <=", $maximo);
+		}
+
+		$productos = $mProducto->where("stock >", 0)->where('imagen IS NOT NULL', NULL, FALSE)->asObject()->findAll();
+
+		$zipFile = new ZipFile();
+		
+		foreach ($productos as $it) {
+			$this->convertirFoto($it->id, $it->imagen, $it);
+			$zipFile->addFile(UPLOADS_PRODUCT_PATH . "convert/{$it->id}.png");
+		}
+
+		$zipFile->saveAsFile(UPLOADS_PRODUCT_PATH . "fotos.zip"); 
+
+		return $this->response->download(UPLOADS_PRODUCT_PATH .  "fotos.zip", null)->setFileName("fotos" . date("Ymd") . '.zip');
+		
 	}
 }

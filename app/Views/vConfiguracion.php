@@ -225,7 +225,7 @@
             </div>
           </div>
           <div class="col-3">
-            <label for="logoFondoLogin">Fondo:</label>
+            <label for="logoFondoLogin">Fondo Inicio:</label>
             <div id="content-upload-logoFondoLogin">
               <div class="content-img rounded d-flex align-items-center justify-content-center">
                 <div class="text-center position-absolute w-90">

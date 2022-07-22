@@ -187,6 +187,10 @@ class mPermisos extends Model {
 					[
 						"id" => 54,
 						"text" => "Ver valor inventario"
+					],
+					[
+						"id" => 55,
+						"text" => "Convertir foto"
 					]
 				]
 			],

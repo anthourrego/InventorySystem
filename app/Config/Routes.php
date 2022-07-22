@@ -88,6 +88,8 @@ $routes->group('Productos', ['filter' => 'authGuard:5'], function ($routes) {
 	$routes->post('Editar', 'cProductos::crearEditar', ['filter' => ['authGuard:52', 'ajax']]);
 	$routes->get('ValidaProducto/(:any)/(:any)/(:num)', 'cProductos::validarProducto/$1/$2/$3', ['filter' => ['authGuard:51,52', 'ajax']]);
 	$routes->post('Eliminar', 'cProductos::eliminar', ['filter' => ['authGuard:53', 'ajax']]);
+	$routes->get('fotoEditada/(:num)/(:any)', 'cProductos::convertirFoto/$1/$2', ['filter' => ['authGuard:55']]);
+	$routes->get('descargarFoto/(:num)/(:num)', 'cProductos::descargarFoto/$1/$2', ['filter' => ['authGuard:55']]);
 });
 
 //Ventas

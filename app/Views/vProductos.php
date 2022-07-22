@@ -1,7 +1,7 @@
 <div class="card">
   <div class="card-header">
     <div class="row justify-content-between">
-      <div class="col-8 col-md-5 d-flex">
+      <div class="col-12 col-md-8 col-lg-5 d-flex">
         <div class="input-group">
           <div class="input-group-prepend">
             <label class="input-group-text" for="selectEstado">Estado</label>
@@ -22,7 +22,7 @@
         </div>
       </div>
       <?php if (validPermissions([54], true)) { ?>
-      <div class="col-8 col-md-3">
+      <div class="col-12 col-md-3 mt-2 mt-md-0">
         <div class="input-group">
           <div class="input-group-prepend">
             <label class="input-group-text" for="selectEstado">Valor Inventario</label>
@@ -31,11 +31,14 @@
         </div>
       </div>
       <?php } ?>
-      <?php if (validPermissions([51], true)) { ?>
-        <div class="col-5 col-md-3 text-right">
+      <div class="col-5 col-md-3 mt-2 mt-md-0 text-right">
+        <?php if (validPermissions([55], true)) { ?>
+          <button type="button" class="btn btn-dark" id="btnFotos"><i class="fa-solid fa-camera"></i> Fotos</button>
+        <?php } ?>
+        <?php if (validPermissions([51], true)) { ?>
           <button type="button" class="btn btn-primary" id="btnCrear"><i class="fa-solid fa-plus"></i> Crear</button>
-        </div>
-      <?php } ?>
+        <?php } ?>
+      </div>
     </div>
   </div>
   <div class="card-body">
@@ -183,6 +186,37 @@
       </div>
       <div class="modal-body">
         <div id="editor-image"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalFiltroFoto" data-backdrop="static" data-keyboard="false" aria-labelledby="modalFiltroFotoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalFiltroFotoLabel"><i class="fa-solid fa-camera"></i> Filtro fotos</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="formFiltroFoto">
+          <div class="row">
+            <div class="col">
+              <label for="filtroMinimo">Mínimo</label>
+              <input type="tel" id="filtroMinimo" class="form-control inputPesos" placeholder="Mínimo">
+            </div>
+            <div class="col">
+              <label for="filtroMaximo">Máximo</label>
+              <input type="tel" id="filtroMaximo" class="form-control inputPesos" placeholder="Máximo">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" form="formFiltroFoto"><i class="fas fa-filter"></i> Filtrar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
       </div>
     </div>
   </div>
