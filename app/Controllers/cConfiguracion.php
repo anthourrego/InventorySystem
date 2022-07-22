@@ -108,9 +108,9 @@ class cConfiguracion extends BaseController {
 		if(is_null($img) || !file_exists($filename)){ 
 			$filename = ASSETS_PATH . "img/nofoto.png";
 		}
-		$mime = mime_content_type($filename); //<-- detect file type
+		//$mime = mime_content_type($filename); //<-- detect file type
 		header('Content-Length: '.filesize($filename)); //<-- sends filesize header
-		header("Content-Type: {$mime}"); //<-- send mime-type header
+		header("Content-Type: image/png"); //<-- send mime-type header
 		header("Content-Disposition: inline; filename='{$filename}';"); //<-- sends filename header
 		readfile($filename); //<--reads and outputs the file onto the output buffer
 		exit(); // or die()

@@ -75,7 +75,6 @@ let DTProductos = $("#table").DataTable({
     defaultContent: '',
     className: 'text-center noExport',
     render: function (meta, type, data, meta) {
-      console.log(data.imagen);
       btnEditar = validPermissions(52) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
       btnCambiarEstado = validPermissions(53) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
       convertirFoto = (validPermissions(55) && data.imagen != null) ? `<a href="${base_url()}Productos/fotoEditada/${data.id}/${data.imagen}" download class="btn btn-info" title="Convertir foto"><i class="fa-solid fa-download"></i></a>` : '';
@@ -295,8 +294,9 @@ $(function () {
   $("#formFiltroFoto").submit(function(e){
     e.preventDefault();
     if (validPermissions(55)){ 
-      let minimo = $("#filtroMinimo").val().length > 0 ? $("#filtroMinimo").val().trim() : 0;
-      let maximo = $("#filtroMaximo").val().length > 0 ? $("#filtroMaximo").val().trim() : 0;
+      let minimo = $("#filtroMinimo").val().length > 0 ? $("#filtroMinimo").val().trim().replaceAll(",", "").replaceAll("$ ", "") : 0;
+      let maximo = $("#filtroMaximo").val().length > 0 ? $("#filtroMaximo").val().trim().replaceAll(",", "").replaceAll("$ ", "") : 0;
+
       window.open(rutaBase + `descargarFoto/${minimo}/${maximo}`);
     } else {
       alertify.alert("Advertencia", "No posees permisos para realizar esta acción")
