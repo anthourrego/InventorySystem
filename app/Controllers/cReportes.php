@@ -400,9 +400,10 @@ class cReportes extends BaseController {
 		$dato = $this->mConfiguracion->where('campo', $campo)->first();
 		$valor = (!is_null($dato) && $dato->valor != '' ? $dato->valor : '');
 		if ($campo == 'logoEmpresa') {
-			$valor = base_url("assets/img/logo-negro-bloque.jpg");
 			if ($valor != '') {
 				$valor = UPLOADS_CONF_PATH . $dato->valor;
+			} else {
+				$valor = base_url("assets/img/logo-negro-bloque.jpg");
 			}
 		}
 		return $valor; 
