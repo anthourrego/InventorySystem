@@ -69,11 +69,12 @@ class cProductos extends BaseController {
 						P.descripcion,
 						P.imagen,
 						CASE 
-								WHEN P.stock <= " . ((int) (session()->has("inventarioBajo") ? session()->get("inventarioBajo") : '0')) . "
-									THEN 'danger'
-								WHEN P.stock > " . ((int) (session()->has("inventarioBajo") ? session()->get("inventarioBajo") : '0')) . " AND P.stock <= " . ((int) (session()->has("inventarioMedio") ? session()->get("inventarioMedio") : '24')) . "
-									THEN 'warning'
-								ELSE 'success' 
+							WHEN P.stock < 0 THEN 'dark'
+							WHEN P.stock <= " . ((int) (session()->has("inventarioBajo") ? session()->get("inventarioBajo") : '0')) . "
+								THEN 'danger'
+							WHEN P.stock > " . ((int) (session()->has("inventarioBajo") ? session()->get("inventarioBajo") : '0')) . " AND P.stock <= " . ((int) (session()->has("inventarioMedio") ? session()->get("inventarioMedio") : '24')) . "
+								THEN 'warning'
+							ELSE 'success' 
 						END AS ColorStock,
 						P.stock,
 						P.precio_venta,
