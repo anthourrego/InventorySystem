@@ -162,9 +162,9 @@ $(function () {
         var image = new Image();
         image.src = event.target.result;
 
-        image.onload = function () { 
-          var height = this.height; 
-          var width = this.width; 
+        image.onload = function () {
+          var height = this.height;
+          var width = this.width;
           let tamanoMax = height <= width ? height : width;
 
           instanciarEditorImagen(image.src, tamanoMax);
@@ -357,14 +357,18 @@ function instanciarEditorImagen(image, tamanoMax) {
       inputs: true,
       inputsPrefix: '',
       grid: true
-    }).rcrop('resize', tamanoMax,tamanoMax);
+    });
   }, 200);
 
-  $('#image').on('rcrop-changed rcrop-ready', function () {
+  $('#image').on('rcrop-changed', function () {
     srcOriginal = $(this).rcrop('getDataURL');
     console.log("Funca ", srcOriginal)
-    // var srcResized = $(this).rcrop('getDataURL', 50, 50);
-  })
+  });
+
+  $('#image').on('rcrop-ready', function () {
+    $(this).rcrop('resize', tamanoMax, tamanoMax);
+    srcOriginal = $(this).rcrop('getDataURL');
+  });
 
   /* const filerobotImageEditor = initEditorImg('#editor-image', image);
   filerobotImageEditor.render({

@@ -176,7 +176,7 @@
 </div>
 
 <div class="modal fade modalFormulario" id="modalEditarImage" data-backdrop="static" data-keyboard="false" aria-labelledby="modalEditarImageLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalEditarImageLabel">Editar Imagen</h5>
@@ -184,8 +184,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <!-- <div id="editor-image"></div> -->
+      <div class="modal-body text-center">
         <img id="image" width="100%" src="" alt="">
       </div>
       <div class="modal-footer">
