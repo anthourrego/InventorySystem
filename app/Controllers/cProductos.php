@@ -29,7 +29,8 @@ class cProductos extends BaseController {
 		$this->LSelect2();
 		$this->LFancybox();
 		$this->LInputMask();
-		$this->LFileRobotImageEditor();
+		// $this->LFileRobotImageEditor();
+		$this->LCropperImageEditor();
 
 		$categorias = new mCategorias();
 		$this->content["categorias"] = $categorias->asObject()->where("estado", 1)->findAll();

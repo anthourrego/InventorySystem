@@ -251,4 +251,13 @@ class BaseController extends Controller {
             'jsImageEditor.js'
         ];
     }
+
+    public function LCropperImageEditor(){
+        $this->content['css'][] = [
+            'assets/Libraries/rcrop/rcrop.min.css'
+        ];
+        $this->content['js'][] = [
+            'assets/Libraries/rcrop/rcrop.min.js'
+        ];
+    }
 }

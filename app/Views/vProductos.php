@@ -185,7 +185,12 @@
         </button>
       </div>
       <div class="modal-body">
-        <div id="editor-image"></div>
+        <!-- <div id="editor-image"></div> -->
+        <img id="image" width="100%" src="" alt="">
+      </div>
+      <div class="modal-footer">
+        <button type="button" onclick="guardarImage()" class="btn btn-success"><i class="fas fa-save"></i> Confirmar</button>
+        <button type="button" class="btn btn-secondary btnCancelarImg"><i class="fas fa-times"></i> Cerrar</button>
       </div>
     </div>
   </div>

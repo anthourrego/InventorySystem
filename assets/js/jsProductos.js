@@ -1,4 +1,5 @@
 let rutaBase = base_url() + "Productos/";
+let srcOriginal = '';
 
 let DTProductos = $("#table").DataTable({
   ajax: {
@@ -287,13 +288,13 @@ $(function () {
     DTProductos.ajax.reload();
   });
 
-  $("#btnFotos").on("click", function(){
+  $("#btnFotos").on("click", function () {
     $("#modalFiltroFoto").modal("show");
   });
 
-  $("#formFiltroFoto").submit(function(e){
+  $("#formFiltroFoto").submit(function (e) {
     e.preventDefault();
-    if (validPermissions(55)){ 
+    if (validPermissions(55)) {
       let minimo = $("#filtroMinimo").val().length > 0 ? $("#filtroMinimo").val().trim().replaceAll(",", "").replaceAll("$ ", "") : 0;
       let maximo = $("#filtroMaximo").val().length > 0 ? $("#filtroMaximo").val().trim().replaceAll(",", "").replaceAll("$ ", "") : 0;
 
@@ -301,6 +302,12 @@ $(function () {
     } else {
       alertify.alert("Advertencia", "No posees permisos para realizar esta acción")
     }
+  });
+
+  $(".btnCancelarImg").click(function () {
+    srcOriginal = '';
+    $("#modalEditarImage").modal('hide');
+    $("#modalCrearEditar").show();
   });
 });
 
@@ -328,7 +335,26 @@ function eliminar(data) {
 }
 
 function instanciarEditorImagen(image) {
-  const filerobotImageEditor = initEditorImg('#editor-image', image);
+  $("#image").attr('src', image);
+  setTimeout(() => {
+    $('#image').rcrop({
+      full: false,
+      minSize: [100, 100],
+      maxSize: [2248, 2248],
+      preserveAspectRatio: true,
+      inputs: true,
+      inputsPrefix: '',
+      grid: true
+    });
+  }, 200);
+
+  $('#image').on('rcrop-changed rcrop-ready', function () {
+    srcOriginal = $(this).rcrop('getDataURL');
+    console.log("Funca ", srcOriginal)
+    // var srcResized = $(this).rcrop('getDataURL', 50, 50);
+  })
+
+  /* const filerobotImageEditor = initEditorImg('#editor-image', image);
   filerobotImageEditor.render({
     onSave: async function (editedImageObject, designState) {
       const file = await baseToFile(editedImageObject.imageBase64, editedImageObject.fullName, editedImageObject.mimeType);
@@ -344,7 +370,18 @@ function instanciarEditorImagen(image) {
         alertify.error("La imagen es superior a 2mb");
       }
     },
-  });
+  }); */
+}
+
+async function guardarImage() {
+  const file = await baseToFile(srcOriginal, 'temp', 'image/png');
+  var dt = new DataTransfer();
+  dt.items.add(file);
+  $("#foto").prop('files', dt.files);
+  $('#imgFoto').attr('src', srcOriginal);
+  $("#modalEditarImage").modal('hide');
+  $("#modalCrearEditar").show();
+  $('#image').rcrop('destroy');
 }
 
 async function baseToFile(url, filename, mimeType) {
