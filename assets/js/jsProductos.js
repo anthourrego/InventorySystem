@@ -158,9 +158,20 @@ $(function () {
     if (file) {
       let reader = new FileReader();
       reader.onload = function (event) {
-        instanciarEditorImagen(event.target.result);
-        $("#modalCrearEditar").hide();
-        $("#modalEditarImage").modal('show');
+        console.log(event.target);
+        var image = new Image();
+        image.src = event.target.result;
+
+        image.onload = function () { 
+          var height = this.height; 
+          var width = this.width; 
+          let tamanoMax = height <= width ? height : width;
+
+          instanciarEditorImagen(image.src, tamanoMax);
+          $("#modalCrearEditar").hide();
+          $("#modalEditarImage").modal('show');
+        };
+
       }
       reader.readAsDataURL(file);
       $("#content-preview").removeClass("d-none");
@@ -334,18 +345,19 @@ function eliminar(data) {
     }, function () { });
 }
 
-function instanciarEditorImagen(image) {
+function instanciarEditorImagen(image, tamanoMax) {
+  $("#image").rcrop("destroy");
   $("#image").attr('src', image);
   setTimeout(() => {
     $('#image').rcrop({
-      full: false,
+      full: true,
       minSize: [100, 100],
-      maxSize: [2248, 2248],
+      maxSize: [tamanoMax, tamanoMax],
       preserveAspectRatio: true,
       inputs: true,
       inputsPrefix: '',
       grid: true
-    });
+    }).rcrop('resize', tamanoMax,tamanoMax);
   }, 200);
 
   $('#image').on('rcrop-changed rcrop-ready', function () {
