@@ -176,7 +176,7 @@ class cProductos extends BaseController {
 						'rules' => [
 							'uploaded[imagen]',
 							'mime_in[imagen,image/jpg,image/jpeg,image/gif,image/png]',
-							'max_size[imagen,2048]',
+							'max_size[imagen,10240]',
 						],
 					]);
 									
@@ -184,8 +184,14 @@ class cProductos extends BaseController {
 					if ($validated) {
 						if ($imgFoto->isValid() && !$imgFoto->hasMoved()) {
 							//Validamos que la imagen suba correctamente
-							$nameImg = "01.{$imgFoto->getClientExtension()}";
-							if ($imgFoto->move(UPLOADS_PRODUCT_PATH . "/" . $product->id, $nameImg, true)) {
+							$nameImg = "01.png";
+
+							$image = Services::image()
+												->withFile($imgFoto)
+												->resize(1080, 1080, true, 'height');
+
+							//$imgFoto->move(UPLOADS_PRODUCT_PATH . "/" . $product->id, $nameImg, true)
+							if ($image->save(UPLOADS_PRODUCT_PATH ."/" . $product->id  ."/". $nameImg)) {
 								$updateFoto = array(
 									"id" => $product->id,
 									"imagen" => $nameImg
