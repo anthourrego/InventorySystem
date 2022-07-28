@@ -82,6 +82,7 @@
           <input type="hidden" name="editFoto" id="editFoto" value="0">
           <div class="form-row">
             <div class="col-6">
+              <button type="button" style="z-index: 30" id="tomarFoto" class="btn btn-info btn-sm col-10 mb-1"><i class="fas fa-camera"></i> Tomar Foto</button>
               <div id="content-upload">
                 <div class="content-img rounded d-flex align-items-center justify-content-center">
                   <div class="text-center position-absolute w-90">
@@ -186,6 +187,10 @@
       </div>
       <div class="modal-body text-center">
         <img id="image" width="100%" src="" alt="">
+
+        <video muted="muted" width="100%" style="display: none;" id="video"></video>
+	      <canvas id="canvas" style="display: none;"></canvas>
+
       </div>
       <div class="modal-footer">
         <button type="button" onclick="guardarImage()" class="btn btn-success"><i class="fas fa-save"></i> Confirmar</button>

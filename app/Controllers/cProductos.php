@@ -29,7 +29,6 @@ class cProductos extends BaseController {
 		$this->LSelect2();
 		$this->LFancybox();
 		$this->LInputMask();
-		// $this->LFileRobotImageEditor();
 		$this->LCropperImageEditor();
 
 		$categorias = new mCategorias();

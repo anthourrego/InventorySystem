@@ -243,15 +243,6 @@ class BaseController extends Controller {
         ];
     }
 
-    public function LFileRobotImageEditor(){
-        $this->content['js'][] = [
-            'assets/Libraries/filerobot-image-editor/filerobot-image-editor.min.js'
-        ];
-        $this->content['js_add'][] = [
-            'jsImageEditor.js'
-        ];
-    }
-
     public function LCropperImageEditor(){
         $this->content['css'][] = [
             'assets/Libraries/rcrop/rcrop.min.css'

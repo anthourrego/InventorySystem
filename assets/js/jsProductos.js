@@ -1,6 +1,7 @@
 let rutaBase = base_url() + "Productos/";
 let srcOriginal = '';
-
+let stream = null;
+let $video = null;
 let DTProductos = $("#table").DataTable({
   ajax: {
     url: rutaBase + "DT",
@@ -166,28 +167,13 @@ $(function () {
           var height = this.height;
           var width = this.width;
           let tamanoMax = height <= width ? height : width;
-
+          $('#image').show();
           instanciarEditorImagen(image.src, tamanoMax);
           $("#modalCrearEditar").hide();
           $("#modalEditarImage").modal('show');
         };
-
       }
       reader.readAsDataURL(file);
-      $("#content-preview").removeClass("d-none");
-      $("#content-upload").addClass("d-none");
-
-      if ($("#id").val().length > 0) {
-        $("#editFoto").val(0);
-      }
-      /* if (file.size <= 2000000) {
-      } else {
-        alertify.error("La imagen es superior a 2mb");
-        $("#foto").val('');
-        $('#imgFoto').attr('src', base_url() + "Usuarios/Foto");
-        $("#content-preview").addClass("d-none");
-        $("#content-upload").removeClass("d-none");
-      } */
     } else {
       $("#foto").val('');
       $('#imgFoto').attr('src', base_url() + "Usuarios/Foto");
@@ -317,8 +303,18 @@ $(function () {
 
   $(".btnCancelarImg").click(function () {
     srcOriginal = '';
+    $('#image').rcrop('destroy');
+    $("#video").hide();
     $("#modalEditarImage").modal('hide');
     $("#modalCrearEditar").show();
+  });
+
+  $("#tomarFoto").click(function () {
+    if (!tieneSoporteUserMedia()) {
+      alertify.warning("Su navegador no soporta tomar fotos.");
+    }
+    $('#image').hide();
+    iniciarCamara();
   });
 });
 
@@ -369,39 +365,120 @@ function instanciarEditorImagen(image, tamanoMax) {
     $(this).rcrop('resize', tamanoMax, tamanoMax);
     srcOriginal = $(this).rcrop('getDataURL');
   });
-
-  /* const filerobotImageEditor = initEditorImg('#editor-image', image);
-  filerobotImageEditor.render({
-    onSave: async function (editedImageObject, designState) {
-      const file = await baseToFile(editedImageObject.imageBase64, editedImageObject.fullName, editedImageObject.mimeType);
-      if (file.size <= 2000000) {
-        var dt = new DataTransfer();
-        dt.items.add(file);
-        $("#foto").prop('files', dt.files);
-        $('#imgFoto').attr('src', editedImageObject.imageBase64);
-        $("#modalEditarImage").modal('hide');
-        $("#modalCrearEditar").show();
-        filerobotImageEditor.terminate();
-      } else {
-        alertify.error("La imagen es superior a 2mb");
-      }
-    },
-  }); */
 }
 
 async function guardarImage() {
-  const file = await baseToFile(srcOriginal, 'temp', 'image/png');
-  var dt = new DataTransfer();
-  dt.items.add(file);
-  $("#foto").prop('files', dt.files);
-  $('#imgFoto').attr('src', srcOriginal);
-  $("#modalEditarImage").modal('hide');
-  $("#modalCrearEditar").show();
-  $('#image').rcrop('destroy');
+  if (stream != null) {
+    recortarImagen();
+  } else {
+    const file = await baseToFile(srcOriginal, 'temp', 'image/png');
+    var dt = new DataTransfer();
+    dt.items.add(file);
+    $("#foto").prop('files', dt.files);
+    $('#imgFoto').attr('src', srcOriginal);
+    $("#modalEditarImage").modal('hide');
+    $("#modalCrearEditar").show();
+    $('#image').rcrop('destroy');
+    $("#content-preview").removeClass("d-none");
+    $("#content-upload").addClass("d-none");
+    if ($("#id").val().length > 0) {
+      $("#editFoto").val(0);
+    }
+  }
 }
 
 async function baseToFile(url, filename, mimeType) {
   const res = await fetch(url);
   const buf = await res.arrayBuffer();
   return new File([buf], filename, { type: mimeType });
+}
+
+function tieneSoporteUserMedia() {
+  return !!(
+    navigator.getUserMedia
+    || (navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia)
+    || navigator.webkitGetUserMedia
+    || navigator.msGetUserMedia
+  );
+}
+
+function _getUserMedia() {
+  return (
+    navigator.getUserMedia
+    || (navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia)
+    || navigator.webkitGetUserMedia || navigator.msGetUserMedia
+  ).apply(navigator, arguments);
+}
+
+function iniciarCamara() {
+  $("#modalCrearEditar").hide();
+  $("#modalEditarImage").modal('show');
+  $("#video").show();
+
+  // Comenzamos pidiendo los dispositivos
+  navigator.mediaDevices.enumerateDevices().then(function (dispositivos) {
+    // Vamos a filtrarlos y guardar aquí los de vídeo
+    const dispositivosDeVideo = [];
+
+    // Recorrer y filtrar
+    dispositivos.forEach(function (dispositivo) {
+      const tipo = dispositivo.kind;
+      if (tipo === "videoinput") {
+        dispositivosDeVideo.push(dispositivo);
+      }
+    });
+
+    // Vemos si encontramos algún dispositivo, y en caso de que si, entonces llamamos a la función
+    // y le pasamos el id de dispositivo
+    if (dispositivosDeVideo.length > 0) {
+      // Mostrar stream con el ID del primer dispositivo, luego el usuario puede cambiar
+      mostrarStream(dispositivosDeVideo[0].deviceId);
+    }
+  });
+}
+
+function mostrarStream(idDeDispositivo) {
+  _getUserMedia({
+    video: {
+      // Justo aquí indicamos cuál dispositivo usar
+      deviceId: idDeDispositivo,
+    }
+  }, function (streamObtenido) {
+    // Simple asignación
+    stream = streamObtenido;
+
+    $video = document.querySelector("#video");
+    // Mandamos el stream de la cámara al elemento de vídeo
+    $video.srcObject = stream;
+    $video.play();
+  }, function (error) {
+    console.log("Permiso denegado o error: ", error);
+    $estado.innerHTML = "No se puede acceder a la cámara, o no diste permiso.";
+  });
+}
+
+function recortarImagen() {
+  $('#image').show();
+  //Pausar reproducción
+  $video.pause();
+
+  //Obtener contexto del canvas y dibujar sobre él
+  let $canvas = document.querySelector("#canvas");
+  $canvas.width = $video.videoWidth;
+  $canvas.height = $video.videoHeight;
+  $canvas.getContext("2d").drawImage($video, 0, 0, $canvas.width, $canvas.height);
+
+  var image = new Image();
+  image.src = $canvas.toDataURL();
+
+  image.onload = function () {
+    var height = this.height;
+    var width = this.width;
+    let tamanoMax = height <= width ? height : width;
+    $("#video").hide();
+    instanciarEditorImagen($canvas.toDataURL(), tamanoMax);
+    stream = null;
+  };
+  /* $("#content-preview").removeClass("d-none");
+  $("#content-upload").addClass("d-none"); */
 }
