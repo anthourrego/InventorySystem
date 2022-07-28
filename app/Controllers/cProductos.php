@@ -190,8 +190,13 @@ class cProductos extends BaseController {
 												->withFile($imgFoto)
 												->resize(1080, 1080, true, 'height');
 
+							$ruta = UPLOADS_PRODUCT_PATH ."/" . $product->id  ."/";
+							if (!file_exists($ruta)) {
+									mkdir($ruta, 0777, true);
+							}
+
 							//$imgFoto->move(UPLOADS_PRODUCT_PATH . "/" . $product->id, $nameImg, true)
-							if ($image->save(UPLOADS_PRODUCT_PATH ."/" . $product->id  ."/". $nameImg)) {
+							if ($image->save($ruta . $nameImg)) {
 								$updateFoto = array(
 									"id" => $product->id,
 									"imagen" => $nameImg
