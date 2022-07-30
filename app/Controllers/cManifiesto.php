@@ -377,7 +377,7 @@ class cManifiesto extends BaseController {
 
 					$file = new \CodeIgniter\Files\File($path);
 
-					$mimeType = $file->getMimeType();;
+					$mimeType = $file->getMimeType();
 		
 					$this->response->setStatusCode(200)
 												->setContentType($mimeType)
@@ -386,7 +386,8 @@ class cManifiesto extends BaseController {
 				}
 
 			} else {
-				return $this->response->download($path, null);
+				$name = str_replace($id, $manif->nombre, $manif->ruta_archivo);
+				return $this->response->download($path, null)->setFileName($name);
 			}
 
 		}
