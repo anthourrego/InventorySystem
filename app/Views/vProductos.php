@@ -181,12 +181,15 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalEditarImageLabel">Editar Imagen</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close btnCancelarImg" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body text-center">
         <img id="image" width="100%" src="" alt="">
+
+        <img id="imageTemp" style="display: none;" width="100%" src="assets/img/nofoto.png" alt="">
+
         <video muted="muted" width="100%" style="display: none;" id="video"></video>
 	      <canvas id="canvas" style="display: none;"></canvas>
 
@@ -194,9 +197,10 @@
       <div class="modal-footer d-flex justify-content-between">
         <div class="btnsync">
           <button type="button" onclick="cambiarCamara()" class="btn btn-secondary btnsyncaction"><i class="fas fa-sync"></i></button>  
+          <button type="button" onclick="reintentarFoto()" class="btn btn-danger reloadFoto"><i class="fas fa-redo"></i></button>  
         </div>
         <div class="btnactions">
-          <button type="button" onclick="guardarImage()" class="btn btn-success"><i class="fas fa-save"></i> Confirmar</button>
+          <button type="button" onclick="guardarImage()" class="btn btn-success btnGuadarFoto"><i class="fas fa-save"></i> Confirmar</button>
           <button type="button" class="btn btn-secondary btnCancelarImg"><i class="fas fa-times"></i> Cerrar</button>
         </div>
       </div>

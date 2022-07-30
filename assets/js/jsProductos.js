@@ -306,6 +306,10 @@ $(function () {
     srcOriginal = '';
     $('#image').rcrop('destroy');
     $("#video").hide();
+    if (stream) {
+      const tracks = stream.getTracks();
+      tracks.forEach(track => track.stop());
+    }
     $("#modalEditarImage").modal('hide');
     $("#modalCrearEditar").show();
   });
@@ -315,8 +319,8 @@ $(function () {
       alertify.warning("Su navegador no soporta tomar fotos.");
       return
     }
-    $(".btnsyncaction").show();
-    $('#image').hide();
+    cameraActive = 'environment';
+    $('#image, .reloadFoto').hide();
     $("#modalCrearEditar").hide();
     $("#modalEditarImage").modal('show');
     iniciarCamara();
@@ -416,7 +420,8 @@ function cambiarCamara() {
 }
 
 async function iniciarCamara() {
-  $("#video").show();
+  $("#imageTemp").show();
+  $(".btnGuadarFoto").prop('disabled', true);
   $video = document.querySelector("#video");
   capture(cameraActive);
 }
@@ -441,10 +446,13 @@ const capture = async facingMode => {
   $video.srcObject = null;
   $video.srcObject = stream;
   $video.play();
+  $("#imageTemp").hide();
+  $(".btnGuadarFoto").prop('disabled', false);
+  $("#video, .btnsyncaction").show();
 }
 
 function recortarImagen() {
-  $('#image').show();
+  $('#image, .reloadFoto').show();
 
   if (stream) {
     const tracks = stream.getTracks();
@@ -468,4 +476,11 @@ function recortarImagen() {
     instanciarEditorImagen($canvas.toDataURL(), tamanoMax);
     stream = null;
   };
+}
+
+function reintentarFoto() {
+  srcOriginal = '';
+  $('#image').rcrop('destroy');
+  $("#video, .reloadFoto, #image").hide();
+  iniciarCamara();
 }
