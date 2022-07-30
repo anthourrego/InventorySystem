@@ -2,6 +2,7 @@ let rutaBase = base_url() + "Productos/";
 let srcOriginal = '';
 let stream = null;
 let $video = null;
+let cameraActive = 'environment';
 let DTProductos = $("#table").DataTable({
   ajax: {
     url: rutaBase + "DT",
@@ -312,8 +313,12 @@ $(function () {
   $("#tomarFoto").click(function () {
     if (!tieneSoporteUserMedia()) {
       alertify.warning("Su navegador no soporta tomar fotos.");
+      return
     }
+    $(".btnsyncaction").show();
     $('#image').hide();
+    $("#modalCrearEditar").hide();
+    $("#modalEditarImage").modal('show');
     iniciarCamara();
   });
 });
@@ -402,65 +407,49 @@ function tieneSoporteUserMedia() {
   );
 }
 
-function _getUserMedia() {
-  return (
-    navigator.getUserMedia
-    || (navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia)
-    || navigator.webkitGetUserMedia || navigator.msGetUserMedia
-  ).apply(navigator, arguments);
+function cambiarCamara() {
+  cameraActive = (cameraActive == 'environment' ? 'user' : 'environment');
+  srcOriginal = '';
+  $('#image').rcrop('destroy');
+  $("#video").hide();
+  iniciarCamara();
 }
 
-function iniciarCamara() {
-  $("#modalCrearEditar").hide();
-  $("#modalEditarImage").modal('show');
+async function iniciarCamara() {
   $("#video").show();
-
-  // Comenzamos pidiendo los dispositivos
-  navigator.mediaDevices.enumerateDevices().then(function (dispositivos) {
-    // Vamos a filtrarlos y guardar aquí los de vídeo
-    const dispositivosDeVideo = [];
-
-    // Recorrer y filtrar
-    dispositivos.forEach(function (dispositivo) {
-      const tipo = dispositivo.kind;
-      if (tipo === "videoinput") {
-        dispositivosDeVideo.push(dispositivo);
-      }
-    });
-
-    // Vemos si encontramos algún dispositivo, y en caso de que si, entonces llamamos a la función
-    // y le pasamos el id de dispositivo
-    if (dispositivosDeVideo.length > 0) {
-      // Mostrar stream con el ID del primer dispositivo, luego el usuario puede cambiar
-      mostrarStream(dispositivosDeVideo[0].deviceId);
-    }
-  });
+  $video = document.querySelector("#video");
+  capture(cameraActive);
 }
 
-function mostrarStream(idDeDispositivo) {
-  _getUserMedia({
+const capture = async facingMode => {
+  const options = {
+    audio: false,
     video: {
-      // Justo aquí indicamos cuál dispositivo usar
-      deviceId: idDeDispositivo,
+      facingMode,
+    },
+  };
+  try {
+    if (stream) {
+      const tracks = stream.getTracks();
+      tracks.forEach(track => track.stop());
     }
-  }, function (streamObtenido) {
-    // Simple asignación
-    stream = streamObtenido;
-
-    $video = document.querySelector("#video");
-    // Mandamos el stream de la cámara al elemento de vídeo
-    $video.srcObject = stream;
-    $video.play();
-  }, function (error) {
-    console.log("Permiso denegado o error: ", error);
-    $estado.innerHTML = "No se puede acceder a la cámara, o no diste permiso.";
-  });
+    stream = await navigator.mediaDevices.getUserMedia(options);
+  } catch (e) {
+    alert(e);
+    return;
+  }
+  $video.srcObject = null;
+  $video.srcObject = stream;
+  $video.play();
 }
 
 function recortarImagen() {
   $('#image').show();
-  //Pausar reproducción
-  $video.pause();
+
+  if (stream) {
+    const tracks = stream.getTracks();
+    tracks.forEach(track => track.stop());
+  }
 
   //Obtener contexto del canvas y dibujar sobre él
   let $canvas = document.querySelector("#canvas");
@@ -475,10 +464,8 @@ function recortarImagen() {
     var height = this.height;
     var width = this.width;
     let tamanoMax = height <= width ? height : width;
-    $("#video").hide();
+    $("#video, .btnsyncaction").hide();
     instanciarEditorImagen($canvas.toDataURL(), tamanoMax);
     stream = null;
   };
-  /* $("#content-preview").removeClass("d-none");
-  $("#content-upload").addClass("d-none"); */
 }

@@ -187,14 +187,18 @@
       </div>
       <div class="modal-body text-center">
         <img id="image" width="100%" src="" alt="">
-
         <video muted="muted" width="100%" style="display: none;" id="video"></video>
 	      <canvas id="canvas" style="display: none;"></canvas>
 
       </div>
-      <div class="modal-footer">
-        <button type="button" onclick="guardarImage()" class="btn btn-success"><i class="fas fa-save"></i> Confirmar</button>
-        <button type="button" class="btn btn-secondary btnCancelarImg"><i class="fas fa-times"></i> Cerrar</button>
+      <div class="modal-footer d-flex justify-content-between">
+        <div class="btnsync">
+          <button type="button" onclick="cambiarCamara()" class="btn btn-secondary btnsyncaction"><i class="fas fa-sync"></i></button>  
+        </div>
+        <div class="btnactions">
+          <button type="button" onclick="guardarImage()" class="btn btn-success"><i class="fas fa-save"></i> Confirmar</button>
+          <button type="button" class="btn btn-secondary btnCancelarImg"><i class="fas fa-times"></i> Cerrar</button>
+        </div>
       </div>
     </div>
   </div>
