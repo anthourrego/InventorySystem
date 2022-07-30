@@ -363,7 +363,8 @@ function instanciarEditorImagen(image, tamanoMax) {
       inputsPrefix: '',
       grid: true
     });
-  }, 200);
+    $('#image').show();
+  }, 100);
 
   $('#image').on('rcrop-changed', function () {
     srcOriginal = $(this).rcrop('getDataURL');
@@ -452,12 +453,7 @@ const capture = async facingMode => {
 }
 
 function recortarImagen() {
-  $('#image, .reloadFoto').show();
-
-  if (stream) {
-    const tracks = stream.getTracks();
-    tracks.forEach(track => track.stop());
-  }
+  $('.reloadFoto').show();
 
   //Obtener contexto del canvas y dibujar sobre él
   let $canvas = document.querySelector("#canvas");
@@ -472,6 +468,10 @@ function recortarImagen() {
     var height = this.height;
     var width = this.width;
     let tamanoMax = height <= width ? height : width;
+    if (stream) {
+      const tracks = stream.getTracks();
+      tracks.forEach(track => track.stop());
+    }
     $("#video, .btnsyncaction").hide();
     instanciarEditorImagen($canvas.toDataURL(), tamanoMax);
     stream = null;
