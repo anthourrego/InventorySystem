@@ -41,6 +41,7 @@ let DTManifiestos = $("#table").DataTable({
         return moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A");
       }
     },
+    { data: 'Asignacion' },
     {
       orderable: false,
       searchable: false,

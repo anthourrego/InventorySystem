@@ -20,10 +20,14 @@ class mManifiesto extends Model {
   protected $updatedField  = 'updated_at';
 
   protected $validationRules    = [
-    'nombre' => 'required|string|min_length[3]|max_length[255]',
+    'nombre' => 'required|string|min_length[3]|max_length[255]|is_unique[manifiestos.nombre, id, {id}]',
     'foto'   => 'permit_empty'
   ];
-  protected $validationMessages = [];
+  protected $validationMessages   = [
+		"nombre" => [
+			'is_unique' => 'El manifiesto <b>{value}</b>, ya se encuentra creado, intente con otro nombre.',
+		]
+	];
   
   public function get($id = null) {
     if ($id === null) {

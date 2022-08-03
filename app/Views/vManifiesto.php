@@ -2,8 +2,8 @@
   <div class="col-12 col-md-12" id="cardManifiestos">
     <div class="card">
       <div class="card-header">
-        <div class="row justify-content-between">
-          <div class="col-8 col-md-3">
+        <div class="row">
+          <div class="col-12 col-md-3">
             <div class="input-group">
               <div class="input-group-prepend">
                 <label class="input-group-text" for="selectEstado">Estado</label>
@@ -15,7 +15,31 @@
               </select>
             </div>
           </div>
-          <div class="col-5 col-md-3 text-right">
+          <div class="col-6 col-md-2">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="selectEstado">Sin Asignar</label>
+              </div>
+              <input type="color" disabled readonly class="form-control form-control-color" value="#ffa9b1" title="Sin Asignar">
+            </div>
+          </div>
+          <div class="col-6 col-md-2">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="selectEstado">Asignado</label>
+              </div>
+              <input type="color" disabled  readonly class="form-control form-control-color" value="#CECECE" title="Asignado">
+            </div>
+          </div>
+          <div class="col-6 col-md-2">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="selectEstado">Seleccionado</label>
+              </div>
+              <input type="color" disabled  readonly class="form-control form-control-color" value="#a9ecff" title="Seleccionado">
+            </div>
+          </div>
+          <div class="col-6 col-md-3 text-right">
             <?php if (validPermissions([81], true)) { ?>
               <button type="button" class="btn btn-primary" id="btnCrearManifiesto"><i class="fa-solid fa-plus"></i> Crear</button>
             <?php } ?>
@@ -39,6 +63,7 @@
                 <th>Nombre</th>
                 <th>Estado</th>
                 <th>Fecha Creación</th>
+                <th>Asignación</th>
                 <th>Acciones</th>
               </tr>
             </thead>

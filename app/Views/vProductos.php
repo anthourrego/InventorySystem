@@ -18,7 +18,7 @@
               <input id="verImg" type="checkbox" <?= $imagenProd == 1 ? 'checked' : '' ?>>
             </div>
           </div>
-          <label for="verImg" class="form-control">¿Ver Imagenes?</label>
+          <label for="verImg" class="form-control">¿Ver Imagen?</label>
         </div>
       </div>
       <?php if (validPermissions([54], true)) { ?>
@@ -31,7 +31,7 @@
         </div>
       </div>
       <?php } ?>
-      <div class="col-5 col-md-3 mt-2 mt-md-0 text-right">
+      <div class="col-12 col-md-3 mt-2 mt-md-0 text-right">
         <?php if (validPermissions([55], true)) { ?>
           <button type="button" class="btn btn-dark" id="btnFotos"><i class="fa-solid fa-camera"></i> Fotos</button>
         <?php } ?>

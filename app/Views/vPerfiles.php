@@ -14,7 +14,7 @@
         </div>
       </div>
       <?php if (validPermissions([21], true)) { ?>
-        <div class="col-5 col-md-3 text-right">
+        <div class="col-4 col-md-3 text-right">
           <button type="button" class="btn btn-primary" id="btnCrear"><i class="fa-solid fa-plus"></i> Crear</button>
         </div>
       <?php } ?>

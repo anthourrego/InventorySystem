@@ -47,6 +47,7 @@ class cManifiesto extends BaseController {
 						WHEN M.estado = 1 THEN 'Activo' 
 						ELSE 'Inactivo' 
 				END AS Nombre_Estado
+				, CASE WHEN T.Total > 0 THEN 'Asignado' ELSE 'Sin Asignar' END AS Asignacion
 				, T.Total AS Total_Prods_Manifiesto
       ")->join("(
 				SELECT 
