@@ -302,10 +302,10 @@ class cProductos extends BaseController {
         'color'      => '#000',
         'opacity'    => 0,
 				'hOffset'    => '10',
-				'vOffset'    => '-50',
+				'vOffset'    => '-90',
         'hAlign'     => 'left',
         'vAlign'     => 'bottom',
-        'fontSize'   => 30,
+        'fontSize'   => 80,
 				'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
     ])->text("$ " . number_format($producto->precio_venta, 0, ',', '.'), [
 			'color'      => '#000',
@@ -314,16 +314,16 @@ class cProductos extends BaseController {
 			'vOffset'    => '-10',
 			'hAlign'     => 'left',
 			'vAlign'     => 'bottom',
-			'fontSize'   => 30,
+			'fontSize'   => 80,
 			'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
 		])->text("Pac " . $producto->cantPaca, [
 			'color'      => '#000',
 			'opacity'    => 0,
 			'hOffset'    => '10',
-			'vOffset'    => '-35',
+			'vOffset'    => '-60',
 			'hAlign'     => 'right',
 			'vAlign'     => 'bottom',
-			'fontSize'   => 17,
+			'fontSize'   => 40,
 			'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
 		])->text("Cant " . $producto->stock, [
 			'color'      => '#000',
@@ -332,7 +332,7 @@ class cProductos extends BaseController {
 			'vOffset'    => '-10',
 			'hAlign'     => 'right',
 			'vAlign'     => 'bottom',
-			'fontSize'   => 17,
+			'fontSize'   => 40,
 			'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
 		])->convert(IMAGETYPE_PNG)
 		->save(UPLOADS_PRODUCT_PATH ."convert/{$producto->id}.png");
