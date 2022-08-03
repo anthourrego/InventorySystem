@@ -194,7 +194,7 @@
 	      <canvas id="canvas" style="display: none;"></canvas>
 
       </div>
-      <div class="modal-footer d-flex justify-content-between">
+      <div class="modal-footer d-flex justify-content-between footer-modal">
         <div class="btnsync">
           <button type="button" onclick="cambiarCamara()" class="btn btn-secondary btnsyncaction"><i class="fas fa-sync"></i></button>  
           <button type="button" onclick="reintentarFoto()" class="btn btn-danger reloadFoto"><i class="fas fa-redo"></i></button>  

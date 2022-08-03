@@ -6,6 +6,7 @@ use App\Models\mPerfiles;
 use \Hermawan\DataTables\DataTable;
 use App\Models\mPermisos;
 use App\Models\mAlmacen;
+use \Config\Services;
 
 class cUsuarios extends BaseController {
 
@@ -19,6 +20,7 @@ class cUsuarios extends BaseController {
 		$this->LSelect2();
 		$this->LJQueryValidation();
 		$this->Lgijgo();
+		$this->LCropperImageEditor();
 
 		$permisosModel = new mPermisos();
 		$this->content["permisos"] = $permisosModel->lista();
@@ -165,8 +167,16 @@ class cUsuarios extends BaseController {
 				if ($validated) {
 					if ($imgFoto->isValid() && !$imgFoto->hasMoved()) {
 						//Validamos que la imagen suba correctamente
-						$nameImg = "{$user->id}.{$imgFoto->getClientExtension()}";
-						if ($imgFoto->move(UPLOADS_USER_PATH, $nameImg, true)) {
+						$nameImg = "{$user->id}.png";
+
+						$image = Services::image()->withFile($imgFoto)->resize(1080, 1080, true, 'height');
+
+						$ruta = UPLOADS_USER_PATH . "/";
+						if (!file_exists($ruta)) {
+							mkdir($ruta, 0777, true);
+						}
+
+						if ($image->save($ruta . $nameImg)) {
 							$updateFoto = array(
 								"id" => $user->id,
 								"foto" => $nameImg

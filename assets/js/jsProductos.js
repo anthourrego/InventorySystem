@@ -160,7 +160,6 @@ $(function () {
     if (file) {
       let reader = new FileReader();
       reader.onload = function (event) {
-        console.log(event.target);
         var image = new Image();
         image.src = event.target.result;
 
@@ -169,6 +168,8 @@ $(function () {
           var width = this.width;
           let tamanoMax = height <= width ? height : width;
           $('#image').show();
+          $(".btnsync").hide();
+          $(".footer-modal").removeClass('justify-content-between');
           instanciarEditorImagen(image.src, tamanoMax);
           $("#modalCrearEditar").hide();
           $("#modalEditarImage").modal('show');
@@ -310,6 +311,7 @@ $(function () {
       const tracks = stream.getTracks();
       tracks.forEach(track => track.stop());
     }
+    stream = null;
     $("#modalEditarImage").modal('hide');
     $("#modalCrearEditar").show();
   });
@@ -320,6 +322,8 @@ $(function () {
       return
     }
     cameraActive = 'environment';
+    $(".btnsync").show();
+    $(".footer-modal").addClass('justify-content-between');
     $('#image, .reloadFoto').hide();
     $("#modalCrearEditar").hide();
     $("#modalEditarImage").modal('show');
@@ -364,11 +368,10 @@ function instanciarEditorImagen(image, tamanoMax) {
       grid: true
     });
     $('#image').show();
-  }, 100);
+  }, 200);
 
   $('#image').on('rcrop-changed', function () {
     srcOriginal = $(this).rcrop('getDataURL');
-    console.log("Funca ", srcOriginal)
   });
 
   $('#image').on('rcrop-ready', function () {
