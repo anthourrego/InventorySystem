@@ -295,6 +295,8 @@ class cProductos extends BaseController {
 			$producto = $datos;
 		}
 
+		$descripcion = substr($producto->descripcion, 0, 66) . (strlen($producto->descripcion) > 66 ? "..." : "");
+
 		$servicios = new Services();
 		$servicios::image()
     ->withFile($filename)
@@ -330,6 +332,17 @@ class cProductos extends BaseController {
 			'hAlign'     => 'right',
 			'vAlign'     => 'bottom',
 			'fontSize'   => 40,
+			'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
+		])->text($descripcion, [
+			'color'      => '#000',
+			'opacity'    => 0,
+			'hOffset'    => '10',
+			'vOffset'    => '-4',
+			'withShadow' => true,
+			'shadowColor' => '#fff',
+			'hAlign'     => 'left',
+			'vAlign'     => 'bottom',
+			'fontSize'   => 18,
 			'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
 		])->convert(IMAGETYPE_PNG)
 		->save(UPLOADS_PRODUCT_PATH ."convert/{$producto->id}.png");
