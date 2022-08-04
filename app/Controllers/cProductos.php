@@ -304,7 +304,7 @@ class cProductos extends BaseController {
 			'color'      => '#000',
 			'opacity'    => 0,
 			'hOffset'    => '10',
-			'vOffset'    => '-90',
+			'vOffset'    => '-130',
 			'withShadow' => true,
 			'shadowColor' => '#fff',
 			'hAlign'     => 'left',
@@ -315,7 +315,7 @@ class cProductos extends BaseController {
 			'color'      => '#000',
 			'opacity'    => 0,
 			'hOffset'    => '10',
-			'vOffset'    => '-10',
+			'vOffset'    => '-40',
 			'withShadow' => true,
 			'shadowColor' => '#fff',
 			'hAlign'     => 'left',
@@ -342,7 +342,7 @@ class cProductos extends BaseController {
 			'shadowColor' => '#fff',
 			'hAlign'     => 'left',
 			'vAlign'     => 'bottom',
-			'fontSize'   => 18,
+			'fontSize'   => 40,
 			'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
 		])->convert(IMAGETYPE_PNG)
 		->save(UPLOADS_PRODUCT_PATH ."convert/{$producto->id}.png");
