@@ -299,19 +299,23 @@ class cProductos extends BaseController {
 		$servicios::image()
     ->withFile($filename)
     ->text($producto->referencia, [
-        'color'      => '#000',
-        'opacity'    => 0,
-				'hOffset'    => '10',
-				'vOffset'    => '-90',
-        'hAlign'     => 'left',
-        'vAlign'     => 'bottom',
-        'fontSize'   => 80,
-				'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
+			'color'      => '#000',
+			'opacity'    => 0,
+			'hOffset'    => '10',
+			'vOffset'    => '-90',
+			'withShadow' => true,
+			'shadowColor' => '#fff',
+			'hAlign'     => 'left',
+			'vAlign'     => 'bottom',
+			'fontSize'   => 80,
+			'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
     ])->text("$ " . number_format($producto->precio_venta, 0, ',', '.'), [
 			'color'      => '#000',
 			'opacity'    => 0,
 			'hOffset'    => '10',
 			'vOffset'    => '-10',
+			'withShadow' => true,
+			'shadowColor' => '#fff',
 			'hAlign'     => 'left',
 			'vAlign'     => 'bottom',
 			'fontSize'   => 80,
@@ -321,15 +325,8 @@ class cProductos extends BaseController {
 			'opacity'    => 0,
 			'hOffset'    => '10',
 			'vOffset'    => '-60',
-			'hAlign'     => 'right',
-			'vAlign'     => 'bottom',
-			'fontSize'   => 40,
-			'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
-		])->text("Cant " . $producto->stock, [
-			'color'      => '#000',
-			'opacity'    => 0,
-			'hOffset'    => '10',
-			'vOffset'    => '-10',
+			'withShadow' => true,
+			'shadowColor' => '#fff',
 			'hAlign'     => 'right',
 			'vAlign'     => 'bottom',
 			'fontSize'   => 40,
