@@ -175,7 +175,7 @@ class cProductos extends BaseController {
 						'rules' => [
 							'uploaded[imagen]',
 							'mime_in[imagen,image/jpg,image/jpeg,image/gif,image/png]',
-							'max_size[imagen,10240]',
+							'max_size[imagen,20480]',
 						],
 					]);
 									
