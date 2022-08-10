@@ -154,7 +154,7 @@ class cManifiesto extends BaseController {
 
 		} else {
 	
-			$prods = $producto->select("descripcion")->where("id_manifiesto IS NULL")->findAll();
+			$prods = $producto->select("descripcion")->where("id_manifiesto IS NULL")->where("estado", 1)->findAll();
 	
 			if (count($prods) == 0) {	
 				$prods = $producto->select("descripcion")->where("id_manifiesto", $id)->findAll();
