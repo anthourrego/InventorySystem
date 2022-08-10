@@ -214,9 +214,9 @@ class cManifiesto extends BaseController {
 		);
 
 		//Validamos si eliminar la foto de perfil y buscamos el manifiesto
-		if($this->request->getPost("editFoto") != 0 && !empty($this->request->getPost("id"))) {
-			$foto = $manifiesto->find($this->request->getPost("id"))["foto"];
-			$dataManifiesto["foto"] = null;
+		if($this->request->getPost("editFile") != 0 && !empty($this->request->getPost("id"))) {
+			$foto = $manifiesto->find($this->request->getPost("id"))["ruta_archivo"];
+			$dataManifiesto["ruta_archivo"] = null;
 			$filenameDelete = UPLOADS_MANIFEST_PATH . $foto; //<-- specify the image  file
 		}
 
@@ -243,7 +243,8 @@ class cManifiesto extends BaseController {
 				if ($validated) {
 					if ($file->isValid() && !$file->hasMoved()) {
 						//Validamos que la imagen suba correctamente
-						$name = "{$manifiesto->id}.{$file->getClientExtension()}";
+						$name = explode('.', $file->getClientName());
+						$name = str_replace(' ', '_', $name[0]) . "." . $file->getClientExtension();
 						if ($file->move(UPLOADS_MANIFEST_PATH, $name, true)) {
 							$updateFile = array(
 								"id" => $manifiesto->id,
