@@ -24,6 +24,8 @@ class cClientes extends BaseController {
 
 	public function listaDT(){
 		$estado = $this->request->getPost("estado");
+		$departamentoSucursal = $this->request->getPost("departamentoSucursal");
+		$ciudadSucursal = $this->request->getPost("ciudadSucursal");
 
 		$query = $this->db->table('clientes')
 											->select("
@@ -44,11 +46,26 @@ class cClientes extends BaseController {
 															WHEN estado = 1 THEN 'Activo' 
 															ELSE 'Inactivo' 
 													END AS Estadito,
+													S.sucursales
 											");
 
 		if($estado != "-1"){
 			$query->where("estado", $estado);
 		}
+
+		$where = "";
+		if(!is_null($departamentoSucursal) && $departamentoSucursal != "-1") {
+			$where = "WHERE id_depto = '$departamentoSucursal'";
+			$where .= (!is_null($ciudadSucursal) && $ciudadSucursal != "-1") ? " AND id_ciudad = '$ciudadSucursal'" : "";
+		}
+		$query->join("(
+			SELECT 
+				GROUP_CONCAT(' ', nombre) AS sucursales
+				, id_cliente 
+			FROM sucursales
+			$where
+			GROUP BY id_cliente
+		) AS S", "clientes.id = S.id_cliente", ($where == "" ? "LEFT" : "INNER"));
 
 		return DataTable::of($query)->toJson(true);
 	}

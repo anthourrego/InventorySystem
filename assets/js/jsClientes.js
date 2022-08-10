@@ -5,13 +5,18 @@ let DTSucursales = null;
 let crearSucursal = false;
 let permiSucursales = validPermissions(44);
 let dataSucursal = {};
+let datosFiltro = {
+  estado: $("#selectEstado").val(),
+  departamentoSucursal: -1,
+  ciudadSucursal: -1
+};
 
 let DTClientes = $("#table").DataTable({
   ajax: {
     url: rutaBase + "DT",
     type: "POST",
     data: function (d) {
-      return $.extend(d, { "estado": $("#selectEstado").val() })
+      return $.extend(d, datosFiltro)
     }
   },
   columns: [
@@ -26,6 +31,7 @@ let DTClientes = $("#table").DataTable({
         return data.ultima_compra ? moment(data.ultima_compra, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A") : '';
       }
     },
+    { data: 'sucursales' },
     {
       data: 'created_at',
       render: function (meta, type, data, meta) {
@@ -92,6 +98,7 @@ let DTClientes = $("#table").DataTable({
 
 $(function () {
   $("#selectEstado").on("change", function () {
+    datosFiltro["estado"] = $("#selectEstado").val();
     DTClientes.ajax.reload();
   });
 
@@ -104,6 +111,23 @@ $(function () {
     $("#cliente-tab").click();
     $("#sucursales-tab").addClass('disabled');
     $("#modalClientes").modal("show");
+  });
+
+  $("#btnFiltros").on("click", function () {
+    $("#modalFiltros").modal("show");
+  });
+
+  $("#reiniciarFiltros").on("click", function () {
+    datosFiltro.departamentoSucursal = -1;
+    datosFiltro.ciudadSucursal = -1;
+    $("#modalFiltros").modal("hide");
+    DTClientes.ajax.reload();
+  });
+
+  $('#modalFiltros').on('shown.bs.modal	', function (event) {
+    if (datosFiltro.departamentoSucursal == -1) {
+      obtenerUbicacion('Departamentos/Obtener/0', "#id_deptoFiltro");
+    }
   });
 
   $('#modalClientes').on('shown.bs.modal	', function (event) {
@@ -142,6 +166,16 @@ $(function () {
           }
         }
       });
+    }
+  });
+
+  $("#formFiltros").submit(function (e) {
+    e.preventDefault();
+    if ($(this).valid()) {
+      datosFiltro["departamentoSucursal"] = $("#id_deptoFiltro").val();
+      datosFiltro["ciudadSucursal"] = $("#id_ciudadFiltro").val();
+      $("#modalFiltros").modal("hide");
+      DTClientes.ajax.reload();
     }
   });
 
@@ -222,10 +256,14 @@ $(function () {
     $(".icono-collapse").removeClass('fa-arrow-up').addClass('fa-arrow-down');
   });
 
-  $("#id_deptoSucursal").change(function () {
-    if ($(this).val()) {
-      let cod = $("#id_deptoSucursal :selected").data('codigo');
-      obtenerUbicacion('Ciudades/Obtener/' + cod, "#id_ciudadSucursal");
+  $("#id_deptoSucursal, #id_deptoFiltro").change(function () {
+    if ($(this).val() && $(this).val() != -1) {
+      let cod = $("#" + $(this).attr('id') + " :selected").data('codigo');
+      obtenerUbicacion('Ciudades/Obtener/' + cod, "#" + $(this).data('ciudad'));
+    } else {
+      if ($(this).data('ciudad') == 'id_ciudadFiltro') {
+        $("#" + $(this).data('ciudad')).html('').change();
+      }
     }
   });
 
@@ -350,6 +388,9 @@ function obtenerUbicacion(extraUrl, input) {
     success: function (resp) {
       if (resp.success) {
         let estructura = '';
+        if (input == '#id_ciudadFiltro' || input == "#id_deptoFiltro") {
+          estructura += `<option value="-1" data-codigo="-1">Todos</option>`;
+        }
         resp.data.forEach(it => {
           estructura += `<option value="${it.id}" data-codigo="${(it.codigo || '')}">${it.nombre}</option>`;
         });

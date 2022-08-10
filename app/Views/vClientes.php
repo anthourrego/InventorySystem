@@ -1,7 +1,7 @@
 <div class="card">
   <div class="card-header">
     <div class="row justify-content-between">
-      <div class="col-8 col-md-3">
+      <div class="col-12 col-md-3">
         <div class="input-group">
           <div class="input-group-prepend">
             <label class="input-group-text" for="selectEstado">Estado</label>
@@ -13,11 +13,12 @@
           </select>
         </div>
       </div>
-      <?php if (validPermissions([41], true)) { ?>
-        <div class="col-4 col-md-3 text-right">
+      <div class="col-4 col-md-3 text-right">
+        <button type="button" class="btn btn-secondary" id="btnFiltros"><i class="fa-solid fa-filter"></i> Filtros</button>
+        <?php if (validPermissions([41], true)) { ?>
           <button type="button" class="btn btn-primary" id="btnCrear"><i class="fa-solid fa-plus"></i> Crear</button>
+        <?php } ?>
         </div>
-      <?php } ?>
     </div>
   </div>
   <div class="card-body">
@@ -31,6 +32,7 @@
             <th>Teléfono</th>
             <th>Total Compras</th>
             <th>Ultima compra</th>
+            <th>Sucursales</th>
             <th>Fecha creación</th>
             <th>Acciones</th>
           </tr>
@@ -83,7 +85,7 @@
                     <label class="mb-0" for="telefono">Teléfono <span class="text-danger">*</span></label>
                     <input placeholder="Ingresar teléfono" class="form-control soloNumeros inputTel inputVer" id="telefono" name="telefono" type="tel" minlength="10" maxlength="50" required autocomplete="off">
                   </div>
-                  <div class="col-12 col-md-6 form-group form-valid mb-1">
+                  <!-- <div class="col-12 col-md-6 form-group form-valid mb-1">
                     <label class="mb-0" for="administrador">Administrador</label>
                     <input placeholder="Ingresar administrador" class="form-control soloLetrasEspacio inputVer" id="administrador" name="administrador" type="text" minlength="1" maxlength="255" autocomplete="off">
                   </div>
@@ -94,7 +96,7 @@
                   <div class="col-12 col-md-6 form-group form-valid mb-1">
                     <label class="mb-0" for="telefonoCart">Teléfono cartera</label>
                     <input placeholder="Ingresar teléfono cartera" class="form-control soloNumeros inputTel inputVer" id="telefonoCart" name="telefonoCart" type="tel" minlength="10" maxlength="50" autocomplete="off">
-                  </div>
+                  </div> -->
                   <div class="col-6 form-group form-group-edit mb-1">
                     <label class="mb-0" for="cantCompras">Cantidad compras</label>
                     <input class="form-control" id="cantCompras" disabled>
@@ -142,7 +144,7 @@
                           </div>
                           <div class="col-12 col-md-6 form-group form-valid">
                             <label for="id_deptoSucursal" class="mb-0">Departamento <span class="text-danger">*</span></label>
-                            <select id="id_deptoSucursal" name="id_deptoSucursal" data-placeholder="Seleccione un departamento" required class="custom-select select2 inputVer">
+                            <select id="id_deptoSucursal" name="id_deptoSucursal" data-placeholder="Seleccione un departamento" required class="custom-select select2 inputVer" data-ciudad="id_ciudadSucursal">
                               <option value=""></option>
                             </select>
                           </div>
@@ -207,6 +209,42 @@
       </div>
       <div class="modal-footer">
         <button type="submit" class="btn btn-success" form="formClientes"><i class="fas fa-save"></i> Guardar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalFiltros" data-backdrop="static" data-keyboard="false" aria-labelledby="modalFiltrosLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-width">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalFiltrosLabel">Filtros</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="formFiltros">
+          <div class="form-row">
+          <div class="col-12 col-md-6 form-group">
+            <label for="id_deptoFiltro" class="mb-0">Departamento <span class="text-danger">*</span></label>
+            <select id="id_deptoFiltro" name="id_deptoFiltro" data-placeholder="Seleccione un departamento" class="custom-select select2 inputVer" data-ciudad="id_ciudadFiltro">
+              <option value=""></option>
+            </select>
+          </div>
+          <div class="col-12 col-md-6 form-group">
+            <label for="id_ciudadFiltro" class="mb-0">Ciudad <span class="text-danger">*</span></label>
+            <select id="id_ciudadFiltro" name="id_ciudadFiltro" data-placeholder="Seleccione una ciudad" class="custom-select select2 inputVer">
+              <option value=""></option>
+            </select>
+          </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success" form="formFiltros"><i class="fas fa-search"></i> Buscar</button>
+        <button type="button" class="btn btn-warning" id="reiniciarFiltros"><i class="fas fa-refresh"></i> Reiniciar Filtros</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
       </div>
     </div>
