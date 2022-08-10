@@ -91,6 +91,8 @@ let DTProductos = $("#table").DataTable({
   }],
   createdRow: function (row, data, dataIndex) {
 
+    if (dataIndex % 2 == 0) $(row).css('background-color', '#00000030'); 
+
     if (!data.manifiesto) $(row).addClass('bg-delete-tb');
 
     $(row).find(".btnCambiarEstado").click(function (e) {
