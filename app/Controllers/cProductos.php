@@ -398,9 +398,15 @@ class cProductos extends BaseController {
 					P.created_at,
 					P.updated_at,
 					C.nombre AS nombreCategoria,
-					P.cantPaca
+					P.cantPaca,
+					CASE 
+						WHEN P.imagen IS NULL THEN '' 
+						ELSE CONCAT('" . base_url() . "/fotoProductosAPP/', P.id, '/', P.imagen) 
+					END As FotoURL				
 			")->join('categorias AS C', 'P.id_categoria = C.id', 'left')
-			->where("P.estado", 1)->get()->getResult();
+			->where("P.estado", 1)
+			->where("P.stock >", 0)
+			->get()->getResult();
 
 		return $this->response->setJSON($productos);
 	} 
