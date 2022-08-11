@@ -369,6 +369,7 @@ $(function () {
           }
         };
       },
+      async: false,
       cache: true
     }
   });
@@ -396,6 +397,7 @@ $(function () {
           }
         };
       },
+      async: false,
       cache: true
     }
   }).on("change", function () {
@@ -426,6 +428,7 @@ $(function () {
           }
         };
       },
+      async: false,
       cache: true
     }
   });

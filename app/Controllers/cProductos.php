@@ -107,7 +107,7 @@ class cProductos extends BaseController {
 		if (isset($postData->ventas) && $postData->ventas == 1) {
 			$inventarioNegativo = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
 			if ($inventarioNegativo == "0") {
-				$query->where("P.stock >", 0);
+				$query->where("P.stock >=", 0);
 			}
 		}
 

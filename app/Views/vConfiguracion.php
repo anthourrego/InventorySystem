@@ -208,36 +208,41 @@
       </div>
       <div class="tab-pane fade" id="generalTab" role="tabpanel" aria-labelledby="consecutivo-tab">
         <div class="form-row">
-          <div class="col-3">
-            <label for="logoLogin">Logo:</label>
-            <div id="content-upload-logoLogin">
-              <div class="content-img rounded d-flex align-items-center justify-content-center">
-                <div class="text-center position-absolute w-90">
-                  <i class="fas fa-cloud-upload-alt"></i>
-                  <span> Selecciona o arrastre su imagen</span>
+          <div class="col-12 col-md-6">
+            <div class="row">
+              <div class="col-12 alert alert-info text-center mb-1 p-1" role="alert">Logo: representación grafica de la empresa. Fondo Inicio: imagen corporativa en el inicio de sesión. Ambas deben tener un peso maximo de 2MB</div>
+              <div class="col-12 col-md-6">
+                <label for="logoLogin">Logo:</label>
+                <div id="content-upload-logoLogin">
+                  <div class="content-img rounded d-flex align-items-center justify-content-center">
+                    <div class="text-center position-absolute w-90">
+                      <i class="fas fa-cloud-upload-alt"></i>
+                      <span> Selecciona o arrastre su imagen</span>
+                    </div>
+                    <input data-nombre="Logo Empresa" name="logoLogin" id="logoLogin" class="input-file-img configAct" accept=".png" type="file">
+                  </div>
                 </div>
-                <input data-nombre="Logo Empresa" name="logoLogin" id="logoLogin" class="input-file-img configAct" accept=".png" type="file">
-              </div>
-            </div>
-            <div id="content-preview-logoLogin" class="d-none text-center">
-              <img id="imgFotologoLogin" src="#" class="img-thumbnail h-100">
-              <button type="button" onclick="eliminarImagen('logoLogin', 'Logo Empresa')" class="btn btn-danger btn-sm btn-eliminar-foto"><i class="fas fa-times"></i></button>
-            </div>
-          </div>
-          <div class="col-3">
-            <label for="logoFondoLogin">Fondo Inicio:</label>
-            <div id="content-upload-logoFondoLogin">
-              <div class="content-img rounded d-flex align-items-center justify-content-center">
-                <div class="text-center position-absolute w-90">
-                  <i class="fas fa-cloud-upload-alt"></i>
-                  <span> Selecciona o arrastre su imagen</span>
+                <div id="content-preview-logoLogin" class="d-none text-center">
+                  <img id="imgFotologoLogin" src="#" class="img-thumbnail h-100">
+                  <button type="button" onclick="eliminarImagen('logoLogin', 'Logo Empresa')" class="btn btn-danger btn-sm btn-eliminar-foto"><i class="fas fa-times"></i></button>
                 </div>
-                <input data-nombre="Logo Empresa" name="logoFondoLogin" id="logoFondoLogin" class="input-file-img configAct" accept=".jpg, .jpeg" type="file">
               </div>
-            </div>
-            <div id="content-preview-logoFondoLogin" class="d-none text-center">
-              <img id="imgFotologoFondoLogin" src="#" class="img-thumbnail h-100">
-              <button type="button" onclick="eliminarImagen('logoFondoLogin', 'Logo Empresa')" class="btn btn-danger btn-sm btn-eliminar-foto"><i class="fas fa-times"></i></button>
+              <div class="col-12 col-md-6">
+                <label for="logoFondoLogin">Fondo Inicio:</label>
+                <div id="content-upload-logoFondoLogin">
+                  <div class="content-img rounded d-flex align-items-center justify-content-center">
+                    <div class="text-center position-absolute w-90">
+                      <i class="fas fa-cloud-upload-alt"></i>
+                      <span> Selecciona o arrastre su imagen</span>
+                    </div>
+                    <input data-nombre="Logo Empresa" name="logoFondoLogin" id="logoFondoLogin" class="input-file-img configAct" accept=".jpg, .jpeg" type="file">
+                  </div>
+                </div>
+                <div id="content-preview-logoFondoLogin" class="d-none text-center">
+                  <img id="imgFotologoFondoLogin" src="#" class="img-thumbnail h-100">
+                  <button type="button" onclick="eliminarImagen('logoFondoLogin', 'Logo Empresa')" class="btn btn-danger btn-sm btn-eliminar-foto"><i class="fas fa-times"></i></button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
