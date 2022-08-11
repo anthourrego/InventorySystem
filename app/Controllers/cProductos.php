@@ -378,4 +378,30 @@ class cProductos extends BaseController {
 		return $this->response->download(UPLOADS_PRODUCT_PATH .  "fotos.zip", null)->setFileName("fotos" . date("Ymd") . '.zip');
 		
 	}
+
+	public function productosAPP() {
+		$productos = $this->db
+			->table('productos AS P')
+			->select("
+					P.id,
+					P.id_categoria,
+					P.referencia,
+					P.item,
+					P.descripcion,
+					P.imagen,
+					P.stock,
+					P.precio_venta,
+					P.costo,
+					P.ubicacion,
+					P.ventas, 
+					P.estado, 
+					P.created_at,
+					P.updated_at,
+					C.nombre AS nombreCategoria,
+					P.cantPaca
+			")->join('categorias AS C', 'P.id_categoria = C.id', 'left')
+			->where("P.estado", 1)->get()->getResult();
+
+		return $this->response->setJSON($productos);
+	} 
 }

@@ -36,6 +36,7 @@ $routes->get('Foto/(:any)', 'Home::foto/$1');
 $routes->post('/iniciarSesion', 'Home::iniciarSesion', ['filter' => 'ajax']);
 $routes->post('/cerrarSesion', 'Home::cerrarSesion', ['filter' => ['authGuard', 'ajax']]);
 $routes->post('sidebar', 'Home::sidebar', ['filter' => ['authGuard', 'ajax']]);
+$routes->get('productosAPP', 'cProductos::productosAPP');
 
 //Usuarios
 $routes->group('Usuarios', ['filter' => 'authGuard:1'], function ($routes) {
