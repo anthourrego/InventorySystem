@@ -260,6 +260,7 @@ $(function () {
           }
         };
       },
+      async: false,
       cache: true
       // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
     }
@@ -288,6 +289,7 @@ $(function () {
           }
         };
       },
+      async: false,
       cache: true
       // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
     }
@@ -319,6 +321,7 @@ $(function () {
           }
         };
       },
+      async: false,
       cache: true
     }
   });
