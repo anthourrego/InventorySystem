@@ -60,6 +60,7 @@ class BaseController extends Controller {
             $this->LAdminLTE();
             $this->LOverlayScrollbars();
             $this->LGlobal();
+            $this->content['Project_Name'] = session()->get("nombreEmpresa");
         } else {
             $this->LBootstrap();
         }

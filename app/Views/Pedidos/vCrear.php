@@ -157,4 +157,5 @@
 	$IMAGENPROD = <?= $imagenProd ?>;
 	$CAMPOSPRODUCTO = <?= json_encode($camposProducto) ?>;
 	$EDITARPEDIDO = "<?= $editarPedido ?>";
+	$NOMBREEMPRESA = "<?= session()->get("nombreEmpresa") ?>";
 </script>

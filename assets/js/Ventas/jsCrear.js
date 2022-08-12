@@ -197,6 +197,8 @@ $(function () {
     DTProductos = $("#table").DataTable(DTProductos);
   }
 
+  document.title = "Factura " + $("#nroVenta").val() + " | " + $NOMBREEMPRESA;
+
   $("#formVenta").submit(function (e) {
     e.preventDefault();
     if ($(this).valid()) {
