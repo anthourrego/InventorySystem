@@ -45,7 +45,8 @@
 								<thead> 
 									<tr>
 										<th>Acción</th>
-										<th>Nombre</th>
+										<th>Referencia</th>
+										<th>Descripción</th>
 										<th>Cantidad</th>
 										<th>Precio</th>
 										<th>Total</th>
@@ -98,6 +99,7 @@
 								<th>Referencia</th>
 								<th>Item</th>
 								<th>Descripción</th>
+								<th>Pac</th>
 								<th>Stock</th>
 								<th>Acciones</th>
 							</tr>

@@ -38,6 +38,9 @@ let DTProductos = {
       }
     },
     {
+      data: 'cantPaca'
+    },
+    {
       data: 'stock',
       className: 'text-center align-middle',
       render: function (meta, type, data, meta) {
@@ -113,10 +116,17 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       }
     },
     {
-      data: 'item',
+      data: 'referencia',
       width: "30%",
       render: function (meta, type, data, meta) {
         return `<span title="${data.referencia}" class="text-descripcion">${data.referencia}</span>`;
+      }
+    },
+    {
+      data: 'descripcion',
+      width: "30%",
+      render: function (meta, type, data, meta) {
+        return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
       }
     },
     {
