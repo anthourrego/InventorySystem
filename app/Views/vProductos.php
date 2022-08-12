@@ -2,17 +2,7 @@
   <div class="card-header">
     <div class="row justify-content-between">
       <div class="col-12 col-md-8 col-lg-5 d-flex">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <label class="input-group-text" for="selectEstado">Estado</label>
-          </div>
-          <select class="custom-select" id="selectEstado">
-            <option selected value="1">Activo</option>
-            <option value="0">Inactivo</option>
-            <option value="-1">Todos</option>
-          </select>
-        </div>
-        <div class="input-group ml-2">
+        <div class="input-group mr-2">
           <div class="input-group-prepend">
             <div class="input-group-text">
               <input id="verImg" type="checkbox" <?= $imagenProd == 1 ? 'checked' : '' ?>>
@@ -20,21 +10,20 @@
           </div>
           <label for="verImg" class="form-control">¿Ver Imagen?</label>
         </div>
-      </div>
-      <?php if (validPermissions([54], true)) { ?>
-      <div class="col-12 col-md-3 mt-2 mt-md-0">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <label class="input-group-text" for="selectEstado">Valor Inventario</label>
+        <?php if (validPermissions([54], true)) { ?>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="selectEstado">Valor Inventario</label>
+            </div>
+            <input type="text" id="valorInventarioActual" class="form-control" disabled value="$ 0">
           </div>
-          <input type="text" id="valorInventarioActual" class="form-control" disabled value="$ 0">
-        </div>
+        <?php } ?>
       </div>
-      <?php } ?>
       <div class="col-12 col-md-3 mt-2 mt-md-0 text-right">
         <?php if (validPermissions([55], true)) { ?>
           <button type="button" class="btn btn-dark" id="btnFotos"><i class="fa-solid fa-camera"></i> Fotos</button>
         <?php } ?>
+        <button type="button" class="btn btn-secondary" id="btnFiltros"><i class="fa-solid fa-filter"></i> Filtros</button>
         <?php if (validPermissions([51], true)) { ?>
           <button type="button" class="btn btn-primary" id="btnCrear"><i class="fa-solid fa-plus"></i> Crear</button>
         <?php } ?>
@@ -233,6 +222,71 @@
       </div>
       <div class="modal-footer">
         <button type="submit" class="btn btn-primary" form="formFiltroFoto"><i class="fas fa-filter"></i> Filtrar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalFiltros" data-backdrop="static" data-keyboard="false" aria-labelledby="modalFiltrosLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-width">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalFiltrosLabel">Filtros</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="formFiltros">
+          <div class="form-row">
+            <div class="col-12 col-md-6 form-group">
+              <label class="mb-0" for="selectEstado">Estado</label>
+              <select class="custom-select" id="selectEstado">
+                <option selected value="1">Activo</option>
+                <option value="0">Inactivo</option>
+                <option value="-1">Todos</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-6 form-group">
+              <label class="mb-0" for="cateFiltro">Categoria</label>
+              <select id="cateFiltro" name="cateFiltro" class="custom-select select2" data-placeholder="Seleccione..." data-allow-clear="1">
+                <option></option>
+                <?php foreach ($categorias as $it) : ?>
+                  <option value="<?=  $it->id?>"><?= $it->nombre ?></option>
+                <?php endforeach ?>
+              </select>
+            </div>
+            <div class="col-6 col-md-3 form-group form-valid">
+              <label class="mb-0" for="cantIni">Cantidad Inicial</label>
+              <input placeholder="Cantidad Inicial" class="form-control soloNumeros" id="cantIni" name="cantIni" type="text" minlength="1" maxlength="255" autocomplete="off">
+            </div>
+            <div class="col-6 col-md-3 form-group form-valid">
+              <label class="mb-0" for="cantFin">Cantidad Final</label>
+              <input placeholder="Cantidad Final" class="form-control soloNumeros" id="cantFin" name="cantFin" type="text" minlength="1" maxlength="255" autocomplete="off">
+            </div>
+            <div class="col-6 col-md-3 form-group form-valid">
+              <label class="mb-0" for="preciIni">Precio Inicial</label>
+              <input placeholder="Precio Inicial" class="form-control soloNumeros" id="preciIni" name="preciIni" type="text" minlength="1" maxlength="255" autocomplete="off">
+            </div>
+            <div class="col-6 col-md-3 form-group form-valid">
+              <label class="mb-0" for="preciFin">Precio Final</label>
+              <input placeholder="Precio Final" class="form-control soloNumeros" id="preciFin" name="preciFin" type="text" minlength="1" maxlength="255" autocomplete="off">
+            </div>
+            <div class="col-12 col-md-6 input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <input id="prodCero" type="checkbox">
+                </div>
+              </div>
+              <label for="prodCero" class="form-control">¿Producto en ceros?</label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success" form="formFiltros"><i class="fas fa-search"></i> Buscar</button>
+        <button type="button" class="btn btn-warning" id="reiniciarFiltros"><i class="fas fa-refresh"></i> Reiniciar Filtros</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
       </div>
     </div>
