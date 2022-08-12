@@ -12,6 +12,9 @@ let DTProductos = $("#table").DataTable({
     }
   },
   order: [[2, "asc"]],
+  search: {
+    return: false,
+  },
   columns: [{
     orderable: false,
     searchable: false,
