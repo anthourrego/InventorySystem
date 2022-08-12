@@ -120,4 +120,5 @@
 	$DATOSVENTA = $DATOSVENTA.length == 0 ? '' : JSON.parse($DATOSVENTA);
 	$IMAGENPROD = <?= $imagenProd ?>;
 	$CAMPOSPRODUCTO = <?= json_encode($camposProducto) ?>;
+	$NOMBREEMPRESA = "<?= session()->get("nombreEmpresa") ?>";
 </script>

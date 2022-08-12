@@ -279,6 +279,8 @@ $(function () {
     DTProductos = $("#table").DataTable(DTProductos);
   }
 
+  document.title = "Pedido " + $("#nroPedido").val() + " | " + $NOMBREEMPRESA;
+
   $("#formPedido").submit(function (e) {
     e.preventDefault();
 
