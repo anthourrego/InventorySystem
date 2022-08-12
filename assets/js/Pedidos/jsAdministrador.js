@@ -5,6 +5,7 @@ let DT = $("#table").DataTable({
     url: rutaBase + "DT",
     type: "POST",
   },
+  order: [[0, "desc"]],
   columns: [
     { data: 'pedido' },
     { data: 'NombreCliente' },

@@ -170,8 +170,7 @@ class cPedidos extends BaseController {
 				S.nombre AS NombreSucursal
 			")->join('clientes AS C', 'P.id_cliente = C.id', 'left')
 			->join('sucursales AS S', 'P.id_sucursal = S.id', 'left')
-			->join('usuarios AS U', 'P.id_vendedor = U.id', 'left')
-			->orderby("P.id DESC");
+			->join('usuarios AS U', 'P.id_vendedor = U.id', 'left');
 
 		return DataTable::of($query)->toJson(true);
 	}
