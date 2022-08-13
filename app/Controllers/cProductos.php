@@ -103,6 +103,22 @@ class cProductos extends BaseController {
 			$query->where("P.estado", $postData->estado);
 		}
 
+		if(isset($postData->categoria) && $postData->categoria > 0){
+			$query->where("P.id_categoria", $postData->categoria);
+		}
+
+		if(isset($postData->cantIni) && isset($postData->cantFin) && $postData->cantIni > 0 && $postData->cantFin > 0){
+			$query->where("P.stock >= $postData->cantIni AND P.stock <= $postData->cantFin");
+		}
+
+		if(isset($postData->preciIni) && isset($postData->preciFin) && $postData->preciIni > 0 && $postData->preciFin > 0){
+			$query->where("P.precio_venta >= $postData->preciIni AND P.precio_venta <= $postData->preciFin");
+		}
+
+		if(isset($postData->prodCero) && $postData->prodCero == 1){
+			$query->where("P.stock", 0);
+		}
+
 		//validamos si aplica para ventas para realziar algunas validaciones
 		if (isset($postData->ventas) && $postData->ventas == 1) {
 			$inventarioNegativo = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
