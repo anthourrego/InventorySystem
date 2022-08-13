@@ -91,9 +91,9 @@ class cClientes extends BaseController {
 			"nombre" => trim($postData["nombre"]),
 			"direccion" => trim($postData["direccion"]),
 			"telefono" => trim($postData["telefono"]),
-			"administrador" => trim($postData["administrador"]),
+			/* "administrador" => trim($postData["administrador"]),
 			"cartera" => trim($postData["cartera"]),
-			"telefonocart" => trim($postData["telefonoCart"]),
+			"telefonocart" => trim($postData["telefonoCart"]), */
 		);
 
 		$clienteModel = new mClientes();
