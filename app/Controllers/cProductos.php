@@ -107,28 +107,20 @@ class cProductos extends BaseController {
 			$query->where("P.id_categoria", $postData->categoria);
 		}
 
-		if(isset($postData->cantIni) && isset($postData->cantFin) && $postData->cantIni >= 0 && $postData->cantFin >= 0){
-			$prodCero = "";
-			if(isset($postData->prodCero) && $postData->prodCero == 1){
-				$prodCero .= " OR P.stock = 0";
-			}
-			$query->where("((P.stock >= $postData->cantIni AND P.stock <= $postData->cantFin) $prodCero)");
-		} else {
-			if(isset($postData->prodCero) && $postData->prodCero == 1){
-				$query->orWhere("P.stock", 0);
-			}
+		if(isset($postData->cantIni) && $postData->cantIni >= 0) {
+			$query->where("P.stock >= $postData->cantIni");
 		}
 
-		if(isset($postData->preciIni) && isset($postData->preciFin) && $postData->preciIni >= 0 && $postData->preciFin >= 0){
-			$prodCero = "";
-			if(isset($postData->prodCero) && $postData->prodCero == 1){
-				$prodCero .= " OR P.precio_venta = 0";
-			}
-			$query->where("((P.precio_venta >= $postData->preciIni AND P.precio_venta <= $postData->preciFin) $prodCero)");
-		} else {
-			if(isset($postData->prodCero) && $postData->prodCero == 1){
-				$query->orWhere("P.precio_venta", 0);
-			}
+		if(isset($postData->cantFin) && $postData->cantFin >= 0){
+			$query->where("P.stock <= $postData->cantFin");
+		}
+
+		if(isset($postData->preciIni) && $postData->preciIni >= 0) {
+			$query->where("P.precio_venta >= $postData->preciIni");
+		}
+
+		if(isset($postData->preciFin) && $postData->preciFin >= 0){
+			$query->where("P.precio_venta <= $postData->preciFin");
 		}
 
 		//validamos si aplica para ventas para realziar algunas validaciones

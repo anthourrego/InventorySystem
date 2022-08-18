@@ -273,14 +273,6 @@
               <label class="mb-0" for="preciFin">Precio Final</label>
               <input placeholder="Precio Final" class="form-control soloNumeros" id="preciFin" name="preciFin" type="text" minlength="1" maxlength="255" autocomplete="off">
             </div>
-            <div class="col-12 col-md-6 input-group">
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  <input id="prodCero" type="checkbox">
-                </div>
-              </div>
-              <label for="prodCero" class="form-control">¿Producto en ceros?</label>
-            </div>
           </div>
         </form>
       </div>
