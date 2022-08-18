@@ -183,6 +183,17 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       calcularTotal();
     });
 
+    $(row).find(".cantidadProduct").on("keydown", function (e) {
+      if (e.which == 9) {
+        setTimeout(() => {
+          let element = $(row).next();
+          if (element.length) {
+            $(element).find(".cantidadProduct").focus();
+          }
+        }, 0);
+      }
+    });
+
     $(row).find(".btnBorrar").click(function (e) {
       e.preventDefault();
       if ($DATOSPEDIDO.estado == 1) {
