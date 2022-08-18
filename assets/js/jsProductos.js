@@ -350,7 +350,6 @@ $(function () {
     dataFiltros.cantFin = $("#cantFin").val() == "" ? -1 : +$("#cantFin").val();
     dataFiltros.preciFin = $("#preciFin").val() == "" ? -1 : +$("#preciFin").val();
     dataFiltros.preciIni = $("#preciIni").val() == "" ? -1 : +$("#preciIni").val();
-    dataFiltros.prodCero = ($("#prodCero").is(':checked') ? 1 : 0)
 
     $("#modalFiltros").modal('hide');
     DTProductos.ajax.reload();
@@ -361,7 +360,6 @@ $(function () {
     $("#selectEstado").val(1);
     $("#cantIni, #cantFin, #preciFin, #preciIni").val('');
     $("#cateFiltro").val('').change();
-    $("#prodCero").prop('checked', false);
     $("#modalFiltros").modal('hide');
     DTProductos.ajax.reload();
   });
