@@ -346,10 +346,10 @@ $(function () {
 
     dataFiltros.estado = $("#selectEstado").val();
     dataFiltros.categoria = $("#cateFiltro").val();
-    dataFiltros.cantIni = +$("#cantIni").val();
-    dataFiltros.cantFin = +$("#cantFin").val();
-    dataFiltros.preciFin = +$("#preciFin").val();
-    dataFiltros.preciIni = +$("#preciIni").val();
+    dataFiltros.cantIni = $("#cantIni").val() == "" ? -1 : +$("#cantIni").val();
+    dataFiltros.cantFin = $("#cantFin").val() == "" ? -1 : +$("#cantFin").val();
+    dataFiltros.preciFin = $("#preciFin").val() == "" ? -1 : +$("#preciFin").val();
+    dataFiltros.preciIni = $("#preciIni").val() == "" ? -1 : +$("#preciIni").val();
     dataFiltros.prodCero = ($("#prodCero").is(':checked') ? 1 : 0)
 
     $("#modalFiltros").modal('hide');
