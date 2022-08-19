@@ -285,22 +285,6 @@ $(function () {
     DTProductos.ajax.reload();
   });
 
-  $("#btnFotos").on("click", function () {
-    $("#modalFiltroFoto").modal("show");
-  });
-
-  $("#formFiltroFoto").submit(function (e) {
-    e.preventDefault();
-    if (validPermissions(55)) {
-      let minimo = $("#filtroMinimo").val().length > 0 ? $("#filtroMinimo").val().trim().replaceAll(",", "").replaceAll("$ ", "") : 0;
-      let maximo = $("#filtroMaximo").val().length > 0 ? $("#filtroMaximo").val().trim().replaceAll(",", "").replaceAll("$ ", "") : 0;
-
-      window.open(rutaBase + `descargarFoto/${minimo}/${maximo}`);
-    } else {
-      alertify.alert("Advertencia", "No posees permisos para realizar esta acción")
-    }
-  });
-
   $(".btnCancelarImg").click(function () {
     srcOriginal = '';
     $('#image').rcrop('destroy');
