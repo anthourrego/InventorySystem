@@ -408,12 +408,14 @@ class cPedidos extends BaseController {
 								break;
 							}
 
-							$product = $mProductos->find($it->id);
-							$product["stock"] = $product["stock"] + $cantidadNueva;
-
-							if(!$mProductos->save($product)){
-								$resp["msj"] = "Error al guardar al actualizar el producto. " . listErrors($mProductos->errors());
-								break;
+							if (!isset($it->motivoDiferencia)) {
+								$product = $mProductos->find($it->id);
+								$product["stock"] = $product["stock"] + $cantidadNueva;
+	
+								if(!$mProductos->save($product)){
+									$resp["msj"] = "Error al guardar al actualizar el producto. " . listErrors($mProductos->errors());
+									break;
+								}
 							}
 						}
 
@@ -430,8 +432,19 @@ class cPedidos extends BaseController {
 							);
 						
 							if(!$mObservacionProductos->save($dataObserSave)){
-								$resp["msj"] = "Error al guardar  la observación del producto. " . listErrors($mObservacionProductos->errors());
+								$resp["msj"] = "Error al guardar la observación del producto. " . listErrors($mObservacionProductos->errors());
 								break;
+							}
+
+							if ($it->motivoDiferencia == "2") {
+								$cantidadNueva = $productoActuales[$productoAct]["cantidad"] - $it->cantidad;
+								$product = $mProductos->find($it->id);
+								$product["stock"] = $product["stock"] + $cantidadNueva;
+
+								if(!$mProductos->save($product)){
+									$resp["msj"] = "Error al guardar el producto. " . listErrors($mProductos->errors());
+									break;
+								}
 							}
 						}
 

@@ -79,6 +79,7 @@ let DTProductos = {
         data.cantidad = 1;
         data.valorUnitario = data.precio_venta;
         data.valorTotal = data.precio_venta;
+        data.nuevo = true;
         productosPedido.unshift(data);
         DTProductosPedido.clear().rows.add(productosPedido).draw();
       }
@@ -239,7 +240,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       $(row).find(".btnAceptarEdicion").click(function (e) {
         e.preventDefault();
 
-        if ($DATOSPEDIDO.estado == 1) {
+        if (!data.nuevo && $DATOSPEDIDO.estado == 1) {
 
           let observacion = false;
           let mensaje = '';
@@ -249,7 +250,8 @@ let DTProductosPedido = $("#tblProductos").DataTable({
             mensaje += '<li> ¿Por que el valor es ' + (+data.valorUnitarioOriginal > +data.valorUnitario ? 'menor' : 'mayor') + ' al orignal del pedido?</li>';
           }
 
-          if (+data.cantidadOriginal != +data.cantidad) {
+          /* Se agrega la segunda validacion para que solo salga con la cantidad cuando se disminuye */
+          if (+data.cantidadOriginal != +data.cantidad && +data.cantidadOriginal > +data.cantidad) {
             observacion = true;
             mensaje += '<li> ¿Por que la cantidad es ' + (+data.cantidadOriginal > +data.cantidad ? 'menor' : 'mayor') + ' a la inicial?</li>';
           }
@@ -318,7 +320,6 @@ $(function () {
       }
 
       if (productosPedido.length > 0) {
-        console.log(productosPedido);
         form = new FormData(this);
         if ($DATOSPEDIDO != '') {
           productosPedido = productosPedido.concat(productosEliminados);
