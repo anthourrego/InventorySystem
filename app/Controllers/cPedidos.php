@@ -247,8 +247,13 @@ class cPedidos extends BaseController {
 
     $dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoPed")->first();
 
-		$numerPedido = (is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1));
-		$pedido = (session()->has("prefijoPed") ? session()->get("prefijoPed") : '') . $numerPedido;
+		$dataPref = (session()->has("prefijoPed") ? session()->get("prefijoPed") : '');
+		$cantDigitos = (session()->has("digitosPed") ? session()->get("digitosPed") : 0);
+
+    $dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoPed")->first();
+
+		$numerPedido = str_pad((is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1)), $cantDigitos, "0", STR_PAD_LEFT);
+		$pedido = $dataPref . $numerPedido;
 
 		$buscarPedido = $pedidoModel->select("id")->where("pedido", $pedido)->first();
 

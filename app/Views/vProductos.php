@@ -21,9 +21,9 @@
       </div>
       <div class="col-12 col-md-3 mt-2 mt-md-0 text-right">
         <?php if (validPermissions([55], true)) { ?>
-          <button type="button" class="btn btn-dark" id="btnFotos"><i class="fa-solid fa-camera"></i> Fotos</button>
+          <a target="_blank" href="<?= base_url("Productos/descargarFoto") ?>" class="btn btn-dark"><i class="fa-solid fa-camera"></i> Fotos</a>
         <?php } ?>
-        <button type="button" class="btn btn-secondary" id="btnFiltros"><i class="fa-solid fa-filter"></i> Filtros</button>
+        <button type="button" class="btn btn-warning" id="btnFiltros"><i class="fa-solid fa-filter"></i> Filtros</button>
         <?php if (validPermissions([51], true)) { ?>
           <button type="button" class="btn btn-primary" id="btnCrear"><i class="fa-solid fa-plus"></i> Crear</button>
         <?php } ?>

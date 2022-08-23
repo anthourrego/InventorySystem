@@ -58,6 +58,8 @@ class cProductos extends BaseController {
 
 	public function listaDT() {
 		$postData = (object) $this->request->getPost();
+		session()->remove(['filtrosProductos']);
+		$arrayFiltro['estado'] = $postData->estado;
 
 		$query = $this->db
 				->table('productos AS P')
@@ -104,33 +106,40 @@ class cProductos extends BaseController {
 		}
 
 		if(isset($postData->categoria) && $postData->categoria > 0){
+			$arrayFiltro['categoria'] = $postData->categoria;
 			$query->where("P.id_categoria", $postData->categoria);
 		}
 
 		if(isset($postData->cantIni) && $postData->cantIni >= 0) {
+			$arrayFiltro['cantIni'] = $postData->cantIni;
 			$query->where("P.stock >= $postData->cantIni");
 		}
 
 		if(isset($postData->cantFin) && $postData->cantFin >= 0){
+			$arrayFiltro['cantFin'] = $postData->cantFin;
 			$query->where("P.stock <= $postData->cantFin");
 		}
 
 		if(isset($postData->preciIni) && $postData->preciIni >= 0) {
+			$arrayFiltro['preciIni'] = $postData->preciIni;
 			$query->where("P.precio_venta >= $postData->preciIni");
 		}
 
 		if(isset($postData->preciFin) && $postData->preciFin >= 0){
+			$arrayFiltro['preciFin'] = $postData->preciFin;
 			$query->where("P.precio_venta <= $postData->preciFin");
 		}
 
 		//validamos si aplica para ventas para realziar algunas validaciones
 		if (isset($postData->ventas) && $postData->ventas == 1) {
+			$arrayFiltro['ventas'] = $postData->ventas;
 			$inventarioNegativo = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
 			if ($inventarioNegativo == "0") {
 				$query->where("P.stock >=", 0);
 			}
 		}
 
+		session()->set('filtrosProductos', $arrayFiltro);
 		return DataTable::of($query)->toJson(true);
 	}
 
@@ -372,31 +381,64 @@ class cProductos extends BaseController {
 		}
 	}
 
-	public function descargarFoto($minimo, $maximo){
+	public function descargarFoto(){
+		$filtros = (object) session()->get("filtrosProductos");
 
 		$mProducto = new mProductos();
 
-		if ($minimo > 0) {
-			$mProducto->where("precio_venta >=", $minimo);
+		$mProducto->where('imagen IS NOT NULL', NULL, FALSE);
+
+
+		if($filtros->estado != "-1"){
+			$mProducto->where("estado", $filtros->estado);
 		}
 
-		if ($maximo > 0) {
-			$mProducto->where("precio_venta <=", $maximo);
+		if(isset($filtros->categoria) && $filtros->categoria > 0){
+			$arrayFiltro['categoria'] = $filtros->categoria;
+			$mProducto->where("id_categoria", $filtros->categoria);
 		}
 
-		$productos = $mProducto->where("stock >", 0)->where('imagen IS NOT NULL', NULL, FALSE)->asObject()->findAll();
+		if(isset($filtros->cantIni) && $filtros->cantIni >= 0) {
+			$arrayFiltro['cantIni'] = $filtros->cantIni;
+			$mProducto->where("stock >= $filtros->cantIni");
+		}
+
+		if(isset($filtros->cantFin) && $filtros->cantFin >= 0){
+			$arrayFiltro['cantFin'] = $filtros->cantFin;
+			$mProducto->where("stock <= $filtros->cantFin");
+		}
+
+		if(isset($filtros->preciIni) && $filtros->preciIni >= 0) {
+			$arrayFiltro['preciIni'] = $filtros->preciIni;
+			$mProducto->where("precio_venta >= $filtros->preciIni");
+		}
+
+		if(isset($filtros->preciFin) && $filtros->preciFin >= 0){
+			$arrayFiltro['preciFin'] = $filtros->preciFin;
+			$mProducto->where("precio_venta <= $filtros->preciFin");
+		}
+
+		//validamos si aplica para ventas para realziar algunas validaciones
+		if (isset($filtros->ventas) && $filtros->ventas == 1) {
+			$arrayFiltro['ventas'] = $filtros->ventas;
+			$inventarioNegativo = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
+			if ($inventarioNegativo == "0") {
+				$mProducto->where("stock >=", 0);
+			}
+		}
+
+		$productos = $mProducto->asObject()->findAll();
 
 		$zipFile = new ZipFile();
-		
+		ob_start();
 		foreach ($productos as $it) {
 			$this->convertirFoto($it->id, $it->imagen, $it);
 			$zipFile->addFile(UPLOADS_PRODUCT_PATH . "convert/{$it->id}.png");
 		}
 
 		$zipFile->saveAsFile(UPLOADS_PRODUCT_PATH . "fotos.zip"); 
-
-		return $this->response->download(UPLOADS_PRODUCT_PATH .  "fotos.zip", null)->setFileName("fotos" . date("Ymd") . '.zip');
 		
+		return $this->response->download(UPLOADS_PRODUCT_PATH .  "fotos.zip", null)->setFileName("fotos" . date("Ymd") . '.zip');
 	}
 
 	public function productosAPP() {
