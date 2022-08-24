@@ -214,7 +214,7 @@
               </a>
             </li>
 						<?php } ?>
-						<?php if (validPermissions([11], true)) { ?> 
+						<?php if (validPermissions([20], true)) { ?> 
 						<li class="nav-item">
               <a href="<?= base_url("ModificarReporte") ?>" class="nav-link <?= current_url(true)->getSegment(3) == 'ModificarReporte' ? 'active' : '' ?>">
 								<i class="nav-icon fa-solid fa-file-pen"></i>

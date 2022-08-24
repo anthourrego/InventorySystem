@@ -163,7 +163,7 @@ $routes->group('Reportes', ['filter' => 'authGuard'], function ($routes) {
 });
 
 //Modificar Reportes
-$routes->group('ModificarReporte', ['filter' => 'authGuard'], function ($routes) {
+$routes->group('ModificarReporte', ['filter' => 'authGuard:20'], function ($routes) {
 	$routes->get('/', 'cModificarReporte::index');
 });
 

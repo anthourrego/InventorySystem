@@ -365,7 +365,7 @@ class mPermisos extends Model {
 				]
 			],
 			[
-				"id" => 11,
+				"id" => 20,
 				"text" => "Modificar Reporte",
 				"uri" => "ModificarReporte",
 				"icon" => "fa-solid fa-file-pen",
