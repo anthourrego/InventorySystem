@@ -162,6 +162,11 @@ $routes->group('Reportes', ['filter' => 'authGuard'], function ($routes) {
 	//$routes->get('DT', 'cManifiesto::listaDT');
 });
 
+//Modificar Reportes
+$routes->group('ModificarReporte', ['filter' => 'authGuard'], function ($routes) {
+	$routes->get('/', 'cModificarReporte::index');
+});
+
 //Almacenes
 $routes->group('Almacen', ['filter' => 'authGuard'], function ($routes) {
 	$routes->get('/', 'cAlmacen::index');

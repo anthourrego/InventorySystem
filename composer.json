@@ -25,7 +25,8 @@
         "ttskch/select2-bootstrap4-theme": "^1.5",
         "robinherbots/jquery.inputmask": "^5.0",
         "tecnickcom/tcpdf": "^6.4",
-        "nelexa/zip": "^4.0"
+        "nelexa/zip": "^4.0",
+        "ckeditor/ckeditor": "4.*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9",
