@@ -252,4 +252,10 @@ class BaseController extends Controller {
             'assets/Libraries/rcrop/rcrop.min.js'
         ];
     }
+
+    public function LCKEditor() {
+        $this->content['js'][] = [
+            'vendor/ckeditor/ckeditor/ckeditor.js'
+        ];
+    }
 }

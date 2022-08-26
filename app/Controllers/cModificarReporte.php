@@ -4,6 +4,13 @@ namespace App\Controllers;
 
 class cModificarReporte extends BaseController {
 
+  private $instrucciones = [
+    "[HEAD HEAD] - Encabezado del reporte"
+    , "[BODY BODY] - Contenido del reporte"
+    , "[FOOTER FOOTER] - Pie de pagina del reporte"
+    , "[DPPROD DPPROD] - Lista detallada de productos"
+  ];
+
   private $reportes = [
     "Factura" => [
       "icono" => "fa-solid fa-store",
@@ -117,7 +124,6 @@ class cModificarReporte extends BaseController {
 		$this->content['view'] = "vModificarReporte";
 
 		$this->LDataTables();
-		$this->LMoment();
 
 		$this->content['js_add'][] = [
 			'jsModificarReporte.js'
@@ -127,8 +133,81 @@ class cModificarReporte extends BaseController {
 
     $this->content['reportes'] = $this->reportes;
 
+    $this->content['instrucciones'] = $this->instrucciones;
+
+    if (!file_exists(UPLOADS_REPOR_PATH)) {
+      mkdir(UPLOADS_REPOR_PATH);
+    }
 
 		return view('UI/viewDefault', $this->content);
+  }
+
+  function reporte($reporte) {
+    $reporte = str_replace("_", " ", $reporte);
+    $datReporte = [];
+    if (isset($this->reportes[$reporte])) {
+      $datReporte = $this->reportes[$reporte];
+    }
+    $this->content['datReporte'] = $datReporte;
+    $this->content['reporte'] = $reporte;
+
+    $this->content['title'] = "Modificar Reporte " . $reporte;
+		$this->content['view'] = "vModificarEstructuraReporte";
+
+		$this->content['js_add'][] = [
+			'jsModificarEstructuraReporte.js'
+		];
+
+    $this->LCKEditor();
+
+    $this->content['variables'] = [];
+    $this->content['contenidoEditor'] = '';
+    if (isset($datReporte["url"])) {
+      $this->content['variables'] = array_filter($this->variables, function ($it) use ($reporte) {
+        return in_array($reporte, $it["aplica"]);
+      });
+      $this->content['contenidoEditor'] = '';
+      $path = UPLOADS_REPOR_PATH . str_replace(" ", "_", $reporte) . ".txt";
+
+      try {
+        if (file_exists($path)) {
+          $arrContextOptions = array(
+            "ssl"=>array(
+              "verify_peer"=>false,
+              "verify_peer_name"=>false,
+            ),
+          );  
+          $this->content['contenidoEditor'] = file_get_contents($path, false, stream_context_create($arrContextOptions));
+          var_dump($this->content['contenidoEditor']);
+          exit;
+        } else {
+          $this->content['contenidoEditor'] = '';
+        }
+      } catch(Exception $e) {
+        $this->content['contenidoEditor'] = '';
+      }
+    }
+
+    $this->content['instrucciones'] = $this->instrucciones;
+
+		return view('UI/viewDefault', $this->content);
+  }
+
+  function guardar() {
+    $resp["success"] = true;
+    $resp["msj"] = "Reporte guardado correctamente";
+    $postData = (object) $this->request->getPost();
+
+    $path = UPLOADS_REPOR_PATH . str_replace(" ", "_", $postData->reporte) . ".txt";
+
+    try {
+      file_put_contents($path, $postData->contenido);
+    } catch(Exception $e) {
+      $resp["success"] = false;
+      $resp["msj"] = "No fue posible guardar el reporte";
+    }
+
+    return $this->response->setJSON($resp);
   }
 
 }

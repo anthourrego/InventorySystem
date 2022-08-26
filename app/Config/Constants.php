@@ -85,6 +85,7 @@ defined('UPLOADS_USER_PATH')      || define('UPLOADS_USER_PATH', WRITEPATH  . "u
 defined('UPLOADS_PRODUCT_PATH')      || define('UPLOADS_PRODUCT_PATH', WRITEPATH  . "uploads/productos/");
 defined('UPLOADS_MANIFEST_PATH')      || define('UPLOADS_MANIFEST_PATH', WRITEPATH  . "uploads/manifiestos/");
 defined('UPLOADS_CONF_PATH')      || define('UPLOADS_CONF_PATH', WRITEPATH  . "uploads/configuracion/");
+defined('UPLOADS_REPOR_PATH')      || define('UPLOADS_REPOR_PATH', WRITEPATH  . "uploads/reportes/");
 
 defined('TIPODOCS')      || define('TIPODOCS', array(
   0 => array("valor" => "NIT", "titulo" => "Nit")

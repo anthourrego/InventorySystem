@@ -1,3 +1,4 @@
+let rutaBase = base_url() + "ModificarReporte/";
 let DTVariables = $("#tblVariables").DataTable({
   processing: false,
   serverSide: false,
@@ -29,4 +30,7 @@ $(function () {
     }
   });
 
+  $(".btn-modifica-reporte").on('click', function () {
+    location.href = rutaBase + "Reporte/" + $(this).data('btn');
+  });
 });
