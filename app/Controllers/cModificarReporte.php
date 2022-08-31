@@ -8,7 +8,7 @@ class cModificarReporte extends BaseController {
     "[HEAD HEAD] - Encabezado del reporte"
     , "[BODY BODY] - Contenido del reporte"
     , "[FOOTER FOOTER] - Pie de pagina del reporte"
-    , "[DPPROD DPPROD] - Lista detallada de productos"
+    , "[DP DP] - Lista detallada de productos"
   ];
 
   private $reportes = [
@@ -29,7 +29,7 @@ class cModificarReporte extends BaseController {
     pos2 => Pedido
   */
 	private $variables = [
-    "logo" => [
+    "logoEmpresa" => [
       "aplica" => ["Factura", "Pedido"],
       "descripcion" => "Logo de la empresa"
     ],
@@ -37,7 +37,7 @@ class cModificarReporte extends BaseController {
       "aplica" => ["Factura", "Pedido"],
       "descripcion" => "Nombre de la empresa"
     ],
-    "digitoVerifiEmpresa" => [
+    "digitoVeriEmpresa" => [
       "aplica" => ["Factura", "Pedido"],
       "descripcion" => "Digito de verificación de la empresa"
     ],
@@ -117,6 +117,14 @@ class cModificarReporte extends BaseController {
       "aplica" => ["Factura", "Pedido"],
       "descripcion" => "Valor total de la venta"
     ],
+    "ubicacionProductoDP" => [
+      "aplica" => ["Pedido"],
+      "descripcion" => "Ubicación del producto"
+    ],
+    "manifiestoProductoDP" => [
+      "aplica" => ["Pedido"],
+      "descripcion" => "Manifiesto del producto"
+    ],
   ];
 
 	function index() {
@@ -178,8 +186,6 @@ class cModificarReporte extends BaseController {
             ),
           );  
           $this->content['contenidoEditor'] = file_get_contents($path, false, stream_context_create($arrContextOptions));
-          var_dump($this->content['contenidoEditor']);
-          exit;
         } else {
           $this->content['contenidoEditor'] = '';
         }
@@ -202,6 +208,28 @@ class cModificarReporte extends BaseController {
 
     try {
       file_put_contents($path, $postData->contenido);
+    } catch(Exception $e) {
+      $resp["success"] = false;
+      $resp["msj"] = "No fue posible guardar el reporte";
+    }
+
+    return $this->response->setJSON($resp);
+  }
+
+  function plantilla() {
+    $resp["success"] = true;
+    $resp["msj"] = "Reporte reemplazado con éxito";
+    $postData = (object) $this->request->getPost();
+
+    $path1 = REPOR_BASE_PATH . $postData->reporte . ".txt";
+    $path2 = UPLOADS_REPOR_PATH . $postData->reporte . ".txt";
+
+    try {
+      $valid = copy($path1, $path2);
+      if ($valid != true) {
+        $resp["success"] = false;
+        $resp["msj"] = "No fue posible guardar el reporte";
+      }
     } catch(Exception $e) {
       $resp["success"] = false;
       $resp["msj"] = "No fue posible guardar el reporte";

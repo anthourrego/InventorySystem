@@ -15,8 +15,6 @@ let DTVariables = $("#tblVariables").DataTable({
 let dataOriginal = DTVariables.rows().data();
 
 $(function () {
-  console.log("Funciona");
-
   $(".btn-reporte").on('click', function () {
     if (!$(this).hasClass('active')) {
       let btn = $(this).data('btn');
@@ -32,5 +30,24 @@ $(function () {
 
   $(".btn-modifica-reporte").on('click', function () {
     location.href = rutaBase + "Reporte/" + $(this).data('btn');
+  });
+
+  $(".btn-plantilla-reporte").on('click', function () {
+    let reporte = $(this).data('btn');
+    alertify.confirm("¿Esta seguro de reemplazar el reporte de " + reporte.split('_').join(' ') + " por la plantilla?", function () {
+      $.ajax({
+        url: rutaBase + "/Plantilla",
+        type: 'POST',
+        dataType: 'json',
+        data: { reporte },
+        success: function (resp) {
+          if (resp.success) {
+            alertify.alert('¡Advertencia!', resp.msj);
+          } else {
+            alertify.alert('¡Advertencia!', resp.msj);
+          }
+        }
+      });
+    }, function () { });
   });
 });

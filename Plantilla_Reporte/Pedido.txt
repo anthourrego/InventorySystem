@@ -1,0 +1,69 @@
+<table border="0" cellpadding="1" cellspacing="1" style="width:100%">
+	<tbody>
+		<tr>
+			<td rowspan="5">{logoEmpresa}</td>
+			<td><strong>{nombreEmpresa}</strong></td>
+			<td rowspan="5" style="text-align:center; vertical-align:middle">
+			<h2><span style="color:#c0392b">Pedido N.{numeracion}</span></h2>
+			</td>
+		</tr>
+		<tr>
+			<td>NIT: {documentoEmpresa}-{digitoVeriEmpresa}</td>
+		</tr>
+		<tr>
+			<td>Direcci&oacute;n: {direccionEmpresa}</td>
+		</tr>
+		<tr>
+			<td>Tel&eacute;fono: {telefonoEmpresa}</td>
+		</tr>
+		<tr>
+			<td>{emailEmpresa}</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>&nbsp;</p>
+
+<table border="0" cellpadding="1" cellspacing="1" style="width:100%">
+	<tbody>
+		<tr>
+			<td>Cliente: {nombreSucursal} - {nombreCliente}</td>
+			<td>Fecha: {fechaCreacion}</td>
+		</tr>
+		<tr>
+			<td>Direcci&oacute;n:{direccionSucursal}</td>
+			<td>Telefono: {telefonoSucursal}</td>
+		</tr>
+		<tr>
+			<td>Ciudad: {ciudadSucursal}, {deptoSucursal}</td>
+			<td>Vendedor: {nombreVendedor}</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>[DP</p>
+
+<table border="1" cellpadding="1" cellspacing="1" style="width:100%">
+	<thead>
+		<tr>
+			<th scope="col"><strong>Item</strong></th>
+			<th scope="col"><strong>Descripci&oacute;n</strong></th>
+			<th scope="col"><strong>Und</strong></th>
+			<th scope="col"><strong>Ubicaci&oacute;n</strong></th>
+			<th scope="col"><strong>Manifiesto</strong></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>{itemProductoDP}</td>
+			<td>{descripcionProductoDP}</td>
+			<td>{cantidadProductoDP}</td>
+			<td>{ubicacionProductoDP}</td>
+			<td>{manifiestoProductoDP}</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>DP]</p>
+
+<p><strong>Total Cajas:</strong> {totalGeneral}</p>

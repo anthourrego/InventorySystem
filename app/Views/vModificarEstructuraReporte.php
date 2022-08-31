@@ -37,7 +37,7 @@
   </div>
 
   <script>
-      let dataEditor = "<?= $contenidoEditor; ?>";
+      let dataEditor = `<?= $contenidoEditor; ?>`;
       let reporte = "<?= $reporte; ?>";
   </script>
 <?php } else { ?>

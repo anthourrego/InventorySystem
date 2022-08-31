@@ -1,14 +1,18 @@
 let baseUrl = base_url() + "ModificarReporte";
 
 $(function () {
-  let editor = CKEDITOR.replace('editReporte');
+
+  let editor = CKEDITOR.replace('editReporte', {
+    customConfig: base_url() + 'assets/Libraries/CKEditor/config.js'
+  });
+
+  CKEDITOR.config.customConfig = base_url() + 'assets/Libraries/CKEditor/config.js';
 
   editor.on('change', function (evt) {
     dataEditor = evt.editor.getData();
   });
 
   $("#btnGuardar").on('click', function () {
-    console.log("Funciona ", dataEditor);
     if (dataEditor.length) {
       $.ajax({
         url: baseUrl + "/Guardar",

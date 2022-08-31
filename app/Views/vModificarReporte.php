@@ -53,12 +53,26 @@
             }
           ?>
         </div>
+        <h4>Modificar Reporte</h4>
         <div class="row">
           <?php
             foreach ($reportes as $key => $value) {
               echo "<div class='col-12 col-md-3 mt-2'>
-                <button type='button' class='btn btn-" . $value['color'] . " btn-modifica-reporte' title='" . $key . "' data-btn='" . str_replace(" ", "_", $key) . "'>
-                <span class='badge'><i class='" . $value['icono'] . "'></i></span> Modificar " . $key . "
+                <button type='button' class='btn btn-" . $value['color'] . " btn-modifica-reporte w-100' title='Editar " . $key . "' data-btn='" . str_replace(" ", "_", $key) . "'>
+                <span class='badge'><i class='" . $value['icono'] . "'></i></span>" . $key . "
+                </button>
+              </div>";
+            }
+          ?>
+        </div>
+        <hr>
+        <h4>Plantilla Reporte</h4>
+        <div class="row">
+          <?php
+            foreach ($reportes as $key => $value) {
+              echo "<div class='col-12 col-md-3 mt-2'>
+                <button type='button' class='btn btn-" . $value['color'] . " btn-plantilla-reporte w-100' title='Reemplazar " . $key . "' data-btn='" . str_replace(" ", "_", $key) . "'>
+                <span class='badge'><i class='" . $value['icono'] . "'></i></span>" . $key . "
                 </button>
               </div>";
             }

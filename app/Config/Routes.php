@@ -167,6 +167,7 @@ $routes->group('ModificarReporte', ['filter' => 'authGuard:20'], function ($rout
 	$routes->get('/', 'cModificarReporte::index');
 	$routes->get('Reporte/(:any)', 'cModificarReporte::reporte/$1');
 	$routes->post('Guardar', 'cModificarReporte::guardar');
+	$routes->post('Plantilla', 'cModificarReporte::plantilla');
 });
 
 //Almacenes
