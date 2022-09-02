@@ -136,7 +136,8 @@ class cReportes extends BaseController {
 				S.nombre AS nombreSucursal,
 				S.telefono AS telefonoSucursal,
 				CI.nombre AS ciudadSucursal,
-				DEP.nombre AS deptoSucursal  
+				DEP.nombre AS deptoSucursal,
+				V.observacion
 			")->join("clientes AS C", "V.id_cliente = C.id", "left")
 			->join("usuarios AS U", "V.id_vendedor = U.id", "left")
 			->join("sucursales AS S", "V.id_sucursal = S.id", "left")

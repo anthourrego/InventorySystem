@@ -67,3 +67,7 @@
 <p>DP]</p>
 
 <p><strong>Total:</strong> {totalGeneral}</p>
+
+<p><strong>Observaci&oacute;n:</strong> {observacion}</p>
+
+<p>&nbsp;</p>
