@@ -350,7 +350,7 @@ $(function () {
 });
 
 function eliminar(data) {
-  alertify.confirm('Cambiar estado', `Esta seguro de cambiar el estado del producto <b>${data.referencia} ("${data.item}")</b> a ${data.estado == "1" ? 'Ina' : 'A'}ctivo`,
+  alertify.confirm('Cambiar estado', `Esta seguro de cambiar el estado del producto <b>${data.referencia} ("${(data.item || '')}")</b> a ${data.estado == "1" ? 'Ina' : 'A'}ctivo`,
     function () {
       $.ajax({
         type: "POST",
