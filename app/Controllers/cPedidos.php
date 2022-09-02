@@ -167,10 +167,12 @@ class cPedidos extends BaseController {
 				CASE WHEN P.Estado = 0 THEN 'Pendiente' WHEN P.Estado = 1 THEN 'Alistamiento' ELSE 'Facturado' END AS NombreEstado,
 				P.total,
 				S.direccion,
-				S.nombre AS NombreSucursal
+				S.nombre AS NombreSucursal,
+				V.id AS idFactura
 			")->join('clientes AS C', 'P.id_cliente = C.id', 'left')
 			->join('sucursales AS S', 'P.id_sucursal = S.id', 'left')
-			->join('usuarios AS U', 'P.id_vendedor = U.id', 'left');
+			->join('usuarios AS U', 'P.id_vendedor = U.id', 'left')
+			->join('ventas AS V', 'P.id = V.id_pedido', 'left');
 
 		return DataTable::of($query)->toJson(true);
 	}
