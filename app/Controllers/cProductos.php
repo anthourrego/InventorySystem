@@ -214,6 +214,7 @@ class cProductos extends BaseController {
 						if ($imgFoto->isValid() && !$imgFoto->hasMoved()) {
 							//Validamos que la imagen suba correctamente
 							$nameImg = "01.png";
+							$nameSmallImg = "01-small.png";
 
 							$image = Services::image()
 												->withFile($imgFoto)
@@ -386,36 +387,44 @@ class cProductos extends BaseController {
 		$filtros = (object) session()->get("filtrosProductos");
 
 		$mProducto = new mProductos();
+		$mProducto1 = new mProductos();
 
 		$mProducto->where('imagen IS NOT NULL', NULL, FALSE);
+		$mProducto1->where('imagen IS NOT NULL', NULL, FALSE);
 
 		if($filtros->estado != "-1"){
 			$mProducto->where("estado", $filtros->estado);
+			$mProducto1->where("estado", $filtros->estado);
 		}
 
 		if(isset($filtros->categoria) && $filtros->categoria > 0){
 			$arrayFiltro['categoria'] = $filtros->categoria;
 			$mProducto->where("id_categoria", $filtros->categoria);
+			$mProducto1->where("id_categoria", $filtros->categoria);
 		}
 
 		if(isset($filtros->cantIni) && $filtros->cantIni >= 0) {
 			$arrayFiltro['cantIni'] = $filtros->cantIni;
 			$mProducto->where("stock >= $filtros->cantIni");
+			$mProducto1->where("stock >= $filtros->cantIni");
 		}
 
 		if(isset($filtros->cantFin) && $filtros->cantFin >= 0){
 			$arrayFiltro['cantFin'] = $filtros->cantFin;
 			$mProducto->where("stock <= $filtros->cantFin");
+			$mProducto1->where("stock <= $filtros->cantFin");
 		}
 
 		if(isset($filtros->preciIni) && $filtros->preciIni >= 0) {
 			$arrayFiltro['preciIni'] = $filtros->preciIni;
 			$mProducto->where("precio_venta >= $filtros->preciIni");
+			$mProducto1->where("precio_venta >= $filtros->preciIni");
 		}
 
 		if(isset($filtros->preciFin) && $filtros->preciFin >= 0){
 			$arrayFiltro['preciFin'] = $filtros->preciFin;
 			$mProducto->where("precio_venta <= $filtros->preciFin");
+			$mProducto1->where("precio_venta <= $filtros->preciFin");
 		}
 
 		//validamos si aplica para ventas para realziar algunas validaciones
@@ -424,6 +433,7 @@ class cProductos extends BaseController {
 			$inventarioNegativo = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
 			if ($inventarioNegativo == "0") {
 				$mProducto->where("stock >=", 0);
+				$mProducto1->where("stock >=", 0);
 			}
 		}
 
@@ -441,11 +451,11 @@ class cProductos extends BaseController {
 			return $this->response->download(UPLOADS_PRODUCT_PATH .  "fotos.zip", null)->setFileName("fotos.zip");
 		} else {
 
-			$mProducto->paginate($limit);
+			$mProducto1->paginate($limit);
 			
 			$resp = [
 				"totalRegistros" => $mProducto->countAllResults(),
-				"totalPaginas" => $mProducto->pager->getPageCount()
+				"totalPaginas" => $mProducto1->pager->getPageCount()
 			];
 			return $this->response->setJSON($resp);
 		}
