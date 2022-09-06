@@ -285,6 +285,81 @@ $(function () {
     DTProductos.ajax.reload();
   });
 
+
+  $("#modalFotos").on('show.bs.modal', function (event) {
+    $("#cantFiltroPaquete").val($CAMPOSPRODUCTO.pacDescarga);
+    $("#nroPaquetes").addClass("d-none");
+    $("#listaPaquetes").empty();
+  });
+
+  $("#cantFiltroPaquete").on("keydown", function (e) {
+		if(e.which == 13) {
+      $("#btnFiltrarPaquetes").trigger("click");
+    }
+	});
+
+  $("#btnFiltrarPaquetes").on("click", function(e){
+    e.preventDefault();
+    let TotalFotos = 0;
+    let pac = $("#cantFiltroPaquete").val();
+
+    $.ajax({
+      url: rutaBase + "descargarFoto/" + pac,
+      type: "GET",
+      dataType: "json",
+      async: false,
+      success: (resp) => {
+        TotalFotos = resp; 
+      }
+    });
+
+    $("#nroPaquetes").removeClass("d-none").find("span").text(TotalFotos.totalPaginas);
+    $("#listaPaquetes").empty();
+
+    for (let i = 0; i < TotalFotos.totalPaginas; i++) {
+      let offset = i * pac;
+      let final = (i+1) * pac; 
+
+      if (final > TotalFotos.totalRegistros){
+        final = TotalFotos.totalRegistros;
+      }
+
+      $("#listaPaquetes").append(`<a href="#" id="pac${(i+1)}" data-cant="${pac}" data-offset="${offset}" data-final="${final}" class="descargarPaquete list-group-item list-group-item-action d-flex justify-content-between align-items-center">Paquete ${(i+1)} | ${(offset+1)}-${final} <i class="fa-solid fa-download"></i></a>`);
+    }
+  });
+
+  $(document).on("click", ".descargarPaquete", function(e){
+    e.preventDefault();
+    let cantidad = $(this).data("cant");
+    let offset = $(this).data("offset");
+    let final = $(this).data("final");
+    $(this).removeClass("list-group-item-success list-group-item-danger");
+    $(this).find("i").removeClass("fa-download fa-times").addClass("fa-rotate rotacionEfecto");
+
+    $.ajax({
+      url: rutaBase + `descargarFoto/${cantidad}/${offset}`,
+      xhrFields: {
+        responseType: 'blob'
+      },
+      success: (resp) => {
+        try {
+          var a = document.createElement('a');
+          var url = window.URL.createObjectURL(resp);
+          a.href = url;
+          a.download = `${(offset+1)}-${final}.zip`;
+          a.click();
+          window.URL.revokeObjectURL(url);
+          $(this).find("i").removeClass("fa-rotate rotacionEfecto").addClass("fa-check");
+          $(this).addClass("list-group-item-success");
+        } catch (error) {
+          $(this).find("i").removeClass("fa-rotate rotacionEfecto").addClass("fa-times");
+          $(this).addClass("list-group-item-danger");
+        }
+      }
+    });
+
+  })
+
   $(".btnCancelarImg").click(function () {
     srcOriginal = '';
     $('#image').rcrop('destroy');

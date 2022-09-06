@@ -70,6 +70,10 @@
               <option value="0" selected>No</option>
             </select>
           </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <label for="pacDescarga">Paquete Descarga X:</label>
+            <input type="number" id="pacDescarga" data-nombre="Paquete descarga" name="pacDescarga" min="1" max="100" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el cantidad">
+          </div>
         </div>
       </div>
       <div class="tab-pane fade" id="inventarioTab" role="tabpanel" aria-labelledby="inventario-tab">

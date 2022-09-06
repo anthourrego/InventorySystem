@@ -18,7 +18,8 @@ class cProductos extends BaseController {
 			"ubicacion" => (session()->has("ubicacionProducto") ? session()->get("ubicacionProducto") : '0'),
 			"costo" => (session()->has("costoProducto") ? session()->get("costoProducto") : '0'),
 			"manifiesto" => (session()->has("manifiestoProducto") ? session()->get("manifiestoProducto") : '0'),
-			"paca" => (session()->has("pacaProducto") ? session()->get("pacaProducto") : '0')
+			"paca" => (session()->has("pacaProducto") ? session()->get("pacaProducto") : '0'),
+			"pacDescarga" => (session()->has("pacDescarga") ? session()->get("pacDescarga") : '1')
  		];
 		$this->content["inventario_negativo"] = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
 		$this->content['imagenProd'] = (session()->has("imageProd") ? session()->get("imageProd") : 0);
@@ -381,13 +382,12 @@ class cProductos extends BaseController {
 		}
 	}
 
-	public function descargarFoto(){
+	public function descargarFoto($limit = null, $offset = null){
 		$filtros = (object) session()->get("filtrosProductos");
 
 		$mProducto = new mProductos();
 
 		$mProducto->where('imagen IS NOT NULL', NULL, FALSE);
-
 
 		if($filtros->estado != "-1"){
 			$mProducto->where("estado", $filtros->estado);
@@ -427,18 +427,28 @@ class cProductos extends BaseController {
 			}
 		}
 
-		$productos = $mProducto->asObject()->findAll();
+		if (!is_null($offset)) {
+			$productos = $mProducto->asObject()->findAll($limit, $offset);
 
-		$zipFile = new ZipFile();
-		ob_start();
-		foreach ($productos as $it) {
-			$this->convertirFoto($it->id, $it->imagen, $it);
-			$zipFile->addFile(UPLOADS_PRODUCT_PATH . "convert/{$it->id}.png");
+			$zipFile = new ZipFile();
+			ob_start();
+			foreach ($productos as $it) {
+				$this->convertirFoto($it->id, $it->imagen, $it);
+				$zipFile->addFile(UPLOADS_PRODUCT_PATH . "convert/{$it->id}.png");
+			}
+	
+			$zipFile->saveAsFile(UPLOADS_PRODUCT_PATH . "fotos.zip"); 
+			return $this->response->download(UPLOADS_PRODUCT_PATH .  "fotos.zip", null)->setFileName("fotos.zip");
+		} else {
+
+			$mProducto->paginate($limit);
+			
+			$resp = [
+				"totalRegistros" => $mProducto->countAllResults(),
+				"totalPaginas" => $mProducto->pager->getPageCount()
+			];
+			return $this->response->setJSON($resp);
 		}
-
-		$zipFile->saveAsFile(UPLOADS_PRODUCT_PATH . "fotos.zip"); 
-		
-		return $this->response->download(UPLOADS_PRODUCT_PATH .  "fotos.zip", null)->setFileName("fotos" . date("Ymd") . '.zip');
 	}
 
 	public function productosAPP() {

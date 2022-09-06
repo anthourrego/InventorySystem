@@ -21,7 +21,7 @@
       </div>
       <div class="col-12 col-md-3 mt-2 mt-md-0 text-right">
         <?php if (validPermissions([55], true)) { ?>
-          <a target="_blank" href="<?= base_url("Productos/descargarFoto") ?>" class="btn btn-dark"><i class="fa-solid fa-camera"></i> Fotos</a>
+          <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#modalFotos"><i class="fa-solid fa-camera"></i> Fotos</button>
         <?php } ?>
         <button type="button" class="btn btn-warning" id="btnFiltros"><i class="fa-solid fa-filter"></i> Filtros</button>
         <?php if (validPermissions([51], true)) { ?>
@@ -197,36 +197,35 @@
   </div>
 </div>
 
-<div class="modal fade" id="modalFiltroFoto" data-backdrop="static" data-keyboard="false" aria-labelledby="modalFiltroFotoLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+<?php if (validPermissions([55], true)) { ?>
+<div class="modal fade" id="modalFotos" data-backdrop="static" data-keyboard="false" aria-labelledby="modalFotosLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalFiltroFotoLabel"><i class="fa-solid fa-camera"></i> Filtro fotos</h5>
+        <h5 class="modal-title" id="modalFotosLabel"><i class="fa-solid fa-camera"></i> Descargar fotos</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <form id="formFiltroFoto">
-          <div class="row">
-            <div class="col">
-              <label for="filtroMinimo">Mínimo</label>
-              <input type="tel" id="filtroMinimo" class="form-control inputPesos" placeholder="Mínimo">
-            </div>
-            <div class="col">
-              <label for="filtroMaximo">Máximo</label>
-              <input type="tel" id="filtroMaximo" class="form-control inputPesos" placeholder="Máximo">
-            </div>
+        <div class="input-group">
+          <input type="number" id="cantFiltroPaquete"  value="<?= $camposProducto["pacDescarga"] ?>" class="form-control inputFocusSelect soloNumeros noEnter" min="1" max="100" placeholder="Cantidad x paquete">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" id="btnFiltrarPaquetes"><i class="fas fa-filter"></i></button>
           </div>
-        </form>
+        </div>
+        <small id="nroPaquetes" class="d-none">Cantidad paquetes: <span>1</span></small>
+
+        <div id="listaPaquetes" class="list-group mt-3"></div>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" form="formFiltroFoto"><i class="fas fa-filter"></i> Filtrar</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
       </div>
     </div>
   </div>
 </div>
+<?php } ?>
+
 
 <div class="modal fade" id="modalFiltros" data-backdrop="static" data-keyboard="false" aria-labelledby="modalFiltrosLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-width">

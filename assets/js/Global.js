@@ -25,7 +25,7 @@ $(function () {
 	});
 });
 
-$(document).on('keydown', "input:not(button, [type=search], .flexdatalist-alias,  .dataTables_filter input), select", function (evt) {
+$(document).on('keydown', "input:not(button, [type=search], .flexdatalist-alias, .dataTables_filter input), select, .noEnter", function (evt) {
 	if (evt.keyCode == 13) {
 		var fields = $(this).parents('form:eq(0),body').find('input,a,select,button,textarea').filter(':visible:not([disabled])');
 		var index = fields.index(this);
