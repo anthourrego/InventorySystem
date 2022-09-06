@@ -125,6 +125,10 @@ class cModificarReporte extends BaseController {
       "aplica" => ["Pedido"],
       "descripcion" => "Manifiesto del producto"
     ],
+    "observacion" => [
+      "aplica" => ["Pedido", "Factura"],
+      "descripcion" => "Observación del reporte"
+    ],
   ];
 
 	function index() {

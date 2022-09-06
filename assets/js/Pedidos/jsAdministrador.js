@@ -12,7 +12,7 @@ let DT = $("#table").DataTable({
     { data: 'NombreVendedor' },
     { data: 'NombreSucursal' },
     { data: 'direccion' },
-    { 
+    {
       data: 'NombreEstado',
       className: 'text-center align-middle',
       render: function (meta, type, data, meta) {
@@ -51,25 +51,32 @@ let DT = $("#table").DataTable({
               <i class="fa-solid ${data.estado == 0 ? 'fa-boxes-stacked' : 'fa-receipt'}"></i>
               </button>`
             : ``}
-            ${validPermissions(106) ? `<a href="${base_url()}Reportes/Pedido/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprimir pedido">
-            <i class="fa-solid fa-print"></i>
-          </a>` : ''}
+            ${validPermissions(106)
+            ? `<a href="${base_url()}Reportes/Pedido/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprimir pedido">
+                  <i class="fa-solid fa-print"></i>
+                </a>
+              ${data.idFactura > 0
+              ? `<a href="${base_url()}Reportes/Factura/${data.idFactura}" target="_blank" type="button" class="btn btn-success" title="Imprimir factura">
+                  <i class="fa-solid fa-receipt"></i>
+                </a>`
+              : ''}`
+            : ''}
             ${data.estado == 2
-              ? `<button type="button" class="btn btn-secondary btnEditar" title="Ver">
+            ? `<button type="button" class="btn btn-secondary btnEditar" title="Ver">
                 <i class="fa-solid fa-eye"></i>
               </button>`
-              : (validPermissions(102) ? `<button type="button" class="btn btn-secondary btnEditar" title="Editar">
+            : (validPermissions(102) ? `<button type="button" class="btn btn-secondary btnEditar" title="Editar">
                 <i class="fa-solid fa-pen-to-square"></i>
               </button>` : `<button type="button" class="btn btn-secondary btnEditar" title="Ver">
               <i class="fa-solid fa-eye"></i>
             </button>`)}
 
             ${data.estado != 2 && validPermissions(103)
-              ? `<button type="button" class="btn btn-danger btnEliminar" title="Eliminar">
+            ? `<button type="button" class="btn btn-danger btnEliminar" title="Eliminar">
               <i class="fa-regular fa-trash-can"></i>
             </button>` :
             ''
-            }
+          }
             
           </div>
         `;
@@ -120,7 +127,7 @@ function alistarPedido(data) {
           }
         }
       });
-    }, function () {});
+    }, function () { });
 }
 
 function eliminar(data) {

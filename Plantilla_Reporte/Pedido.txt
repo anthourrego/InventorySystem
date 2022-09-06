@@ -67,3 +67,5 @@
 <p>DP]</p>
 
 <p><strong>Total Cajas:</strong> {totalGeneral}</p>
+
+<p><strong>Observaci&oacute;n:</strong> {observacion}</p>

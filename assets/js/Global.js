@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 		},
 		ajaxError: function (funcion, request, settings) {
 			$("#cargandoAjax").removeClass('d-none');
-			let textoServer = request.responseText ? request.responseText : "Valide si tiene conexión a internet ya que no se ha encuentrado una respuesta";
+			let textoServer = request.responseText ? request.responseText : "Valide si tiene conexión a internet ya que no se ha encontrado una respuesta";
 			alertify.globalAlert('Error', textoServer, function () {
 				this.destroy();
 			});
