@@ -595,3 +595,8 @@ div.dt-button-collection .dt-button {
       transform:rotate(360deg); 
   } 
 }
+
+.pe-none {
+  pointer-events:none!important;
+  opacity: 0.5;
+}
