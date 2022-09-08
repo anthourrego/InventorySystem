@@ -41,6 +41,7 @@ class cReportes extends BaseController {
 		$pdf->startPageGroup();
 		$pdf->AddPage();
 		$pdf->writeHTML($estrucPdf, false, false, false, false, '');
+		$pdf->setTitle('Factura ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
 		$pdf->Output($dataVenta['codigo'] . ".pdf", 'I');
 		exit;
 	}
@@ -75,6 +76,7 @@ class cReportes extends BaseController {
 		$pdf->startPageGroup();
 		$pdf->AddPage();
 		$pdf->writeHTML($estrucPdf, false, false, false, false, '');
+		$pdf->setTitle('Pedido ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
 		$pdf->Output($dataVenta['codigo'] . ".pdf", 'I');
 		exit;
 	}
