@@ -352,6 +352,16 @@ $(function () {
     DTProductos.column('.imgProdTb').column().visible($IMAGENPROD)
     DTProductos.ajax.reload();
   });
+
+  if ($DATOSVENTA == '') {
+    $(".nav-item, .brand-link").addClass('pe-none');
+
+    $("#btnCancelarCreacion").on('click', function () {
+      alertify.confirm("Cancelar venta", `Esta seguro de cancelar la Factura ${$("#nroVenta").val()}?`, function () {
+        window.location.href = base_url() + 'Ventas/Administrar';
+      }, function () { });
+    });
+  }
 });
 
 function calcularTotal() {

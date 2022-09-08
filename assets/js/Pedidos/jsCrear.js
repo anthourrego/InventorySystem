@@ -471,6 +471,16 @@ $(function () {
     DTProductos.column('.imgProdTb').column().visible($IMAGENPROD)
     DTProductos.ajax.reload();
   });
+
+  if ($DATOSPEDIDO == '') {
+    $(".nav-item, .brand-link").addClass('pe-none');
+
+    $("#btnCancelarCreacion").on('click', function () {
+      alertify.confirm("Cancelar pedido", `Esta seguro de cancelar el pedido ${$("#nroPedido").val()}?`, function () {
+        window.location.href = base_url() + 'Pedidos/Administrar';
+      }, function () { });
+    });
+  }
 });
 
 function calcularTotal() {
