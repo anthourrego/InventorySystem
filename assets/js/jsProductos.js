@@ -25,8 +25,9 @@ let DTProductos = $("#table").DataTable({
     defaultContent: '',
     className: "text-center imgProdTb",
     render: function (meta, type, data, meta) {
+      let extension = data.imagen == null ? null : "01-small." + data.imagen.split(".").pop();
       return $imagenProd ? `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
-                  <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
+                  <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${extension}" alt="" />
                 </a>` : '';
     }
   },
@@ -421,6 +422,22 @@ $(function () {
     $("#cateFiltro").val('').change();
     $("#modalFiltros").modal('hide');
     DTProductos.ajax.reload();
+  });
+
+  $("#btnSincronizar").on("click", function(e){
+    $.ajax({
+      url: rutaBase + "Sincronizar",
+      dataType: "json",
+      type: "GET",
+      success: (resp) => {
+        if (resp.success) {
+          alertify.success(resp.msj);
+          DTProductos.ajax.reload();
+        } else {
+          alertify.alert('¡Advertencia!', resp.msj);
+        }
+      }
+    });
   });
 });
 

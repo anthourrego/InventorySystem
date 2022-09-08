@@ -94,6 +94,7 @@ $routes->group('Productos', ['filter' => 'authGuard:5'], function ($routes) {
 	$routes->get('fotoEditada/(:num)/(:any)', 'cProductos::convertirFoto/$1/$2', ['filter' => ['authGuard:55']]);
 	$routes->get('descargarFoto/(:num)', 'cProductos::descargarFoto/$1', ['filter' => ['authGuard:55']]);
 	$routes->get('descargarFoto/(:num)/(:num)', 'cProductos::descargarFoto/$1/$2', ['filter' => ['authGuard:55']]);
+	$routes->get('Sincronizar', 'cProductos::sincronizar', ['filter' => ['authGuard:56']]);
 });
 
 //Ventas

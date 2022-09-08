@@ -37,8 +37,6 @@ class cVentas extends BaseController {
 		$this->LJQueryValidation();
 		$this->LFancybox();
 
-		$ventaModel = new mVentas();
-
 		$mClientes = new mClientes();
 		$this->content["cantidadClientes"] = $mClientes->where("estado", 1)->countAllResults();
 

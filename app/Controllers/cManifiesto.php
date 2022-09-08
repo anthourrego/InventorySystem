@@ -17,6 +17,7 @@ class cManifiesto extends BaseController {
 		$this->LDataTables();
 		$this->LMoment();
 		$this->LJQueryValidation();
+		$this->LFancybox();
 		
 		$this->content['js_add'][] = [
 			'jsManifiesto.js'

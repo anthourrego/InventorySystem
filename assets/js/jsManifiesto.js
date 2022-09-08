@@ -222,8 +222,9 @@ let DTProductosStruc = {
     defaultContent: '',
     className: "text-center imgProdTb",
     render: function (meta, type, data, meta) {
+      let extension = data.imagen == null ? null : "01-small." + data.imagen.split(".").pop();
       return $imagenProd || $("#verImg1").is(':checked') ? `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
-        <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
+        <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${extension}" alt="" />
       </a>` : '';
     }
   },
@@ -298,8 +299,9 @@ let DTVerProductosStruc = {
     visible: $imagenProd,
     className: "text-center imgProdTb",
     render: function (meta, type, data, meta) {
+      let extension = data.imagen == null ? null : "01-small." + data.imagen.split(".").pop();
       return $imagenProd || $("#verImg2").is(':checked') ? `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
-          <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${data.imagen}" alt="" />
+          <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${extension}" alt="" />
         </a>` : '';
     }
   },

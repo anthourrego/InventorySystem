@@ -20,6 +20,9 @@
         <?php } ?>
       </div>
       <div class="col-12 col-md-3 mt-2 mt-md-0 text-right">
+        <?php if (validPermissions([56], true)) { ?>
+        <button type="button" class="btn btn-secondary" id="btnSincronizar"><i class="fa-solid fa-sync"></i></button>
+        <?php } ?>
         <?php if (validPermissions([55], true)) { ?>
           <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#modalFotos"><i class="fa-solid fa-camera"></i> Fotos</button>
         <?php } ?>

@@ -225,18 +225,24 @@ class cProductos extends BaseController {
 									mkdir($ruta, 0777, true);
 							}
 
-							//$imgFoto->move(UPLOADS_PRODUCT_PATH . "/" . $product->id, $nameImg, true)
 							if ($image->save($ruta . $nameImg)) {
-								$updateFoto = array(
-									"id" => $product->id,
-									"imagen" => $nameImg
-								);
-	
-								if ($product->save($updateFoto)) { 
-									$resp["success"] = true;
-									$resp["msj"] = "El producto <b>{$product->referencia}</b> se " . (empty($postData->id) ? 'creo' : 'actualizo') . " correctamente.";
+								$imageSmall = Services::image()
+												->withFile($imgFoto)
+												->resize(250, 250, true, 'height');
+								if ($imageSmall->save($ruta . $nameSmallImg)) {
+									$updateFoto = array(
+										"id" => $product->id,
+										"imagen" => $nameImg
+									);
+		
+									if ($product->save($updateFoto)) { 
+										$resp["success"] = true;
+										$resp["msj"] = "El producto <b>{$product->referencia}</b> se " . (empty($postData->id) ? 'creo' : 'actualizo') . " correctamente.";
+									} else {
+										$resp["msj"] = "Ha ocurrido un error al actualizar los datos de la foto.";
+									}
 								} else {
-									$resp["msj"] = "Ha ocurrido un error al actualizar los datos de la foto.";
+									$resp["msj"] = "Ha ocurrido un error al subir la foto miniatura.";
 								}
 							} else {
 								$resp["msj"] = "Ha ocurrido un error al subir la foto.";
@@ -484,7 +490,11 @@ class cProductos extends BaseController {
 					CASE 
 						WHEN P.imagen IS NULL THEN '' 
 						ELSE CONCAT('" . base_url() . "/fotoProductosAPP/', P.id, '/', P.imagen) 
-					END As FotoURL				
+					END As FotoURL,
+					CASE 
+						WHEN P.imagen IS NULL THEN '' 
+						ELSE CONCAT('" . base_url() . "/fotoProductosAPP/', P.id, '/', SUBSTRING(P.imagen,1,LOCATE('.', P.imagen)+-1), '-small', SUBSTRING(P.imagen,LOCATE('.', P.imagen),LENGTH(P.imagen)-LOCATE('.', P.imagen)+1)) 
+					END As FotoURLSmall			
 			")->join('categorias AS C', 'P.id_categoria = C.id', 'left')
 			->where("P.estado", 1)
 			->where("P.stock >", 0)
@@ -492,4 +502,43 @@ class cProductos extends BaseController {
 
 		return $this->response->setJSON($productos);
 	} 
+
+	public function sincronizar(){
+		$resp['success'] = false;
+		$resp['listProd'] = "";
+		$contProd = 0;
+
+		$mProducto = new mProductos();
+		$productos = $mProducto->where('imagen IS NOT NULL', NULL, FALSE)->asObject()->findAll();
+
+
+		foreach ($productos as $it) {
+			$filename = UPLOADS_PRODUCT_PATH ."{$it->id}/{$it->imagen}"; //<-- specify the image  file
+
+			//Si la foto no existe la colocamos por defecto
+			if(file_exists($filename)){ 
+				$extension = pathinfo($filename, PATHINFO_EXTENSION);
+				$nameSmallImg = "01-small.{$extension}";
+	
+				$ruta = UPLOADS_PRODUCT_PATH ."/" . $it->id  ."/";
+	
+				$imageSmall = Services::image()
+								->withFile($filename)
+								->resize(250, 250, true, 'height');
+				if (!$imageSmall->save($ruta . $nameSmallImg)) {
+					$resp["listProd"] .= "<li>{$it->referencia}</li>";
+					$contProd++;
+				}
+			}
+		}
+
+		if ($contProd == 0) {
+			$resp['success'] = true;
+			$resp['msj'] = "Imagenes de small creadas correctamente";
+		} else {
+			$resp["msj"] = "Ha ocurrido un error al convertir estas imagenes. <br> <ul>{$resp['listProd']}</ul>"; 
+		}
+
+		return $this->response->setJSON($resp);
+	}
 }

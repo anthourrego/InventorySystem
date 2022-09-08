@@ -190,7 +190,11 @@ class mPermisos extends Model {
 					],
 					[
 						"id" => 55,
-						"text" => "Convertir foto"
+						"text" => "Descargar fotos"
+					],
+					[
+						"id" => 56,
+						"text" => "Sincronizar fotos"
 					]
 				]
 			],
