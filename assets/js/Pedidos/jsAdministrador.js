@@ -110,7 +110,7 @@ let DT = $("#table").DataTable({
       alertify.prompt('Cantidad imprimir', 'Número de cajas disponibles?', '1', function (evt, value) {
         if (value > 0) {
           if (value <= limiteRotulo) {
-            window.open(`${base_url()}Reportes/Rotulo/${data.idFactura}/${value}`, '_blank');
+            window.open(`${base_url()}Reportes/Rotulo/${data.id.trim()}/${value}`, '_blank');
           } else {
             alertify.warning('El limite permitido es ' + limiteRotulo);
             setTimeout(() => {
