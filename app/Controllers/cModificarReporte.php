@@ -21,36 +21,37 @@ class cModificarReporte extends BaseController {
       "icono" => "fa-solid fa-boxes-stacked",
       "color" => "secondary",
       "url" => ""
+    ],
+    "Rotulo" => [
+      "icono" => "fa-solid fa-tags",
+      "color" => "info",
+      "url" => ""
     ]
   ];
 
-  /* 
-    pos1 => Factura,
-    pos2 => Pedido
-  */
 	private $variables = [
     "logoEmpresa" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
       "descripcion" => "Logo de la empresa"
     ],
     "nombreEmpresa" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
       "descripcion" => "Nombre de la empresa"
     ],
     "digitoVeriEmpresa" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
       "descripcion" => "Digito de verificación de la empresa"
     ],
     "direccionEmpresa" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
       "descripcion" => "Dirección de la empresa"
     ],
     "telefonoEmpresa" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
       "descripcion" => "Telefono de la empresa"
     ],
     "emailEmpresa" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
       "descripcion" => "Correo electrónico de la empresa"
     ],
     "numeracion" => [
@@ -62,27 +63,27 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Nombre de la sucursal"
     ],
     "nombreCliente" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
       "descripcion" => "Nombre del cliente"
     ],
     "fechaCreacion" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
       "descripcion" => "Fecha de generación del documento"
     ],
     "direccionSucursal" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
       "descripcion" => "Dirección de la sucursal"
     ],
     "telefonoSucursal" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
       "descripcion" => "Telefono de la sucursal"
     ],
     "ciudadSucursal" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
       "descripcion" => "Ciudad de la sucursal"
     ],
     "deptoSucursal" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
       "descripcion" => "Departamento de la sucursal"
     ],
     "nombreVendedor" => [
@@ -126,8 +127,12 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Manifiesto del producto"
     ],
     "observacion" => [
-      "aplica" => ["Pedido", "Factura"],
+      "aplica" => ["Pedido", "Factura", "Rotulo"],
       "descripcion" => "Observación del reporte"
+    ],
+    "numeroRotulo" => [
+      "aplica" => ["Rotulo"],
+      "descripcion" => "Numeración secuencial del rotulo"
     ],
   ];
 

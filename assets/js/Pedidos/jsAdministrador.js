@@ -1,4 +1,5 @@
 let rutaBase = base_url() + "Pedidos/";
+let limiteRotulo = 1000;
 
 let DT = $("#table").DataTable({
   ajax: {
@@ -75,8 +76,13 @@ let DT = $("#table").DataTable({
             ? `<button type="button" class="btn btn-danger btnEliminar" title="Eliminar">
               <i class="fa-regular fa-trash-can"></i>
             </button>` :
-            ''
-          }
+            ''}
+
+            ${validPermissions(107)
+            ? `<button type="button" class="btn btn-dark btnImprimirRotulo" title="Imprimir rotulo">
+                <i class="fa-solid fa-tags"></i>
+              </button>` :
+            ''}
             
           </div>
         `;
@@ -97,6 +103,29 @@ let DT = $("#table").DataTable({
     $(row).find(".btnConfirmarPedido").click(function (e) {
       e.preventDefault();
       alistarPedido(data);
+    });
+
+    $(row).find('.btnImprimirRotulo').click(function () {
+      let context = this;
+      alertify.prompt('Cantidad imprimir', 'Número de cajas disponibles?', '1', function (evt, value) {
+        if (value > 0) {
+          if (value <= limiteRotulo) {
+            window.open(`${base_url()}Reportes/Rotulo/${data.idFactura}/${value}`, '_blank');
+          } else {
+            alertify.warning('El limite permitido es ' + limiteRotulo);
+            setTimeout(() => {
+              $(context).click();
+            }, 0);
+          }
+        } else {
+          alertify.warning('Ingrese una cantidad valida');
+          setTimeout(() => {
+            $(context).click();
+          }, 0);
+        }
+      }, function () { }).setting({
+        'type': 'number'
+      });
     });
   }
 });

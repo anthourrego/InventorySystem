@@ -1,0 +1,56 @@
+<table border="0" cellpadding="1" cellspacing="1" style="width:300px">
+	<tbody>
+		<tr>
+			<td colspan="2">Rotulo: {numeroRotulo}</td>
+		</tr>
+		<tr>
+			<td>{logoEmpresa}</td>
+			<td style="vertical-align:top">{fechaCreacion}</td>
+		</tr>
+		<tr>
+			<td><strong>Remite:</strong></td>
+			<td>{nombreEmpresa}</td>
+		</tr>
+		<tr>
+			<td>Direcci&oacute;n:</td>
+			<td>{direccionEmpresa}</td>
+		</tr>
+		<tr>
+			<td>Tel&eacute;fono:</td>
+			<td>{telefonoEmpresa}</td>
+		</tr>
+		<tr>
+			<td>Ciudad:</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td><strong>Destino:</strong></td>
+			<td>{nombreCliente}</td>
+		</tr>
+		<tr>
+			<td>Direcci&oacute;n:</td>
+			<td>{direccionSucursal}</td>
+		</tr>
+		<tr>
+			<td>Tel&eacute;fono:</td>
+			<td>{telefonoSucursal}</td>
+		</tr>
+		<tr>
+			<td>Ciudad:</td>
+			<td>{ciudadSucursal}</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="2"><strong>Observaciones:&nbsp;{observacion} cajas</strong></td>
+		</tr>
+	</tbody>
+</table>
+
+<p>&nbsp;</p>

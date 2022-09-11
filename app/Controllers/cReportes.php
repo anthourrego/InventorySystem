@@ -81,6 +81,30 @@ class cReportes extends BaseController {
 		exit;
 	}
 
+	public function rotulo($id, $cantidad) {
+
+		$estrucPdf = $this->estructuraReporte("Rotulo");
+
+		$estrucPdf = $this->setValuesCompany($estrucPdf);
+
+		$estrucPdf = str_replace("{observacion}", $cantidad, $estrucPdf);
+		$dataVenta = $this->cargarDataVenta($estrucPdf, $id, "pedidos");
+		$estrucPdf = $dataVenta['pdf'];
+
+		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$pdf->startPageGroup();
+
+		for ($i=0; $i < $cantidad; $i++) { 
+			$pdf->AddPage();
+			$estrucPdf2 = str_replace("{numeroRotulo}", ($i + 1) . '/' . $cantidad, $estrucPdf);
+			$pdf->writeHTML($estrucPdf2, false, false, false, false, '');
+		}
+
+		$pdf->setTitle('Rotulos | ' . session()->get("nombreEmpresa"));
+		$pdf->Output("1.pdf", 'I');
+		exit;
+	}
+
 	private function estructuraReporte($reporte) {
 		$path = UPLOADS_REPOR_PATH . "$reporte.txt";
 

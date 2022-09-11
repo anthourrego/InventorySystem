@@ -161,6 +161,7 @@ $routes->group('Perfil', ['filter' => 'authGuard'], function ($routes) {
 $routes->group('Reportes', ['filter' => 'authGuard'], function ($routes) {
 	$routes->get('Factura/(:num)', 'cReportes::factura/$1');
 	$routes->get('Pedido/(:num)', 'cReportes::pedido/$1');
+	$routes->get('Rotulo/(:num)/(:num)', 'cReportes::rotulo/$1/$2');
 	//$routes->get('DT', 'cManifiesto::listaDT');
 });
 
