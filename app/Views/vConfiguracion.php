@@ -163,7 +163,7 @@
                   <i class="fas fa-cloud-upload-alt"></i>
                   <span> Selecciona o arrastre su imagen</span>
                 </div>
-                <input data-nombre="Logo Empresa" name="logoEmpresa" id="logoEmpresa" class="input-file-img configAct" accept=".jpg, .jpeg" type="file">
+                <input data-nombre="Logo Empresa" name="logoEmpresa" id="logoEmpresa" class="input-file-img configAct" accept=".jpg, .jpeg, .png" type="file">
               </div>
             </div>
             <div id="content-preview-logoEmpresa" class="d-none text-center">
