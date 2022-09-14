@@ -151,6 +151,7 @@
 
 <script>
 	$INVENTARIONEGATIVO = "<?= $inventario_negativo ?>";
+	$CANTIDADDESPACHAR = <?= $cantidad_despachar ?>;
 	$CANTIDADVENDEDORES ="<?= $cantidadVendedores ?>";
 	$CANTIDADCLIENTES ="<?= $cantidadClientes ?>";
 	$PREFIJOVALIDO ="<?= $prefijoValido ?>";
