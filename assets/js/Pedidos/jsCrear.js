@@ -65,8 +65,10 @@ let DTProductos = {
           btn = false;
         }
 
+        if (data.stock <= 0 && $INVENTARIONEGATIVO == "0") return '';
+
         return `<div class="btn-group btn-group-sm" role="group">
-                  <button id="p${data.id}" type="button" class="btn btn-primary btnAdd ${(btn == true ? '' : 'disabled')}" ${(btn == true ? '' : 'disabled')} title="Agregar"><i class="fa-solid fa-plus"></i></button>
+                  <button id="p${data.id}" type="button" class="btn btn-primary btnAdd ${(btn ? '' : 'disabled')}" ${(btn ? '' : 'disabled')} title="Agregar"><i class="fa-solid fa-plus"></i></button>
                 </div>`;
       }
     },
@@ -123,7 +125,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
     },
     {
       data: 'referencia',
-      width: "30%",
+      width: "25%",
       render: function (meta, type, data, meta) {
         return `<span title="${data.referencia}" class="text-descripcion">${data.referencia}</span>`;
       }
@@ -187,6 +189,17 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       data = resultado;
 
       calcularTotal();
+
+      let faltante = Number(data.stock) - cant;
+      if (faltante > 0 && cant <= Number(data.stock) && faltante <= $CANTIDADDESPACHAR) {
+        alertify.confirm("Alerta Despacho", `Despachar cantidad restante ${faltante}, del producto ${resultado.referencia}`
+          , function () {
+            $(row).find(".cantidadProduct").val(Number(data.stock)).change();
+          }
+          , function () { }
+        );
+      }
+
     });
 
     $(row).find(".cantidadProduct").on("keydown", function (e) {
@@ -194,7 +207,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
         setTimeout(() => {
           let element = $(row).next();
           if (element.length) {
-            $(element).find(".cantidadProduct").focus();
+            $(element).find(".cantidadProduct").click();
           }
         }, 0);
       }
