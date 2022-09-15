@@ -22,9 +22,13 @@ CKEDITOR.editorConfig = function (config) {
     '/',
     { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
     { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align']},
-    { name: 'styles', groups: ['styles'] },
+    { name: 'styles', groups: ['Format', 'Font', 'FontSize'] },
     { name: 'colors', groups: ['colors'] },
-    { name: 'about', groups: ['about'] }
+    { name: 'about', groups: ['about'] },
+    {
+      name: 'align',
+      groups: ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']
+    },
   ];
 
   // Remove some buttons provided by the standard plugins, which are
@@ -37,5 +41,5 @@ CKEDITOR.editorConfig = function (config) {
   // Simplify the dialog windows.
   config.removeDialogTabs = 'image:advanced;link:advanced';
 
-  config.extraPlugins = 'colorbutton';
+  config.extraPlugins = 'colorbutton,colordialog, justify, font, dialog, dialogadvtab';
 };
