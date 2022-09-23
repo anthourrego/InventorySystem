@@ -9,7 +9,8 @@ let DT = $("#table").DataTable({
   columns: [
     {data: 'codigo'},
     {data: 'NombreCliente'},
-    {data: 'NombreVendedor'},
+    {data: 'NombreSucursal'},
+    {data: 'Ciudad'},
     {data: 'metodo_pago'},
     {
       data: 'neto',
@@ -25,6 +26,7 @@ let DT = $("#table").DataTable({
         return formatoPesos.format(data.total);
       }
     },
+    {data: 'NombreVendedor'},
     {
       data: 'created_at',
       render: function(meta, type, data, meta) {

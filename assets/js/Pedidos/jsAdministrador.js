@@ -10,9 +10,9 @@ let DT = $("#table").DataTable({
   columns: [
     { data: 'pedido' },
     { data: 'NombreCliente' },
-    { data: 'NombreVendedor' },
     { data: 'NombreSucursal' },
     { data: 'direccion' },
+    { data: 'Ciudad' },
     {
       data: 'NombreEstado',
       className: 'text-center align-middle',
@@ -39,6 +39,7 @@ let DT = $("#table").DataTable({
         return moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A");
       }
     },
+    { data: 'NombreVendedor' },
     {
       orderable: false,
       searchable: false,
