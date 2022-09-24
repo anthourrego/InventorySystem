@@ -151,8 +151,12 @@ class cVentas extends BaseController {
 												END AS metodo_pago,
 												V.created_at,
 												V.updated_at,
-												V.id_pedido
+												S.nombre AS NombreSucursal,
+												V.id_pedido,
+												CUI.nombre AS Ciudad
 											")->join('clientes AS C', 'V.id_cliente = C.id', 'left')
+											->join('sucursales AS S', 'V.id_sucursal = S.id', 'left')
+											->join('ciudades AS CUI', 'S.id_ciudad = CUI.id', 'left')
 											->join('usuarios AS U', 'V.id_vendedor = U.id', 'left');
 
 		return DataTable::of($query)->toJson(true);

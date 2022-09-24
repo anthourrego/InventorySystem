@@ -15,12 +15,13 @@
           <tr>
             <th>Nro Pedido</th>
             <th>Cliente</th>
-            <th>Vendedor</th>
             <th>Sucursal</th>
             <th>Dirección</th>
+            <th>Ciudad</th>
             <th>Estado</th>
             <th>Total</th>
             <th>Fecha Creación</th>
+            <th>Vendedor</th>
             <th>Acciones</th>
           </tr>
         </thead>

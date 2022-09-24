@@ -13,10 +13,12 @@
           <tr>
             <th>Código factura</th>
             <th>Cliente</th>
-            <th>Vendedor</th>
+            <th>Sucursal</th>
+            <th>Ciudad</th>
             <th>Forma de pago</th>
             <th>Neto</th>
             <th>Total</th>
+            <th>Vendedor</th>
             <th>Fecha Creación</th>
             <th>Acciones</th>
           </tr>
