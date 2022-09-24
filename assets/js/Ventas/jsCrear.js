@@ -92,7 +92,7 @@ let DTProductosVenta = $("#tblProductos").DataTable({
   processing: false,
   serverSide: false,
   order: [],
-  scrollY: screen.height - 750,
+  scrollY: '60vh',
   scroller: {
     loadingIndicator: true
   },

@@ -2,6 +2,8 @@ let rutaBase = base_url() + "Pedidos/";
 let productosPedido = [];
 let productosEliminados = [];
 
+console.log(screen.height);
+
 let DTProductos = {
   ajax: {
     url: rutaBase + "DTProductos",
@@ -101,7 +103,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
   processing: false,
   serverSide: false,
   order: [],
-  scrollY: screen.height - 750,
+  scrollY: '60vh',
   scroller: {
     loadingIndicator: true
   },
