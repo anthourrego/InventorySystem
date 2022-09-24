@@ -24,7 +24,8 @@ class mSucursalesCliente extends Model
 		"estado",
     "id_cliente",
 		"id_depto",
-		"id_ciudad"
+		"id_ciudad",
+		"barrio"
 	];
 
 	// Dates
@@ -45,6 +46,7 @@ class mSucursalesCliente extends Model
     "id_cliente"=> "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[clientes.id]",
 		"id_depto"=> "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[departamentos.id]",
 		"id_ciudad"=> "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[ciudades.id]",
+		"barrio" => 'required|string|min_length[1]|max_length[254]'
 	];
 	protected $validationMessages   = [];
 	protected $skipValidation       = false;

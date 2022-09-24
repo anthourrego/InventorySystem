@@ -141,12 +141,16 @@ class cClientes extends BaseController {
 
 		if (isset($data->search) && strlen(trim($data->search))) {
 			$resp['data'] = $clienteModel->select("
-															id,
-															CONCAT(documento, ' | ', nombre) AS text
-														")->where("estado", 1)
-														->like('documento', $data->search)
-														->orLike('nombre', $data->search)
-														->findAll($limit, $offset);
+					clientes.id,
+					CONCAT(clientes.documento, ' | ', clientes.nombre, ' | ', IF(C.nombre IS NULL, '', C.nombre)) AS text
+				")
+				->join("sucursales AS S", "clientes.id = S.id_cliente", "left")
+				->join("ciudades AS C", "S.id_ciudad = C.id", "left")
+				->where("clientes.estado", 1)
+				->like('clientes.documento', $data->search)
+				->orLike('clientes.nombre', $data->search)
+				->orLike('C.nombre', $data->search)
+				->findAll($limit, $offset);
 
 			$resp['total_count'] = $clienteModel->like('documento', $data->search)
 																					->orLike('nombre', $data->search)
@@ -154,10 +158,13 @@ class cClientes extends BaseController {
 																					->countAllResults();
 		} else {
 			$resp['data'] = $clienteModel->select("
-															id,
-															CONCAT(documento, ' | ', nombre) AS text
-														")->where("estado", 1)
-														->findAll($limit, $offset);
+					clientes.id,
+					CONCAT(clientes.documento, ' | ', clientes.nombre, ' | ', IF(C.nombre IS NULL, '', C.nombre)) AS text
+				")
+				->join("sucursales AS S", "clientes.id = S.id_cliente", "left")
+				->join("ciudades AS C", "S.id_ciudad = C.id", "left")
+				->where("clientes.estado", 1)
+				->findAll($limit, $offset);
 
 			$resp['total_count'] = $clienteModel->where("estado", 1)->countAllResults();
 		}

@@ -59,7 +59,7 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Consecutivo de documento"
     ],
     "nombreSucursal" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
       "descripcion" => "Nombre de la sucursal"
     ],
     "nombreCliente" => [
@@ -70,6 +70,10 @@ class cModificarReporte extends BaseController {
       "aplica" => ["Factura", "Pedido", "Rotulo"],
       "descripcion" => "Fecha de generación del documento"
     ],
+    "horaCreacion" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Hora de generación del documento"
+    ],
     "direccionSucursal" => [
       "aplica" => ["Factura", "Pedido", "Rotulo"],
       "descripcion" => "Dirección de la sucursal"
@@ -77,6 +81,22 @@ class cModificarReporte extends BaseController {
     "telefonoSucursal" => [
       "aplica" => ["Factura", "Pedido", "Rotulo"],
       "descripcion" => "Telefono de la sucursal"
+    ],
+    "barrioSucursal" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Barrio de la sucursal"
+    ],
+    "adminSucursal" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Administrador de la sucursal"
+    ],
+    "carteraSucursal" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Cartera de la sucursal"
+    ],
+    "telCartSucursal" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Telefono cartera de la sucursal"
     ],
     "ciudadSucursal" => [
       "aplica" => ["Factura", "Pedido", "Rotulo"],

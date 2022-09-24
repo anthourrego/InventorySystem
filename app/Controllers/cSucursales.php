@@ -26,6 +26,7 @@ class cSucursales extends BaseController {
           s.updated_at,
 					s.id_depto,
 					s.id_ciudad,
+					s.barrio,
 					c.nombre AS ciudad,
           CASE 
               WHEN s.estado = 1 THEN 'Activo' 
@@ -58,6 +59,7 @@ class cSucursales extends BaseController {
       "id_cliente" => $postData["id_cliente"],
 			"id_depto" => $postData["id_deptoSucursal"],
 			"id_ciudad" => $postData["id_ciudadSucursal"],
+			"barrio" => $postData["barrioSucursal"],
 		);
 
 		$sucursal = new mSucursalesCliente();

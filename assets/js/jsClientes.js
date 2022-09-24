@@ -217,7 +217,7 @@ $(function () {
           success: function (resp) {
             if (resp.success) {
               DTSucursales.ajax.reload();
-              $("#idSucursal, #nombreSucursal, #direccionSucursal, #administradorSucursal, #carteraSucursal, #telefonoCartSucursal, #telefonoSucursal").val('');
+              $("#idSucursal, #nombreSucursal, #direccionSucursal, #administradorSucursal, #carteraSucursal, #telefonoCartSucursal, #telefonoSucursal, #barrioSucursal").val('');
               $("#id_ciudadSucursal, #id_deptoSucursal").val(0).change();
               $('#collapseDatosBasicos').collapse('hide');
               alertify.success(resp.msj);
@@ -270,7 +270,7 @@ $(function () {
   $("#btnLimpiar").click(function () {
     $("button[form='formSucursal']").attr("disabled", false);
     $(".inputVer").removeClass("disabled").prop("disabled", false);
-    $("#idSucursal, #nombreSucursal, #direccionSucursal, #administradorSucursal, #carteraSucursal, #telefonoCartSucursal, #telefonoSucursal").val('');
+    $("#idSucursal, #nombreSucursal, #direccionSucursal, #administradorSucursal, #carteraSucursal, #telefonoCartSucursal, #telefonoSucursal, #barrioSucursal").val('');
     $("#id_ciudadSucursal, #id_deptoSucursal").val(0).change();
     $(this).hide();
   });
@@ -324,6 +324,7 @@ function tablaSucursales() {
         { data: 'administrador' },
         { data: 'cartera' },
         { data: 'telefonocart' },
+        { data: 'barrio' },
         {
           orderable: false,
           searchable: false,
@@ -368,6 +369,7 @@ function tablaSucursales() {
           $("#carteraSucursal").val(data.cartera);
           $("#telefonoCartSucursal").val(data.telefonocart);
           $("#telefonoSucursal").val(data.telefono);
+          $("#barrioSucursal").val(data.barrio);
           dataSucursal = data;
           $('#collapseDatosBasicos').collapse('show');
         });
