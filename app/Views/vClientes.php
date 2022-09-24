@@ -85,18 +85,6 @@
                     <label class="mb-0" for="telefono">Teléfono <span class="text-danger">*</span></label>
                     <input placeholder="Ingresar teléfono" class="form-control soloNumeros inputTel inputVer" id="telefono" name="telefono" type="tel" minlength="10" maxlength="50" required autocomplete="off">
                   </div>
-                  <!-- <div class="col-12 col-md-6 form-group form-valid mb-1">
-                    <label class="mb-0" for="administrador">Administrador</label>
-                    <input placeholder="Ingresar administrador" class="form-control soloLetrasEspacio inputVer" id="administrador" name="administrador" type="text" minlength="1" maxlength="255" autocomplete="off">
-                  </div>
-                  <div class="col-12 col-md-6 form-group form-valid mb-1">
-                    <label class="mb-0" for="cartera">Cartera</label>
-                    <input placeholder="Ingresar encargado cartera" class="form-control soloLetrasEspacio inputVer" id="cartera" name="cartera" type="text" minlength="1" maxlength="255" autocomplete="off">
-                  </div>
-                  <div class="col-12 col-md-6 form-group form-valid mb-1">
-                    <label class="mb-0" for="telefonoCart">Teléfono cartera</label>
-                    <input placeholder="Ingresar teléfono cartera" class="form-control soloNumeros inputTel inputVer" id="telefonoCart" name="telefonoCart" type="tel" minlength="10" maxlength="50" autocomplete="off">
-                  </div> -->
                   <div class="col-6 form-group form-group-edit mb-1">
                     <label class="mb-0" for="cantCompras">Cantidad compras</label>
                     <input class="form-control" id="cantCompras" disabled>
@@ -138,11 +126,11 @@
                       <form id="formSucursal" class="formValid">
                         <input type="hidden" class="inputVer" name="idSucursal" id="idSucursal">
                         <div class="form-row">
-                          <div class="col-12 col-md-6 form-group form-valid mb-1">
+                          <div class="col-12 col-md-4 form-group form-valid mb-1">
                             <label class="mb-0" for="nombreSucursal">Nombre <span class="text-danger">*</span></label>
                             <input placeholder="Ingresar nombre" class="form-control soloLetrasEspacio inputVer" id="nombreSucursal" name="nombreSucursal" type="text" minlength="1" maxlength="255" required autocomplete="off">
                           </div>
-                          <div class="col-12 col-md-6 form-group form-valid">
+                          <div class="col-12 col-md-4 form-group form-valid">
                             <label for="id_deptoSucursal" class="mb-0">Departamento <span class="text-danger">*</span></label>
                             <select id="id_deptoSucursal" name="id_deptoSucursal" data-placeholder="Seleccione un departamento" required class="custom-select select2 inputVer" data-ciudad="id_ciudadSucursal">
                               <option value=""></option>
@@ -153,6 +141,10 @@
                             <select id="id_ciudadSucursal" name="id_ciudadSucursal" data-placeholder="Seleccione una ciudad" required class="custom-select select2 inputVer">
                               <option value=""></option>
                             </select>
+                          </div>
+                          <div class="col-12 col-md-4 form-group form-valid mb-1">
+                            <label class="mb-0" for="barrioSucursal">Barrio <span class="text-danger">*</span></label>
+                            <input placeholder="Ingresar barrio" class="form-control soloLetrasEspacioCaracteres inputVer" id="barrioSucursal" name="barrioSucursal" type="text" minlength="1" maxlength="254" required autocomplete="off">
                           </div>
                           <div class="col-12 col-md-4 form-group form-valid mb-1">
                             <label class="mb-0" for="direccionSucursal">Dirección <span class="text-danger">*</span></label>
@@ -197,6 +189,7 @@
                       <th>Administrador</th>
                       <th>Cartera</th>
                       <th>Telefono Cartera</th>
+                      <th>Barrio</th>
                       <th>Acciones</th>
                     </tr>
                   </thead>

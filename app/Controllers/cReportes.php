@@ -87,7 +87,10 @@ class cReportes extends BaseController {
 
 		$estrucPdf = $this->setValuesCompany($estrucPdf);
 
-		$estrucPdf = str_replace("{observacion}", $cantidad, $estrucPdf);
+		$observacion = (isset($_GET['observacion']) ? $_GET['observacion'] : '');
+		$observacion = str_replace('_', ' ', $observacion);
+
+		$estrucPdf = str_replace("{observacion}", $observacion, $estrucPdf);
 		$dataVenta = $this->cargarDataVenta($estrucPdf, $id, "pedidos");
 		$estrucPdf = $dataVenta['pdf'];
 
@@ -157,10 +160,15 @@ class cReportes extends BaseController {
 				C.nombre AS nombreCliente,
 				U.nombre AS nombreVendedor,
 				V.total AS totalGeneral,
-				V.created_at AS fechaCreacion,
+				DATE_FORMAT(V.created_at, '%d-%m-%Y') AS fechaCreacion,
+				DATE_FORMAT(V.created_at, '%H:%i:%s') AS horaCreacion,
 				S.direccion AS direccionSucursal,
 				S.nombre AS nombreSucursal,
 				S.telefono AS telefonoSucursal,
+				S.barrio AS barrioSucursal,
+				S.administrador AS adminSucursal,
+				S.cartera AS carteraSucursal,
+				S.telefonoCart AS telCartSucursal,
 				CI.nombre AS ciudadSucursal,
 				DEP.nombre AS deptoSucursal,
 				V.observacion

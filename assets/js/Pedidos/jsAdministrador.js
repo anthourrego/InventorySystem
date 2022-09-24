@@ -107,10 +107,21 @@ let DT = $("#table").DataTable({
 
     $(row).find('.btnImprimirRotulo').click(function () {
       let context = this;
-      alertify.prompt('Cantidad imprimir', 'Número de cajas disponibles?', '1', function (evt, value) {
+      alertify.prompt('Impresión', 'Número de cajas disponibles?', '1', function (evt, value) {
         if (value > 0) {
           if (value <= limiteRotulo) {
-            window.open(`${base_url()}Reportes/Rotulo/${data.id.trim()}/${value}`, '_blank');
+            setTimeout(() => {
+              alertify.prompt('Impresión', 'Observación', '', function (evt, observa) {
+                if (observa != '') {
+                  observa = observa.split(' ').join('_');
+                  window.open(`${base_url()}Reportes/Rotulo/${data.id.trim()}/${value}?observacion=${observa}`, '_blank');
+                } else {
+                  window.open(`${base_url()}Reportes/Rotulo/${data.id.trim()}/${observa}`, '_blank');
+                }
+              }, function () { }).setting({
+                'type': 'text'
+              });
+            }, 0);
           } else {
             alertify.warning('El limite permitido es ' + limiteRotulo);
             setTimeout(() => {
