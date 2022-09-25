@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\mConfiguracion;
+use \Config\Services;
 
 class cConfiguracion extends BaseController {
 	public function index() {
@@ -66,6 +67,14 @@ class cConfiguracion extends BaseController {
 						//Validamos que la imagen suba correctamente
 						$dataSave['valor'] = $dataPost["campo"] . '.' . $file->guessExtension();
 						if ($file->move(UPLOADS_CONF_PATH, $dataSave['valor'], true)) {
+							if ($dataSave["campo"] = "logoEmpresa") {
+								Services::image()
+									->withFile(UPLOADS_CONF_PATH . $dataSave['valor'])
+									->resize(180, 180, true, 'height')
+									->convert(IMAGETYPE_PNG)
+									->save(UPLOADS_CONF_PATH . 'logoEmpresa-small.png');
+							}
+
 							$resp["success"] = true;
 							$resp["file"] = $dataSave['valor'];
 							$resp["msj"] = "Archivo <b>{$dataPost['nombre']}</b> se creo correctamente.";

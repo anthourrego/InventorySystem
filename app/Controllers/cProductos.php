@@ -384,6 +384,33 @@ class cProductos extends BaseController {
 		])->convert(IMAGETYPE_PNG)
 		->save(UPLOADS_PRODUCT_PATH ."convert/{$producto->id}.png");
 
+		//Colocamos la marca de agua
+		if (session()->has("logoEmpresa")) {
+			//Si la foto no existe la colocamos por defecto
+			$logoEmpresa = UPLOADS_CONF_PATH . 'logoEmpresa-small.png';
+			if(!file_exists($logoEmpresa)){ 
+				Services::image()
+					->withFile(UPLOADS_CONF_PATH . session()->get("logoEmpresa"))
+					->resize(180, 180, true, 'height')
+					->convert(IMAGETYPE_PNG)
+					->save($logoEmpresa);
+			}
+
+			// Load the stamp and the photo to apply the watermark to
+			$im = imagecreatefrompng(UPLOADS_PRODUCT_PATH . "convert/{$producto->id}.png");
+			$stamp = imagecreatefrompng($logoEmpresa);
+	
+			// Set the margins for the stamp and get the height/width of the stamp image
+			$sx = imagesx($stamp);
+	
+			// Copy the stamp image onto our photo using the margin offsets and the photo 
+			// width to calculate positioning of the stamp. 
+			imagecopy($im, $stamp, imagesx($im) - $sx - 10, 10, 0, 0, imagesx($stamp), imagesy($stamp));
+	
+			imagepng($im, UPLOADS_PRODUCT_PATH ."convert/{$producto->id}.png", 0);
+			imagedestroy($im);
+		}
+
 		if (is_null($datos)) {
 			return $this->response->download(UPLOADS_PRODUCT_PATH . "convert/{$producto->id}.png", null)->setFileName($producto->referencia . '.png');
 		}
@@ -540,5 +567,27 @@ class cProductos extends BaseController {
 		}
 
 		return $this->response->setJSON($resp);
+	}
+
+	public function waterMarket() {
+		// Load the stamp and the photo to apply the watermark to
+		$im = imagecreatefrompng(UPLOADS_PRODUCT_PATH . '1/01.png');
+		$stamp = imagecreatefrompng(ASSETS_PATH . 'img/logoLogin.png');
+
+		// Set the margins for the stamp and get the height/width of the stamp image
+		$marge_right = 10;
+		$marge_bottom = 10;
+		$sx = imagesx($stamp);
+		$sy = imagesy($stamp);
+
+		// Copy the stamp image onto our photo using the margin offsets and the photo 
+		// width to calculate positioning of the stamp. 
+		imagecopy($im, $stamp, imagesx($im) - $sx - $marge_right, imagesy($im) - $sy - $marge_bottom, 0, 0, imagesx($stamp), imagesy($stamp));
+
+		// Output and free memory
+		header('Content-type: image/png');
+		imagepng($im);
+		imagedestroy($im);
+		exit(); // or die()
 	}
 }
