@@ -62,8 +62,23 @@
           </div>
           <div class="col-5">
             <h5 class="text-center">Productos Por Empacar</h5>
+
+            <div class="input-group mb-3">
+              <input type="text" class="form-control form-control-sm" id="inputBuscarProd" placeholder="Ingrese referencia producto" aria-describedby="btnBuscar">
+              <div class="input-group-append">
+                <button class="btn btn-secondary btn-sm" type="button" id="btnBuscar">
+                  <i class="fas fa-search"></i>
+                  Buscar
+                </button>
+              </div>
+            </div>
+
             <!-- Lista de los productos pendientes por empacar -->
             <div class="list-group" id="listaproductospedido"></div>
+
+            <div class="list-group d-none" id="listaproductospedidonohay">
+              <div class="font-weight-bold text-center p-2">No se encontraron productos</div>
+            </div>
           </div>
         </div>
 

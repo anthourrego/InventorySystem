@@ -100,8 +100,8 @@ let DT = $("#table").DataTable({
           </button>`;
         }
 
-        /* Si tiene permiso de imprimir el rotulo */
-        if (validPermissions(107)) {
+        /* Si esta empacado o facturado y si tiene permiso de imprimir el rotulo */
+        if (data.estado >= 2 && validPermissions(107)) {
           botones += `<button type="button" class="btn btn-dark btnImprimirRotulo" title="Imprimir rotulo">
             <i class="fa-solid fa-tags"></i>
           </button>`;

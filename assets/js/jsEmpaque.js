@@ -147,6 +147,14 @@ $(function () {
   $("#modalEmpaque").on('hidden.bs.modal', function () {
     DT.ajax.reload();
   });
+
+  $("#inputBuscarProd").on('keyup', function () {
+    buscarValores($(this).val());
+  });
+
+  $("#btnBuscar").on("click", function () {
+    buscarValores($("#inputBuscarProd").val());
+  });
 })
 
 /* Funcion para organizar info de pedido en caja */
@@ -159,7 +167,14 @@ function obtenerInfoPedido(pedido, sync = false) {
       estructura += `<div class="list-group-item list-group-item-action item-prod-agregar p-2">
           <div class="d-flex justify-content-between align-items-center">
             <h6 class="mb-0 text-truncate w-50">${it.referencia} - ${it.descripcion}</h6>
-            <input id="prod${it.id}" type="number" class="form-control form-control-sm cantAgregarProd soloNumeros w-25" min="1" value="${it.cantAgregar}" max="${it.CantTotalCajas}">
+
+            <div class="input-group w-25">
+              <input id="prod${it.id}" type="number" class="form-control form-control-sm cantAgregarProd soloNumeros w-25" min="1" value="${it.cantAgregar}" max="${it.CantTotalCajas}" aria-describedby="btnCantidad">
+              <div class="input-group-append">
+                <button class="btn btn-outline-info btn-sm" type="button" id="btnCantidad">/${it.cantidad}</button>
+              </div>
+            </div>
+
             <button type="button" class="btn btn-sm btn-primary btn-agregar-prod" data-input="#prod${it.id}" data-pos=${x}><i class="fas fa-plus"></i> Agregar</button>
           </div>
         </div>
@@ -424,4 +439,19 @@ function eliminarCaja(idCaja, idPedido, idProdCaja = 0) {
       }
     }
   });
+}
+
+function buscarValores(valor) {
+  $(".item-prod-agregar").removeClass('d-none');
+  $("#listaproductospedidonohay").addClass('d-none');
+
+  $.each($(".item-prod-agregar h6"), function () {
+    if (!$(this).text().toLowerCase().includes(valor.toLowerCase())) {
+      $(this).closest(".item-prod-agregar").addClass('d-none');
+    }
+  });
+
+  if ($(".item-prod-agregar:not(.d-none)").length) {
+    $("#listaproductospedidonohay").addClass('d-none');
+  }
 }
