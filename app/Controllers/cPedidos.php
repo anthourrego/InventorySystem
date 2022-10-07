@@ -140,6 +140,7 @@ class cPedidos extends BaseController {
 		$this->content["cantidadClientes"] = $mClientes->where("estado", 1)->countAllResults();
 		$this->content["cantidadVendedores"] = $this->cantidadVendedores();
 		$this->content["inventario_negativo"] = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
+		$this->content["cantidad_despachar"] = (session()->has("cantDespachar") ? session()->get("cantDespachar") : '6');
 		$this->content["camposProducto"] = [
 			"item" => (session()->has("itemProducto") ? session()->get("itemProducto") : '0'),
 			"paca" => (session()->has("pacaProducto") ? session()->get("pacaProducto") : '0')
