@@ -124,6 +124,8 @@ class cPedidos extends BaseController {
 
 		$this->content["nroPedido"] = $pedido->pedido;
 
+		$this->content["cantidad_despachar"] = (session()->has("cantDespachar") ? session()->get("cantDespachar") : '6');
+
 		$this->content['title'] = ($pedido->estado == 2 ? "Ver" : "Editar") . " pedido " . $pedido->pedido;
 		$this->content['view'] = "Pedidos/vCrear";
 
@@ -166,7 +168,15 @@ class cPedidos extends BaseController {
 				P.created_at,
 				P.updated_at,
 				P.estado,
-				CASE WHEN P.Estado = 0 THEN 'Pendiente' WHEN P.Estado = 1 THEN 'Alistamiento' ELSE 'Facturado' END AS NombreEstado,
+				CASE 
+					WHEN P.Estado = 0 
+						THEN 'Pendiente' 
+					WHEN P.Estado = 1 
+						THEN 'Alistamiento' 
+					WHEN P.Estado = 2 
+						THEN 'Empacado' 
+					ELSE 'Facturado' 
+				END AS NombreEstado,
 				P.total,
 				S.direccion,
 				S.nombre AS NombreSucursal,
@@ -176,7 +186,8 @@ class cPedidos extends BaseController {
 			->join('sucursales AS S', 'P.id_sucursal = S.id', 'left')
 			->join('ciudades AS CUI', 'S.id_ciudad = CUI.id', 'left')
 			->join('usuarios AS U', 'P.id_vendedor = U.id', 'left')
-			->join('ventas AS V', 'P.id = V.id_pedido', 'left');
+			->join('ventas AS V', 'P.id = V.id_pedido', 'left')
+			->where('P.estado <> 1');
 
 		return DataTable::of($query)->toJson(true);
 	}

@@ -339,7 +339,7 @@ class mPermisos extends Model {
 				"id" => 10,
 				"text" => "Pedidos",
 				"uri" => "Pedidos/Administrar",
-				"icon" => "fa-solid fa-box-check",
+				"icon" => "fa-solid fa-boxes-stacked",
 				"color" => "bg-danger",
 				"children" => [
 					[
@@ -378,6 +378,23 @@ class mPermisos extends Model {
 				"uri" => "ModificarReporte",
 				"icon" => "fa-solid fa-file-pen",
 				"color" => "bg-dark"
+			],
+			[
+				"id" => 30,
+				"text" => "Empaque",
+				"uri" => "Empaque",
+				"icon" => "fa-solid fa-box-open",
+				"color" => "bg-primary",
+				"children" => [
+					[
+						"id" => 301,
+						"text" => "Finalizar Empaque"
+					],
+					[
+						"id" => 302,
+						"text" => "Reabrir Empaque"
+					],
+				]
 			],
 		];
 

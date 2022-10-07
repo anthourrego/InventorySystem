@@ -236,6 +236,21 @@ $routes->group('Pedidos', ['filter' => 'authGuard:10'], function ($routes) {
 	$routes->get('Cargar/(:num)', 'cPedidos::cargarPedido/$1', ['filter' => 'ajax']);
 });
 
+//Empaque
+$routes->group('Empaque', ['filter' => 'authGuard:30'], function ($routes) {
+	$routes->get('/', 'cEmpaque::index');
+	$routes->post('DT', 'cEmpaque::listaDT');
+	$routes->post('IniciarEmpaque', 'cEmpaque::iniciarEmpaque');
+	$routes->get('ProductosPedido/(:num)', 'cEmpaque::obtenerProductosPedido/$1');
+	$routes->post('AgregarCaja', 'cEmpaque::agregarCaja');
+	$routes->get('ObtenerProductosaCaja/(:num)', 'cEmpaque::obtenerProductosCaja/$1');
+	$routes->post('EliminarCaja', 'cEmpaque::eliminarCaja');
+	$routes->post('AgregarProductoCaja', 'cEmpaque::agregarProductoCaja');
+	$routes->post('FinalizarEmpaque', 'cEmpaque::finalizarEmpaque');
+	$routes->post('ReabrirCaja', 'cEmpaque::reabrirCaja');
+	$routes->post('ReabrirEmpaque', 'cEmpaque::reabrirEmpaque');
+});
+
 
 /*
  * --------------------------------------------------------------------

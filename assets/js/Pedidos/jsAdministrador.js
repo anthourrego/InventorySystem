@@ -20,8 +20,8 @@ let DT = $("#table").DataTable({
         let color = "success";
         if (data.estado == 0) {
           color = "primary";
-        } else if (data.estado == 1) {
-          color = "warning";
+        } else if (data.estado == 2) {
+          color = "info";
         }
         return `<button class="btn btn-${color}">${data.NombreEstado}</button>`;
       }
@@ -46,47 +46,68 @@ let DT = $("#table").DataTable({
       defaultContent: '',
       className: 'text-center noExport',
       render: function (meta, type, data, meta) {
-        return `
-          <div class="btn-group btn-group-sm" role="group">
-            ${(data.estado == 0 && validPermissions(104)) || (data.estado == 1 && validPermissions(105))
-            ? `<button type="button" class="btn btn-${data.estado == 0 ? 'warning' : 'success'} btnConfirmarPedido" title="${data.estado == 0 ? 'Alistar' : 'Facturar'} Pedido">
-              <i class="fa-solid ${data.estado == 0 ? 'fa-boxes-stacked' : 'fa-receipt'}"></i>
-              </button>`
-            : ``}
-            ${validPermissions(106)
-            ? `<a href="${base_url()}Reportes/Pedido/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprimir pedido">
-                  <i class="fa-solid fa-print"></i>
-                </a>
-              ${data.idFactura > 0
-              ? `<a href="${base_url()}Reportes/Factura/${data.idFactura}" target="_blank" type="button" class="btn btn-success" title="Imprimir factura">
-                  <i class="fa-solid fa-receipt"></i>
-                </a>`
-              : ''}`
-            : ''}
-            ${data.estado == 2
-            ? `<button type="button" class="btn btn-secondary btnEditar" title="Ver">
-                <i class="fa-solid fa-eye"></i>
-              </button>`
-            : (validPermissions(102) ? `<button type="button" class="btn btn-secondary btnEditar" title="Editar">
-                <i class="fa-solid fa-pen-to-square"></i>
-              </button>` : `<button type="button" class="btn btn-secondary btnEditar" title="Ver">
+        let estado = 'Facturar';
+        let color = 'success';
+        if (data.estado == 0) {
+          estado = 'Enviar Alistamiento';
+          color = 'warning';
+        }
+        let botones = '';
+
+        /* Si es para alistamiento o si no tiene factura y ya esta empacado */
+        if ((data.estado == 0 && validPermissions(104)) || (data.idFactura <= 0 && data.estado == 2 && validPermissions(105))) {
+          botones += `<button type="button" class="btn btn-${color} btnConfirmarPedido" title="${estado} Pedido">
+            <i class="fa-solid ${data.estado == 0 ? 'fa-boxes-stacked' : 'fa-receipt'}"></i>
+          </button>`;
+        }
+
+        /* Tiene permiso de imprimir */
+        if (validPermissions(106)) {
+          botones += `<a href="${base_url()}Reportes/Pedido/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprimir Pedido">
+            <i class="fa-solid fa-print"></i>
+          </a>`;
+          /* Conpermiso y tenga factura */
+          if (data.idFactura > 0) {
+            botones += `<a href="${base_url()}Reportes/Factura/${data.idFactura}" target="_blank" type="button" class="btn btn-success" title="Imprimir Factura">
+              <i class="fa-solid fa-receipt"></i>
+            </a>`;
+          }
+        }
+
+        /* Si esta facturado */
+        if (data.estado == 3) {
+          botones += `<button type="button" class="btn btn-secondary btnEditar" title="Ver">
+            <i class="fa-solid fa-eye"></i>
+          </button>`;
+        } else {
+          /* Si no esta facturado y tiene permiso de editar */
+          if (validPermissions(102)) {
+            botones += `<button type="button" class="btn btn-secondary btnEditar" title="Editar">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>`;
+          } else {
+            /* Solo puede ver el pedido */
+            botones += `<button type="button" class="btn btn-secondary btnEditar" title="Ver">
               <i class="fa-solid fa-eye"></i>
-            </button>`)}
+            </button>`;
+          }
+        }
 
-            ${data.estado != 2 && validPermissions(103)
-            ? `<button type="button" class="btn btn-danger btnEliminar" title="Eliminar">
-              <i class="fa-regular fa-trash-can"></i>
-            </button>` :
-            ''}
+        /* Si no esta facturado y tiene permiso de eliminar */
+        if (data.estado != 3 && validPermissions(103)) {
+          botones += `<button type="button" class="btn btn-danger btnEliminar" title="Eliminar">
+            <i class="fa-regular fa-trash-can"></i>
+          </button>`;
+        }
 
-            ${validPermissions(107)
-            ? `<button type="button" class="btn btn-dark btnImprimirRotulo" title="Imprimir rotulo">
-                <i class="fa-solid fa-tags"></i>
-              </button>` :
-            ''}
-            
-          </div>
-        `;
+        /* Si tiene permiso de imprimir el rotulo */
+        if (validPermissions(107)) {
+          botones += `<button type="button" class="btn btn-dark btnImprimirRotulo" title="Imprimir rotulo">
+            <i class="fa-solid fa-tags"></i>
+          </button>`;
+        }
+
+        return `<div class="btn-group btn-group-sm" role="group">${botones}</div>`;
       }
     },
   ],
@@ -152,7 +173,7 @@ function alistarPedido(data) {
         dataType: 'json',
         data: {
           id: data.id,
-          estado: (data.estado == 0 ? 1 : 2)
+          estado: (data.estado == 0 ? 1 : 3)
         },
         success: function (resp) {
           if (resp.success) {

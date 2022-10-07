@@ -143,8 +143,8 @@
                             </select>
                           </div>
                           <div class="col-12 col-md-4 form-group form-valid mb-1">
-                            <label class="mb-0" for="barrioSucursal">Barrio <span class="text-danger">*</span></label>
-                            <input placeholder="Ingresar barrio" class="form-control soloLetrasEspacioCaracteres inputVer" id="barrioSucursal" name="barrioSucursal" type="text" minlength="1" maxlength="254" required autocomplete="off">
+                            <label class="mb-0" for="barrioSucursal">Barrio </label>
+                            <input placeholder="Ingresar barrio" class="form-control soloLetrasEspacioCaracteres inputVer" id="barrioSucursal" name="barrioSucursal" type="text" minlength="1" maxlength="254" autocomplete="off">
                           </div>
                           <div class="col-12 col-md-4 form-group form-valid mb-1">
                             <label class="mb-0" for="direccionSucursal">Dirección <span class="text-danger">*</span></label>
