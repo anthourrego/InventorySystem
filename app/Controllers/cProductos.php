@@ -477,7 +477,7 @@ class cProductos extends BaseController {
 			ob_start();
 			foreach ($productos as $it) {
 				$this->convertirFoto($it->id, $it->imagen, $it);
-				$zipFile->addFile(UPLOADS_PRODUCT_PATH . "convert/{$it->id}.png");
+				$zipFile->addFile(UPLOADS_PRODUCT_PATH . "convert/{$it->id}.png", "{$it->referencia}.png");
 			}
 	
 			$zipFile->saveAsFile(UPLOADS_PRODUCT_PATH . "fotos.zip"); 
