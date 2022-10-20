@@ -214,10 +214,12 @@ class cProductos extends BaseController {
 						if ($imgFoto->isValid() && !$imgFoto->hasMoved()) {
 							//Validamos que la imagen suba correctamente
 							$nameImg = "01.png";
+							$nameLogo = "01-logo.png";
 							$nameSmallImg = "01-small.png";
 
 							$image = Services::image()
 												->withFile($imgFoto)
+												->convert(IMAGETYPE_PNG)
 												->resize(1080, 1080, true, 'height');
 
 							$ruta = UPLOADS_PRODUCT_PATH ."/" . $product->id  ."/";
@@ -226,8 +228,13 @@ class cProductos extends BaseController {
 							}
 
 							if ($image->save($ruta . $nameImg)) {
+
+								$product->imagen = $nameImg;
+								$this->marcaAguaProducto($product);
+
 								$imageSmall = Services::image()
-												->withFile($imgFoto)
+												->withFile($ruta . $nameLogo)
+												->convert(IMAGETYPE_PNG)
 												->resize(250, 250, true, 'height');
 								if ($imageSmall->save($ruta . $nameSmallImg)) {
 									$updateFoto = array(
@@ -282,10 +289,18 @@ class cProductos extends BaseController {
 	}
 
 	public function foto($id = null, $img = null){
-		$filename = UPLOADS_PRODUCT_PATH ."{$id}/{$img}"; //<-- specify the image  file
+		$ruta = UPLOADS_PRODUCT_PATH ."{$id}/";
+		$filename = $ruta . $img; //<-- specify the image  file/<-- specify the image  file
 		//Si la foto no existe la colocamos por defecto
 		if(is_null($img) || !file_exists($filename)){ 
 			$filename = ASSETS_PATH . "img/nofoto.png";
+		} else {
+			$dataImg = (object) pathinfo($img);
+
+			//Si el archivo existe validamos que existe si existe utilizamos ese
+			if (file_exists($ruta . $dataImg->filename . "-logo." . $dataImg->extension)) {
+				$filename = $ruta . $dataImg->filename . "-logo." . $dataImg->extension;
+			}
 		}
 		//$mime = mime_content_type($filename); //<-- detect file type
 		header('Content-Length: '.filesize($filename)); //<-- sends filesize header
@@ -313,11 +328,19 @@ class cProductos extends BaseController {
 	}
 
 	public function convertirFoto($id, $img, $datos = null){
-		$filename = UPLOADS_PRODUCT_PATH ."{$id}/{$img}"; //<-- specify the image  file
+		$ruta = UPLOADS_PRODUCT_PATH ."{$id}/";
+		$filename = $ruta . $img; //<-- specify the image  file
 
 		//Si la foto no existe la colocamos por defecto
 		if(is_null($img) || !file_exists($filename)){ 
 			$filename = ASSETS_PATH . "img/nofoto.png";
+		} else {
+			$dataImg = (object) pathinfo($img);
+
+			//Si el archivo existe validamos que existe si existe utilizamos ese
+			if (file_exists($ruta . $dataImg->filename . "-logo." . $dataImg->extension)) {
+				$filename = $ruta . $dataImg->filename . "-logo." . $dataImg->extension;
+			}
 		}
 
 		if (!is_dir(UPLOADS_PRODUCT_PATH . 'convert/')) {
@@ -383,33 +406,6 @@ class cProductos extends BaseController {
 			'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
 		])->convert(IMAGETYPE_PNG)
 		->save(UPLOADS_PRODUCT_PATH ."convert/{$producto->id}.png");
-
-		//Colocamos la marca de agua
-		if (session()->has("logoEmpresa")) {
-			//Si la foto no existe la colocamos por defecto
-			$logoEmpresa = UPLOADS_CONF_PATH . 'logoEmpresa-small.png';
-			if(!file_exists($logoEmpresa)){ 
-				Services::image()
-					->withFile(UPLOADS_CONF_PATH . session()->get("logoEmpresa"))
-					->resize(180, 180, true, 'height')
-					->convert(IMAGETYPE_PNG)
-					->save($logoEmpresa);
-			}
-
-			// Load the stamp and the photo to apply the watermark to
-			$im = imagecreatefrompng(UPLOADS_PRODUCT_PATH . "convert/{$producto->id}.png");
-			$stamp = imagecreatefrompng($logoEmpresa);
-	
-			// Set the margins for the stamp and get the height/width of the stamp image
-			$sx = imagesx($stamp);
-	
-			// Copy the stamp image onto our photo using the margin offsets and the photo 
-			// width to calculate positioning of the stamp. 
-			imagecopy($im, $stamp, imagesx($im) - $sx - 10, 10, 0, 0, imagesx($stamp), imagesy($stamp));
-	
-			imagepng($im, UPLOADS_PRODUCT_PATH ."convert/{$producto->id}.png", 0);
-			imagedestroy($im);
-		}
 
 		if (is_null($datos)) {
 			return $this->response->download(UPLOADS_PRODUCT_PATH . "convert/{$producto->id}.png", null)->setFileName($producto->referencia . '.png');
@@ -477,7 +473,7 @@ class cProductos extends BaseController {
 			ob_start();
 			foreach ($productos as $it) {
 				$this->convertirFoto($it->id, $it->imagen, $it);
-				$zipFile->addFile(UPLOADS_PRODUCT_PATH . "convert/{$it->id}.png");
+				$zipFile->addFile(UPLOADS_PRODUCT_PATH . "convert/{$it->id}.png", "{$it->referencia}.png");
 			}
 	
 			$zipFile->saveAsFile(UPLOADS_PRODUCT_PATH . "fotos.zip"); 
@@ -540,17 +536,50 @@ class cProductos extends BaseController {
 
 
 		foreach ($productos as $it) {
+			$ruta = UPLOADS_PRODUCT_PATH ."/" . $it->id  ."/";
 			$filename = UPLOADS_PRODUCT_PATH ."{$it->id}/{$it->imagen}"; //<-- specify the image  file
 
 			//Si la foto no existe la colocamos por defecto
 			if(file_exists($filename)){ 
-				$extension = pathinfo($filename, PATHINFO_EXTENSION);
-				$nameSmallImg = "01-small.{$extension}";
-	
-				$ruta = UPLOADS_PRODUCT_PATH ."/" . $it->id  ."/";
+				$dataFoto = (object) pathinfo($filename);
+
+				//Si la extension de la imagen es jpg convertimos todo a png para evitar conflictos
+				if ($dataFoto->extension != "png") {
+					Services::image()
+						->withFile($filename)
+						->convert(IMAGETYPE_PNG)
+						->save($ruta . "{$dataFoto->filename}.png");
+
+					$filename = $ruta . "{$dataFoto->filename}.png";
+					
+					//Eliminamos los archivos restantes en jpg
+					$rutaFoto = $ruta . $it->imagen;
+					if (file_exists($rutaFoto)) {
+						unlink($rutaFoto);
+					}
+					$rutaLogo = $ruta . $dataFoto->filename . "-logo." . $dataFoto->extension; 
+					if (file_exists($rutaLogo)) {
+						unlink($rutaLogo);
+					}
+					$rutaSmall = $ruta . $dataFoto->filename . "-small." . $dataFoto->extension; 
+					if (file_exists($rutaSmall)) {
+						unlink($rutaSmall);
+					}
+
+					$it->imagen = "{$dataFoto->filename}.png";
+
+					$mProducto->save(["id" => $it->id, "imagen" => $it->imagen]);
+
+
+					$dataFoto = (object) pathinfo($filename);
+				}
+				
+				$this->marcaAguaProducto($it);
+
+				$nameSmallImg = "01-small.{$dataFoto->extension}";
 	
 				$imageSmall = Services::image()
-								->withFile($filename)
+								->withFile($ruta . $dataFoto->filename . "-logo." . $dataFoto->extension)
 								->resize(250, 250, true, 'height');
 				if (!$imageSmall->save($ruta . $nameSmallImg)) {
 					$resp["listProd"] .= "<li>{$it->referencia}</li>";
@@ -561,7 +590,7 @@ class cProductos extends BaseController {
 
 		if ($contProd == 0) {
 			$resp['success'] = true;
-			$resp['msj'] = "Imagenes de small creadas correctamente";
+			$resp['msj'] = "Imagenes de small y/o con logo creadas correctamente";
 		} else {
 			$resp["msj"] = "Ha ocurrido un error al convertir estas imagenes. <br> <ul>{$resp['listProd']}</ul>"; 
 		}
@@ -569,25 +598,41 @@ class cProductos extends BaseController {
 		return $this->response->setJSON($resp);
 	}
 
-	public function waterMarket() {
-		// Load the stamp and the photo to apply the watermark to
-		$im = imagecreatefrompng(UPLOADS_PRODUCT_PATH . '1/01.png');
-		$stamp = imagecreatefrompng(ASSETS_PATH . 'img/logoLogin.png');
+	public function marcaAguaProducto($prod){
+		$ruta = UPLOADS_PRODUCT_PATH ."/" . $prod->id  ."/";
+		$filename = $ruta . "{$prod->imagen}";
+		$ext = (object) pathinfo($filename);
 
-		// Set the margins for the stamp and get the height/width of the stamp image
-		$marge_right = 10;
-		$marge_bottom = 10;
-		$sx = imagesx($stamp);
-		$sy = imagesy($stamp);
+		//Colocamos la marca de agua
+		if (session()->has("logoEmpresa")) {
+			//Si la foto no existe la colocamos por defecto
+			$logoEmpresa = UPLOADS_CONF_PATH . 'logoEmpresa-small.png';
+			if(!file_exists($logoEmpresa)){ 
+				Services::image()
+					->withFile(UPLOADS_CONF_PATH . session()->get("logoEmpresa"))
+					->resize(180, 180, true, 'height')
+					->convert(IMAGETYPE_PNG)
+					->save($logoEmpresa);
+			}
 
-		// Copy the stamp image onto our photo using the margin offsets and the photo 
-		// width to calculate positioning of the stamp. 
-		imagecopy($im, $stamp, imagesx($im) - $sx - $marge_right, imagesy($im) - $sy - $marge_bottom, 0, 0, imagesx($stamp), imagesy($stamp));
+			// Load the stamp and the photo to apply the watermark to
+			$im = imagecreatefrompng($filename);
+			$stamp = imagecreatefrompng($logoEmpresa);
 
-		// Output and free memory
-		header('Content-type: image/png');
-		imagepng($im);
-		imagedestroy($im);
-		exit(); // or die()
+			// Set the margins for the stamp and get the height/width of the stamp image
+			$sx = imagesx($stamp);
+
+			// Copy the stamp image onto our photo using the margin offsets and the photo 
+			// width to calculate positioning of the stamp. 
+			imagecopy($im, $stamp, imagesx($im) - $sx - 10, 10, 0, 0, imagesx($stamp), imagesy($stamp));
+
+			imagepng($im, $ruta ."{$ext->filename}-logo.png", 0);
+			imagedestroy($im);
+		} else {
+			Services::image()
+					->withFile($filename)
+					->convert(IMAGETYPE_PNG)
+					->save($ruta . "{$ext->filename}-logo.png");
+		}
 	}
 }
