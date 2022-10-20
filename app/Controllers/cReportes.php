@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Controllers;
-use TCPDF;
+use setasign\Fpdi\TcpdfFpdi;
 use App\Models\mVentasProductos;
 use App\Models\mPedidosProductos;
 use App\Models\mConfiguracion;
+use App\Models\mPedidosCajas;
+use App\Models\mPedidosCajasProductos;
 
 class cReportes extends BaseController {
 
@@ -21,26 +23,90 @@ class cReportes extends BaseController {
 
 		$dataVenta = $this->cargarDataVenta($estrucPdf, $id, "ventas");
 		$estrucPdf = $dataVenta['pdf'];
+		$manifiestos = [];
 
-		$mVentasProductos = new mVentasProductos();
+		if (is_null($dataVenta['id_pedido']) || $dataVenta['id_pedido'] == '') {
+			$mVentasProductos = new mVentasProductos();
 
-		$productosFactura = $mVentasProductos->select("
-				P.referencia AS referenciaProductoDP,
-				P.item AS itemProductoDP,
-				P.descripcion AS descripcionProductoDP,
-				ventasproductos.cantidad AS cantidadProductoDP,
-				ventasproductos.valor AS valorProductoDP,
-				(ventasproductos.cantidad * ventasproductos.valor) AS totalProductoDP
-			")->join("productos AS P", "ventasproductos.id_producto = P.id", "left")
-			->where("id_venta", $id)
-			->findAll();
+			$productosFactura = $mVentasProductos->select("
+					P.referencia AS referenciaProductoDP,
+					P.item AS itemProductoDP,
+					P.descripcion AS descripcionProductoDP,
+					ventasproductos.cantidad AS cantidadProductoDP,
+					ventasproductos.valor AS valorProductoDP,
+					(ventasproductos.cantidad * ventasproductos.valor) AS totalProductoDP
+				")->join("productos AS P", "ventasproductos.id_producto = P.id", "left")
+				->where("id_venta", $id)
+				->findAll();
 
-		$estrucPdf = $this->estructuraProductos($estrucPdf, $productosFactura);
+			$estrucPdf = $this->estructuraProductos($estrucPdf, $productosFactura);
+		} else {
 
-		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+			$mPedidosCajas = new mPedidosCajas();
+
+			$productosFactura = $mPedidosCajas->select("
+					P.referencia AS referenciaProductoDP,
+					P.item AS itemProductoDP,
+					P.descripcion AS descripcionProductoDP,
+					PCP.cantidad AS cantidadProductoDP,
+					PV.valor AS valorProductoDP,
+					(PCP.cantidad * PV.valor) AS totalProductoDP,
+					numero_caja AS numeroCaja,
+					M.ruta_archivo AS archivoManifiesto,
+					M.id AS idManifiesto,
+				")
+				->join("pedidoscajasproductos AS PCP", "pedidoscajas.id = PCP.id_caja", "left")
+				->join("productos AS P", "PCP.id_producto = P.id", "left")
+				->join("manifiestos AS M", "P.id_manifiesto = M.id", "left")
+				->join("(
+					SELECT id_producto, valor FROM ventasproductos WHERE id_venta = '$id'
+				) AS PV", "PCP.id_producto = PV.id_producto", "left")
+				->where("id_pedido", $dataVenta['id_pedido'])
+				->orderBy("numero_caja", "ASC")
+				->orderBy("PCP.id", "DESC")
+				->findAll();
+
+			$estrucPdf = $this->estructuraProductos($estrucPdf, $productosFactura);
+
+			foreach ($productosFactura as $key => $value) {
+				if (!is_null($value->idManifiesto)) {
+					$enc = array_search($value->idManifiesto, array_column($manifiestos, "id"));
+					if ($enc === false) {
+						$data = [
+							"id" => $value->idManifiesto,
+							"archivo" => $value->archivoManifiesto
+						];
+						array_push($manifiestos, $data);
+					}
+				}
+			}
+		}
+
+		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		$pdf->startPageGroup();
 		$pdf->AddPage();
 		$pdf->writeHTML($estrucPdf, false, false, false, false, '');
+
+		if (count($manifiestos) > 0) {
+			foreach ($manifiestos as $llave => $manif) {
+				$ext = explode('.', $manif['archivo'])[1];
+				$file = UPLOADS_MANIFEST_PATH . $manif['archivo'];
+				if ($ext == 'pdf') {
+
+					$paginas = $pdf->setSourceFile($file);
+					for($i=0; $i < $paginas; $i++) {
+						$pdf->AddPage();
+						$tplIdx = $pdf->importPage($i+1);
+						$pdf->useTemplate($tplIdx, 10, 10, 200);
+					}
+
+				} else if ($ext == 'png' || $ext == 'jpg' || $ext == 'jpeg') {
+					$pdf->AddPage();
+					$pdf->Image($file);
+				}
+			}
+		}
+
 		$pdf->setTitle('Factura ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
 		$pdf->Output($dataVenta['codigo'] . ".pdf", 'I');
 		exit;
@@ -72,7 +138,7 @@ class cReportes extends BaseController {
 
 		$estrucPdf = $this->estructuraProductos($estrucPdf, $productosFactura);
 
-		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		$pdf->startPageGroup();
 		$pdf->AddPage();
 		$pdf->writeHTML($estrucPdf, false, false, false, false, '');
@@ -94,7 +160,7 @@ class cReportes extends BaseController {
 		$dataVenta = $this->cargarDataVenta($estrucPdf, $id, "pedidos");
 		$estrucPdf = $dataVenta['pdf'];
 
-		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		$pdf->startPageGroup();
 
 		for ($i=0; $i < $cantidad; $i++) { 
@@ -177,8 +243,12 @@ class cReportes extends BaseController {
 			->join("sucursales AS S", "V.id_sucursal = S.id", "left")
 			->join("ciudades AS CI", "S.id_ciudad = CI.id", "left")
 			->join("departamentos AS DEP", "CI.id_depto = DEP.codigo", "left")
-			->where("V.id", $id)
-			->get()->getResultObject()[0];
+			->where("V.id", $id);
+		
+		if ($tabla == 'ventas') {
+			$venta = $venta->select("id_pedido");
+		}
+		$venta = $venta->get()->getResultObject()[0];
 
 		foreach ($venta as $key => $value) {
 			if ($key == 'totalGeneral') {
@@ -188,7 +258,8 @@ class cReportes extends BaseController {
 		};
 		return array(
 			"pdf" => $pdf,
-			"codigo" => $venta->numeracion
+			"codigo" => $venta->numeracion,
+			"id_pedido" => isset($venta->id_pedido) ? $venta->id_pedido : null
 		);
 	}
 

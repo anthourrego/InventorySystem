@@ -154,6 +154,10 @@ class cModificarReporte extends BaseController {
       "aplica" => ["Rotulo"],
       "descripcion" => "Numeración secuencial del rotulo"
     ],
+    "numeroCajaDP" => [
+      "aplica" => ["Factura"],
+      "descripcion" => "Caja del producto"
+    ],
   ];
 
 	function index() {

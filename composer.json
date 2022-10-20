@@ -26,7 +26,8 @@
         "robinherbots/jquery.inputmask": "^5.0",
         "tecnickcom/tcpdf": "^6.4",
         "nelexa/zip": "^4.0",
-        "ckeditor/ckeditor": "4.*"
+        "ckeditor/ckeditor": "4.*",
+        "setasign/fpdi": "^2.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9",
