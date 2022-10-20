@@ -165,7 +165,7 @@ function observacionRotulo(value, data) {
       observa = observa.split(' ').join('_');
       window.open(`${base_url()}Reportes/Rotulo/${data.id.trim()}/${value}?observacion=${observa}`, '_blank');
     } else {
-      window.open(`${base_url()}Reportes/Rotulo/${data.id.trim()}/${observa}`, '_blank');
+      window.open(`${base_url()}Reportes/Rotulo/${data.id.trim()}/${value}`, '_blank');
     }
   }, function () { }).setting({
     'type': 'text'
