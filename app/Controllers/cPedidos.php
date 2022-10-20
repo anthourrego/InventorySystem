@@ -182,12 +182,20 @@ class cPedidos extends BaseController {
 				S.direccion,
 				S.nombre AS NombreSucursal,
 				V.id AS idFactura,
-				CUI.nombre AS Ciudad
+				CUI.nombre AS Ciudad,
+				TC.TotalCajas
 			")->join('clientes AS C', 'P.id_cliente = C.id', 'left')
 			->join('sucursales AS S', 'P.id_sucursal = S.id', 'left')
 			->join('ciudades AS CUI', 'S.id_ciudad = CUI.id', 'left')
 			->join('usuarios AS U', 'P.id_vendedor = U.id', 'left')
 			->join('ventas AS V', 'P.id = V.id_pedido', 'left')
+			->join("(
+				SELECT 
+					COUNT(id_pedido) AS TotalCajas
+					, id_pedido
+				FROM pedidoscajas
+				GROUP BY id_pedido
+			) AS TC", "P.id = TC.id_pedido", "left")
 			->where('P.estado <> 1');
 
 		return DataTable::of($query)->toJson(true);

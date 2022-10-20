@@ -112,6 +112,7 @@ let DT = $("#table").DataTable({
     },
   ],
   createdRow: function (row, data, dataIndex) {
+    console.log(data);
     $(row).find(".btnEliminar").click(function (e) {
       e.preventDefault();
       eliminar(data);
@@ -129,39 +130,47 @@ let DT = $("#table").DataTable({
 
     $(row).find('.btnImprimirRotulo').click(function () {
       let context = this;
-      alertify.prompt('Impresión', 'Número de cajas disponibles?', '1', function (evt, value) {
-        if (value > 0) {
-          if (value <= limiteRotulo) {
-            setTimeout(() => {
-              alertify.prompt('Impresión', 'Observación', '', function (evt, observa) {
-                if (observa != '') {
-                  observa = observa.split(' ').join('_');
-                  window.open(`${base_url()}Reportes/Rotulo/${data.id.trim()}/${value}?observacion=${observa}`, '_blank');
-                } else {
-                  window.open(`${base_url()}Reportes/Rotulo/${data.id.trim()}/${observa}`, '_blank');
-                }
-              }, function () { }).setting({
-                'type': 'text'
-              });
-            }, 0);
+      if (!data.TotalCajas) {
+        alertify.prompt('Impresión', 'Número de cajas disponibles?', '1', function (evt, value) {
+          if (value > 0) {
+            if (value <= limiteRotulo) {
+              setTimeout(() => {
+                observacionRotulo(value, data);
+              }, 0);
+            } else {
+              alertify.warning('El limite permitido es ' + limiteRotulo);
+              setTimeout(() => {
+                $(context).click();
+              }, 0);
+            }
           } else {
-            alertify.warning('El limite permitido es ' + limiteRotulo);
+            alertify.warning('Ingrese una cantidad valida');
             setTimeout(() => {
               $(context).click();
             }, 0);
           }
-        } else {
-          alertify.warning('Ingrese una cantidad valida');
-          setTimeout(() => {
-            $(context).click();
-          }, 0);
-        }
-      }, function () { }).setting({
-        'type': 'number'
-      });
+        }, function () { }).setting({
+          'type': 'number'
+        });
+      } else {
+        observacionRotulo(+data.TotalCajas, data);
+      }
     });
   }
 });
+
+function observacionRotulo(value, data) {
+  alertify.prompt('Impresión', 'Observación', '', function (evt, observa) {
+    if (observa != '') {
+      observa = observa.split(' ').join('_');
+      window.open(`${base_url()}Reportes/Rotulo/${data.id.trim()}/${value}?observacion=${observa}`, '_blank');
+    } else {
+      window.open(`${base_url()}Reportes/Rotulo/${data.id.trim()}/${observa}`, '_blank');
+    }
+  }, function () { }).setting({
+    'type': 'text'
+  });
+}
 
 function alistarPedido(data) {
   let msj = (data.estado == 0 ? 'iniciar alistamiento para' : 'facturar');
