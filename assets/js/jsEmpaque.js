@@ -165,42 +165,26 @@ function obtenerInfoPedido(pedido, sync = false) {
     let estructura = '';
     pedido.productos.forEach((it, x) => {
       estructura += `<div class="list-group-item list-group-item-action item-prod-agregar p-2">
-      
-        <div class="row">
-          <div class="col-7 col-lg-6 align-self-center">
-            <h6 class="mb-0 text-truncate w-100">${it.referencia} - ${it.descripcion}</h6>
-          </div>
-          <div class="col-5 col-lg-3">
-            <div class="input-group">
-              <input id="prod${it.id}" type="number" class="form-control form-control-sm cantAgregarProd soloNumeros" min="1" value="${it.cantAgregar}" max="${it.CantTotalCajas}" aria-describedby="btnCantidad">
-              <div class="input-group-append">
-                <button class="btn btn-outline-info btn-sm" type="button" id="btnCantidad">/${it.cantidad}</button>
+          <div class="row">
+            <div class="col-7 col-lg-6 align-self-center">
+              <h6 class="mb-0 text-truncate w-100">${it.referencia} - ${it.descripcion}</h6>
+            </div>
+            <div class="col-5 col-lg-3">
+              <div class="input-group">
+                <input id="prod${it.id}" type="number" class="form-control form-control-sm cantAgregarProd soloNumeros" min="1" value="${it.cantAgregar}" max="${it.CantTotalCajas}" aria-describedby="btnCantidad">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-info btn-sm" type="button" id="btnCantidad">/${it.cantidad}</button>
+                </div>
               </div>
             </div>
+            <div class="col-12 col-lg-3 text-right">
+              <button type="button" class="btn btn-sm btn-primary btn-agregar-prod" data-input="#prod${it.id}" data-pos=${x}>
+                <i class="fas fa-plus"></i> Agregar
+              </button>
+            </div>
           </div>
-          <div class="col-12 col-lg-3 text-right">
-            <button type="button" class="btn btn-sm btn-primary btn-agregar-prod" data-input="#prod${it.id}" data-pos=${x}>
-              <i class="fas fa-plus"></i> Agregar
-            </button>
-          </div>
-        </div>
-      </div>
-
-          
+        </div>  
       `;
-      {/* <div class="d-flex justify-content-between align-items-center">
-            <h6 class="mb-0 text-truncate w-50">${it.referencia} - ${it.descripcion}</h6>
-
-            <div class="input-group w-25">
-              <input id="prod${it.id}" type="number" class="form-control form-control-sm cantAgregarProd soloNumeros w-25" min="1" value="${it.cantAgregar}" max="${it.CantTotalCajas}" aria-describedby="btnCantidad">
-              <div class="input-group-append">
-                <button class="btn btn-outline-info btn-sm" type="button" id="btnCantidad">/${it.cantidad}</button>
-              </div>
-            </div>
-
-            <button type="button" class="btn btn-sm btn-primary btn-agregar-prod" data-input="#prod${it.id}" data-pos=${x}><i class="fas fa-plus"></i> Agregar</button>
-          </div>
-        </div> */}
     });
     $("#listaproductospedido").html(estructura);
 
