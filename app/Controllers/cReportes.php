@@ -17,6 +17,8 @@ class cReportes extends BaseController {
 	}
 
 	public function factura($id) {
+		$mPedidosCajas = new mPedidosCajas();
+
 		$estrucPdf = $this->estructuraReporte("Factura");
 
 		$estrucPdf = $this->setValuesCompany($estrucPdf);
@@ -25,7 +27,9 @@ class cReportes extends BaseController {
 		$estrucPdf = $dataVenta['pdf'];
 		$manifiestos = [];
 
-		if (is_null($dataVenta['id_pedido']) || $dataVenta['id_pedido'] == '') {
+		$totCajas = $mPedidosCajas->where("id_pedido", $dataVenta['id_pedido'])->countAllResults();
+
+		if (is_null($dataVenta['id_pedido']) || $dataVenta['id_pedido'] == '' || $totCajas == 0) {
 			$mVentasProductos = new mVentasProductos();
 
 			$productosFactura = $mVentasProductos->select("
@@ -34,15 +38,14 @@ class cReportes extends BaseController {
 					P.descripcion AS descripcionProductoDP,
 					ventasproductos.cantidad AS cantidadProductoDP,
 					ventasproductos.valor AS valorProductoDP,
-					(ventasproductos.cantidad * ventasproductos.valor) AS totalProductoDP
+					(ventasproductos.cantidad * ventasproductos.valor) AS totalProductoDP,
+					'' AS numeroCaja
 				")->join("productos AS P", "ventasproductos.id_producto = P.id", "left")
 				->where("id_venta", $id)
 				->findAll();
 
 			$estrucPdf = $this->estructuraProductos($estrucPdf, $productosFactura);
 		} else {
-
-			$mPedidosCajas = new mPedidosCajas();
 
 			$productosFactura = $mPedidosCajas->select("
 					P.referencia AS referenciaProductoDP,
