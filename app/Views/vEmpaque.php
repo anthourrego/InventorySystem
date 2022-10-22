@@ -23,7 +23,7 @@
 </div>
 
 <div class="modal fade" id="modalEmpaque" data-backdrop="static" data-keyboard="false" aria-labelledby="modalEmpaqueLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable" style="min-width: 90vw;">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title titulo-modal-pedido" id="modalEmpaqueLabel"></h5>

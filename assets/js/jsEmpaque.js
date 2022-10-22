@@ -165,7 +165,30 @@ function obtenerInfoPedido(pedido, sync = false) {
     let estructura = '';
     pedido.productos.forEach((it, x) => {
       estructura += `<div class="list-group-item list-group-item-action item-prod-agregar p-2">
-          <div class="d-flex justify-content-between align-items-center">
+      
+        <div class="row">
+          <div class="col-7 col-lg-6 align-self-center">
+            <h6 class="mb-0 text-truncate w-100">${it.referencia} - ${it.descripcion}</h6>
+          </div>
+          <div class="col-5 col-lg-3">
+            <div class="input-group">
+              <input id="prod${it.id}" type="number" class="form-control form-control-sm cantAgregarProd soloNumeros" min="1" value="${it.cantAgregar}" max="${it.CantTotalCajas}" aria-describedby="btnCantidad">
+              <div class="input-group-append">
+                <button class="btn btn-outline-info btn-sm" type="button" id="btnCantidad">/${it.cantidad}</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-lg-3 text-right">
+            <button type="button" class="btn btn-sm btn-primary btn-agregar-prod" data-input="#prod${it.id}" data-pos=${x}>
+              <i class="fas fa-plus"></i> Agregar
+            </button>
+          </div>
+        </div>
+      </div>
+
+          
+      `;
+      {/* <div class="d-flex justify-content-between align-items-center">
             <h6 class="mb-0 text-truncate w-50">${it.referencia} - ${it.descripcion}</h6>
 
             <div class="input-group w-25">
@@ -177,8 +200,7 @@ function obtenerInfoPedido(pedido, sync = false) {
 
             <button type="button" class="btn btn-sm btn-primary btn-agregar-prod" data-input="#prod${it.id}" data-pos=${x}><i class="fas fa-plus"></i> Agregar</button>
           </div>
-        </div>
-      `;
+        </div> */}
     });
     $("#listaproductospedido").html(estructura);
 
@@ -225,7 +247,7 @@ function obtenerInfoPedido(pedido, sync = false) {
         $("#btnFinalizarCaja").show();
       }
 
-      let estructu = `<div class="col-4">
+      let estructu = `<div class="col-8 col-lg-4">
         <div class="card mb-2 ${(!it.finEmpaque && $USUARIOID == it.empacador ? 'border border-info caja-actual' : '')}" ${(!it.finEmpaque && $USUARIOID == it.empacador ? `data-caja="${it.idCajaPedido}"` : '')}>
           <div class="card-body">
             <div class="row">
@@ -249,7 +271,7 @@ function obtenerInfoPedido(pedido, sync = false) {
     });
     $("#listacajas").html(estrcutura);
 
-    if (pedido.cajas.length > 3) {
+    if (pedido.cajas.length > 3 || ($(window).width() < 993 && pedido.cajas.length > 1)) {
       $("#listacajas").css("overflow-x", "scroll");
     } else {
       $("#listacajas").css("overflow-x", "unset");
@@ -267,9 +289,9 @@ function obtenerInfoPedido(pedido, sync = false) {
           if (productosCaja.length) {
             estructura = '';
             productosCaja.forEach((it, x) => {
-              estructura += `<div class="list-group-item list-group-item-action item-prod-agregar p-2">
+              estructura += `<div class="list-group-item list-group-item-action p-2">
                   <div class="d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 text-truncate w-50">
+                    <h6 class="mb-0 text-truncate w-75">
                       Ref: ${it.referencia} - Cantidad: ${it.cantidad}
                     </h6>
                     <button type="button" class="btn btn-sm btn-danger btn-eliminar-prod" data-pos=${x}>
