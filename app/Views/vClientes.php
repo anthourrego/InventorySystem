@@ -116,7 +116,7 @@
                     <div class="card-header" id="cabeceraDatos">
                       <h2 class="mb-0 d-flex" data-toggle="collapse" data-target="#collapseDatosBasicos" aria-expanded="true" aria-controls="collapseDatosBasicos">
                         <button class="btn btn-block text-left" type="button">
-                          Datos Basicos
+                          Agregar Sucursal
                         </button>
                         <i class="icono-collapse fas fa-arrow-down"></i>
                       </h2>
