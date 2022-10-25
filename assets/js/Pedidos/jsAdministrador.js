@@ -20,6 +20,8 @@ let DT = $("#table").DataTable({
         let color = "success";
         if (data.estado == 0) {
           color = "primary";
+        } else if (data.estado == 1) {
+          color = "secondary";
         } else if (data.estado == 2) {
           color = "info";
         }

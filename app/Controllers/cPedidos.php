@@ -173,7 +173,7 @@ class cPedidos extends BaseController {
 					WHEN P.Estado = 0 
 						THEN 'Pendiente' 
 					WHEN P.Estado = 1 
-						THEN 'Alistamiento' 
+						THEN 'En Proceso' 
 					WHEN P.Estado = 2 
 						THEN 'Empacado' 
 					ELSE 'Facturado' 
@@ -195,8 +195,7 @@ class cPedidos extends BaseController {
 					, id_pedido
 				FROM pedidoscajas
 				GROUP BY id_pedido
-			) AS TC", "P.id = TC.id_pedido", "left")
-			->where('P.estado <> 1');
+			) AS TC", "P.id = TC.id_pedido", "left");
 
 		return DataTable::of($query)->toJson(true);
 	}

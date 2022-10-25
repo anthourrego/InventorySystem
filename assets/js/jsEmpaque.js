@@ -346,6 +346,8 @@ function obtenerInfoPedido(pedido, sync = false) {
     });
 
     if (!sync) $(".card.caja-actual").find('.item-caja').click();
+  } else {
+    $("#listaproductoscaja").html('');
   }
 
   $("#btnSincronizar").off('click').on('click', function () {
