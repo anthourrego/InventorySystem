@@ -170,13 +170,13 @@ class cPedidos extends BaseController {
 				P.updated_at,
 				P.estado,
 				CASE 
+					WHEN V.id IS NOT NULL
+						THEN 'Facturado'
 					WHEN P.Estado = 0 
 						THEN 'Pendiente' 
 					WHEN P.Estado = 1 
 						THEN 'En Proceso' 
-					WHEN P.Estado = 2 
-						THEN 'Empacado' 
-					ELSE 'Facturado' 
+					ELSE 'Empacado' 
 				END AS NombreEstado,
 				P.total,
 				S.direccion,

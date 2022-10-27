@@ -18,12 +18,15 @@ let DT = $("#table").DataTable({
       className: 'text-center align-middle',
       render: function (meta, type, data, meta) {
         let color = "success";
-        if (data.estado == 0) {
-          color = "primary";
-        } else if (data.estado == 1) {
-          color = "secondary";
-        } else if (data.estado == 2) {
-          color = "info";
+        let facturado = (data.idFactura && data.idFactura > 0);
+        if (!facturado) {
+          if (data.estado == 0) {
+            color = "primary";
+          } else if (data.estado == 1) {
+            color = "secondary";
+          } else if (data.estado == 2) {
+            color = "info";
+          }
         }
         return `<button class="btn btn-${color}">${data.NombreEstado}</button>`;
       }
@@ -55,9 +58,10 @@ let DT = $("#table").DataTable({
           color = 'warning';
         }
         let botones = '';
+        let facturado = (data.idFactura && data.idFactura > 0);
 
         /* Si es para alistamiento o si no tiene factura y ya esta empacado */
-        if ((data.estado == 0 && validPermissions(104)) || (data.idFactura <= 0 && data.estado == 2 && validPermissions(105))) {
+        if ((data.estado == 0 && validPermissions(104)) || (!facturado && data.estado == 2 && validPermissions(105))) {
           botones += `<button type="button" class="btn btn-${color} btnConfirmarPedido" title="${estado} Pedido">
             <i class="fa-solid ${data.estado == 0 ? 'fa-boxes-stacked' : 'fa-receipt'}"></i>
           </button>`;
@@ -69,7 +73,7 @@ let DT = $("#table").DataTable({
             <i class="fa-solid fa-print"></i>
           </a>`;
           /* Conpermiso y tenga factura */
-          if (data.idFactura > 0) {
+          if (facturado) {
             botones += `<a href="${base_url()}Reportes/Factura/${data.idFactura}" target="_blank" type="button" class="btn btn-success" title="Imprimir Factura">
               <i class="fa-solid fa-receipt"></i>
             </a>`;
@@ -77,7 +81,7 @@ let DT = $("#table").DataTable({
         }
 
         /* Si esta facturado */
-        if (data.estado == 3) {
+        if (facturado) {
           botones += `<button type="button" class="btn btn-secondary btnEditar" title="Ver">
             <i class="fa-solid fa-eye"></i>
           </button>`;
@@ -96,7 +100,7 @@ let DT = $("#table").DataTable({
         }
 
         /* Si no esta facturado y tiene permiso de eliminar */
-        if (data.estado != 3 && validPermissions(103)) {
+        if (!facturado && validPermissions(103)) {
           botones += `<button type="button" class="btn btn-danger btnEliminar" title="Eliminar">
             <i class="fa-regular fa-trash-can"></i>
           </button>`;
