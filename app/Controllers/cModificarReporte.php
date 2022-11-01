@@ -122,9 +122,13 @@ class cModificarReporte extends BaseController {
       "aplica" => ["Factura", "Pedido"],
       "descripcion" => "Descripcion del producto"
     ],
-    "cantidadProductoDP" => [
+    "cantPacaProductoDP" => [
       "aplica" => ["Factura", "Pedido"],
-      "descripcion" => "Cantidad solicitada del producto"
+      "descripcion" => "Cantidad paca del producto"
+    ],
+    "paqueteProductoDP" => [
+      "aplica" => ["Factura", "Pedido"],
+      "descripcion" => "Cantidad paca x cantidad solicitada del producto"
     ],
     "valorProductoDP" => [
       "aplica" => ["Factura", "Pedido"],
