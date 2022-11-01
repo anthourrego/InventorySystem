@@ -22,12 +22,12 @@
 							<option></option>
 						</select>
 					</div>
-					<div class="col-6 form-group mb-1 form-valid">
+					<!-- <div class="col-6 form-group mb-1 form-valid">
 						<label class="mb-0" for="cliente">Cliente<span class="text-danger">*</span></label>
 						<select <?= $prefijoValido == 'N' || $editarPedido == 'N' ? 'disabled' : '' ?> id="cliente" required name="cliente" class="custom-select custom-select-sm select2" data-placeholder="Seleccione un cliente..." data-allow-clear="1">
 							<option></option>
 						</select>
-					</div>
+					</div> -->
 					<div class="col-6 form-group mb-1 form-valid">
 						<label class="mb-0" for="sucursal">Sucursales<span class="text-danger">*</span></label>
 						<select <?= $prefijoValido == 'N' || $editarPedido == 'N' ? 'disabled' : '' ?> id="sucursal" required name="sucursal" class="custom-select custom-select-sm select2" data-placeholder="Seleccione un sucursal..." data-allow-clear="1">

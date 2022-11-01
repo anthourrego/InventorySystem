@@ -1,6 +1,6 @@
 let rutaBase = base_url() + "Ventas/";
 let productosVentas = [];
-
+let sucursales = [];
 let DTProductos = {
   ajax: {
     url: rutaBase + "DTProductos",
@@ -209,7 +209,9 @@ $(function () {
     if ($(this).valid()) {
       if (productosVentas.length > 0) {
         form = new FormData(this);
-        form.append("idCliente", $("#cliente").val());
+
+        let idCliente = sucursales.find(x => x.id == $("#sucursal").val()).idCliente;
+        form.append("idCliente", idCliente);
         form.append("idUsuario", $("#vendedor").val());
         form.append("observacion", $("#observacion").val());
         form.append("productos", JSON.stringify(productosVentas));
@@ -283,7 +285,7 @@ $(function () {
     }
   });
 
-  $("#cliente").select2({
+  /* $("#cliente").select2({
     ajax: {
       url: base_url() + "Busqueda/Clientes",
       type: "POST",
@@ -312,11 +314,11 @@ $(function () {
     }
   }).on("change", function () {
     $("#sucursal").val('').trigger('change.select2');
-  });
+  }); */
 
   $("#sucursal").select2({
     ajax: {
-      url: base_url() + "Busqueda/Sucursales",
+      url: base_url() + "Busqueda/SucursalesClientes",
       type: "POST",
       dataType: 'json',
       delay: 250,
@@ -331,6 +333,7 @@ $(function () {
       },
       processResults: function (data, params) {
         params.page = params.page || 1;
+        sucursales = data.data;
         return {
           results: data.data,
           pagination: {

@@ -116,6 +116,7 @@ $routes->group('Busqueda', ['filter' => 'authGuard'], function ($routes) {
 	$routes->post('Vendedores', 'cUsuarios::getVendedores', ['filter' => 'ajax']);
 	$routes->post('Clientes', 'cClientes::getClientes', ['filter' => 'ajax']);
 	$routes->post('Sucursales', 'cSucursales::getSucursales', ['filter' => 'ajax']);
+	$routes->post('SucursalesClientes', 'cSucursales::getSucursalesClientes', ['filter' => 'ajax']);
 });
 
 //Permisos

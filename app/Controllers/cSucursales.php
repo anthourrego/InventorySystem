@@ -131,4 +131,53 @@ class cSucursales extends BaseController {
 		return $this->response->setJSON($resp);
 	}
 
+	public function getSucursalesClientes(){
+		$resp["success"] = false;
+		//Traemos los datos del post
+		$data = (object) $this->request->getPost();
+		$limit = 10;
+		$offset = ($data->page - 1) * $limit;  
+		$sucursal = new mSucursalesCliente();
+		
+		$resp['data'] = $sucursal->select("
+					c.id AS idCliente
+					, CONCAT(c.documento, ' | ', c.nombre, ' | ', ci.nombre, ' | ', sucursales.nombre) AS text
+					, sucursales.id
+				")
+				->join("clientes c", "sucursales.id_cliente = c.id", "LEFT")
+				->join("ciudades ci", "sucursales.id_ciudad = ci.id", "LEFT")
+				->where("c.estado", 1)
+				->where("sucursales.estado", 1);
+
+		// 1144038430 | Carlos Arias | Buga | El gangazo paisa Buga
+
+		if (isset($data->search) && strlen(trim($data->search))) {
+
+			$where = "
+				(
+					c.documento LIKE '%$data->search%'
+					OR c.nombre LIKE '%$data->search%'
+					OR ci.nombre LIKE '%$data->search%'
+					OR sucursales.nombre LIKE '%$data->search%'
+				)
+			";
+
+			$resp['data'] = $resp['data']->where($where)->findAll($limit, $offset);
+
+			$resp['total_count'] = $sucursal
+				->join("clientes c", "sucursales.id_cliente = c.id", "LEFT")
+				->join("ciudades ci", "sucursales.id_ciudad = ci.id", "LEFT")
+				->where($where)
+				->where("c.estado", 1)
+				->where("sucursales.estado", 1)
+				->countAllResults();
+		} else {
+			$resp['data'] = $resp['data']->findAll($limit, $offset);
+
+			$resp['total_count'] = $sucursal->where("estado", 1)->countAllResults();
+		}
+
+		return $this->response->setJSON($resp);
+	}
+
 }

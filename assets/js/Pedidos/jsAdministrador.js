@@ -118,7 +118,6 @@ let DT = $("#table").DataTable({
     },
   ],
   createdRow: function (row, data, dataIndex) {
-    console.log(data);
     $(row).find(".btnEliminar").click(function (e) {
       e.preventDefault();
       eliminar(data);
