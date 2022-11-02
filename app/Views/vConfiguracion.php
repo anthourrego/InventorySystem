@@ -244,7 +244,7 @@
                       <i class="fas fa-cloud-upload-alt"></i>
                       <span> Selecciona o arrastre su imagen</span>
                     </div>
-                    <input data-nombre="Logo Empresa" name="logoLogin" id="logoLogin" class="input-file-img configAct" accept=".png" type="file">
+                    <input data-nombre="Logo Login" name="logoLogin" id="logoLogin" class="input-file-img configAct" accept=".png" type="file">
                   </div>
                 </div>
                 <div id="content-preview-logoLogin" class="d-none text-center">
@@ -260,7 +260,7 @@
                       <i class="fas fa-cloud-upload-alt"></i>
                       <span> Selecciona o arrastre su imagen</span>
                     </div>
-                    <input data-nombre="Logo Empresa" name="logoFondoLogin" id="logoFondoLogin" class="input-file-img configAct" accept=".jpg, .jpeg" type="file">
+                    <input data-nombre="Fondo Login" name="logoFondoLogin" id="logoFondoLogin" class="input-file-img configAct" accept=".jpg, .jpeg" type="file">
                   </div>
                 </div>
                 <div id="content-preview-logoFondoLogin" class="d-none text-center">

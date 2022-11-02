@@ -67,7 +67,7 @@ class cConfiguracion extends BaseController {
 						//Validamos que la imagen suba correctamente
 						$dataSave['valor'] = $dataPost["campo"] . '.' . $file->guessExtension();
 						if ($file->move(UPLOADS_CONF_PATH, $dataSave['valor'], true)) {
-							if ($dataSave["campo"] = "logoEmpresa") {
+							if ($dataSave["campo"] == "logoEmpresa") {
 								Services::image()
 									->withFile(UPLOADS_CONF_PATH . $dataSave['valor'])
 									->resize(180, 180, true, 'height')
@@ -75,7 +75,6 @@ class cConfiguracion extends BaseController {
 									->save(UPLOADS_CONF_PATH . 'logoEmpresa-small.png');
 							}
 
-							$resp["success"] = true;
 							$resp["file"] = $dataSave['valor'];
 							$resp["msj"] = "Archivo <b>{$dataPost['nombre']}</b> se creo correctamente.";
 						} else {
