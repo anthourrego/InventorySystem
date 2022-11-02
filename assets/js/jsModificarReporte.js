@@ -1,4 +1,4 @@
-let rutaBase = base_url() + "ModificarReporte/";
+let rutaBaseReporte = base_url() + "ModificarReporte/";
 let DTVariables = $("#tblVariables").DataTable({
   processing: false,
   serverSide: false,
@@ -29,14 +29,14 @@ $(function () {
   });
 
   $(".btn-modifica-reporte").on('click', function () {
-    location.href = rutaBase + "Reporte/" + $(this).data('btn');
+    location.href = rutaBaseReporte + "Reporte/" + $(this).data('btn');
   });
 
   $(".btn-plantilla-reporte").on('click', function () {
     let reporte = $(this).data('btn');
     alertify.confirm("¿Esta seguro de reemplazar el reporte de " + reporte.split('_').join(' ') + " por la plantilla?", function () {
       $.ajax({
-        url: rutaBase + "/Plantilla",
+        url: rutaBaseReporte + "/Plantilla",
         type: 'POST',
         dataType: 'json',
         data: { reporte },

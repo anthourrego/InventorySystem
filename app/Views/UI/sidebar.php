@@ -214,14 +214,6 @@
               </a>
             </li>
 						<?php } ?>
-						<?php if (validPermissions([20], true)) { ?> 
-						<li class="nav-item">
-              <a href="<?= base_url("ModificarReporte") ?>" class="nav-link <?= current_url(true)->getSegment(3) == 'ModificarReporte' ? 'active' : '' ?>">
-								<i class="nav-icon fa-solid fa-file-pen"></i>
-                <p>Modificar Reporte</p>
-              </a>
-            </li>
-						<?php } ?>
 						<?php if ((!session()->has("manejaEmpaque") || session()->get("manejaEmpaque") == "1") && validPermissions([30], true)) { ?> 
 						<li class="nav-item">
               <a href="<?= base_url("Empaque") ?>" class="nav-link <?= current_url(true)->getSegment(3) == 'Empaque' ? 'active' : '' ?>">

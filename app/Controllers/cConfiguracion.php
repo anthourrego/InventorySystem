@@ -7,16 +7,190 @@ use App\Models\mConfiguracion;
 use \Config\Services;
 
 class cConfiguracion extends BaseController {
-	public function index() {
+	private $instrucciones = [
+    "[HEAD HEAD] - Encabezado del reporte"
+    , "[BODY BODY] - Contenido del reporte"
+    , "[FOOTER FOOTER] - Pie de pagina del reporte"
+    , "[DP DP] - Lista detallada de productos"
+  ];
+
+  private $reportes = [
+    "Factura" => [
+      "icono" => "fa-solid fa-store",
+      "color" => "primary",
+      "url" => ""
+    ],
+    "Pedido" => [
+      "icono" => "fa-solid fa-boxes-stacked",
+      "color" => "secondary",
+      "url" => ""
+    ],
+    "Rotulo" => [
+      "icono" => "fa-solid fa-tags",
+      "color" => "info",
+      "url" => ""
+    ]
+  ];
+
+	private $variables = [
+    "logoEmpresa" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Logo de la empresa"
+    ],
+    "nombreEmpresa" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Nombre de la empresa"
+    ],
+    "digitoVeriEmpresa" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Digito de verificación de la empresa"
+    ],
+    "direccionEmpresa" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Dirección de la empresa"
+    ],
+    "telefonoEmpresa" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Telefono de la empresa"
+    ],
+    "emailEmpresa" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Correo electrónico de la empresa"
+    ],
+    "numeracion" => [
+      "aplica" => ["Factura", "Pedido"],
+      "descripcion" => "Consecutivo de documento"
+    ],
+    "nombreSucursal" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Nombre de la sucursal"
+    ],
+    "nombreCliente" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Nombre del cliente"
+    ],
+    "fechaCreacion" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Fecha de generación del documento"
+    ],
+    "horaCreacion" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Hora de generación del documento"
+    ],
+    "direccionSucursal" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Dirección de la sucursal"
+    ],
+    "telefonoSucursal" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Telefono de la sucursal"
+    ],
+    "barrioSucursal" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Barrio de la sucursal"
+    ],
+    "adminSucursal" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Administrador de la sucursal"
+    ],
+    "carteraSucursal" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Cartera de la sucursal"
+    ],
+    "telCartSucursal" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Telefono cartera de la sucursal"
+    ],
+    "ciudadSucursal" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Ciudad de la sucursal"
+    ],
+    "deptoSucursal" => [
+      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "descripcion" => "Departamento de la sucursal"
+    ],
+    "nombreVendedor" => [
+      "aplica" => ["Factura", "Pedido"],
+      "descripcion" => "Nombre del vendedor"
+    ],
+    "itemProductoDP" => [
+      "aplica" => ["Factura", "Pedido"],
+      "descripcion" => "Número de item del producto"
+    ],
+    "referenciaProductoDP" => [
+      "aplica" => ["Factura", "Pedido"],
+      "descripcion" => "Referencia del producto"
+    ],
+    "descripcionProductoDP" => [
+      "aplica" => ["Factura", "Pedido"],
+      "descripcion" => "Descripcion del producto"
+    ],
+    "cantPacaProductoDP" => [
+      "aplica" => ["Factura", "Pedido"],
+      "descripcion" => "Cantidad paca del producto"
+    ],
+    "paqueteProductoDP" => [
+      "aplica" => ["Factura", "Pedido"],
+      "descripcion" => "Cantidad paca x cantidad solicitada del producto"
+    ],
+    "valorProductoDP" => [
+      "aplica" => ["Factura", "Pedido"],
+      "descripcion" => "Valor de venta del producto"
+    ],
+    "totalProductoDP" => [
+      "aplica" => ["Factura", "Pedido"],
+      "descripcion" => "Total por producto"
+    ],
+    "totalGeneral" => [
+      "aplica" => ["Factura", "Pedido"],
+      "descripcion" => "Valor total de la venta"
+    ],
+    "ubicacionProductoDP" => [
+      "aplica" => ["Pedido"],
+      "descripcion" => "Ubicación del producto"
+    ],
+    "manifiestoProductoDP" => [
+      "aplica" => ["Pedido"],
+      "descripcion" => "Manifiesto del producto"
+    ],
+    "observacion" => [
+      "aplica" => ["Pedido", "Factura", "Rotulo"],
+      "descripcion" => "Observación del reporte"
+    ],
+    "numeroRotulo" => [
+      "aplica" => ["Rotulo"],
+      "descripcion" => "Numeración secuencial del rotulo"
+    ],
+    "numeroCajaDP" => [
+      "aplica" => ["Factura"],
+      "descripcion" => "Caja del producto"
+    ],
+  ];
+
+	public function index($tab = null) {
 		$this->content['title'] = "Configuración";
 		$this->content['view'] = "vConfiguracion";
 
+		//Validación de reportes
+		$this->content['variables'] = $this->variables;
+    $this->content['reportes'] = $this->reportes;
+    $this->content['instrucciones'] = $this->instrucciones;
+
+		if (!file_exists(UPLOADS_REPOR_PATH)) {
+      mkdir(UPLOADS_REPOR_PATH);
+    }
+
 		$this->LSelect2();
+		$this->LDataTables();
+
+		//Tab si viene de la url
+		$this->content["tab"] = $tab;
 
 		$this->content["editar"] = validPermissions([71], true);
 
 		$this->content['js_add'][] = [
-			'jsConfiguracion.js'
+			'jsConfiguracion.js',
+			'jsModificarReporte.js'
 		];
 
 		return view('UI/viewDefault', $this->content);

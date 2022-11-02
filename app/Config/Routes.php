@@ -130,11 +130,19 @@ $routes->group('Permisos', ['filter' => 'authGuard'], function ($routes) {
 //Configuración
 $routes->group('Configuracion', ['filter' => 'authGuard'], function ($routes) {
 	$routes->get('/', 'cConfiguracion::index', ['filter' => 'authGuard:7']);
+	$routes->get('Tab/(:any)', 'cConfiguracion::index/$1', ['filter' => 'authGuard:7']);
 	$routes->get('Datos', 'cConfiguracion::datos', ['filter' => ['ajax']]);
 	$routes->post('Actualizar', 'cConfiguracion::actualizar', ['filter' => ['authGuard:71', 'ajax']]);
 	$routes->get('Foto', 'cConfiguracion::foto');
 	$routes->get('Foto/(:any)', 'cConfiguracion::foto/$1');
 	$routes->post('Eliminar', 'cConfiguracion::eliminar');
+});
+
+//Modificar Reportes
+$routes->group('ModificarReporte', ['filter' => 'authGuard:7'], function ($routes) {
+	$routes->get('Reporte/(:any)', 'cModificarReporte::reporte/$1');
+	$routes->post('Guardar', 'cModificarReporte::guardar');
+	$routes->post('Plantilla', 'cModificarReporte::plantilla');
 });
 
 //Manifiesto
@@ -164,14 +172,6 @@ $routes->group('Reportes', ['filter' => 'authGuard'], function ($routes) {
 	$routes->get('Pedido/(:num)', 'cReportes::pedido/$1');
 	$routes->get('Rotulo/(:num)/(:num)', 'cReportes::rotulo/$1/$2');
 	//$routes->get('DT', 'cManifiesto::listaDT');
-});
-
-//Modificar Reportes
-$routes->group('ModificarReporte', ['filter' => 'authGuard:20'], function ($routes) {
-	$routes->get('/', 'cModificarReporte::index');
-	$routes->get('Reporte/(:any)', 'cModificarReporte::reporte/$1');
-	$routes->post('Guardar', 'cModificarReporte::guardar');
-	$routes->post('Plantilla', 'cModificarReporte::plantilla');
 });
 
 //Almacenes

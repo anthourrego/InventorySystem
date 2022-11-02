@@ -2,7 +2,7 @@
   <div class="card-header p-0 border-bottom-0">
     <ul class="nav nav-tabs" id="tabConfiguracion" role="tablist">
       <li class="nav-item" role="presentation">
-        <a class="nav-link active" id="producto-tab" data-toggle="tab" href="#productoTab" role="tab" aria-controls="productoTab" aria-selected="true">Productos</a>
+        <a class="nav-link <?= is_null($tab) ? "active" : '' ?>" id="producto-tab" data-toggle="tab" href="#productoTab" role="tab" aria-controls="productoTab" aria-selected="true">Productos</a>
       </li>
       <li class="nav-item" role="presentation">
         <a class="nav-link" id="inventario-tab" data-toggle="tab" href="#inventarioTab" role="tab" aria-controls="inventarioTab" aria-selected="false">Inventario</a>
@@ -19,11 +19,14 @@
       <li class="nav-item" role="presentation">
         <a class="nav-link" id="general-tab" data-toggle="tab" href="#generalTab" role="tab" aria-controls="generalTab" aria-selected="false">General</a>
       </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link <?= $tab == "Reportes" ? "active" : '' ?>" id="reportes-tab" data-toggle="tab" href="#reportesTab" role="tab" aria-controls="reportesTab" aria-selected="false">Reportes</a>
+      </li>
     </ul>
   </div>
   <div class="card-body">
     <div class="tab-content" id="contentTab">
-      <div class="tab-pane fade show active" id="productoTab" role="tabpanel" aria-labelledby="producto-tab">
+      <div class="tab-pane fade <?= is_null($tab) ? "show active" : '' ?>" id="productoTab" role="tabpanel" aria-labelledby="producto-tab">
         <div class="form-row">
           <div class="col-12 col-md-6 col-lg-3">
             <label for="costoProducto">Costo:</label>
@@ -175,7 +178,7 @@
           <hr class="col-12 my-2">
         </div>
       </div>
-      <div class="tab-pane fade" id="empresaTab" role="tabpanel" aria-labelledby="consecutivo-tab">
+      <div class="tab-pane fade" id="empresaTab" role="tabpanel" aria-labelledby="empresa-tab">
         <div class="form-row">
           <div class="col-3">
             <div id="content-upload-logoEmpresa">
@@ -231,7 +234,7 @@
           </div>
         </div>
       </div>
-      <div class="tab-pane fade" id="generalTab" role="tabpanel" aria-labelledby="consecutivo-tab">
+      <div class="tab-pane fade" id="generalTab" role="tabpanel" aria-labelledby="general-tab">
         <div class="form-row">
           <div class="col-12 col-md-6">
             <div class="row">
@@ -271,6 +274,9 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="tab-pane fade <?= $tab == "Reportes" ? "show active" : '' ?>" id="reportesTab" role="tabpanel" aria-labelledby="reportes-tab">
+        <?= view("vModificarReporte"); ?>
       </div>
     </div>
   </div>

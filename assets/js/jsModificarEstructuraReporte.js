@@ -22,7 +22,7 @@ $(function () {
         success: function (resp) {
           if (resp.success) {
             alertify.alert('¡Advertencia!', resp.msj, function () {
-              location.href = baseUrl;
+              location.href = base_url() + "Configuracion/Tab/Reportes";
             });
           } else {
             alertify.alert('¡Advertencia!', resp.msj);
