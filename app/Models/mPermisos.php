@@ -355,10 +355,6 @@ class mPermisos extends Model {
 						"text" => "Eliminar"
 					],
 					[
-						"id" => 104,
-						"text" => "Enviar a Alistamiento"
-					],
-					[
 						"id" => 105,
 						"text" => "Facturar"
 					],
@@ -400,6 +396,14 @@ class mPermisos extends Model {
 							"text" => "Reabrir Empaque"
 						],
 					]
+				]
+			);
+
+			array_push(
+				$permisos[9]['children']
+				, [
+					"id" => 104,
+					"text" => "Enviar a Alistamiento"
 				]
 			);
 		}
