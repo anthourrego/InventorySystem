@@ -168,8 +168,8 @@
             <label for="manejaEmpaque">Maneja Empaque:</label>
             <select id="manejaEmpaque" data-nombre="Maneja Empaque" <?= !$editar ? 'disabled' : '' ?> name="manejaEmpaque" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
               <option value=""></option>
-              <option value="1">Si</option>
-              <option value="0" selected>No</option>
+              <option value="1" selected>Si</option>
+              <option value="0">No</option>
             </select>
           </div>
           <hr class="col-12 my-2">
