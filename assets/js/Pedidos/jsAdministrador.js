@@ -51,6 +51,12 @@ let DT = $("#table").DataTable({
       defaultContent: '',
       className: 'text-center noExport',
       render: function (meta, type, data, meta) {
+
+        /* Validamos si no maneja empaque y sea estado inicial y se factura directo */
+        if ($MANEJAEMPAQUE != '1' && data.estado == 0) {
+          data.estado = 2;
+        }
+
         let estado = 'Facturar';
         let color = 'success';
         if (data.estado == 0) {

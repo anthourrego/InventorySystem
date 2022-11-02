@@ -379,24 +379,30 @@ class mPermisos extends Model {
 				"icon" => "fa-solid fa-file-pen",
 				"color" => "bg-dark"
 			],
-			[
-				"id" => 30,
-				"text" => "Empaque",
-				"uri" => "Empaque",
-				"icon" => "fa-solid fa-box-open",
-				"color" => "bg-primary",
-				"children" => [
-					[
-						"id" => 301,
-						"text" => "Finalizar Empaque"
-					],
-					[
-						"id" => 302,
-						"text" => "Reabrir Empaque"
-					],
-				]
-			],
 		];
+
+		if (!session()->has("manejaEmpaque") || session()->get("manejaEmpaque") == "1") {
+			array_push(
+				$permisos
+				, [
+					"id" => 30,
+					"text" => "Empaque",
+					"uri" => "Empaque",
+					"icon" => "fa-solid fa-box-open",
+					"color" => "bg-primary",
+					"children" => [
+						[
+							"id" => 301,
+							"text" => "Finalizar Empaque"
+						],
+						[
+							"id" => 302,
+							"text" => "Reabrir Empaque"
+						],
+					]
+				]
+			);
+		}
 
 		if ($validar != '') {
 			$permisos = $this->validar($validar, $permisos, []);

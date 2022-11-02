@@ -11,6 +11,9 @@
         <a class="nav-link" id="consecutivo-tab" data-toggle="tab" href="#consecutivoTab" role="tab" aria-controls="consecutivoTab" aria-selected="false">Consecutivo</a>
       </li>
       <li class="nav-item" role="presentation">
+        <a class="nav-link" id="ventas-tab" data-toggle="tab" href="#ventasTab" role="tab" aria-controls="ventasTab" aria-selected="false">Pedidos / Ventas</a>
+      </li>
+      <li class="nav-item" role="presentation">
         <a class="nav-link" id="empresa-tab" data-toggle="tab" href="#empresaTab" role="tab" aria-controls="empresaTab" aria-selected="false">Empresa</a>
       </li>
       <li class="nav-item" role="presentation">
@@ -154,6 +157,20 @@
           <div class="col-12 col-md-6 col-lg-3">
             <label for="digitosPed">Cant digitos:</label>
             <input type="number" id="digitosPed"  data-nombre="Consecutivo Factura" name="digitosPed" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad de digitos">
+          </div>
+          <hr class="col-12 my-2">
+        </div>
+      </div>
+      <div class="tab-pane fade" id="ventasTab" role="tabpanel" aria-labelledby="ventas-tab">
+        <div class="form-row">
+          <h5 class="mb-1 col-12">Pedidos:</h5>
+          <div class="col-12 col-md-6 col-lg-3">
+            <label for="manejaEmpaque">Maneja Empaque:</label>
+            <select id="manejaEmpaque" data-nombre="Maneja Empaque" <?= !$editar ? 'disabled' : '' ?> name="manejaEmpaque" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
+              <option value=""></option>
+              <option value="1">Si</option>
+              <option value="0" selected>No</option>
+            </select>
           </div>
           <hr class="col-12 my-2">
         </div>

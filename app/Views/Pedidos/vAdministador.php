@@ -30,3 +30,7 @@
     </div>
   </div>
 </div>
+
+<script>
+	$MANEJAEMPAQUE = "<?= $manejaEmpaque ?>";
+</script>

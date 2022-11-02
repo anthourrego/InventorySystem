@@ -22,6 +22,8 @@ class cPedidos extends BaseController {
 		$this->LDataTables();
 		$this->LMoment();
 
+		$this->content['manejaEmpaque'] = (!session()->has("manejaEmpaque") || session()->get("manejaEmpaque") == "1" ? "1" : "0");
+
 		$this->content['js_add'][] = [
 			'Pedidos/jsAdministrador.js'
 		];
