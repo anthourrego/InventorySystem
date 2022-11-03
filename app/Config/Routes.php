@@ -160,9 +160,10 @@ $routes->group('Perfil', ['filter' => 'authGuard'], function ($routes) {
 
 //Reportes
 $routes->group('Reportes', ['filter' => 'authGuard'], function ($routes) {
-	$routes->get('Factura/(:num)', 'cReportes::factura/$1');
+	$routes->get('Factura/(:num)/(:num)', 'cReportes::factura/$1/$2');
 	$routes->get('Pedido/(:num)', 'cReportes::pedido/$1');
 	$routes->get('Rotulo/(:num)/(:num)', 'cReportes::rotulo/$1/$2');
+	$routes->get('Manifiestos/(:any)', 'cReportes::manifiestos/$1');
 	//$routes->get('DT', 'cManifiesto::listaDT');
 });
 
@@ -235,6 +236,7 @@ $routes->group('Pedidos', ['filter' => 'authGuard:10'], function ($routes) {
 	$routes->post('Crear', 'cPedidos::crearEditar', ['filter' => 'ajax']);
 	$routes->post('Editar', 'cPedidos::guardarEditar', ['filter' => 'ajax']);
 	$routes->get('Cargar/(:num)', 'cPedidos::cargarPedido/$1', ['filter' => 'ajax']);
+	$routes->get('CajasManifiestos/(:num)', 'cPedidos::cajasManifiestos/$1', ['filter' => 'ajax']);
 });
 
 //Empaque

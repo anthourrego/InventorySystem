@@ -51,7 +51,6 @@ let DT = $("#table").DataTable({
       defaultContent: '',
       className: 'text-center noExport',
       render: function (meta, type, data, meta) {
-
         /* Validamos si no maneja empaque y sea estado inicial y se factura directo */
         if ($MANEJAEMPAQUE != '1' && data.estado == 0) {
           data.estado = 2;
@@ -112,11 +111,21 @@ let DT = $("#table").DataTable({
           </button>`;
         }
 
-        /* Si esta empacado o facturado y si tiene permiso de imprimir el rotulo */
-        if (data.estado >= 2 && validPermissions(107)) {
-          botones += `<button type="button" class="btn btn-dark btnImprimirRotulo" title="Imprimir rotulo">
-            <i class="fa-solid fa-tags"></i>
-          </button>`;
+        /* Si esta empacado o facturado */
+        if (data.estado >= 2) {
+          /* Si tiene permiso para imprimir el rotulo */
+          if (validPermissions(107)) {
+            botones += `<button type="button" class="btn btn-dark btnImprimirRotulo" title="Imprimir rotulo">
+              <i class="fa-solid fa-tags"></i>
+            </button>`;
+          }
+
+          /* Si tiene permiso para imprimir manifiestos */
+          if (data.TotalCajas > 0 && validPermissions(108)) {
+            botones += `<button type="button" class="btn btn-warning btnVerManifiesto" title="Ver Manifiestos Cajas">
+              <i class="fa-solid fa-file"></i>
+            </button>`;
+          }
         }
 
         return `<div class="btn-group btn-group-sm" role="group">${botones}</div>`;
@@ -166,6 +175,11 @@ let DT = $("#table").DataTable({
       } else {
         observacionRotulo(+data.TotalCajas, data);
       }
+    });
+
+    $(row).find(".btnVerManifiesto").click(function (e) {
+      e.preventDefault();
+      buscarManifiestos(data);
     });
   }
 });
@@ -232,4 +246,59 @@ function eliminar(data) {
         }
       });
     }, function () { });
+}
+
+function buscarManifiestos(info) {
+  $.ajax({
+    type: "GET",
+    url: rutaBase + "CajasManifiestos/" + info.id,
+    dataType: 'json',
+    success: function (resp) {
+      if (resp.success) {
+        console.log(resp);
+        let estructura = '';
+        let { datos } = resp;
+
+        datos.forEach((it, x) => {
+
+          let ids = it.manifiestos.map((op, p) => op.id);
+
+          estructura += `<div class="list-group-item list-group-item-action lgicaja p-2">
+              <div class="d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 text-truncate h6-click w-75" style="cursor: pointer" data-pos="${x}">
+                  Caja ${it.numeroCaja}
+                </h6>
+                ${validPermissions(1081) ? `<a href="${base_url()}Reportes/Manifiestos/${ids.join('_')}" target="_blank" type="button" class="btn btn-info" title="Imprimir Manifiestos">
+                  <i class="fa-solid fa-print"></i>
+                </a>` : ''}
+              </div>
+            </div>
+          `;
+        });
+        $('#listacajas').html(estructura);
+
+        $(".lgicaja .h6-click").on('click', function () {
+          let pos = $(this).data('pos');
+          let info = '';
+          datos[pos].manifiestos.forEach((op, p) => {
+            info += `<div class="list-group-item list-group-item-action p-2">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0 text-truncate h6-click w-75">
+                    ${op.nombre}
+                  </h6>
+                </div>
+              </div>
+            `;
+          });
+          $('#listamanifiestos').html(info);
+        });
+
+        $(".lgicaja .h6-click").first().click();
+
+        $("#modalManifiestos").modal('show');
+      } else {
+        alertify.error(resp.msj);
+      }
+    }
+  });
 }

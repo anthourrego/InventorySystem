@@ -13,6 +13,8 @@ use App\Models\mConfiguracion;
 use App\Models\mObservacionProductos;
 use App\Models\mVentas;
 use App\Models\mVentasProductos;
+use App\Models\mPedidosCajas;
+use App\Models\mPedidosCajasProductos;
 
 class cPedidos extends BaseController {
 	public function index() {
@@ -717,4 +719,55 @@ class cPedidos extends BaseController {
 
 		return $this->response->setJSON($resp);
 	}
+
+	public function cajasManifiestos($pedido) {
+		$resp["success"] = false;
+		$resp["msj"] = "Caja encontradas";
+		$mPedidosCajas = new mPedidosCajas();
+
+		$cajas = $mPedidosCajas->select("
+				id AS idCaja,
+				numero_caja AS numeroCaja
+			")
+			->where("id_pedido", $pedido)
+			->orderBy("numero_caja", "ASC")
+			->findAll();
+
+		if (count($cajas) > 0) {
+
+			$mPedidosCajasProductos = new mPedidosCajasProductos();
+
+			foreach($cajas as $pos => $value1) {
+				$productos = $mPedidosCajasProductos->select("
+					M.nombre AS Manifiesto,
+					M.id AS idManifiesto,
+				")
+				->join("productos AS P", "pedidoscajasproductos.id_producto = P.id", "left")
+				->join("manifiestos AS M", "P.id_manifiesto = M.id", "left")
+				->where("id_caja", $value1->idCaja)
+				->orderBy("pedidoscajasproductos.id", "DESC")
+				->findAll();
+	
+				$manifiestos = [];
+				foreach ($productos as $key => $value) {
+					if (!is_null($value->idManifiesto)) {
+						$enc = array_search($value->idManifiesto, array_column($manifiestos, "id"));
+						if ($enc === false) {
+							$data = [
+								"id" => $value->idManifiesto,
+								"nombre" => $value->Manifiesto
+							];
+							array_push($manifiestos, $data);
+						}
+					}
+				}
+				$cajas[$pos]->manifiestos = $manifiestos;
+			}
+			$resp["datos"] = $cajas;
+			$resp["success"] = true;
+		} else {
+			$resp["msj"] = "No se encontraron cajas para el pedido";
+		}
+		return $this->response->setJSON($resp);
+	} 
 }
