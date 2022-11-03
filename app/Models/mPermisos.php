@@ -377,14 +377,7 @@ class mPermisos extends Model {
 						]
 					]
 				]
-			],
-			[
-				"id" => 20,
-				"text" => "Modificar Reporte",
-				"uri" => "ModificarReporte",
-				"icon" => "fa-solid fa-file-pen",
-				"color" => "bg-dark"
-			],
+			]
 		];
 
 		if (!session()->has("manejaEmpaque") || session()->get("manejaEmpaque") == "1") {
