@@ -126,6 +126,13 @@ let DT = $("#table").DataTable({
               <i class="fa-solid fa-file"></i>
             </button>`;
           }
+
+          /* Se valida si tiene permiso para imprimir la orden de envio */
+          if (validPermissions(109)) {
+            botones += `<button type="button" class="btn btn-primary btnOrdenEnvio" title="Imprimir Orden de envio">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>`;
+          }
         }
 
         return `<div class="btn-group btn-group-sm" role="group">${botones}</div>`;
@@ -180,6 +187,25 @@ let DT = $("#table").DataTable({
     $(row).find(".btnVerManifiesto").click(function (e) {
       e.preventDefault();
       buscarManifiestos(data);
+    });
+
+    $(row).find(".btnOrdenEnvio").click(function (e) {
+      e.preventDefault();
+      let context = this;
+      alertify.prompt('Envío', 'Valor del envio?', '1', function (evt, value) {
+        if (value > 0) {
+          value = value.split(' ').join('_');
+          value = value.split('.').join('');
+          window.open(`${base_url()}Reportes/Envio/${data.id.trim()}/${value}`, '_blank');
+        } else {
+          alertify.warning('Ingrese una cantidad valida');
+          setTimeout(() => {
+            $(context).click();
+          }, 0);
+        }
+      }, function () { }).setting({
+        'type': 'number'
+      });
     });
   }
 });

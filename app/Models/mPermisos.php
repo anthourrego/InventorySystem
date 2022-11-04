@@ -375,6 +375,10 @@ class mPermisos extends Model {
 								"text" => "Imprimir Manifiesto"
 							],
 						]
+					],
+					[
+						"id" => 109,
+						"text" => "Imprmir Orden de Envio"
 					]
 				]
 			]

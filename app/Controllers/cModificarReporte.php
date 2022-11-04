@@ -26,32 +26,37 @@ class cModificarReporte extends BaseController {
       "icono" => "fa-solid fa-tags",
       "color" => "info",
       "url" => ""
+    ],
+    "Envio" => [
+      "icono" => "fa-solid fa-paper-plane",
+      "color" => "success",
+      "url" => ""
     ]
   ];
 
 	private $variables = [
     "logoEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
       "descripcion" => "Logo de la empresa"
     ],
     "nombreEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
       "descripcion" => "Nombre de la empresa"
     ],
     "digitoVeriEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
       "descripcion" => "Digito de verificación de la empresa"
     ],
     "direccionEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
       "descripcion" => "Dirección de la empresa"
     ],
     "telefonoEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
       "descripcion" => "Telefono de la empresa"
     ],
     "emailEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
       "descripcion" => "Correo electrónico de la empresa"
     ],
     "numeracion" => [
@@ -59,51 +64,51 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Consecutivo de documento"
     ],
     "nombreSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
       "descripcion" => "Nombre de la sucursal"
     ],
     "nombreCliente" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
       "descripcion" => "Nombre del cliente"
     ],
     "fechaCreacion" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
       "descripcion" => "Fecha de generación del documento"
     ],
     "horaCreacion" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
       "descripcion" => "Hora de generación del documento"
     ],
     "direccionSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
       "descripcion" => "Dirección de la sucursal"
     ],
     "telefonoSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
       "descripcion" => "Telefono de la sucursal"
     ],
     "barrioSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
       "descripcion" => "Barrio de la sucursal"
     ],
     "adminSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
       "descripcion" => "Administrador de la sucursal"
     ],
     "carteraSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
       "descripcion" => "Cartera de la sucursal"
     ],
     "telCartSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
       "descripcion" => "Telefono cartera de la sucursal"
     ],
     "ciudadSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
       "descripcion" => "Ciudad de la sucursal"
     ],
     "deptoSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
       "descripcion" => "Departamento de la sucursal"
     ],
     "nombreVendedor" => [
@@ -162,6 +167,14 @@ class cModificarReporte extends BaseController {
       "aplica" => ["Factura"],
       "descripcion" => "Caja del producto"
     ],
+    "totalCajas" => [
+      "aplica" => ["Envio"],
+      "descripcion" => "Total de cajas para el pedido"
+    ],
+    "costoEnvio" => [
+      "aplica" => ["Envio"],
+      "descripcion" => "Valor envio productos"
+    ]
   ];
 
 	function index() {

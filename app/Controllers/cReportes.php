@@ -352,4 +352,30 @@ class cReportes extends BaseController {
 		exit;
 	}
 
+	public function envio($id, $valor) {
+		$mPedidosCajas = new mPedidosCajas();
+
+		$estrucPdf = $this->estructuraReporte("Envio");
+
+		$estrucPdf = $this->setValuesCompany($estrucPdf);
+
+		$dataVenta = $this->cargarDataVenta($estrucPdf, $id, "pedidos");
+		$estrucPdf = $dataVenta['pdf'];
+
+		$totCajas = $mPedidosCajas->where("id_pedido", $dataVenta['id_pedido'])->countAllResults();
+
+		$estrucPdf = str_replace("{totalCajas}", $totCajas, $estrucPdf);
+		$estrucPdf = str_replace("{costoEnvio}", '$ ' . number_format($valor, 0, ',', '.'), $estrucPdf);
+
+		$pageLayout = array(150, 150); // PDF_PAGE_FORMAT
+
+		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, $pageLayout, true, 'UTF-8', false);
+		$pdf->startPageGroup();
+		$pdf->AddPage();
+		$pdf->writeHTML($estrucPdf, false, false, false, false, '');
+		$pdf->setTitle('Envio Pedido ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
+		$pdf->Output($dataVenta['codigo'] . ".pdf", 'I');
+		exit;
+	}
+
 }
