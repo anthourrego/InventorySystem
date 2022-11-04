@@ -22,7 +22,9 @@ class mPedidos extends Model {
 		"impuesto",
 		"neto",
 		"total",
-		"metodo_pago"
+		"metodo_pago",
+		"estado",
+		"fin_empaque"
 	];
 
 	// Dates

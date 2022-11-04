@@ -110,7 +110,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       orderable: false,
       searchable: false,
       defaultContent: '',
-      visible: ($DATOSPEDIDO != '' && $DATOSPEDIDO.estado == '2' ? false : true),
+      visible: ($DATOSPEDIDO != '' && $DATOSPEDIDO.estado == '3' ? false : true),
       className: 'text-center noExport',
       render: function (meta, type, data, meta) {
         let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "0";
@@ -342,13 +342,23 @@ $(function () {
         if ($DATOSPEDIDO != '') {
           productosPedido = productosPedido.concat(productosEliminados);
         }
-        
-        let idCliente = sucursales.find(x => x.id == $("#sucursal").val()).idCliente;
+
+        let idCliente = null;
+        if (sucursales.length) {
+          idCliente = sucursales.find(x => x.id == $("#sucursal").val()).idCliente;
+        } else {
+          idCliente = $DATOSPEDIDO.id_cliente;
+        }
+
         form.append("idCliente", idCliente);
         form.append("idSucursal", $("#sucursal").val());
         form.append("idUsuario", $("#vendedor").val());
         form.append("observacion", $("#observacion").val());
         form.append("productos", JSON.stringify(productosPedido));
+
+        if ($DATOSPEDIDO != '') {
+          form.append("estado", $DATOSPEDIDO.estado);
+        }
 
         $.ajax({
           url: rutaBase + ($DATOSPEDIDO == '' ? "Crear" : 'Editar'),

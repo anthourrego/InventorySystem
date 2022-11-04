@@ -121,7 +121,7 @@ class cPedidos extends BaseController {
 		if (!validPermissions([102], true)) {
 			$this->content["editarPedido"] = 'N';
 		} else {
-			if (!is_null($pedido) && $pedido->estado == 2) {
+			if (!is_null($pedido) && $pedido->estado == 3) {
 				$this->content["editarPedido"] = 'N';
 			}
 		}
@@ -209,34 +209,55 @@ class cPedidos extends BaseController {
 		//Traemos los datos del post
 		$data = (object) $this->request->getPost();
 		$contActProd = true;
+		$mPedidosCajas = new mPedidosCajas();
+		$mPedidosCajasProductos = new mPedidosCajasProductos();
         
 		$this->db->transBegin();
 
-		$mPedidosProductos = new mPedidosProductos();
-		$mProductos = new mProductos();
-		$mObservacionProductos = new mObservacionProductos();
-
-		$productosPedidos = $mPedidosProductos->where("id_pedido", $data->id)->findAll();
-
-		//Actualizamos el inventario de los productos
-		foreach ($productosPedidos as $it) {
-			$producto = $mProductos->asObject()->find($it->id_producto);
+		$cajas = $mPedidosCajas->where('id_pedido', $data->id)->findAll();
+		
+		foreach ($cajas as $it) {
 			
-			$dataSave = [
-				"id" => $it->id_producto,
-				"stock" => ($producto->stock + $it->cantidad)
-			];
-
-			if (!$mProductos->save($dataSave)) {
+			/* Eliminamos los productos de la caja actual */
+			if (!$mPedidosCajasProductos->where('id_caja', $it->id)->delete()) { 
 				$contActProd = false;
 				break;
 			}
 
-			$mObservacionProductos->where('id_pedido_producto', $it->id)->delete();
+			/* Eliminamos la caja */
+			if (!$mPedidosCajas->delete($it->id)) { 
+				$contActProd = false;
+				break;
+			}
+		}
+
+		if ($contActProd == true) {
+			$mPedidosProductos = new mPedidosProductos();
+			$mProductos = new mProductos();
+			$mObservacionProductos = new mObservacionProductos();
+	
+			$productosPedidos = $mPedidosProductos->where("id_pedido", $data->id)->findAll();
+	
+			//Actualizamos el inventario de los productos
+			foreach ($productosPedidos as $it) {
+				$producto = $mProductos->asObject()->find($it->id_producto);
+				
+				$dataSave = [
+					"id" => $it->id_producto,
+					"stock" => ($producto->stock + $it->cantidad)
+				];
+	
+				if (!$mProductos->save($dataSave)) {
+					$contActProd = false;
+					break;
+				}
+	
+				$mObservacionProductos->where('id_pedido_producto', $it->id)->delete();
+			}
 		}
 		
 		//Eliminamos todos los datos
-		if($contActProd) {
+		if ($contActProd == true) {
 			if($mPedidosProductos->where("id_pedido", $data->id)->delete()){
 				$pedidos = new mPedidos();
 				if ($pedidos->delete($data->id)) { 
@@ -255,7 +276,6 @@ class cPedidos extends BaseController {
 		if($resp["success"] == false || $this->db->transStatus() === false) {
 			$this->db->transRollback();
 		} else {
-			//$this->db->transRollback();
 			$this->db->transCommit();
 		}
 
@@ -412,6 +432,11 @@ class cPedidos extends BaseController {
 				"metodo_pago" => $dataPost->metodoPago,
 				"observacion" => $dataPost->observacion
 			);
+
+			if ($dataPost->estado == '2') {
+				$dataSave['estado'] = 1;
+				$dataSave['fin_empaque'] = null;
+			} 
 
 			if($mPedidos->save($dataSave)){
 				//Tramos los productos actuales para comparalos con los que ingresan

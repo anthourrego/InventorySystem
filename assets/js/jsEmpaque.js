@@ -269,7 +269,7 @@ function obtenerInfoPedido(pedido, sync = false) {
         type: 'GET',
         dataType: 'json',
         success: function ({ productosCaja }) {
-          let estructura = `<div class="font-weight-bold text-center p-2 col-12">No se encontraron cajas</div>`;
+          let estructura = `<div class="font-weight-bold text-center p-2 col-12">No se encontraron productos en la caja</div>`;
           if (productosCaja.length) {
             estructura = '';
             productosCaja.forEach((it, x) => {
