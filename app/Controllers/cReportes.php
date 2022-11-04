@@ -97,7 +97,7 @@ class cReportes extends BaseController {
 		$pdf->AddPage();
 		$pdf->writeHTML($estrucPdf, false, false, false, false, '');
 
-		if (count($manifiestos) > 0) {
+		/* if (count($manifiestos) > 0) {
 			foreach ($manifiestos as $llave => $manif) {
 				$ext = explode('.', $manif['archivo'])[1];
 				$file = UPLOADS_MANIFEST_PATH . $manif['archivo'];
@@ -115,7 +115,7 @@ class cReportes extends BaseController {
 					$pdf->Image($file);
 				}
 			}
-		}
+		} */
 
 		$pdf->setTitle('Factura ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
 		$pdf->Output($dataVenta['codigo'] . ".pdf", 'I');

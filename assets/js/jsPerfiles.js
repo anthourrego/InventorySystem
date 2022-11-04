@@ -92,7 +92,9 @@ let DTPefiles = $("#table").DataTable({
         success: function(data) {
           data.forEach(it => {
             let node = arbolPermisos.getNodeById(it.permiso);
-            arbolPermisos.check(node).expand(node);
+            if (node && node != undefined) {
+              arbolPermisos.check(node).expand(node);
+            }
           });
           $("#modalPermisos").modal("show");
         }
