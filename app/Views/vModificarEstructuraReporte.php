@@ -3,13 +3,16 @@
     <div class="col-4">
       <div class="card">
         <div class="card-body">   
-          <div class="alert alert-warning" role="alert">
+          <!-- <div class="alert alert-warning" role="alert">
             <?php
               foreach ($instrucciones as $value) {
                 echo "<span>" . $value . "</span></br>";
               }
             ?>
-          </div>
+          </div> -->
+
+          <h4 class="text-center">Variables</h4>
+
           <ul>
             <?php
               foreach ($variables as $key => $value) {

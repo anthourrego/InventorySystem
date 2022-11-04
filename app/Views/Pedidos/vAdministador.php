@@ -31,6 +31,45 @@
   </div>
 </div>
 
+<div class="modal fade" id="modalManifiestos" data-backdrop="static" data-keyboard="false" aria-labelledby="modalManifiestosLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalManifiestosLabel">Impresión de Manifiestos</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="col-5">
+            <h5 class="text-center">Cajas</h5>
+            <!-- Lista de cajas del pedido -->
+            <div class="d-flex" id="listacajas"></div>
+          </div>
+          <div class="col-7">
+            <h5 class="text-center">Manifiestos</h5>
+
+            <!-- Lista de los productos pendientes por empacar -->
+            <div class="list-group" id="listamanifiestos"></div>
+
+            <div class="list-group d-none" id="listaproductospedidonohay">
+              <div class="font-weight-bold text-center p-2">No se encontraron manifiestos</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-success" id="btn-finalizar-empaque">
+          <i class="fas fa-check"></i> Aceptar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 	$MANEJAEMPAQUE = "<?= $manejaEmpaque ?>";
 </script>

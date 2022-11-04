@@ -46,13 +46,13 @@
 	<div class="col-5">
 		<div class="card">
 			<div class="card-body">
-        <div class="alert alert-warning" role="alert">
+        <!-- <div class="alert alert-warning" role="alert">
           <?php
             foreach ($instrucciones as $value) {
               echo "<span>" . $value . "</span></br>";
             }
           ?>
-        </div>
+        </div> -->
         <h4>Modificar Reporte</h4>
         <div class="row">
           <?php

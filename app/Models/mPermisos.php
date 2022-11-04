@@ -365,6 +365,20 @@ class mPermisos extends Model {
 					[
 						"id" => 107,
 						"text" => "Imprimir Rotulo"
+					],
+					[
+						"id" => 108,
+						"text" => "Ver Manifiestos Cajas",
+						"children" => [
+							[
+								"id" => 1081,
+								"text" => "Imprimir Manifiesto"
+							],
+						]
+					],
+					[
+						"id" => 109,
+						"text" => "Imprmir Orden de Envio"
 					]
 				]
 			]

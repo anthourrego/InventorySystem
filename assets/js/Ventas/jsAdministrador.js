@@ -40,7 +40,7 @@ let DT = $("#table").DataTable({
       className: 'text-center noExport',
       render: function(meta, type, data, meta) {
         return `<div class="btn-group btn-group-sm" role="group">
-                  <a href="${base_url()}Reportes/Factura/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprimir factura"><i class="fa-solid fa-print"></i></a>
+                  <a href="${base_url()}Reportes/Factura/${data.id}/1" target="_blank" type="button" class="btn btn-info" title="Imprimir factura"><i class="fa-solid fa-print"></i></a>
                   ${ data.id_pedido != null ?
                     `<a href="${base_url()}Reportes/Pedido/${data.id_pedido}" target="_blank" type="button" class="btn btn-success" title="Imprimir pedido"><i class="fa-solid fa-check-to-slot"></i></a>` : ``
                   }
