@@ -8,7 +8,12 @@ let DT = $("#table").DataTable({
   },
   order: [[0, "desc"]],
   columns: [
-    { data: 'pedido' },
+    { 
+      data: 'pedido', 
+      render: function(meta, type, data, meta) {
+        return (data.idFactura && data.idFactura > 0 && validPermissions(6)) ? `<a target="_blank" title="${data.factura}" href="${base_url()}Ventas/Editar/${data.idFactura}">${data.pedido} | ${data.factura}</a>` : data.pedido;
+      }
+    },
     { data: 'NombreCliente' },
     { data: 'NombreSucursal' },
     { data: 'direccion' },

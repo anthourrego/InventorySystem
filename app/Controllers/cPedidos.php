@@ -187,7 +187,8 @@ class cPedidos extends BaseController {
 				S.nombre AS NombreSucursal,
 				V.id AS idFactura,
 				CUI.nombre AS Ciudad,
-				TC.TotalCajas
+				TC.TotalCajas,
+				V.codigo AS factura
 			")->join('clientes AS C', 'P.id_cliente = C.id', 'left')
 			->join('sucursales AS S', 'P.id_sucursal = S.id', 'left')
 			->join('ciudades AS CUI', 'S.id_ciudad = CUI.id', 'left')
