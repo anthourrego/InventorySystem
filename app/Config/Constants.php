@@ -93,4 +93,4 @@ defined('TIPODOCS')      || define('TIPODOCS', array(
   , 1 => array("valor" => "CC", "titulo" => "Cedula Ciudadania")
 ));// Tipos de documentos
 
-defined('DOMINIO') || define('DOMINIO', 1);
+defined('DOMINIO') || define('DOMINIO', 0);
