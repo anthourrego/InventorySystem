@@ -367,9 +367,11 @@ class cReportes extends BaseController {
 		$estrucPdf = str_replace("{totalCajas}", $totCajas, $estrucPdf);
 		$estrucPdf = str_replace("{costoEnvio}", '$ ' . number_format($valor, 0, ',', '.'), $estrucPdf);
 
-		$pageLayout = array(150, 150); // PDF_PAGE_FORMAT
+		// $pageLayout = array(150, 150); // PDF_PAGE_FORMAT
 
-		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, $pageLayout, true, 'UTF-8', false);
+		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+		// $pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, $pageLayout, true, 'UTF-8', false);
 		$pdf->startPageGroup();
 		$pdf->AddPage();
 		$pdf->writeHTML($estrucPdf, false, false, false, false, '');
