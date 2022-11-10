@@ -46,7 +46,7 @@
           <div class="col-5">
             <h5 class="text-center">Cajas</h5>
             <!-- Lista de cajas del pedido -->
-            <div class="d-flex" id="listacajas"></div>
+            <div class="list-group" id="listacajas" style="max-height: 276px; overflow-y: scroll;"></div>
           </div>
           <div class="col-7">
             <h5 class="text-center">Manifiestos</h5>

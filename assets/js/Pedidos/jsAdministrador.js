@@ -286,10 +286,15 @@ function buscarManifiestos(info) {
     dataType: 'json',
     success: function (resp) {
       if (resp.success) {
-        console.log(resp);
         let estructura = '';
         let { datos } = resp;
 
+        if (datos.length > 5) {
+          $("#listacajas").css("overflow-x", "scroll");
+        } else {
+          $("#listacajas").css("overflow-x", "unset");
+        }
+        
         datos.forEach((it, x) => {
 
           let ids = it.manifiestos.map((op, p) => op.id);
