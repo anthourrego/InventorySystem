@@ -79,6 +79,10 @@ let DT = $("#table").DataTable({
             obtenerInfoPedido(resp.pedido);
           } else {
             alertify.error(resp.msj);
+            if (resp.recargar) {
+              $("#modalEmpaque").modal('hide');
+              DT.ajax.reload();
+            }
           }
         }
       });
@@ -95,6 +99,7 @@ let DT = $("#table").DataTable({
             obtenerInfoPedido(resp.pedido);
           } else {
             alertify.error(resp.msj);
+            DT.ajax.reload();
           }
         }
       });
@@ -136,6 +141,10 @@ let DT = $("#table").DataTable({
             DT.ajax.reload();
           } else {
             alertify.error(resp.msj);
+            if (resp.recargar) {
+              $("#modalEmpaque").modal('hide');
+              DT.ajax.reload();
+            }
           }
         }
       });
@@ -160,6 +169,15 @@ $(function () {
 /* Funcion para organizar info de pedido en caja */
 function obtenerInfoPedido(pedido, sync = false) {
   console.log(pedido);
+
+  if (!pedido || !pedido.id) {
+    alertify.alert('¡Advertencia!', "El Pedido fue eliminado", function () {
+      $("#modalEmpaque").modal('hide');
+      DT.ajax.reload();
+    });
+    return
+  }
+
   $("#listaproductospedido").html(`<div class="font-weight-bold text-center p-2">No se encontraron productos</div>`);
   if (pedido.productos.length) {
     let estructura = '';
@@ -213,6 +231,10 @@ function obtenerInfoPedido(pedido, sync = false) {
             obtenerInfoPedido(resp.pedido);
           } else {
             alertify.error(resp.msj);
+            if (resp.recargar) {
+              $("#modalEmpaque").modal('hide');
+              DT.ajax.reload();
+            }
           }
         }
       });
@@ -317,6 +339,10 @@ function obtenerInfoPedido(pedido, sync = false) {
                     obtenerInfoPedido(resp.pedido);
                   } else {
                     alertify.error(resp.msj);
+                    if (resp.recargar) {
+                      $("#modalEmpaque").modal('hide');
+                      DT.ajax.reload();
+                    }
                   }
                 }
               });
@@ -360,6 +386,7 @@ function obtenerInfoPedido(pedido, sync = false) {
           obtenerInfoPedido(resp.pedido, true);
         } else {
           alertify.error(resp.msj);
+          DT.ajax.reload();
         }
       }
     });
@@ -382,6 +409,10 @@ function obtenerInfoPedido(pedido, sync = false) {
           obtenerInfoPedido(resp.pedido);
         } else {
           alertify.error(resp.msj);
+          if (resp.recargar) {
+            $("#modalEmpaque").modal('hide');
+            DT.ajax.reload();
+          }
         }
       }
     });
@@ -403,6 +434,10 @@ function obtenerInfoPedido(pedido, sync = false) {
           DT.ajax.reload();
         } else {
           alertify.error(resp.msj);
+          if (resp.recargar) {
+            $("#modalEmpaque").modal('hide');
+            DT.ajax.reload();
+          }
         }
       }
     });
@@ -444,6 +479,10 @@ function eliminarCaja(idCaja, idPedido, idProdCaja = 0) {
         obtenerInfoPedido(resp.pedido);
       } else {
         alertify.error(resp.msj);
+        if (resp.recargar) {
+          $("#modalEmpaque").modal('hide');
+          DT.ajax.reload();
+        }
       }
     }
   });

@@ -65,6 +65,16 @@ class cEmpaque extends BaseController {
 		$resp["success"] = false;
 		//Traemos los datos del post
 		$data = (object) $this->request->getPost();
+
+		$pedidoModel = new mPedidos();
+		$pedido = $pedidoModel->cargarPedido($data->idPedido);
+
+		if (!isset($pedido[0])) {
+			$res['success'] = false;
+			$res['msj'] = "El Pedido fue eliminado";
+			$res['recargar'] = true;
+			return $this->response->setJSON($res);
+		}
         
 		$pedidoActual = $this->db->table('pedidos')
 			->select("inicio_empaque")
@@ -100,7 +110,19 @@ class cEmpaque extends BaseController {
 		$pedidoModel = new mPedidos();
 		$mPedidosCajas = new mPedidosCajas();
 
-		$pedido = $pedidoModel->cargarPedido($id)[0];
+		$pedido = $pedidoModel->cargarPedido($id);
+
+		if (!isset($pedido[0])) {
+			if ($query == true) {
+				$res['success'] = false;
+				$res['msj'] = "El Pedido fue eliminado";
+				return $this->response->setJSON($res);
+			} else {
+				return null;
+			}
+		} else {
+			$pedido = $pedido[0];
+		}
 
 		$productos = $this->pedidosPendientes($pedido->id);
 
@@ -185,7 +207,17 @@ class cEmpaque extends BaseController {
 		$res['success'] = true;
 		$res['msj'] = 'Caja creada correctamente';
 		$mPedidosCajas = new mPedidosCajas();
+		$pedidoModel = new mPedidos();
 		$data = (object) $this->request->getPost();
+
+		$pedido = $pedidoModel->cargarPedido($data->idPedido);
+
+		if (!isset($pedido[0])) {
+			$res['success'] = false;
+			$res['msj'] = "El Pedido fue eliminado";
+			$res['recargar'] = true;
+			return $this->response->setJSON($res);
+		}
 
 		$dataCaja = array(
 			"id_pedido" => $data->idPedido
@@ -220,7 +252,17 @@ class cEmpaque extends BaseController {
 		$res['msj'] = 'Caja eliminada correctamente';
 		$mPedidosCajas = new mPedidosCajas();
 		$mPedidosCajasProductos = new mPedidosCajasProductos();
+		$pedidoModel = new mPedidos();
 		$data = (object) $this->request->getPost();
+
+		$pedido = $pedidoModel->cargarPedido($data->idPedido);
+
+		if (!isset($pedido[0])) {
+			$res['success'] = false;
+			$res['msj'] = "El Pedido fue eliminado";
+			$res['recargar'] = true;
+			return $this->response->setJSON($res);
+		}
 
 		$caja = $mPedidosCajas->where('id', $data->idCaja)->first();
 
@@ -268,7 +310,7 @@ class cEmpaque extends BaseController {
 			} else {
 				$this->db->transRollback();
 				$res['success'] = false;
-				$res['msj'] = 'No fue posible agregar la caja';
+				$res['msj'] = 'No fue posible eliminar la caja';
 			}
 		}
 		return $this->response->setJSON($res);
@@ -278,7 +320,17 @@ class cEmpaque extends BaseController {
 		$res['success'] = true;
 		$res['msj'] = 'Producto agregado correctamente';
 		$mPedidos = new mPedidos();
+		$pedidoModel = new mPedidos();
 		$data = (object) $this->request->getPost();
+
+		$pedido = $pedidoModel->cargarPedido($data->idPedido);
+
+		if (!isset($pedido[0])) {
+			$res['success'] = false;
+			$res['msj'] = "El Pedido fue eliminado";
+			$res['recargar'] = true;
+			return $this->response->setJSON($res);
+		}
 
 		$this->db->transBegin();
 
@@ -345,6 +397,15 @@ class cEmpaque extends BaseController {
 		$resp["success"] = false;
 		// Traemos los datos del post
 		$data = (object) $this->request->getPost();
+		$pedidoModel = new mPedidos();
+		$pedido = $pedidoModel->cargarPedido($data->idPedido);
+
+		if (!isset($pedido[0])) {
+			$res['success'] = false;
+			$res['msj'] = "El Pedido fue eliminado";
+			$res['recargar'] = true;
+			return $this->response->setJSON($res);
+		}
 
 		$this->db->transBegin();
 
@@ -447,6 +508,16 @@ class cEmpaque extends BaseController {
 
 		if (session()->has("id_user")) {
 
+			$pedidoModel = new mPedidos();
+			$pedido = $pedidoModel->cargarPedido($data->idPedido);
+
+			if (!isset($pedido[0])) {
+				$res['success'] = false;
+				$res['msj'] = "El Pedido fue eliminado";
+				$res['recargar'] = true;
+				return $this->response->setJSON($res);
+			}
+
 			$mPedidosCajas = new mPedidosCajas();
 
 			$datos = $mPedidosCajas->select("id")
@@ -487,6 +558,16 @@ class cEmpaque extends BaseController {
 		$resp["success"] = false;
 		// Traemos los datos del post
 		$data = (object) $this->request->getPost();
+
+		$pedidoModel = new mPedidos();
+		$pedido = $pedidoModel->cargarPedido($data->idPedido);
+
+		if (!isset($pedido[0])) {
+			$res['success'] = false;
+			$res['msj'] = "El Pedido fue eliminado";
+			$res['recargar'] = true;
+			return $this->response->setJSON($res);
+		}
 
 		$this->db->transBegin();
 
