@@ -226,7 +226,7 @@ class cReportes extends BaseController {
 			if ($value->campo == 'logoEmpresa') {
 				$value->valor = '<img src="' . UPLOADS_CONF_PATH . $value->valor. '" width="130px" height="100px">';
 			}
-			$pdf = str_replace("{{$value->campo}}", $value->valor, $pdf);
+			$pdf = str_replace("{{$value->campo}}", (is_null($value->valor) ? '' : $value->valor), $pdf);
 		}
 		return $pdf;
 	}
@@ -266,7 +266,7 @@ class cReportes extends BaseController {
 			if ($key == 'totalGeneral') {
 				$value = '$ ' . number_format($value, 0, ',', '.');
 			}
-			$pdf = str_replace("{{$key}}", $value, $pdf);
+			$pdf = str_replace("{{$key}}", (is_null($value) ? '' : $value), $pdf);
 		};
 		return array(
 			"pdf" => $pdf,
@@ -293,7 +293,7 @@ class cReportes extends BaseController {
 						if ($key == 'valorProductoDP' || $key == 'totalProductoDP') {
 							$value = '$ ' . number_format($value, 0, ',', '.');
 						}
-						$estructura = str_replace("{{$key}}", $value, $estructura);
+						$estructura = str_replace("{{$key}}", (is_null($value) ? '' : $value), $estructura);
 					}
 				}
 				$parte1 = explode("<tbody>", $contentReplace)[0];
@@ -306,7 +306,7 @@ class cReportes extends BaseController {
 						if ($key == 'valorProductoDP' || $key == 'totalProductoDP') {
 							$value = '$ ' . number_format($value, 0, ',', '.');
 						}
-						$estructura = str_replace("{{$key}}", $value, $estructura);
+						$estructura = str_replace("{{$key}}", (is_null($value) ? '' : $value), $estructura);
 					}
 				}
 			}
