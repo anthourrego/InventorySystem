@@ -70,6 +70,20 @@
   </div>
 </div>
 
+<!-- the form to be viewed as dialog-->
+<div class="d-none">
+  <form id="formRotulo">
+    <div class="form-group" id="formDivRotuloNroCajas">
+      <label for="formRotuloNroCajas" class="mb-0">Número de cajas disponibles</label>
+      <input type="number" name="nroCajas" class="form-control" value="1" min="1" max="1000" id="formRotuloNroCajas">
+    </div>
+    <div class="form-group">
+      <label for="formRotuloObservacion" class="mb-0">Observación</label>
+      <textarea name="observacion" class="form-control" id="formRotuloObservacion" rows="3"></textarea>
+    </div>
+  </form>
+</div>
+
 <script>
 	$MANEJAEMPAQUE = "<?= $manejaEmpaque ?>";
 </script>

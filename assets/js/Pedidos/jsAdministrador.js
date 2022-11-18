@@ -162,31 +162,52 @@ let DT = $("#table").DataTable({
 
     $(row).find('.btnImprimirRotulo').click(function () {
       let context = this;
-      if (!data.TotalCajas) {
-        alertify.prompt('Impresión', 'Número de cajas disponibles?', '1', function (evt, value) {
-          if (value > 0) {
-            if (value <= limiteRotulo) {
-              setTimeout(() => {
-                observacionRotulo(value, data);
-              }, 0);
-            } else {
+      let nroCajas = 1;
+      let observacion = "";
+      let campoFoco = 'input[name="nroCajas"]';
+
+      if (!data.TotalCajas || $MANEJAEMPAQUE == '0') {
+        $("#formDivRotuloNroCajas").removeClass("d-none");
+      } else {
+        $("#formDivRotuloNroCajas").addClass("d-none");
+        campoFoco = 'textarea[name="observacion"]';
+      }
+
+      alertify.imprimirRotulo(function(){
+        if (!data.TotalCajas || $MANEJAEMPAQUE == '0') {
+          nroCajas = $('#formRotulo input[name="nroCajas"]').val();
+          if (nroCajas > 0) {
+            if (nroCajas > limiteRotulo) {
               alertify.warning('El limite permitido es ' + limiteRotulo);
               setTimeout(() => {
                 $(context).click();
               }, 0);
+              return;
             }
-          } else {
+          }  else {
             alertify.warning('Ingrese una cantidad valida');
             setTimeout(() => {
               $(context).click();
             }, 0);
+            return;
           }
-        }, function () { }).setting({
-          'type': 'number'
-        });
-      } else {
-        observacionRotulo(+data.TotalCajas, data);
-      }
+        } else {
+          nroCajas = +data.TotalCajas
+        }
+        observacion = $('#formRotulo textarea[name="observacion"]').val();
+
+        if (observacion != '') {
+          observacion = observacion.split(' ').join('_');
+          window.open(`${base_url()}Reportes/Rotulo/${data.id.trim()}/${nroCajas}?observacion=${observacion}`, '_blank');
+        } else {
+          window.open(`${base_url()}Reportes/Rotulo/${data.id.trim()}/${nroCajas}`, '_blank');
+        }
+        $('#formRotulo')[0].reset();
+
+      }, 
+      function(){
+        $('#formRotulo')[0].reset();
+      }).set('selector', campoFoco);
     });
 
     $(row).find(".btnVerManifiesto").click(function (e) {
@@ -214,19 +235,6 @@ let DT = $("#table").DataTable({
     });
   }
 });
-
-function observacionRotulo(value, data) {
-  alertify.prompt('Impresión', 'Observación', '', function (evt, observa) {
-    if (observa != '') {
-      observa = observa.split(' ').join('_');
-      window.open(`${base_url()}Reportes/Rotulo/${data.id.trim()}/${value}?observacion=${observa}`, '_blank');
-    } else {
-      window.open(`${base_url()}Reportes/Rotulo/${data.id.trim()}/${value}`, '_blank');
-    }
-  }, function () { }).setting({
-    'type': 'text'
-  });
-}
 
 function alistarPedido(data) {
   let msj = (data.estado == 0 ? 'iniciar alistamiento para' : 'facturar');
@@ -338,3 +346,68 @@ function buscarManifiestos(info) {
     }
   });
 }
+
+alertify.imprimirRotulo || alertify.dialog('imprimirRotulo',function(){
+  return {
+    main:function(onok, oncancel){
+      this.set('title', "Imprimir rotulo");
+      this.setContent($('#formRotulo')[0]);
+      this.set('onok', onok);
+      this.set('oncancel', oncancel);
+    },
+    setup:function(){
+      return {
+        buttons: [
+					{
+						text: alertify.defaults.glossary.ok,
+						key: 13,
+						className: alertify.defaults.theme.ok,
+					},
+					{
+						text: alertify.defaults.glossary.cancel,
+						key: 27,
+						invokeOnClose: true,
+						className: alertify.defaults.theme.cancel,
+					}
+				],
+        //focus: { element:0 },
+        focus:{
+          element:function(){
+            return this.elements.body.querySelector(this.get('selector'));
+          },
+          select:true
+        },
+        options:{
+          maximizable:false,
+          resizable:false,
+        }
+      };
+    },
+    settings:{
+      selector:undefined,
+      onok: null,
+      oncancel: null
+    },
+    callback: function (closeEvent) {
+      var returnValue;
+      switch (closeEvent.index) {
+      case 0:
+          if (typeof this.get('onok') === 'function') {
+              returnValue = this.get('onok').call(this, closeEvent);
+              if (typeof returnValue !== 'undefined') {
+                  closeEvent.cancel = !returnValue;
+              }
+          }
+          break;
+      case 1:
+          if (typeof this.get('oncancel') === 'function') {
+              returnValue = this.get('oncancel').call(this, closeEvent);
+              if (typeof returnValue !== 'undefined') {
+                  closeEvent.cancel = !returnValue;
+              }
+          }
+          break;
+      }
+  },
+  };
+});
