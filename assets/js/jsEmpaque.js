@@ -58,6 +58,9 @@ let DT = $("#table").DataTable({
             ${validPermissions(301) && data.inicio_empaque ? `<button type="button" class="btn btn-success btnFinEmpaque" title="Finalizar Empaque Pedido">
               <i class="fa-solid fa-check"></i>
             </button>` : ''}
+            ${validPermissions(106) ? `<a href="${base_url()}Reportes/Pedido/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprimir Pedido">
+              <i class="fa-solid fa-print"></i>
+            </a>` : ''}
           </div>
         `;
       }
@@ -120,7 +123,13 @@ let DT = $("#table").DataTable({
             alertify.success(resp.msj);
             DT.ajax.reload();
           } else {
-            alertify.error(resp.msj);
+            if (resp.obsProds) {
+              alertify.confirm("Advertencia", resp.msj, function () {
+                agregarObservaciones(data, resp.obsProds, true);
+              }, function () { });
+            } else {
+              alertify.error(resp.msj);
+            }
           }
         }
       });
@@ -210,7 +219,7 @@ function obtenerInfoPedido(pedido, sync = false) {
 
       let cajaId = $(".caja-actual[data-caja]").data('caja');
 
-      if (!cajaId) return alertify.warning("No se ha encontrada caja en proceso");
+      if (!cajaId) return alertify.warning("No se ha encontrado caja en proceso");
 
       let producto = pedido.productos[$(this).data('pos')];
       let cantAgregar = $($(this).data('input')).val();
@@ -433,10 +442,16 @@ function obtenerInfoPedido(pedido, sync = false) {
           $("#modalEmpaque").modal('hide');
           DT.ajax.reload();
         } else {
-          alertify.error(resp.msj);
-          if (resp.recargar) {
-            $("#modalEmpaque").modal('hide');
-            DT.ajax.reload();
+          if (resp.obsProds) {
+            alertify.confirm("Advertencia", resp.msj, function () {
+              agregarObservaciones(pedido, resp.obsProds);
+            }, function () { });
+          } else {
+            alertify.error(resp.msj);
+            if (resp.recargar) {
+              $("#modalEmpaque").modal('hide');
+              DT.ajax.reload();
+            }
           }
         }
       }
@@ -501,4 +516,96 @@ function buscarValores(valor) {
   if ($(".item-prod-agregar:not(.d-none)").length) {
     $("#listaproductospedidonohay").addClass('d-none');
   }
+}
+
+function agregarObservaciones(pedido, productos, direct = false) {
+  console.log(productos);
+  $("#btn-cancelar-empaque-obs").off('click').on('click', function () {
+    if (direct) {
+      $("#modalObsProd").modal('hide');
+    } else {
+      $("#modalEmpaque").modal('show');
+      $("#btnSincronizar").click();
+    }
+  });
+
+  let estructura = '';
+  productos.forEach((it, x) => {
+    estructura += `<div class="list-group-item list-group-item-action item-prod-add p-2">
+        <div class="row align-items-center">
+          <div class="mb-1 col-7 col-lg-3 align-self-center">
+            <h6 class="mb-0 text-truncate text-bold">${it.referencia} - ${it.descripcion}</h6>
+          </div>
+          <div class="mb-1 col-5 col-lg-2">
+            <button type="button" class="btn btn-secondary cantProd">
+              Cantidad: <span class="badge badge-light">${it.cantAgregar}</span>
+            </button>
+          </div>
+          <div class="mb-1 col-12 col-lg-3 form-group form-valid">
+            <label for="motivo${it.id + 1}" class="mb-0">Motivo</label>
+						<select class="form-control" name="motivo${it.id + 1}" id="motivo${it.id + 1}" required>
+							<option value="1">Daño</option>
+							<option value="2">Devolución</option>
+							<option value="3">Perdida</option>
+						</select>
+					</div>
+          <div class="mb-1 col-12 col-lg-4 form-group form-valid">
+            <label for="textarea${it.id}" class="mb-0">Observación</label>
+            <textarea rows="1" class="form-control" data-pediprod="${it.idPedidoProducto}" data-prod="${it.id}" id="textarea${it.id}" name="textarea${it.id}" placeholder="Observación" required></textarea>
+          </div>
+        </div>
+      </div>  
+    `;
+  });
+  $("#listaproductosobser").html(estructura);
+
+  $("#formObs").off('submit').on('submit', function (e) {
+    e.preventDefault();
+
+    if ($(this).valid()) {
+      let productos = [];
+      $.each($('.item-prod-add'), function (pos) {
+        let textarea = $(this).find('textarea');
+        let motivo = $(this).find('select').val();
+        let cantidad = $(this).find('button.cantProd span').text();
+        let data = {
+          observacion: textarea.val(),
+          motivo: motivo,
+          productoId: textarea.data('prod'),
+          pedidoProd: textarea.data('pediprod'),
+          cantidad: cantidad
+        }
+        productos.push(data);
+      });
+
+      $.ajax({
+        type: "POST",
+        url: rutaBase + "ObservacionProductos",
+        dataType: 'json',
+        data: {
+          idPedido: pedido.id,
+          productos: productos
+        },
+        success: function (resp) {
+          if(resp.success) {
+            alertify.success(resp.msj);
+            $("#modalObsProd, #modalEmpaque").modal('hide');
+            DT.ajax.reload();
+          } else {
+            alertify.error(resp.msj);
+            if (resp.recargar) {
+              $("#modalObsProd, #modalEmpaque").modal('hide');
+              DT.ajax.reload();
+            } else if (resp.empaque) {
+              $("#btn-cancelar-empaque-obs").click();
+            }
+          }
+        }
+      });
+    }
+  });
+
+  $(".titulo-modal-obs").html(`Observación Productos | Pedido ${pedido.pedido}`);
+  $("#modalEmpaque").modal('hide');
+  $("#modalObsProd").modal('show');
 }

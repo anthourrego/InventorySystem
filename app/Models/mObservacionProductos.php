@@ -20,7 +20,8 @@ class mObservacionProductos extends Model {
 		"cantidad_anterior",
 		"cantidad_actual",
 		"valor_anterior",
-		"valor_actual"
+		"valor_actual",
+		"tipo"
 	];
 
 	// Dates

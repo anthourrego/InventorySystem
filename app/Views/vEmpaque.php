@@ -97,6 +97,38 @@
   </div>
 </div>
 
+<div class="modal fade" id="modalObsProd" data-backdrop="static" data-keyboard="false" aria-labelledby="modalObsProdLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title titulo-modal-obs" id="modalObsProdLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="formObs" class="formValid">
+          <div class="row">
+            <div class="col">
+              <h5 class="text-center">Productos Faltantes Por Empacar</h5>
+              <!-- Lista de los productos pendientes por empacar -->
+              <div class="list-group" id="listaproductosobser"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal" id="btn-cancelar-empaque-obs">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button type="submit" form="formObs" class="btn btn-success" id="btn-finalizar-empaque-obs">
+          <i class="fas fa-check"></i> Finalizar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   $USUARIOID = <?= $usuario ?>;
 </script>
