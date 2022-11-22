@@ -58,6 +58,9 @@ let DT = $("#table").DataTable({
             ${validPermissions(301) && data.inicio_empaque ? `<button type="button" class="btn btn-success btnFinEmpaque" title="Finalizar Empaque Pedido">
               <i class="fa-solid fa-check"></i>
             </button>` : ''}
+            ${validPermissions(106) ? `<a href="${base_url()}Reportes/Pedido/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprimir Pedido">
+              <i class="fa-solid fa-print"></i>
+            </a>` : ''}
           </div>
         `;
       }
