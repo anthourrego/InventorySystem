@@ -254,6 +254,7 @@ $routes->group('Empaque', ['filter' => 'authGuard:30'], function ($routes) {
 	$routes->post('FinalizarEmpaque', 'cEmpaque::finalizarEmpaque');
 	$routes->post('ReabrirCaja', 'cEmpaque::reabrirCaja');
 	$routes->post('ReabrirEmpaque', 'cEmpaque::reabrirEmpaque');
+	$routes->post('ObservacionProductos', 'cEmpaque::observacionProductos');
 });
 
 

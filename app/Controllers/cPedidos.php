@@ -253,7 +253,7 @@ class cPedidos extends BaseController {
 					break;
 				}
 	
-				$mObservacionProductos->where('id_pedido_producto', $it->id)->delete();
+				$mObservacionProductos->where('id_pedido_producto', $it->id)->where("tipo IS NULL")->delete();
 			}
 		}
 		

@@ -7,6 +7,7 @@ use App\Models\mPedidos;
 use App\Models\mPedidosProductos;
 use App\Models\mPedidosCajas;
 use App\Models\mPedidosCajasProductos;
+use App\Models\mObservacionProductos;
 
 class cEmpaque extends BaseController {
 	
@@ -16,6 +17,7 @@ class cEmpaque extends BaseController {
 
 		$this->LDataTables();
 		$this->LMoment();
+		$this->LJQueryValidation();
 
 		$this->content['js_add'][] = [
 			'jsEmpaque.js'
@@ -159,7 +161,8 @@ class cEmpaque extends BaseController {
 				(
 					pedidosproductos.cantidad - IF(prodCaja.CantTotalCajas IS NULL, 0, prodCaja.CantTotalCajas)
 				) AS cantAgregar,
-				prodCaja.CantTotalCajas
+				prodCaja.CantTotalCajas,
+				pedidosproductos.id AS idPedidoProducto
 			")->join("productos AS p", "pedidosproductos.id_producto = p.id")
 			->join("(
 				SELECT
@@ -458,18 +461,18 @@ class cEmpaque extends BaseController {
 
 		} else {
 
-			$productos = $this->pedidosPendientes($data->idPedido);
+			$mPedidosCajas = new mPedidosCajas();
+			$faltantes = $mPedidosCajas
+				->select('id,numero_caja')
+				->where('id_pedido', $data->idPedido)
+				->where('fin_empaque IS NULL')
+				->get()->getResultObject();
+			
+			if (count($faltantes) == 0) {
+			
+				$productos = $this->pedidosPendientes($data->idPedido);
 
-			if (count($productos) == 0) {
-
-				$mPedidosCajas = new mPedidosCajas();
-				$faltantes = $mPedidosCajas
-					->select('id,numero_caja')
-					->where('id_pedido', $data->idPedido)
-					->where('fin_empaque IS NULL')
-					->get()->getResultObject();
-		
-				if (count($faltantes) == 0) {
+				if (count($productos) == 0) {
 		
 					$builder = $this->db->table('pedidos')
 						->set("fin_empaque", date("Y-m-d H:i:s"))
@@ -483,11 +486,14 @@ class cEmpaque extends BaseController {
 						$resp['msj'] = "No fue posible finalizar el empaque";
 					}
 				} else {
-					$resp['msj'] = "Aun faltan la caja " . $faltantes[0]->numero_caja . " por cerrar";
+					/* Se organiza por si desea dejar los prods sin empacar */
+					$res['success'] = false;
+					$res['msj'] = "¿Está seguro de finalizar el pedido con productos sin empacar?";
+					$res['obsProds'] = $productos;
+					return $this->response->setJSON($res);
 				}
-				
 			} else {
-				$resp['msj'] = "Aun hay productos pendientes por empacar";
+				$resp['msj'] = "Aun faltan la caja " . $faltantes[0]->numero_caja . " por cerrar";
 			}
 		}
 		if ($resp["success"] == true) {
@@ -582,6 +588,86 @@ class cEmpaque extends BaseController {
 		} else {
 			$this->db->transRollback();
 			$resp['msj'] = "No fue posible reabrir la caja";
+		}
+		return $this->response->setJSON($resp);
+	}
+
+	public function observacionProductos() {
+		$resp["success"] = false;
+		// Traemos los datos del post
+		$data = (object) $this->request->getPost();
+		$mObservacionProductos = new mObservacionProductos();
+		$pedidoModel = new mPedidos();
+
+		$pedido = $pedidoModel->cargarPedido($data->idPedido);
+		if (!isset($pedido[0])) {
+			$res['success'] = false;
+			$res['msj'] = "El Pedido fue eliminado";
+			$res['recargar'] = true;
+			return $this->response->setJSON($res);
+		}
+
+		$productos = $this->pedidosPendientes($data->idPedido);
+		if(count($productos) == 0) {
+			$res['success'] = false;
+			$res['msj'] = "No se encontraron productos pendientes por empacar";
+			$res['empaque'] = true;
+			return $this->response->setJSON($res);
+		}
+
+		$this->db->transBegin();
+
+		$cantidad = 0;
+		foreach ($data->productos as $it) {
+			$dataObserSave = array(
+				"id_pedido_producto" => $it['pedidoProd'],
+				"motivo" => $it['motivo'],
+				"observacion" => $it['observacion'],
+				"cantidad_anterior" => $it['cantidad'],
+				"cantidad_actual" => $it['cantidad'],
+				"valor_anterior" => 0,
+				"valor_actual" => 0,
+				"tipo" => "E"
+			);
+		
+			if(!$mObservacionProductos->save($dataObserSave)){
+				$resp["msj"] = "Error al guardar la observación del producto. " . listErrors($mObservacionProductos->errors());
+				break;
+			} else {
+				$cantidad++;
+			}
+		}
+
+		if (count($data->productos) == $cantidad) {
+
+			$builder = $this->db->table('pedidoscajas')
+				->set("fin_empaque", date("Y-m-d H:i:s"))
+				->where("id_empacador", session()->get("id_user"))
+				->where("fin_empaque IS NULL")
+				->where('id_pedido', $data->idPedido);
+
+			if($builder->update()) {
+
+				$builder = $this->db->table('pedidos')
+					->set("fin_empaque", date("Y-m-d H:i:s"))
+					->set("estado", 2)
+					->where('id', $data->idPedido);
+	
+				if($builder->update()) {
+					$resp["success"] = true;
+					$resp['msj'] = "Empaque finalizado correctamente";
+				} else {
+					$resp['msj'] = "No fue posible finalizar el empaque del pedido";
+				}
+			} else {
+				$resp['msj'] = "No fue posible finalizar las cajas pendientes";
+			}
+		}
+
+		if ($resp["success"] == true) {
+			$this->db->transCommit();
+		} else {
+			$this->db->transRollback();
 		}
 		return $this->response->setJSON($resp);
 	}
