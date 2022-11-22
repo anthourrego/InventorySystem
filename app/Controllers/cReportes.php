@@ -55,10 +55,10 @@ class cReportes extends BaseController {
 					P.item AS itemProductoDP,
 					P.descripcion AS descripcionProductoDP,
 					P.cantPaca AS cantPacaProductoDP,
-					CAST((P.cantPaca / PCP.cantidad) AS DECIMAL(12,2)) AS paqueteProductoDP,
-					PCP.cantidad AS cantidadProductoDP,
+					CAST((P.cantPaca / PV.cantidad) AS DECIMAL(12,2)) AS paqueteProductoDP,
+					PV.cantidad AS cantidadProductoDP,
 					PV.valor AS valorProductoDP,
-					(PCP.cantidad * PV.valor) AS totalProductoDP,
+					(PV.cantidad * PV.valor) AS totalProductoDP,
 					numero_caja AS numeroCaja,
 					M.ruta_archivo AS archivoManifiesto,
 					M.id AS idManifiesto,
@@ -67,7 +67,7 @@ class cReportes extends BaseController {
 				->join("productos AS P", "PCP.id_producto = P.id", "left")
 				->join("manifiestos AS M", "P.id_manifiesto = M.id", "left")
 				->join("(
-					SELECT id_producto, valor FROM ventasproductos WHERE id_venta = '$id'
+					SELECT id_producto, valor, cantidad FROM ventasproductos WHERE id_venta = '$id'
 				) AS PV", "PCP.id_producto = PV.id_producto", "left")
 				->where("id_pedido", $dataVenta['id_pedido'])
 				->orderBy("numero_caja", "ASC")
