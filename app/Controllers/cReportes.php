@@ -202,7 +202,7 @@ class cReportes extends BaseController {
 				echo "<h1>No se encontra estructura relacionada</h1>";
 				exit;
 			}
-		} catch(Exception $e) {
+		} catch(\Exception $e) {
 			echo "<h1>No se encontra estructura relacionada</h1>";
 			exit;
 		}

@@ -239,7 +239,7 @@ class cModificarReporte extends BaseController {
         } else {
           $this->content['contenidoEditor'] = '';
         }
-      } catch(Exception $e) {
+      } catch(\Exception $e) {
         $this->content['contenidoEditor'] = '';
       }
     }
@@ -258,7 +258,7 @@ class cModificarReporte extends BaseController {
 
     try {
       file_put_contents($path, $postData->contenido);
-    } catch(Exception $e) {
+    } catch(\Exception $e) {
       $resp["success"] = false;
       $resp["msj"] = "No fue posible guardar el reporte";
     }
@@ -280,7 +280,7 @@ class cModificarReporte extends BaseController {
         $resp["success"] = false;
         $resp["msj"] = "No fue posible guardar el reporte";
       }
-    } catch(Exception $e) {
+    } catch(\Exception $e) {
       $resp["success"] = false;
       $resp["msj"] = "No fue posible guardar el reporte";
     }
