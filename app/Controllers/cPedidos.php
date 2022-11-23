@@ -161,6 +161,8 @@ class cPedidos extends BaseController {
 	}
 
 	public function listaDT(){
+		$estado = $this->request->getPost("estado");
+
 		$query = $this->db->table('pedidos AS P')
 			->select("
 				P.id,
@@ -201,6 +203,16 @@ class cPedidos extends BaseController {
 				FROM pedidoscajas
 				GROUP BY id_pedido
 			) AS TC", "P.id = TC.id_pedido", "left");
+
+		if($estado != "-1") {
+			if($estado == "3") {
+				$query->where("V.id IS NOT NULL");
+			} else if($estado == "2") {
+				$query->where("(P.Estado IN(2, 3) AND V.id IS NULL)");
+			} else {
+				$query->where("P.Estado", $estado);
+			}
+		}
 
 		return DataTable::of($query)->toJson(true);
 	}
