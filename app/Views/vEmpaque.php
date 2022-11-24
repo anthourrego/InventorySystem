@@ -23,7 +23,7 @@
 </div>
 
 <div class="modal fade" id="modalEmpaque" data-backdrop="static" data-keyboard="false" aria-labelledby="modalEmpaqueLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable" style="min-width: 90vw;">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable" style="min-width: 99vw;">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title titulo-modal-pedido" id="modalEmpaqueLabel"></h5>
@@ -48,7 +48,7 @@
         </div>
 
         <div class="row">
-          <div class="col-7">
+          <div class="col-5">
             <h5 class="text-center">Cajas</h5>
             <!-- Lista de cajas del pedido -->
             <div class="d-flex" id="listacajas"></div>
@@ -60,7 +60,12 @@
             <!-- Lista producto dentro de la caja -->
             <div class="list-group" id="listaproductoscaja"></div>
           </div>
-          <div class="col-5">
+          <div class="col-7">
+
+            <div class="imagen-producto d-flex justify-content-end">
+              <img style="max-width: 160px;" src="" class="rounded d-none" id="imgProd" alt="Producto">
+            </div>
+
             <h5 class="text-center">Productos Por Empacar</h5>
 
             <div class="input-group mb-3">
