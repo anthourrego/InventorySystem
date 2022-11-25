@@ -5,6 +5,9 @@ let DT = $("#table").DataTable({
   ajax: {
     url: rutaBase + "DT",
     type: "POST",
+    data: function (d) {
+      return $.extend(d, { "estado": $("#selectEstado").val() })
+    }
   },
   order: [[0, "desc"]],
   columns: [
@@ -234,6 +237,12 @@ let DT = $("#table").DataTable({
       });
     });
   }
+});
+
+$(function () {
+  $("#selectEstado").on("change", function () {
+    DT.ajax.reload();
+  });
 });
 
 function alistarPedido(data) {

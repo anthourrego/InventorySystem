@@ -157,6 +157,7 @@ class cEmpaque extends BaseController {
 				p.referencia, 
 				p.item,
 				p.descripcion,
+				p.imagen,
 				pedidosproductos.cantidad,
 				(
 					pedidosproductos.cantidad - IF(prodCaja.CantTotalCajas IS NULL, 0, prodCaja.CantTotalCajas)

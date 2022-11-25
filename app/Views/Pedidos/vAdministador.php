@@ -1,13 +1,28 @@
 <div class="card">
-  <?php if (validPermissions([101], true)) { ?>
-    <div class="card-header">
-      <div class="row justify-content-between">
-        <div class="offset-8 offset-md-9 col-5 col-md-3 text-right">
-          <a href="<?= base_url("Pedidos/Crear") ?>" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Crear</a>
+
+  <div class="card-header">
+    <div class="row justify-content-between">
+      <div class="col-8 col-md-3">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="selectEstado">Estado</label>
+          </div>
+          <select class="custom-select" id="selectEstado">
+            <option selected value="-1">Todos</option>
+            <option value="0">Pendiente</option>
+            <option value="1">En Proceso</option>
+            <option value="2">Empacado</option>
+            <option value="3">Facturado</option>
+          </select>
         </div>
       </div>
+      <?php if (validPermissions([101], true)) { ?>
+        <div class="col-4 col-md-3 text-right">
+          <a href="<?= base_url("Pedidos/Crear") ?>" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Crear</a>
+        </div>
+      <?php } ?>
     </div>
-  <?php } ?>
+  </div>
   <div class="card-body">
     <div class="table-responsive">
       <table id="table" class="table table-sm table-striped table-hover table-bordered w-100">

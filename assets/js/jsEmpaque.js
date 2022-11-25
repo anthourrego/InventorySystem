@@ -177,7 +177,10 @@ $(function () {
 
 /* Funcion para organizar info de pedido en caja */
 function obtenerInfoPedido(pedido, sync = false) {
-  console.log(pedido);
+
+  console.log(pedido)
+  $("#imgProd").addClass('d-none');
+  $("#imgProd").attr('src', '');
 
   if (!pedido || !pedido.id) {
     alertify.alert('¡Advertencia!', "El Pedido fue eliminado", function () {
@@ -193,7 +196,7 @@ function obtenerInfoPedido(pedido, sync = false) {
     pedido.productos.forEach((it, x) => {
       estructura += `<div class="list-group-item list-group-item-action item-prod-agregar p-2">
           <div class="row">
-            <div class="col-7 col-lg-6 align-self-center">
+            <div class="col-7 col-lg-6 align-self-center option-ref" data-pos="${x}">
               <h6 class="mb-0 text-truncate w-100">${it.referencia} - ${it.descripcion}</h6>
             </div>
             <div class="col-5 col-lg-3">
@@ -248,6 +251,16 @@ function obtenerInfoPedido(pedido, sync = false) {
         }
       });
     });
+
+    $(".option-ref").click(function () {
+      let data = pedido.productos[$(this).data('pos')];
+      if (data.imagen) {
+        let extension = data.imagen == null ? null : "01-small." + data.imagen.split(".").pop();
+        $("#imgProd").removeClass('d-none').attr('src', `${base_url()}Productos/Foto/${data.id}/${extension}`);
+      } else {
+        $("#imgProd").addClass('d-none').attr('src', '');
+      }
+    });
   }
 
   $("#listacajas").html(`<div class="font-weight-bold text-center p-2 col-12">No se encontraron cajas</div>`);
@@ -263,7 +276,7 @@ function obtenerInfoPedido(pedido, sync = false) {
       }
 
       let estructu = `<div class="col-8 col-lg-4">
-        <div class="card mb-2 ${(!it.finEmpaque && $USUARIOID == it.empacador ? 'border border-info caja-actual' : '')}" ${(!it.finEmpaque && $USUARIOID == it.empacador ? `data-caja="${it.idCajaPedido}"` : '')}>
+        <div class="card mb-2 ${(!it.finEmpaque && $USUARIOID == it.empacador ? 'border border-info caja-actual' : '')}" ${(!it.finEmpaque && $USUARIOID == it.empacador ? `data-caja="${it.idCajaPedido}"` : '')} style="border-width: 3px !important;">
           <div class="card-body">
             <div class="row">
               <div class="col-9 item-caja" data-pos="${pos}" style="cursor: pointer;">
@@ -401,7 +414,7 @@ function obtenerInfoPedido(pedido, sync = false) {
     });
   });
 
-  $(".titulo-modal-pedido").html(`Empaque Productos | Pedido ${pedido.pedido}`);
+  $(".titulo-modal-pedido").html(`Empaque | Pedido ${pedido.pedido} | Sucursal: ${pedido.NombreSucursal}`);
   $("#modalEmpaque").modal('show');
 
   $("#btnAgregarCaja").off('click').on('click', function () {
@@ -587,7 +600,7 @@ function agregarObservaciones(pedido, productos, direct = false) {
           productos: productos
         },
         success: function (resp) {
-          if(resp.success) {
+          if (resp.success) {
             alertify.success(resp.msj);
             $("#modalObsProd, #modalEmpaque").modal('hide');
             DT.ajax.reload();
