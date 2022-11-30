@@ -374,7 +374,7 @@ $(function () {
                 alertify.confirm("Pedido creado correctamente", `Nro de pedido: <b>${resp.msj.pedido}</b>, por valor de <b>${formatoPesos.format(resp.msj.total)}</b><br><br>Desea crear un nuevo pedido?`,
                   function () {
                     productosPedido = [];
-                    $("#cliente, #vendedor").data("id", "").closest(".input-group").find(".input-group-text").text("");
+                    $("#sucursal, #vendedor").data("id", "").closest(".input-group").find(".input-group-text").text("");
                     $("#observacion").val("");
                     $("#total").val(0)
                     DTProductos.ajax.reload();

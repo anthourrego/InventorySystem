@@ -3,15 +3,14 @@ $(function(){
   if($NROVENTA != 0) {
     //Traemos los datos de la factura
     var vendedorOption = new Option($DATOSVENTA.NombreVendedor, $DATOSVENTA.id_vendedor, true, true);
-    var clienteOption = new Option(($DATOSVENTA.NroDocumentoCliente + ' | ' + $DATOSVENTA.NombreCliente), $DATOSVENTA.id_cliente, true, true);
-    var sucursalOption = new Option(($DATOSVENTA.NombreSucursal || ''), $DATOSVENTA.id_sucursal, true, true);
+    //var clienteOption = new Option(($DATOSVENTA.NroDocumentoCliente + ' | ' + $DATOSVENTA.NombreCliente), $DATOSVENTA.id_cliente, true, true);
+    var sucursalOption = new Option(($DATOSVENTA.NroDocumentoCliente + " | " + $DATOSVENTA.NombreCliente + " | " + $DATOSVENTA.NombreSucursal), $DATOSVENTA.id_sucursal, true, true);
 
     $("#metodoPago").val($DATOSVENTA.metodo_pago).trigger('change');
     $("#observacion").val($DATOSVENTA.observacion);
     $("#total").val($DATOSVENTA.total);
     $("#idVenta").val($DATOSVENTA.id);
     $('#vendedor').append(vendedorOption).trigger('change');
-    $('#cliente').append(clienteOption).trigger('change');
     $('#sucursal').append(sucursalOption).trigger('change');
     
     productosVentas = $DATOSVENTA.productos;

@@ -80,6 +80,7 @@ class mVentas extends Model {
 				V.metodo_pago,
 				V.observacion,
 				V.created_at,
+				V.id_sucursal,
 				S.direccion AS Direccion,
 				S.nombre AS NombreSucursal,
 				S.administrador AS AdministradorSucursal,
