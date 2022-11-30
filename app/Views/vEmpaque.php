@@ -63,7 +63,7 @@
           <div class="col-7">
 
             <div class="imagen-producto d-flex justify-content-end">
-              <img style="max-width: 160px;" src="" class="rounded d-none" id="imgProd" alt="Producto">
+              <img style="max-width: 160px;" src="" class="rounded" id="imgProd" alt="Producto">
             </div>
 
             <h5 class="text-center">Productos Por Empacar</h5>
@@ -79,7 +79,7 @@
             </div>
 
             <!-- Lista de los productos pendientes por empacar -->
-            <div class="list-group" id="listaproductospedido"></div>
+            <div class="row" id="listaproductospedido"></div>
 
             <div class="list-group d-none" id="listaproductospedidonohay">
               <div class="font-weight-bold text-center p-2">No se encontraron productos</div>
