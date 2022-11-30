@@ -6,6 +6,7 @@ let DT = $("#table").DataTable({
     type: "POST",
   },
   order: [[0, "desc"]],
+  scrollX: true,
   columns: [
     {data: 'codigo'},
     {data: 'NombreCliente'},
