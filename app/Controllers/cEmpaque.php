@@ -494,7 +494,7 @@ class cEmpaque extends BaseController {
 					return $this->response->setJSON($res);
 				}
 			} else {
-				$resp['msj'] = "Aun faltan la caja " . $faltantes[0]->numero_caja . " por cerrar";
+				$resp['msj'] = "Aun falta la caja " . $faltantes[0]->numero_caja . " por cerrar";
 			}
 		}
 		if ($resp["success"] == true) {
@@ -599,6 +599,7 @@ class cEmpaque extends BaseController {
 		$data = (object) $this->request->getPost();
 		$mObservacionProductos = new mObservacionProductos();
 		$pedidoModel = new mPedidos();
+		$mPedidosProductos = new mPedidosProductos();
 
 		$pedido = $pedidoModel->cargarPedido($data->idPedido);
 		if (!isset($pedido[0])) {
@@ -620,22 +621,34 @@ class cEmpaque extends BaseController {
 
 		$cantidad = 0;
 		foreach ($data->productos as $it) {
-			$dataObserSave = array(
-				"id_pedido_producto" => $it['pedidoProd'],
-				"motivo" => $it['motivo'],
-				"observacion" => $it['observacion'],
-				"cantidad_anterior" => $it['cantidad'],
-				"cantidad_actual" => $it['cantidad'],
-				"valor_anterior" => 0,
-				"valor_actual" => 0,
-				"tipo" => "E"
-			);
+
+			$pedidoProd = $mPedidosProductos->asObject()->find($it['pedidoProd']);
+
+			$builder = $this->db->table('pedidosproductos')
+												->set("cantidad", ($pedidoProd->cantidad - $it['cantidad']))
+												->where('id', $it['pedidoProd']);
 		
-			if(!$mObservacionProductos->save($dataObserSave)){
-				$resp["msj"] = "Error al guardar la observación del producto. " . listErrors($mObservacionProductos->errors());
-				break;
+			if($builder->update()) {
+				$dataObserSave = array(
+					"id_pedido_producto" => $it['pedidoProd'],
+					"motivo" => $it['motivo'],
+					"observacion" => $it['observacion'],
+					"cantidad_anterior" => $pedidoProd->cantidad,
+					"cantidad_actual" => ($pedidoProd->cantidad - $it['cantidad']),
+					"valor_anterior" => 0,
+					"valor_actual" => 0,
+					"tipo" => "E"
+				);
+			
+				if(!$mObservacionProductos->save($dataObserSave)){
+					$resp["msj"] = "Error al guardar la observación del producto. " . listErrors($mObservacionProductos->errors());
+					break;
+				} else {
+					$cantidad++;
+				}
 			} else {
-				$cantidad++;
+				$resp["msj"] = "No fue posible actualizar el pedido.";
+				break;
 			}
 		}
 

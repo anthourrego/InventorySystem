@@ -178,9 +178,7 @@ $(function () {
 /* Funcion para organizar info de pedido en caja */
 function obtenerInfoPedido(pedido, sync = false) {
 
-  console.log(pedido)
-  $("#imgProd").addClass('d-none');
-  $("#imgProd").attr('src', '');
+  $("#imgProd").attr('src', `${base_url()}Productos/Foto`);
 
   if (!pedido || !pedido.id) {
     alertify.alert('¡Advertencia!', "El Pedido fue eliminado", function () {
@@ -194,27 +192,24 @@ function obtenerInfoPedido(pedido, sync = false) {
   if (pedido.productos.length) {
     let estructura = '';
     pedido.productos.forEach((it, x) => {
-      estructura += `<div class="list-group-item list-group-item-action item-prod-agregar p-2">
-          <div class="row">
-            <div class="col-7 col-lg-6 align-self-center option-ref" data-pos="${x}">
-              <h6 class="mb-0 text-truncate w-100">${it.referencia} - ${it.descripcion}</h6>
-            </div>
-            <div class="col-5 col-lg-3">
-              <div class="input-group">
-                <input id="prod${it.id}" type="number" class="form-control form-control-sm cantAgregarProd soloNumeros" min="1" value="${it.cantAgregar}" max="${it.CantTotalCajas}" aria-describedby="btnCantidad">
-                <div class="input-group-append">
-                  <button class="btn btn-outline-info btn-sm" type="button" id="btnCantidad">/${it.cantidad}</button>
-                </div>
+      estructura += `<div class="item-prod-agregar col-12 col-md-6">
+        <div class="card p-2">
+          <div class="d-flex align-items-center option-ref">
+            <h6 class="mb-0 text-truncate" style="width: 65%" data-item="${it.item}">${it.referencia} - ${it.descripcion}</h6>
+            <div class="input-group" style="width: 35%">
+              <input id="prod${it.id}" type="number" class="form-control form-control-sm cantAgregarProd soloNumeros p-1" min="1" value="${it.cantAgregar}" max="${it.CantTotalCajas}" aria-describedby="btnCantidad">
+              <div class="input-group-append">
+                <button class="btn btn-outline-info btn-sm" type="button" id="btnCantidad">/${it.cantidad}</button>
               </div>
             </div>
-            <div class="col-12 col-lg-3 text-right">
-              <button type="button" class="btn btn-sm btn-primary btn-agregar-prod" data-input="#prod${it.id}" data-pos=${x}>
-                <i class="fas fa-plus"></i> Agregar
-              </button>
-            </div>
           </div>
-        </div>  
-      `;
+          <div class="d-flex justify-content-end mt-1">
+            <button type="button" class="btn btn-sm btn-primary btn-agregar-prod" data-input="#prod${it.id}" data-pos=${x}>
+              <i class="fas fa-plus"></i> Agregar
+            </button>
+          </div>
+        </div>
+      </div>`;
     });
     $("#listaproductospedido").html(estructura);
 
@@ -254,12 +249,7 @@ function obtenerInfoPedido(pedido, sync = false) {
 
     $(".option-ref").click(function () {
       let data = pedido.productos[$(this).data('pos')];
-      if (data.imagen) {
-        let extension = data.imagen == null ? null : "01-small." + data.imagen.split(".").pop();
-        $("#imgProd").removeClass('d-none').attr('src', `${base_url()}Productos/Foto/${data.id}/${extension}`);
-      } else {
-        $("#imgProd").addClass('d-none').attr('src', '');
-      }
+      $("#imgProd").removeClass('d-none').attr('src', `${base_url()}Productos/Foto/${data.id}/${data.imagen}`);
     });
   }
 
@@ -414,7 +404,7 @@ function obtenerInfoPedido(pedido, sync = false) {
     });
   });
 
-  $(".titulo-modal-pedido").html(`Empaque | Pedido ${pedido.pedido} | Sucursal: ${pedido.NombreSucursal}`);
+  $(".titulo-modal-pedido").html(`Empaque | Pedido ${pedido.pedido} | ${pedido.NombreSucursal}`);
   $("#modalEmpaque").modal('show');
 
   $("#btnAgregarCaja").off('click').on('click', function () {
@@ -490,6 +480,10 @@ function obtenerInfoPedido(pedido, sync = false) {
       }
     });
   });
+
+  setTimeout(() => {
+    document.getElementById("listacajas").scrollLeft = document.getElementById("listacajas").scrollWidth
+  }, 500);
 }
 
 function eliminarCaja(idCaja, idPedido, idProdCaja = 0) {
@@ -521,7 +515,10 @@ function buscarValores(valor) {
   $("#listaproductospedidonohay").addClass('d-none');
 
   $.each($(".item-prod-agregar h6"), function () {
-    if (!$(this).text().toLowerCase().includes(valor.toLowerCase())) {
+
+    let item = $(this).data("item");
+
+    if (!$(this).text().toLowerCase().includes(valor.toLowerCase()) && !(item + "").toLowerCase().includes(valor.toLowerCase())) {
       $(this).closest(".item-prod-agregar").addClass('d-none');
     }
   });
@@ -532,7 +529,6 @@ function buscarValores(valor) {
 }
 
 function agregarObservaciones(pedido, productos, direct = false) {
-  console.log(productos);
   $("#btn-cancelar-empaque-obs").off('click').on('click', function () {
     if (direct) {
       $("#modalObsProd").modal('hide');
