@@ -24,7 +24,7 @@
   }
 ?>
 
-<div class="modal-dialog">
+<div class="modal-dialog" id="contenidoPerfil">
   <div class="modal-content">
     <div class="modal-header">
       <h5 class="modal-title" id="modalMiPerfilLabel"><i class="fa-solid fa-user"></i> <?= $title ?></h5>
@@ -44,19 +44,20 @@
         <div class="tab-pane p-2 fade show active" id="nav-home" role="tabpanel" aria-labelledby="data-tab">
           <form id="formMiperfil" enctype="multipart/form-data">
             <div class="form-row justify-content-center">
-              <div class="col-7">
-                <div id="content-upload" class="<?= is_null($usuario->foto) || $usuario->foto == '' ? '' : 'd-none' ?>">
+              <div class="col-6">
+                <button type="button" style="z-index: 30" id="tomarFoto-perfil" class="btn btn-info btn-sm col-10 mb-1"><i class="fas fa-camera"></i> Tomar Foto</button>
+                <div id="content-upload-perfil" class="<?= !is_null($usuario->foto) && $usuario->foto != '' ? 'd-none' : '' ?>">
                   <div class="content-img rounded d-flex align-items-center justify-content-center">
-                    <div class="text-center position-absolute w-80">
+                    <div class="text-center position-absolute w-90">
                       <i class="fas fa-cloud-upload-alt"></i>
                       <span> Selecciona o arrastre su imagen</span>
                     </div>
-                    <input id="foto" name="foto" class="input-file-img inputVer" accept=".png, .jpg, .jpeg" type="file">
+                    <input id="foto-perfil" name="foto" class="input-file-img inputVer" accept=".png, .jpg, .jpeg" type="file">
                   </div>
                 </div>
-                <div id="content-preview" class="text-center <?= !is_null($usuario->foto) && $usuario->foto != '' ? '' : 'd-none' ?>">
-                  <img id="imgFoto" src="<?= base_url("Usuarios/Foto/" . $usuario->foto) ?>" class="img-thumbnail h-100">
-                  <button type="button" class="btn btn-danger btn-sm btn-eliminar-foto" style="right: 20px;"><i class="fas fa-times"></i></button>
+                <div id="content-preview-perfil" class="text-center <?= !is_null($usuario->foto) && $usuario->foto != '' ? '' : 'd-none' ?>">
+                  <img id="imgFoto-perfil" src="<?= base_url("Usuarios/Foto/" . $usuario->foto) ?>" class="img-thumbnail h-100">
+                  <button type="button" class="btn btn-danger btn-sm btn-eliminar-foto-perfil"><i class="fas fa-times"></i></button>
                 </div>
               </div>
               <div class="col-12">
@@ -126,6 +127,36 @@
     <div class="modal-footer">
       <button type="submit" class="btn btn-success buttons-modal" id="btn-guardar" form="formMiperfil"><i class="fas fa-save"></i> Guardar</button>
       <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-dialog" id="contenidoFotoPerfil" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="modalEditarImageLabel">Editar Imagen</h5>
+      <button type="button" class="close btnCancelarImg" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body text-center">
+      <img id="image-perfil" width="100%" src="" alt="">
+
+      <img id="imageTemp-perfil" style="display: none;" width="100%" src="assets/img/nofoto.png" alt="">
+
+      <video muted="muted" width="100%" style="display: none;" id="video-perfil"></video>
+      <canvas id="canvas-perfil" style="display: none;"></canvas>
+
+    </div>
+    <div class="modal-footer d-flex justify-content-between footer-modal-perfil">
+      <div class="btnsync-perfil">
+        <button type="button" onclick="cambiarCamaraPerfil()" class="btn btn-secondary btnsyncaction-perfil"><i class="fas fa-sync"></i></button>  
+        <button type="button" onclick="reintentarFotoPerfil()" class="btn btn-danger reloadFoto-perfil"><i class="fas fa-redo"></i></button>  
+      </div>
+      <div class="btnactions-perfil">
+        <button type="button" onclick="guardarImagePerfil()" class="btn btn-success btnGuadarFoto-perfil"><i class="fas fa-save"></i> Confirmar</button>
+        <button type="button" class="btn btn-secondary btnCancelarImg-perfil"><i class="fas fa-times"></i> Cerrar</button>
+      </div>
     </div>
   </div>
 </div>
