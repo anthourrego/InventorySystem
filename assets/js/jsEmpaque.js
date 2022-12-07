@@ -58,7 +58,7 @@ let DT = $("#table").DataTable({
             ${validPermissions(301) && data.inicio_empaque ? `<button type="button" class="btn btn-success btnFinEmpaque" title="Finalizar Empaque Pedido">
               <i class="fa-solid fa-check"></i>
             </button>` : ''}
-            ${validPermissions(106) ? `<a href="${base_url()}Reportes/Pedido/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprimir Pedido">
+            ${validPermissions(106) ? `<a href="${base_url()}Reportes/Pedido/${data.id}/0" target="_blank" type="button" class="btn btn-info" title="Imprimir Pedido">
               <i class="fa-solid fa-print"></i>
             </a>` : ''}
           </div>
@@ -192,10 +192,10 @@ function obtenerInfoPedido(pedido, sync = false) {
   if (pedido.productos.length) {
     let estructura = '';
     pedido.productos.forEach((it, x) => {
-      estructura += `<div class="item-prod-agregar col-12 col-md-6">
+      estructura += `<div class="item-prod-agregar col-12">
         <div class="card p-2">
-          <div class="d-flex align-items-center option-ref">
-            <h6 class="mb-0 text-truncate" style="width: 65%" data-item="${it.item}">${it.referencia} - ${it.descripcion}</h6>
+          <div class="d-flex align-items-center option-ref" data-pos=${x}>
+            <h6 class="mb-0" style="width: 65%" data-item="${it.item}">${it.referencia} - ${it.descripcion}</h6>
             <div class="input-group" style="width: 35%">
               <input id="prod${it.id}" type="number" class="form-control form-control-sm cantAgregarProd soloNumeros p-1" min="1" value="${it.cantAgregar}" max="${it.CantTotalCajas}" aria-describedby="btnCantidad">
               <div class="input-group-append">
