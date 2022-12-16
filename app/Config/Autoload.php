@@ -91,5 +91,6 @@ class Autoload extends AutoloadConfig {
         'app/Helpers/404.php'
         ,'app/Helpers/listErrors.php'
         ,'app/Helpers/validPermissions.php'
+        ,'app/Helpers/sendEmail.php'
     ];
 }

@@ -1,6 +1,11 @@
 let rutaBase = base_url() + "Configuracion/";
 
 $(function () {
+  $("#tipoCEnvioEmpresa").on('change', function () {
+    let smtp = $(this).find('option:selected').data('smtp');
+    $("#hostEnvioEmpresa").val(smtp).prop('disabled', (smtp == 'N/A' ? false : true)).change();
+  });
+
   //Traemos los datos
   $.ajax({
     url: rutaBase + "Datos",

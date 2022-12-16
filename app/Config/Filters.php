@@ -9,6 +9,7 @@ use CodeIgniter\Filters\Honeypot;
 use CodeIgniter\Filters\InvalidChars;
 use CodeIgniter\Filters\SecureHeaders;
 use App\Filters\AuthGuard;
+use App\Filters\FacturaQR;
 use App\Filters\Ajax;
 use App\Filters\Cors;
 
@@ -29,6 +30,7 @@ class Filters extends BaseConfig
         'authGuard'     => AuthGuard::class,
         'ajax'          => Ajax::class,
         'cors'          => Cors::class,
+        'qrFactura'     => FacturaQR::class,
     ];
 
     /**

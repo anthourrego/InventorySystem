@@ -194,7 +194,10 @@ function obtenerInfoPedido(pedido, sync = false) {
     pedido.productos.forEach((it, x) => {
       estructura += `<div class="item-prod-agregar col-12">
         <div class="card p-2">
-          <div class="d-flex align-items-center option-ref" data-pos=${x}>
+          <div class="d-flex align-items-center">
+            <button title="Ver Foto" type="button" class="btn btn-info btn-sm mr-2 option-ref" data-pos=${x}>
+              <i class="fas fa-image"></i>
+            </button>
             <h6 class="mb-0" style="width: 65%" data-item="${it.item}">${it.referencia} - ${it.descripcion}</h6>
             <div class="input-group" style="width: 35%">
               <input id="prod${it.id}" type="number" class="form-control form-control-sm cantAgregarProd soloNumeros p-1" min="1" value="${it.cantAgregar}" max="${it.CantTotalCajas}" aria-describedby="btnCantidad">

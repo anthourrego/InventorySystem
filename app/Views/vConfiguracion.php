@@ -22,6 +22,9 @@
       <li class="nav-item" role="presentation">
         <a class="nav-link <?= $tab == "Reportes" ? "active" : '' ?>" id="reportes-tab" data-toggle="tab" href="#reportesTab" role="tab" aria-controls="reportesTab" aria-selected="false">Reportes</a>
       </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="smtpcorreos-tab" data-toggle="tab" href="#smtpcorreosTab" role="tab" aria-controls="smtpcorreosTab" aria-selected="false">SMTP Correo</a>
+      </li>
     </ul>
   </div>
   <div class="card-body">
@@ -277,6 +280,35 @@
       </div>
       <div class="tab-pane fade <?= $tab == "Reportes" ? "show active" : '' ?>" id="reportesTab" role="tabpanel" aria-labelledby="reportes-tab">
         <?= view("vModificarReporte"); ?>
+      </div>
+      <div class="tab-pane fade" id="smtpcorreosTab" role="tabpanel" aria-labelledby="smtpcorreos-tab">
+        <div class="form-row">
+          <div class="col-12 col-md-6 col-lg-4">
+            <label for="tipoCEnvioEmpresa">Tipo Correo:</label>
+            <select id="tipoCEnvioEmpresa" data-nombre="Tipo Correo" <?= !$editar ? 'disabled' : '' ?> name="tipoCEnvioEmpresa" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
+              <?php foreach (TIPOCORREO as $key => $value) {
+                echo '<option value="' . $value['valor'] . '" data-smtp="' . $value['smtp'] . '">' . $value['titulo'] . '</option>';
+              }
+              ?>
+            </select>
+          </div>
+          <div class="col-12 col-md-6 col-lg-4">
+            <label for="hostEnvioEmpresa">SMTP Host:</label>
+            <input type="text" id="hostEnvioEmpresa" data-nombre="Host" name="hostEnvioEmpresa" <?= !$editar ? 'disabled' : '' ?> class="form-control configAct" required autocomplete="off"placeholder="Ingrese correo electrónico">
+          </div>
+          <div class="col-12 col-md-6 col-lg-4">
+            <label for="emailEnvioEmpresa">Correo:</label>
+            <input type="text" id="emailEnvioEmpresa" data-nombre="Correo electrónico" name="emailEnvioEmpresa" <?= !$editar ? 'disabled' : '' ?> class="form-control configAct" required autocomplete="off"placeholder="Ingrese correo electrónico">
+          </div>
+          <div class="col-12 col-md-6 col-lg-4">
+            <label for="passEnvioEmpresa">Contraseña:</label>
+            <input type="password" id="passEnvioEmpresa" placeholder="Contraseña" maxlength="100" <?= !$editar ? 'disabled' : '' ?> name="passEnvioEmpresa" class="form-control soloLetras configAct" autocomplete="off">
+          </div>
+          <div class="col-12 col-md-6 col-lg-4">
+            <label for="puertoEnvioEmpresa">Puerto:</label>
+            <input type="text" id="puertoEnvioEmpresa" data-nombre="Puerto" name="puertoEnvioEmpresa" <?= !$editar ? 'disabled' : '' ?> class="form-control configAct" required autocomplete="off"placeholder="Ingrese Puerto">
+          </div>
+        </div>
       </div>
     </div>
   </div>

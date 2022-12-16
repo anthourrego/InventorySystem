@@ -17,7 +17,7 @@ class cReportes extends BaseController {
 		$this->mConfiguracion = new mConfiguracion();
 	}
 
-	public function factura($id, $desdeFactura = 0) {
+	public function factura($id, $desdeFactura = 0, $download = 0, $fotoProd = 0) {
 		$mPedidosCajas = new mPedidosCajas();
 
 		$estrucPdf = $this->estructuraReporte("Factura");
@@ -42,12 +42,14 @@ class cReportes extends BaseController {
 					ventasproductos.cantidad AS cantidadProductoDP,
 					ventasproductos.valor AS valorProductoDP,
 					(ventasproductos.cantidad * ventasproductos.valor) AS totalProductoDP,
-					'' AS numeroCaja
+					'' AS numeroCaja,
+					P.imagen AS imagenDP,
+					P.id AS idProducto
 				")->join("productos AS P", "ventasproductos.id_producto = P.id", "left")
 				->where("id_venta", $id)
 				->findAll();
 
-			$estrucPdf = $this->estructuraProductos($estrucPdf, $productosFactura);
+			$estrucPdf = $this->estructuraProductos($estrucPdf, $productosFactura, $fotoProd);
 		} else {
 
 			$productosFactura = $mPedidosCajas->select("
@@ -62,6 +64,8 @@ class cReportes extends BaseController {
 					numero_caja AS numeroCaja,
 					M.ruta_archivo AS archivoManifiesto,
 					M.id AS idManifiesto,
+					P.imagen AS imagenDP,
+					P.id AS idProducto
 				")
 				->join("pedidoscajasproductos AS PCP", "pedidoscajas.id = PCP.id_caja", "left")
 				->join("productos AS P", "PCP.id_producto = P.id", "left")
@@ -74,7 +78,7 @@ class cReportes extends BaseController {
 				->orderBy("PCP.id", "DESC")
 				->findAll();
 
-			$estrucPdf = $this->estructuraProductos($estrucPdf, $productosFactura);
+			$estrucPdf = $this->estructuraProductos($estrucPdf, $productosFactura, $fotoProd);
 
 			if ($desdeFactura == 0) {
 				foreach ($productosFactura as $key => $value) {
@@ -117,12 +121,19 @@ class cReportes extends BaseController {
 			}
 		} */
 
+		if ($download == 1) {
+			$nit = $this->getValConfig("documentoEmpresa");
+			if ($nit != '') {
+				$pdf->SetProtection(array('print','copy'), $nit, null, 0);
+			}
+		}
+
 		$pdf->setTitle('Factura ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
-		$pdf->Output($dataVenta['codigo'] . ".pdf", 'I');
+		$pdf->Output($dataVenta['codigo'] . ".pdf", ($download == "1" ? 'D' : 'I'));
 		exit;
 	}
 
-	public function pedido($id) {
+	public function pedido($id, $download = 0, $fotoProd = 0) {
 
 		$estrucPdf = $this->estructuraReporte("Pedido");
 
@@ -142,20 +153,29 @@ class cReportes extends BaseController {
 				M.nombre AS manifiestoProductoDP,
 				pedidosproductos.cantidad AS cantidadProductoDP,
 				pedidosproductos.valor AS valorProductoDP,
-				(pedidosproductos.cantidad * pedidosproductos.valor) AS totalProductoDP
+				(pedidosproductos.cantidad * pedidosproductos.valor) AS totalProductoDP,
+				P.imagen AS imagenDP,
+				P.id AS idProducto
 			")->join("productos AS P", "pedidosproductos.id_producto = P.id", "left")
 			->join("manifiestos AS M", "P.id_manifiesto = M.id", "left")
 			->where("id_pedido", $id)
 			->findAll();
 
-		$estrucPdf = $this->estructuraProductos($estrucPdf, $productosFactura);
+		$estrucPdf = $this->estructuraProductos($estrucPdf, $productosFactura, $fotoProd);
 
 		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		$pdf->startPageGroup();
 		$pdf->AddPage();
 		$pdf->writeHTML($estrucPdf, false, false, false, false, '');
+
+		if ($download == 1) {
+			$nit = $this->getValConfig("documentoEmpresa");
+			if ($nit != '') {
+				$pdf->SetProtection(array('print','copy'), $nit, null, 0);
+			}
+		}
 		$pdf->setTitle('Pedido ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
-		$pdf->Output($dataVenta['codigo'] . ".pdf", 'I');
+		$pdf->Output($dataVenta['codigo'] . ".pdf", ($download == "1" ? 'D' : 'I'));
 		exit;
 	}
 
@@ -275,7 +295,7 @@ class cReportes extends BaseController {
 		);
 	}
 
-	private function estructuraProductos($pdf, $productos) {
+	private function estructuraProductos($pdf, $productos, $imagen = 0) {
 		$contentReplace = "";
 		if (strpos($pdf, "[DP")) {
 			$contentReplace = explode("[DP", $pdf);
@@ -286,14 +306,44 @@ class cReportes extends BaseController {
 			if (strpos($contentReplace, "<tbody>")) {
 				$table = explode("<tbody>", $contentReplace);
 				$table = explode("</tbody>", $table[1])[0];
+
+				if ($imagen == 1) {
+					/* Partimos la estructura en el thead, dejamos solo el tr dentro */
+					$tableHead = explode("<thead>", $contentReplace);
+					$tableHead = explode("</thead>", $tableHead[1])[0];
+
+					/* Sacamos los th de tr del thead para agregar la columan de imagen */
+					$tableHeadtr = explode("<tr>", $tableHead);
+					$tableHeadtr = explode("</tr>", $tableHeadtr[1])[0];
+	
+					$tableHeadtr = '<tr><th scope="col"><strong>Imagen</strong></th>' . $tableHeadtr . '</tr>';
+	
+					$tableHeadListo = explode("<thead>", $contentReplace)[0];
+	
+					/* Concatenamos las partes para volver a armar el thead */
+					$contentReplace = $tableHeadListo . $tableHeadtr . explode("</thead>", $contentReplace)[1];
+
+					/* Sacamos el tr del body y agregamos la columna imagen al inicio y volvemos a crear el tr */
+					$tableBodytr = explode("<tr>", $table);
+					$tableBodytr = explode("</tr>", $tableBodytr[1])[0];
+					$table = '<tr><td>{imagenDP}</td>' . $tableBodytr . '</tr>';
+				}
+
 				$estructura = "";
 				foreach ($productos as $key => $value) {
 					$estructura .= $table;
-					foreach ($value as $key => $value) {
-						if ($key == 'valorProductoDP' || $key == 'totalProductoDP') {
-							$value = '$ ' . number_format($value, 0, ',', '.');
+					foreach ($value as $key => $value2) {
+						if ($imagen == 1 && $key == 'imagenDP') {
+							$path = UPLOADS_PRODUCT_PATH . $value->idProducto . "/01-small.png";
+							if (!file_exists($path)) {
+								$path = ASSETS_PATH . "/img/nofoto.png";
+							}
+							$value2 = '<img src="' . $path . '" width="70px" height="40px">';
 						}
-						$estructura = str_replace("{{$key}}", (is_null($value) ? '' : $value), $estructura);
+						if ($key == 'valorProductoDP' || $key == 'totalProductoDP') {
+							$value2 = '$ ' . number_format($value2, 0, ',', '.');
+						}
+						$estructura = str_replace("{{$key}}", (is_null($value2) ? '' : $value2), $estructura);
 					}
 				}
 				$parte1 = explode("<tbody>", $contentReplace)[0];
@@ -302,6 +352,11 @@ class cReportes extends BaseController {
 				$estructura = "";
 				foreach ($productos as $key => $value) {
 					$estructura .= $contentReplace;
+
+					if ($imagen == 1) {
+						$estructura .= 'Imagen: <img src="' . UPLOADS_PRODUCT_PATH . $value->idProducto . '"/01-small.png" width="70px" height="40px">';
+					}
+
 					foreach ($value as $key => $value) {
 						if ($key == 'valorProductoDP' || $key == 'totalProductoDP') {
 							$value = '$ ' . number_format($value, 0, ',', '.');
@@ -378,6 +433,12 @@ class cReportes extends BaseController {
 		$pdf->setTitle('Envio Pedido ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
 		$pdf->Output($dataVenta['codigo'] . ".pdf", 'I');
 		exit;
+	}
+
+	private function getValConfig($field) {
+		return $this->mConfiguracion
+				->select("IF(valor IS NULL OR valor = '', '', valor) AS valor")
+				->where('campo', $field)->get()->getRow('valor');
 	}
 
 }

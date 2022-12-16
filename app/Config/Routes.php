@@ -39,6 +39,8 @@ $routes->post('sidebar', 'Home::sidebar', ['filter' => ['authGuard', 'ajax']]);
 $routes->get('productosAPP', 'cProductos::productosAPP');
 $routes->get('fotoProductosAPP/(:num)/(:any)', 'cProductos::foto/$1/$2');
 
+/* Ruta para la lectura de QR */
+$routes->get('FacturaQR/(:num)', 'cPedidos::facturaQR/$1');
 
 //Usuarios
 $routes->group('Usuarios', ['filter' => 'authGuard:1'], function ($routes) {
@@ -170,11 +172,19 @@ $routes->group('Perfil', ['filter' => 'authGuard'], function ($routes) {
 $routes->group('Reportes', ['filter' => 'authGuard'], function ($routes) {
 	$routes->get('Factura/(:num)', 'cReportes::factura/$1');
 	$routes->get('Factura/(:num)/(:num)', 'cReportes::factura/$1/$2');
-	$routes->get('Pedido/(:num)', 'cReportes::pedido/$1');
+	$routes->get('Pedido/(:num)/(:num)', 'cReportes::pedido/$1/$2');
 	$routes->get('Rotulo/(:num)/(:num)', 'cReportes::rotulo/$1/$2');
 	$routes->get('Manifiestos/(:any)', 'cReportes::manifiestos/$1');
 	$routes->get('Envio/(:num)/(:any)', 'cReportes::envio/$1/$2');
 	//$routes->get('DT', 'cManifiesto::listaDT');
+});
+
+//ReportesQR
+$routes->group('ReportesQR', ['filter' => 'qrFactura'], function ($routes) {
+	$routes->get('Pedido/(:num)/(:num)', 'cReportes::pedido/$1/$2');
+	$routes->get('Factura/(:num)/(:num)/(:num)', 'cReportes::factura/$1/$2/$3');
+	$routes->get('FacturaFoto/(:num)/(:num)/(:num)/(:num)', 'cReportes::factura/$1/$2/$3/$4');
+	$routes->get('PedidoFoto/(:num)/(:num)/(:num)', 'cReportes::pedido/$1/$2/$3');
 });
 
 //Almacenes
@@ -239,6 +249,11 @@ $routes->group('Pedidos', ['filter' => 'authGuard:10'], function ($routes) {
 	$routes->post('Editar', 'cPedidos::guardarEditar', ['filter' => 'ajax']);
 	$routes->get('Cargar/(:num)', 'cPedidos::cargarPedido/$1', ['filter' => 'ajax']);
 	$routes->get('CajasManifiestos/(:num)', 'cPedidos::cajasManifiestos/$1', ['filter' => 'ajax']);
+	$routes->get('GenerarQR/(:num)', 'cPedidos::generarQR/$1');
+
+
+
+	$routes->get('EnviarEmail', 'cPedidos::sendEmail');
 });
 
 //Empaque

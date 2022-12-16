@@ -15,6 +15,8 @@ use App\Models\mVentas;
 use App\Models\mVentasProductos;
 use App\Models\mPedidosCajas;
 use App\Models\mPedidosCajasProductos;
+use chillerlan\QRCode\QRCode;
+use chillerlan\QRCode\QROptions;
 
 class cPedidos extends BaseController {
 	public function index() {
@@ -807,5 +809,105 @@ class cPedidos extends BaseController {
 			$resp["msj"] = "No se encontraron cajas para el pedido";
 		}
 		return $this->response->setJSON($resp);
-	} 
+	}
+
+	public function generarQR($pedido) {
+		$resp["success"] = true;
+		$resp["msj"] = "Código QR generado correctamente";
+		$resp["name"] = "QR_$pedido";
+		$options = new QROptions([
+			'imageTransparent' => false
+		]);
+		$resp["qr"] = (new QRCode($options))->render(base_url() . "/FacturaQR/{$pedido}");
+		return $this->response->setJSON($resp);
+	}
+
+	public function facturaQR($factura) {
+		$mVentas = new mVentas();
+		$mVentasProductos = new mVentasProductos();
+		$mPedidos = new mPedidos();
+		$mPedidosCajas = new mPedidosCajas();
+		$mPedidosCajasProductos = new mPedidosCajasProductos();
+
+		$this->db->transBegin();
+
+		$this->content['cajas'] = [];
+		$this->content['productos'] = [];
+		$this->content['factura'] = $mVentas->asObject()->find($factura);
+
+		if (!is_null($this->content['factura']->id_pedido)) {
+			$cajas = $mPedidosCajas->select("
+					pedidoscajas.id AS idCajaPedido,
+					pedidoscajas.numero_caja AS numeroCaja,
+					pedidoscajas.id_empacador AS empacador,
+					pedidoscajas.inicio_empaque AS inicioEmpaque,
+					pedidoscajas.fin_empaque AS finEmpaque,
+					U.nombre AS nombreEmpacador
+				")->join('usuarios AS U', 'pedidoscajas.id_empacador = U.id', 'left')
+				->where("pedidoscajas.id_pedido", $this->content['factura']->id_pedido)
+				->findAll();
+	
+			if (count($cajas) > 0) {
+	
+				$mPedidosCajasProductos = new mPedidosCajasProductos();
+	
+				foreach($cajas as $pos => $value1) {
+					$cajas[$pos]->productos = $mPedidosCajasProductos->select("
+						P.item,
+						P.referencia,
+						P.descripcion,
+						P.precio_venta,
+						P.cantPaca,
+						pedidoscajasproductos.cantidad
+					")
+					->join("productos AS P", "pedidoscajasproductos.id_producto = P.id", "left")
+					->where("pedidoscajasproductos.id_caja", $value1->idCajaPedido)
+					->orderBy("pedidoscajasproductos.id", "DESC")
+					->findAll();
+				}
+			}
+			$this->content['cajas'] = $cajas;
+		} else {
+			$this->content['productos'] = $mVentasProductos->select("
+				P.item,
+				P.referencia,
+				P.descripcion,
+				ventasproductos.valor AS precio_venta,
+				P.cantPaca,
+				ventasproductos.cantidad
+			")->join("productos AS P", "ventasproductos.id_producto = P.id", "left")
+			->where("id_venta", $factura)
+			->findAll();
+		}
+
+		$builder = $this->db->table('ventas')->set("leidoQR", 1)->where('id_pedido', $factura);
+		if($builder->update()) {
+			$this->db->transCommit();
+
+			$mConfiguracion = new mConfiguracion();
+
+			$emailEmpresa = $mConfiguracion->select("valor, campo")->where('campo', "emailEmpresa")->get()->getRow('valor');
+
+			if (
+				!is_null($emailEmpresa) 
+				&& $emailEmpresa != '' 
+				&& strpos($emailEmpresa, '@') !== false 
+				&& strpos($emailEmpresa, '.') !== false
+			) {
+				$body = "<div>
+					<h3>Descarga Factura QR</h3>
+					<p>
+						Se ha descargado la factura " . $this->content['factura']->codigo . " por un total de " . $this->content['factura']->total . " desde la opción del QR
+					</p>
+				</div>";
+
+				$this->content['respuestaCorreo'] = sendEmail($mConfiguracion, [$emailEmpresa], "Descarga Factura " . $this->content['factura']->codigo, $body);
+			}
+		} else {
+			$this->db->transRollback();
+		}
+
+		return view('vFacturaQR', $this->content);
+	}
+
 }

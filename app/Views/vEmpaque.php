@@ -63,7 +63,7 @@
           <div class="col-7">
 
             <div class="imagen-producto d-flex justify-content-end">
-              <img style="max-width: 160px;" src="" class="rounded" id="imgProd" alt="Producto">
+              <img style="max-width: 160px;" src="" class="rounded border" id="imgProd" alt="Producto">
             </div>
 
             <h5 class="text-center">Productos Por Empacar</h5>

@@ -99,6 +99,36 @@
   </form>
 </div>
 
+<div class="modal fade" id="modalGQR" data-backdrop="static" data-keyboard="false" aria-labelledby="modalGQRLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalGQRLabel">Código QR</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="col-12">
+            <img width="100%" id="imgqr" alt="Codigo QR">
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <a type="button" download="" href="" class="btn btn-success" id="btnDescargarQR">
+          <i class="fas fa-download"></i> Descargar
+        </a>
+        <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-primary">
+          <i class="fas fa-check"></i> Aceptar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 	$MANEJAEMPAQUE = "<?= $manejaEmpaque ?>";
 </script>
