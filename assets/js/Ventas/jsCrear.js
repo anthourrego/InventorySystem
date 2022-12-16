@@ -210,7 +210,13 @@ $(function () {
       if (productosVentas.length > 0) {
         form = new FormData(this);
 
-        let idCliente = sucursales.find(x => x.id == $("#sucursal").val()).idCliente;
+        let idCliente = null;
+        if (sucursales.length) {
+          idCliente = sucursales.find(x => x.id == $("#sucursal").val()).idCliente;
+        } else {
+          idCliente = $DATOSVENTA.id_cliente;
+        }
+
         form.append("idCliente", idCliente);
         form.append("idUsuario", $("#vendedor").val());
         form.append("observacion", $("#observacion").val());
@@ -231,7 +237,7 @@ $(function () {
                   function () {
                     productosVentas = [];
                     $("#nroVenta").val(resp.msj.codigo + 1);
-                    $("#cliente, #vendedor").data("id", "").closest(".input-group").find(".input-group-text").text("");
+                    $("#sucursal, #vendedor").data("id", "").closest(".input-group").find(".input-group-text").text("");
                     $("#observacion").val("");
                     $("#total").val(0)
                     DTProductos.ajax.reload();

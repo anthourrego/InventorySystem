@@ -17,6 +17,7 @@ class cMiPerfil extends BaseController {
 		
 		$this->LJQueryValidation();
 		$this->LSelect2();
+		$this->LCropperImageEditor();
 
 		$this->content['cssMiP'] = $this->content['css'];
 
@@ -88,7 +89,8 @@ class cMiPerfil extends BaseController {
 				if ($validated) {
 					if ($imgFoto->isValid() && !$imgFoto->hasMoved()) {
 						//Validamos que la imagen suba correctamente
-						$nameImg = "{$user->id}.{$imgFoto->getClientExtension()}";
+						$nameImg = "{$user->id}.png";
+						
 						if ($imgFoto->move(UPLOADS_USER_PATH, $nameImg, true)) {
 							
 							$updateFoto = array("id" => $user->id, "foto" => $nameImg);

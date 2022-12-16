@@ -499,7 +499,7 @@ div.dt-button-collection .dt-button {
   cursor: pointer;
 }
 
-.btn-eliminar-foto {
+.btn-eliminar-foto, .btn-eliminar-foto-perfil {
   position: absolute;
   top: 0px;
   right: 5px;

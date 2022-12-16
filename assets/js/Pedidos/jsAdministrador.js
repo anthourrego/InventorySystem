@@ -10,6 +10,7 @@ let DT = $("#table").DataTable({
     }
   },
   order: [[0, "desc"]],
+  scrollX: true,
   columns: [
     {
       data: 'pedido',

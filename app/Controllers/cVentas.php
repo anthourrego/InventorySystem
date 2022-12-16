@@ -82,20 +82,20 @@ class cVentas extends BaseController {
 		$venta = $venta[0];
 		
 		$productos = $mVentasProductos->select("
-											p.id,
-											ventasproductos.id AS idProductoVenta,
-											p.referencia, 
-											p.item, 
-											p.descripcion,
-											(p.stock + ventasproductos.cantidad) AS stock,
-											ventasproductos.cantidad,
-											ventasproductos.valor AS valorUnitario,
-											ventasproductos.valor_original,
-											p.precio_venta,
-											(ventasproductos.valor * ventasproductos.cantidad) AS valorTotal
-										")->join("productos AS p", "ventasproductos.id_producto = p.id")
-										->where("ventasproductos.id_venta", $venta->id)
-										->findAll();
+				p.id,
+				ventasproductos.id AS idProductoVenta,
+				p.referencia, 
+				p.item, 
+				p.descripcion,
+				(p.stock + ventasproductos.cantidad) AS stock,
+				ventasproductos.cantidad,
+				ventasproductos.valor AS valorUnitario,
+				ventasproductos.valor_original,
+				p.precio_venta,
+				(ventasproductos.valor * ventasproductos.cantidad) AS valorTotal
+			")->join("productos AS p", "ventasproductos.id_producto = p.id")
+			->where("ventasproductos.id_venta", $venta->id)
+			->findAll();
 
 		$venta->productos = $productos;
 		
@@ -135,29 +135,29 @@ class cVentas extends BaseController {
 
 	public function listaDT(){
 		$query = $this->db->table('ventas AS V')
-											->select("
-												V.id,
-												V.codigo,
-												V.id_cliente,
-												C.nombre AS NombreCliente,
-												V.id_vendedor,
-												U.nombre AS NombreVendedor,
-												V.impuesto,
-												V.neto,
-												V.total,
-												CASE 
-													WHEN V.metodo_pago = 1 THEN 'Contado' 
-													ELSE 'Credito'
-												END AS metodo_pago,
-												V.created_at,
-												V.updated_at,
-												S.nombre AS NombreSucursal,
-												V.id_pedido,
-												CUI.nombre AS Ciudad
-											")->join('clientes AS C', 'V.id_cliente = C.id', 'left')
-											->join('sucursales AS S', 'V.id_sucursal = S.id', 'left')
-											->join('ciudades AS CUI', 'S.id_ciudad = CUI.id', 'left')
-											->join('usuarios AS U', 'V.id_vendedor = U.id', 'left');
+			->select("
+				V.id,
+				V.codigo,
+				V.id_cliente,
+				C.nombre AS NombreCliente,
+				V.id_vendedor,
+				U.nombre AS NombreVendedor,
+				V.impuesto,
+				V.neto,
+				V.total,
+				CASE 
+					WHEN V.metodo_pago = 1 THEN 'Contado' 
+					ELSE 'Credito'
+				END AS metodo_pago,
+				V.created_at,
+				V.updated_at,
+				S.nombre AS NombreSucursal,
+				V.id_pedido,
+				CUI.nombre AS Ciudad
+			")->join('clientes AS C', 'V.id_cliente = C.id', 'left')
+			->join('sucursales AS S', 'V.id_sucursal = S.id', 'left')
+			->join('ciudades AS CUI', 'S.id_ciudad = CUI.id', 'left')
+			->join('usuarios AS U', 'V.id_vendedor = U.id', 'left');
 
 		return DataTable::of($query)->toJson(true);
 	}
@@ -343,6 +343,7 @@ class cVentas extends BaseController {
 				"id" => $dataPost->idVenta,
 				"id_cliente" => $dataPost->idCliente,
 				"id_vendedor" => $dataPost->idUsuario,
+				"id_sucursal" => $dataPost->sucursal,
 				"impuesto" => 0,
 				"neto" => 0,
 				"total" => 0,
