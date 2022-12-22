@@ -547,3 +547,13 @@ alertify.busquedaAlert || alertify.dialog('busquedaAlert', function factory() {
 		}
 	};
 });
+
+$(document).on("click", ".btn-pass", function (e) {
+	if ($(this).find('i').hasClass('fa-eye')) {
+		$(this).closest('.input-group').find('input').attr('type', 'text');
+		$(this).find('i').removeClass('fa-eye').addClass('fa-eye-slash');
+	} else {
+		$(this).closest('.input-group').find('input').attr('type', 'password');
+		$(this).find('i').removeClass('fa-eye-slash').addClass('fa-eye');
+	}
+});

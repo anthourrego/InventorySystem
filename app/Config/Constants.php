@@ -93,4 +93,10 @@ defined('TIPODOCS')      || define('TIPODOCS', array(
   , 1 => array("valor" => "CC", "titulo" => "Cedula Ciudadania")
 ));// Tipos de documentos
 
+defined('TIPOCORREO')      || define('TIPOCORREO', array(
+  0 => array("valor" => "H", "titulo" => "Hotmail", "smtp" => "smtp.live.com")
+  , 1 => array("valor" => "G", "titulo" => "Gmail", "smtp" => "smtp.gmail.com")
+  , 2 => array("valor" => "O", "titulo" => "Otro", "smtp" => "N/A")
+));// Tipos de documentos
+
 defined('DOMINIO') || define('DOMINIO', 0);

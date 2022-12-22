@@ -220,16 +220,6 @@ $(function () {
     }
   });
 
-  $(".btn-pass").on("click", function () {
-    if ($(this).find('i').hasClass('fa-eye')) {
-      $(this).closest('.input-group').find('input').attr('type', 'text');
-      $(this).find('i').removeClass('fa-eye').addClass('fa-eye-slash');
-    } else {
-      $(this).closest('.input-group').find('input').attr('type', 'password');
-      $(this).find('i').removeClass('fa-eye-slash').addClass('fa-eye');
-    }
-  });
-
   $("#formPassword").validate({
     rules: {
       passActual: "required",

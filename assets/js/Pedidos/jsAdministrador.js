@@ -12,9 +12,9 @@ let DT = $("#table").DataTable({
   order: [[0, "desc"]],
   scrollX: true,
   columns: [
-    { 
-      data: 'pedido', 
-      render: function(meta, type, data, meta) {
+    {
+      data: 'pedido',
+      render: function (meta, type, data, meta) {
         return (data.idFactura && data.idFactura > 0 && validPermissions(6)) ? `<a target="_blank" title="${data.factura}" href="${base_url()}Ventas/Editar/${data.idFactura}">${data.pedido} | ${data.factura}</a>` : data.pedido;
       }
     },
@@ -83,7 +83,7 @@ let DT = $("#table").DataTable({
 
         /* Tiene permiso de imprimir */
         if (validPermissions(106)) {
-          botones += `<a href="${base_url()}Reportes/Pedido/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprimir Pedido">
+          botones += `<a href="${base_url()}Reportes/Pedido/${data.id}/0" target="_blank" type="button" class="btn btn-info" title="Imprimir Pedido">
             <i class="fa-solid fa-print"></i>
           </a>`;
           /* Conpermiso y tenga factura */
@@ -144,6 +144,13 @@ let DT = $("#table").DataTable({
           }
         }
 
+        /* Si esta facturado y tiene permiso de imprimir QR */
+        if (facturado && validPermissions(110)) {
+          botones += `<button type="button" class="btn btn-info btnImprimirQR" title="Código QR">
+            <i class="fa-solid fa-qrcode"></i>
+          </button>`;
+        }
+
         return `<div class="btn-group btn-group-sm" role="group">${botones}</div>`;
       }
     },
@@ -177,7 +184,7 @@ let DT = $("#table").DataTable({
         campoFoco = 'textarea[name="observacion"]';
       }
 
-      alertify.imprimirRotulo(function(){
+      alertify.imprimirRotulo(function () {
         if (!data.TotalCajas || $MANEJAEMPAQUE == '0') {
           nroCajas = $('#formRotulo input[name="nroCajas"]').val();
           if (nroCajas > 0) {
@@ -188,7 +195,7 @@ let DT = $("#table").DataTable({
               }, 0);
               return;
             }
-          }  else {
+          } else {
             alertify.warning('Ingrese una cantidad valida');
             setTimeout(() => {
               $(context).click();
@@ -208,10 +215,10 @@ let DT = $("#table").DataTable({
         }
         $('#formRotulo')[0].reset();
 
-      }, 
-      function(){
-        $('#formRotulo')[0].reset();
-      }).set('selector', campoFoco);
+      },
+        function () {
+          $('#formRotulo')[0].reset();
+        }).set('selector', campoFoco);
     });
 
     $(row).find(".btnVerManifiesto").click(function (e) {
@@ -235,6 +242,22 @@ let DT = $("#table").DataTable({
         }
       }, function () { }).setting({
         'type': 'number'
+      });
+    });
+
+    $(row).find(".btnImprimirQR").click(function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: "GET",
+        url: `${rutaBase}GenerarQR/${data.idFactura}`,
+        dataType: 'json',
+        success: function (resp) {
+          if (resp.success) {
+            $("#imgqr").attr("src", resp.qr);
+            $("#modalGQR").modal('show');
+            $("#btnDescargarQR").attr('download', resp.name + '.png').attr('href', resp.qr);
+          }
+        }
       });
     });
   }
@@ -263,7 +286,7 @@ function alistarPedido(data) {
             alertify.success(resp.msj);
             DT.ajax.reload();
             if (data.estado == 0) {
-              window.open(base_url() + "Reportes/Pedido/" + data.id);
+              window.open(base_url() + "Reportes/Pedido/" + data.id + "/0");
             } else {
               window.open(base_url() + "Reportes/Factura/" + resp.id_factura);
             }
@@ -312,7 +335,7 @@ function buscarManifiestos(info) {
         } else {
           $("#listacajas").css("overflow-x", "unset");
         }
-        
+
         datos.forEach((it, x) => {
 
           let ids = it.manifiestos.map((op, p) => op.id);
@@ -357,67 +380,67 @@ function buscarManifiestos(info) {
   });
 }
 
-alertify.imprimirRotulo || alertify.dialog('imprimirRotulo',function(){
+alertify.imprimirRotulo || alertify.dialog('imprimirRotulo', function () {
   return {
-    main:function(onok, oncancel){
+    main: function (onok, oncancel) {
       this.set('title', "Imprimir rotulo");
       this.setContent($('#formRotulo')[0]);
       this.set('onok', onok);
       this.set('oncancel', oncancel);
     },
-    setup:function(){
+    setup: function () {
       return {
         buttons: [
-					{
-						text: alertify.defaults.glossary.ok,
-						key: 13,
-						className: alertify.defaults.theme.ok,
-					},
-					{
-						text: alertify.defaults.glossary.cancel,
-						key: 27,
-						invokeOnClose: true,
-						className: alertify.defaults.theme.cancel,
-					}
-				],
+          {
+            text: alertify.defaults.glossary.ok,
+            key: 13,
+            className: alertify.defaults.theme.ok,
+          },
+          {
+            text: alertify.defaults.glossary.cancel,
+            key: 27,
+            invokeOnClose: true,
+            className: alertify.defaults.theme.cancel,
+          }
+        ],
         //focus: { element:0 },
-        focus:{
-          element:function(){
+        focus: {
+          element: function () {
             return this.elements.body.querySelector(this.get('selector'));
           },
-          select:true
+          select: true
         },
-        options:{
-          maximizable:false,
-          resizable:false,
+        options: {
+          maximizable: false,
+          resizable: false,
         }
       };
     },
-    settings:{
-      selector:undefined,
+    settings: {
+      selector: undefined,
       onok: null,
       oncancel: null
     },
     callback: function (closeEvent) {
       var returnValue;
       switch (closeEvent.index) {
-      case 0:
+        case 0:
           if (typeof this.get('onok') === 'function') {
-              returnValue = this.get('onok').call(this, closeEvent);
-              if (typeof returnValue !== 'undefined') {
-                  closeEvent.cancel = !returnValue;
-              }
+            returnValue = this.get('onok').call(this, closeEvent);
+            if (typeof returnValue !== 'undefined') {
+              closeEvent.cancel = !returnValue;
+            }
           }
           break;
-      case 1:
+        case 1:
           if (typeof this.get('oncancel') === 'function') {
-              returnValue = this.get('oncancel').call(this, closeEvent);
-              if (typeof returnValue !== 'undefined') {
-                  closeEvent.cancel = !returnValue;
-              }
+            returnValue = this.get('oncancel').call(this, closeEvent);
+            if (typeof returnValue !== 'undefined') {
+              closeEvent.cancel = !returnValue;
+            }
           }
           break;
       }
-  },
+    },
   };
 });
