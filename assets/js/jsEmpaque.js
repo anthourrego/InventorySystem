@@ -28,17 +28,20 @@ let DT = $("#table").DataTable({
     }, {
       data: 'total',
       className: 'text-right',
+      visible: false,
       render: function (meta, type, data, meta) {
         return formatoPesos.format(data.total);
       }
     }, {
       data: 'created_at',
+      visible: false,
       render: function (meta, type, data, meta) {
         return moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A");
       }
-    },
-    { data: 'NombreVendedor' },
-    {
+    }, {
+      data: 'NombreVendedor',
+      visible: false,
+    }, {
       orderable: false,
       searchable: false,
       defaultContent: '',
@@ -198,15 +201,16 @@ function obtenerInfoPedido(pedido, sync = false) {
             <button title="Ver Foto" type="button" class="btn btn-info btn-sm mr-2 option-ref" data-pos=${x}>
               <i class="fas fa-image"></i>
             </button>
-            <h6 class="mb-0" style="width: 65%" data-item="${it.item}">${it.referencia} - ${it.descripcion}</h6>
+            <h6 class="mb-0" style="width: 65%" data-item="${it.item}">${it.referencia} - ${(it.item || '')}</h6>
             <div class="input-group" style="width: 35%">
-              <input id="prod${it.id}" type="number" class="form-control form-control-sm cantAgregarProd soloNumeros p-1" min="1" value="${it.cantAgregar}" max="${it.CantTotalCajas}" aria-describedby="btnCantidad">
+              <input id="prod${it.id}" type="number" class="form-control form-control-sm cantAgregarProd soloNumeros p-1 font-weight-bold" min="1" value="${it.cantAgregar}" max="${it.CantTotalCajas}" aria-describedby="btnCantidad">
               <div class="input-group-append">
-                <button class="btn btn-outline-info btn-sm" type="button" id="btnCantidad">/${it.cantidad}</button>
+                <button class="btn btn-info btn-sm" type="button" id="btnCantidad">/${it.cantidad}</button>
               </div>
             </div>
           </div>
-          <div class="d-flex justify-content-end mt-1">
+          <div class="d-flex justify-content-between mt-1">
+            <h6 class="mb-0">${it.descripcion} - ${(it.ubicacionProd || '')}</h6>
             <button type="button" class="btn btn-sm btn-primary btn-agregar-prod" data-input="#prod${it.id}" data-pos=${x}>
               <i class="fas fa-plus"></i> Agregar
             </button>
@@ -313,7 +317,7 @@ function obtenerInfoPedido(pedido, sync = false) {
               estructura += `<div class="list-group-item list-group-item-action p-2">
                   <div class="d-flex justify-content-between align-items-center">
                     <h6 class="mb-0 text-truncate w-75">
-                      Ref: ${it.referencia} - Cantidad: ${it.cantidad}
+                      ${it.referencia} - ${it.cantidad} uni
                     </h6>
                     <button type="button" class="btn btn-sm btn-danger btn-eliminar-prod" data-pos=${x}>
                       <i class="fas fa-trash"></i>

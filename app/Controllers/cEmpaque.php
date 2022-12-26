@@ -163,7 +163,8 @@ class cEmpaque extends BaseController {
 					pedidosproductos.cantidad - IF(prodCaja.CantTotalCajas IS NULL, 0, prodCaja.CantTotalCajas)
 				) AS cantAgregar,
 				prodCaja.CantTotalCajas,
-				pedidosproductos.id AS idPedidoProducto
+				pedidosproductos.id AS idPedidoProducto,
+				p.ubicacion AS ubicacionProd
 			")->join("productos AS p", "pedidosproductos.id_producto = p.id")
 			->join("(
 				SELECT
