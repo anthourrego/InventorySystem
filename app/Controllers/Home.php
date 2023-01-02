@@ -166,4 +166,21 @@ class Home extends BaseController {
 		}
 		return $valor; 
 	}
+
+	public function fotoEmpresa() {
+		$logo = $this->mConfiguracion->select("valor")->where("campo", "logoEmpresa")->get()->getRow('valor');
+		$filename = UPLOADS_CONF_PATH . $logo;
+		
+		// Si la foto no existe la colocamos por defecto
+		if(is_null($logo) || empty($logo) || !file_exists($filename)){ 
+			$filename = base_url("assets/img/logo-negro-bloque.jpg");
+		}
+
+		//$mime = mime_content_type($filename); //<-- detect file type
+		header('Content-Length: '.filesize($filename)); //<-- sends filesize header
+		header("Content-Type: image/jpeg"); //<-- send mime-type header
+		header("Content-Disposition: inline; filename='{$filename}';"); //<-- sends filename header
+		readfile($filename); //<--reads and outputs the file onto the output buffer
+		exit(); // or die()
+	}
 }

@@ -15,7 +15,7 @@ let DT = $("#table").DataTable({
     {
       data: 'pedido',
       render: function (meta, type, data, meta) {
-        return (data.idFactura && data.idFactura > 0 && validPermissions(6)) ? `<a target="_blank" title="${data.factura}" href="${base_url()}Ventas/Editar/${data.idFactura}">${data.pedido} | ${data.factura}</a>` : data.pedido;
+        return (data.idFactura && data.idFactura > 0 && data.leidoQR != 1 && validPermissions(6)) ? `<a target="_blank" title="${data.factura}" href="${base_url()}Ventas/Editar/${data.idFactura}">${data.pedido} | ${data.factura}</a>` : data.pedido;
       }
     },
     { data: 'NombreCliente' },
@@ -35,6 +35,10 @@ let DT = $("#table").DataTable({
             color = "secondary";
           } else if (data.estado == 2) {
             color = "info";
+          }
+        } else {
+          if (data.leidoQR == 1) {
+            color = "warning";
           }
         }
         return `<button class="btn btn-${color}">${data.NombreEstado}</button>`;
@@ -73,6 +77,11 @@ let DT = $("#table").DataTable({
         }
         let botones = '';
         let facturado = (data.idFactura && data.idFactura > 0);
+
+        if (data.leidoQR == 1) {
+          facturado = false;
+          data.estado = 2;
+        }
 
         /* Si es para alistamiento o si no tiene factura y ya esta empacado */
         if ((data.estado == 0 && validPermissions(104)) || (!facturado && data.estado == 2 && validPermissions(105))) {
@@ -145,11 +154,11 @@ let DT = $("#table").DataTable({
         }
 
         /* Si esta facturado y tiene permiso de imprimir QR */
-        if (facturado && validPermissions(110)) {
+        /* if (facturado && validPermissions(110)) {
           botones += `<button type="button" class="btn btn-info btnImprimirQR" title="Código QR">
             <i class="fa-solid fa-qrcode"></i>
           </button>`;
-        }
+        } */
 
         return `<div class="btn-group btn-group-sm" role="group">${botones}</div>`;
       }

@@ -179,7 +179,11 @@ class cPedidos extends BaseController {
 				P.estado,
 				CASE 
 					WHEN V.id IS NOT NULL
-						THEN 'Facturado'
+						THEN CASE
+							WHEN V.leidoQR = 1
+								THEN 'Despachado'
+							ELSE 'Facturado'
+						END
 					WHEN P.Estado = 0 
 						THEN 'Pendiente' 
 					WHEN P.Estado = 1 
@@ -192,7 +196,8 @@ class cPedidos extends BaseController {
 				V.id AS idFactura,
 				CUI.nombre AS Ciudad,
 				TC.TotalCajas,
-				V.codigo AS factura
+				V.codigo AS factura,
+				V.leidoQR
 			")->join('clientes AS C', 'P.id_cliente = C.id', 'left')
 			->join('sucursales AS S', 'P.id_sucursal = S.id', 'left')
 			->join('ciudades AS CUI', 'S.id_ciudad = CUI.id', 'left')
@@ -660,103 +665,42 @@ class cPedidos extends BaseController {
 
 	public function facturarPedido() {
 		$resp["success"] = false;
+
 		// Traemos los datos del post
 		$data = (object) $this->request->getPost();
-        
+		$mVentas = new mVentas();
+		
 		$this->db->transBegin();
+		
+		$factura = $mVentas->asObject()->where("id_pedido", $data->id)->first();
 
-		$builder = $this->db->table('pedidos')->set("estado", $data->estado)->where('id', $data->id);
+		if (is_null($factura)) {
+			$resp = $this->crearFacturaPedido($data);
 
-		// Facturamos el pedido
-		if($builder->update()) {
-
-			$mConfiguracion = new mConfiguracion();
-			$pedidoModel = new mPedidos();
-			$mPedidosProductos = new mPedidosProductos();
-			$ventaModel = new mVentas();
-			$mVentasProductos = new mVentasProductos();
-
-			$dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoFact")->first();
-			$cantDigitos = (session()->has("digitosFact") ? session()->get("digitosFact") : 0);
-
-			$numerVenta = str_pad((is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1)), $cantDigitos, "0", STR_PAD_LEFT);
-			$codigo = (session()->has("prefijoFact") ? session()->get("prefijoFact") : '') . $numerVenta;
-
-			$pedido = $pedidoModel->find($data->id);
-			$pedidoProductos = $mPedidosProductos->where("id_pedido", $data->id)->findAll();
-
-			$ventaSave = [
-				"codigo" => $codigo,
-				"id_cliente" => $pedido->id_cliente,
-				"id_vendedor" => $pedido->id_vendedor,
-				"observacion" => $pedido->observacion,
-				"impuesto" => $pedido->impuesto,
-				"neto" => $pedido->neto,
-				"total" => $pedido->total,
-				"metodo_pago" => $pedido->metodo_pago,
-				"id_sucursal" => $pedido->id_sucursal,
-				"id_pedido" => $data->id
-			];
-
-			if($ventaModel->save($ventaSave)){
-				$ventaSave["id"] = $ventaModel->getInsertID();
-
-				foreach ($pedidoProductos as $it) {
-					$dataProductoVenta = [
-						"id_venta" => $ventaSave["id"],
-						"id_producto" => $it->id_producto,
-						"cantidad" => $it->cantidad,
-						"valor" => $it->valor,
-						"valor_original" => $it->valor_original
-					];
-
-					if (!$mVentasProductos->save($dataProductoVenta)) {
-						$resp["msj"] = "Ha ocurrido un error al guardar los productos." . listErrors($mVentasProductos->errors());
-						break;
-					}
-				}
-				if ($this->db->transStatus() !== false) {
-					$resp["success"] = true;
-					$resp['msj'] = "Pedido Facturado correctamente, Factura nro: " . $codigo;
-					$resp["id_factura"] = $ventaSave["id"];
-					$resp["nFactura"] = $codigo;
-				}
-			} else {
-				$resp["msj"] = "Ha ocurrido un error al guardar la venta." . listErrors($ventaModel->errors());
-			}
-
-		} else {
-			$resp['msj'] = "No fue posible guardar la información";
-		}
-
-		if($resp["success"] == false || $this->db->transStatus() === false) {
-			$this->db->transRollback();
-		} else {
-			if (is_null($dataConse)) {
-				$mConfiguracion = new mConfiguracion();
-				$dataSave = [
-					"campo" => "consecutivoFact",
-					"valor" => $numerVenta
-				];
-				if(!$mConfiguracion->save($dataSave)) {
-					$this->db->transRollback();
-					$resp["msj"] = "Ha ocurrido un error al guardar la factura." . listErrors($mConfiguracion->errors());
-				} else {
-					$this->db->transCommit();
-				}
-			} else {
-				$builder = $this->db->table('configuracion')->set("valor", $numerVenta)->where('campo', "consecutivoFact");
+			if ($resp['success'] == true) {
+				$builder = $this->db->table('pedidos')->set("estado", $data->estado)->where('id', $data->id);
 				if($builder->update()) {
+					$resp['msj'] = "No fue posible generar la factura";
 					$this->db->transCommit();
 				} else {
-					$resp["success"] = false;
 					$this->db->transRollback();
 				}
+			} else {
+				$this->db->transRollback();
 			}
 
-			$this->db->transCommit();
+		} else {
+			$builder = $this->db->table('ventas')->set("leidoQR", 0)->where('id_pedido', $data->id);
+			if($builder->update()) {
+				$resp["success"] = true;
+				$resp['msj'] = "Pedido Facturado correctamente, Factura nro: " . $factura->codigo;
+				$resp['id_factura'] = $factura->id;
+				$this->db->transCommit();
+			} else {
+				$this->db->transRollback();
+				$resp['msj'] = "No fue posible generar la factura";
+			}
 		}
-
 		return $this->response->setJSON($resp);
 	}
 
@@ -825,65 +769,92 @@ class cPedidos extends BaseController {
 	public function facturaQR($factura) {
 		$mVentas = new mVentas();
 		$mVentasProductos = new mVentasProductos();
-		$mPedidos = new mPedidos();
 		$mPedidosCajas = new mPedidosCajas();
 		$mPedidosCajasProductos = new mPedidosCajasProductos();
-
-		$this->db->transBegin();
+		$mConfiguracion = new mConfiguracion();
 
 		$this->content['cajas'] = [];
 		$this->content['productos'] = [];
-		$this->content['factura'] = $mVentas->asObject()->find($factura);
 
-		if (!is_null($this->content['factura']->id_pedido)) {
-			$cajas = $mPedidosCajas->select("
-					pedidoscajas.id AS idCajaPedido,
-					pedidoscajas.numero_caja AS numeroCaja,
-					pedidoscajas.id_empacador AS empacador,
-					pedidoscajas.inicio_empaque AS inicioEmpaque,
-					pedidoscajas.fin_empaque AS finEmpaque,
-					U.nombre AS nombreEmpacador
-				")->join('usuarios AS U', 'pedidoscajas.id_empacador = U.id', 'left')
-				->where("pedidoscajas.id_pedido", $this->content['factura']->id_pedido)
-				->findAll();
-	
-			if (count($cajas) > 0) {
-	
-				$mPedidosCajasProductos = new mPedidosCajasProductos();
-	
-				foreach($cajas as $pos => $value1) {
-					$cajas[$pos]->productos = $mPedidosCajasProductos->select("
-						P.item,
-						P.referencia,
-						P.descripcion,
-						P.precio_venta,
-						P.cantPaca,
-						pedidoscajasproductos.cantidad
-					")
-					->join("productos AS P", "pedidoscajasproductos.id_producto = P.id", "left")
-					->where("pedidoscajasproductos.id_caja", $value1->idCajaPedido)
-					->orderBy("pedidoscajasproductos.id", "DESC")
-					->findAll();
-				}
+		$this->content['factura'] = $mVentas->asObject()->where("id_pedido", $factura)->first();
+
+		$this->db->transBegin();
+
+		$nuevo = false;
+		if (is_null($this->content['factura'])) {
+			$prefijo = $mConfiguracion->select("valor")->where("campo", "prefijoFact")->first();
+			$data = (object) array(
+				"id" => $factura,
+				"prefijo" => (isset($prefijo->valor) && !is_null($prefijo->valor) ? $prefijo->valor : '')
+			);
+			$resp = $this->crearFacturaPedido($data, false);
+
+			if (isset($resp["id_factura"])) {
+				$this->content['factura'] = $mVentas->asObject()->find($resp["id_factura"]);
+				$nuevo = true;
 			}
-			$this->content['cajas'] = $cajas;
-		} else {
-			$this->content['productos'] = $mVentasProductos->select("
-				P.item,
-				P.referencia,
-				P.descripcion,
-				ventasproductos.valor AS precio_venta,
-				P.cantPaca,
-				ventasproductos.cantidad
-			")->join("productos AS P", "ventasproductos.id_producto = P.id", "left")
-			->where("id_venta", $factura)
-			->findAll();
 		}
 
-		$builder = $this->db->table('ventas')->set("leidoQR", 1)->where('id_pedido', $factura);
-		if($builder->update()) {
-			$this->db->transCommit();
+		/* Cajas del pedido */
+		$cajas = $mPedidosCajas->select("
+				pedidoscajas.id AS idCajaPedido,
+				pedidoscajas.numero_caja AS numeroCaja,
+				pedidoscajas.id_empacador AS empacador,
+				pedidoscajas.inicio_empaque AS inicioEmpaque,
+				pedidoscajas.fin_empaque AS finEmpaque,
+				U.nombre AS nombreEmpacador
+			")->join('usuarios AS U', 'pedidoscajas.id_empacador = U.id', 'left')
+			->where("pedidoscajas.id_pedido", $this->content['factura']->id_pedido)
+			->findAll();
 
+		if (count($cajas) > 0) {
+
+			$mPedidosCajasProductos = new mPedidosCajasProductos();
+
+			foreach($cajas as $pos => $value1) {
+				$cajas[$pos]->productos = $mPedidosCajasProductos->select("
+					P.item,
+					P.referencia,
+					P.descripcion,
+					P.precio_venta,
+					P.cantPaca,
+					pedidoscajasproductos.cantidad,
+					PP.valor,
+					P.imagen,
+					P.id
+				")
+				->join("productos AS P", "pedidoscajasproductos.id_producto = P.id", "left")
+				->join("pedidosproductos AS PP", "pedidoscajasproductos.id_producto = PP.id_producto AND PP.id_pedido = '" . $this->content['factura']->id_pedido . "'", "left")
+				->where("pedidoscajasproductos.id_caja", $value1->idCajaPedido)
+				->orderBy("pedidoscajasproductos.id", "DESC")
+				->findAll();
+			}
+		}
+		$this->content['cajas'] = $cajas;
+
+		$this->content['productos'] = $mVentasProductos->select("
+			P.item,
+			P.referencia,
+			P.descripcion,
+			ventasproductos.valor AS precio_venta,
+			P.cantPaca,
+			ventasproductos.cantidad
+		")->join("productos AS P", "ventasproductos.id_producto = P.id", "left")
+		->where("id_venta", $factura)
+		->findAll();
+
+		if ($nuevo == true) {
+			$builder = $this->db->table('ventas')->set("leidoQR", 1)->where('id_pedido', $factura);
+			if($builder->update()) {
+				$this->db->transCommit();
+			} else {
+				$this->db->transRollback();
+			}
+		} else {
+			$this->db->transCommit();
+		}
+
+		if (!is_null($this->content['factura'])) {
 			$mConfiguracion = new mConfiguracion();
 
 			$emailEmpresa = $mConfiguracion->select("valor, campo")->where('campo', "emailEmpresa")->get()->getRow('valor');
@@ -903,11 +874,87 @@ class cPedidos extends BaseController {
 
 				$this->content['respuestaCorreo'] = sendEmail($mConfiguracion, [$emailEmpresa], "Descarga Factura " . $this->content['factura']->codigo, $body);
 			}
+		}
+		return view('vFacturaQR', $this->content);
+	}
+
+	private function crearFacturaPedido($data) {
+		$resp["success"] = false;
+
+		// Facturamos el pedido
+		$mConfiguracion = new mConfiguracion();
+		$pedidoModel = new mPedidos();
+		$mPedidosProductos = new mPedidosProductos();
+		$ventaModel = new mVentas();
+		$mVentasProductos = new mVentasProductos();
+
+		$dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoFact")->first();
+		$cantDigitos = (session()->has("digitosFact") ? session()->get("digitosFact") : 0);
+
+		$numerVenta = str_pad((is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1)), $cantDigitos, "0", STR_PAD_LEFT);
+		$codigo = (session()->has("prefijoFact") ? session()->get("prefijoFact") : (isset($data->prefijo) ? $data->prefijo : '')) . $numerVenta;
+
+		$pedido = $pedidoModel->find($data->id);
+		$pedidoProductos = $mPedidosProductos->where("id_pedido", $data->id)->findAll();
+
+		$ventaSave = [
+			"codigo" => $codigo,
+			"id_cliente" => $pedido->id_cliente,
+			"id_vendedor" => $pedido->id_vendedor,
+			"observacion" => $pedido->observacion,
+			"impuesto" => $pedido->impuesto,
+			"neto" => $pedido->neto,
+			"total" => $pedido->total,
+			"metodo_pago" => $pedido->metodo_pago,
+			"id_sucursal" => $pedido->id_sucursal,
+			"id_pedido" => $data->id
+		];
+
+		if($ventaModel->save($ventaSave)){
+			$ventaSave["id"] = $ventaModel->getInsertID();
+
+			foreach ($pedidoProductos as $it) {
+				$dataProductoVenta = [
+					"id_venta" => $ventaSave["id"],
+					"id_producto" => $it->id_producto,
+					"cantidad" => $it->cantidad,
+					"valor" => $it->valor,
+					"valor_original" => $it->valor_original
+				];
+
+				if (!$mVentasProductos->save($dataProductoVenta)) {
+					$resp["msj"] = "Ha ocurrido un error al guardar los productos." . listErrors($mVentasProductos->errors());
+					break;
+				}
+			}
+			if ($this->db->transStatus() !== false) {
+				$resp["success"] = true;
+				$resp['msj'] = "Pedido Facturado correctamente, Factura nro: " . $codigo;
+				$resp["id_factura"] = $ventaSave["id"];
+				$resp["nFactura"] = $codigo;
+			}
 		} else {
-			$this->db->transRollback();
+			$resp["msj"] = "Ha ocurrido un error al guardar la venta." . listErrors($ventaModel->errors());
 		}
 
-		return view('vFacturaQR', $this->content);
+		if($resp["success"] == true || $this->db->transStatus() !== false) {
+			if (is_null($dataConse)) {
+				$mConfiguracion = new mConfiguracion();
+				$dataSave = [
+					"campo" => "consecutivoFact",
+					"valor" => $numerVenta
+				];
+				if(!$mConfiguracion->save($dataSave)) {
+					$resp["msj"] = "Ha ocurrido un error al guardar la factura." . listErrors($mConfiguracion->errors());
+				}
+			} else {
+				$builder = $this->db->table('configuracion')->set("valor", $numerVenta)->where('campo', "consecutivoFact");
+				if(!$builder->update()) {
+					$resp["success"] = false;
+				}
+			}
+		}
+		return $resp;
 	}
 
 }

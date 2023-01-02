@@ -157,7 +157,11 @@ class cVentas extends BaseController {
 			")->join('clientes AS C', 'V.id_cliente = C.id', 'left')
 			->join('sucursales AS S', 'V.id_sucursal = S.id', 'left')
 			->join('ciudades AS CUI', 'S.id_ciudad = CUI.id', 'left')
-			->join('usuarios AS U', 'V.id_vendedor = U.id', 'left');
+			->join('usuarios AS U', 'V.id_vendedor = U.id', 'left')
+			->groupStart()
+				->where('V.leidoQR', '0')
+				->orWhere('V.leidoQR IS NULL')
+			->groupEnd();
 
 		return DataTable::of($query)->toJson(true);
 	}

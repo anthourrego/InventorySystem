@@ -174,6 +174,10 @@ class cModificarReporte extends BaseController {
     "costoEnvio" => [
       "aplica" => ["Envio"],
       "descripcion" => "Valor envio productos"
+    ],
+    "imagenQR" => [
+      "aplica" => ["Rotulo"],
+      "descripcion" => "Imagen del Qr para descarga de la factura"
     ]
   ];
 

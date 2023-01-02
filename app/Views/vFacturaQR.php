@@ -25,96 +25,58 @@
   <body>
     <div class="container-fluid p-3">
 
-      <h4 class="text-center">Factura <?= $factura->codigo ?></h4>
+      <?php if (!is_null($factura)) { ?>
 
-      <div class="container botones-acciones">
-        
-        <?php 
-          if (is_null($factura->id_pedido)) {
-            echo "<a type='button' class='btn btn-primary w-100 mb-2' id='btnDescargar' href='" . base_url() . "/ReportesQR/Factura/$factura->id/1/1' target='_blank'>
-              <i class='fas fa-download'></i> Descargar
-            </a>";
-          } else {
-            echo "<a type='button' class='btn btn-primary w-100 mb-2' id='btnDescargar' href='" . base_url() . "/ReportesQR/Pedido/$factura->id_pedido/1' target='_blank'>
-              <i class='fas fa-download'></i> Descargar
-            </a>";
-          }
-        ?>
+        <div class="d-flex justify-content-around align-items-center mb-3">
+          <img src="<?= base_url() ?>/FotoEmpresa" width="130px" height="100px">
+          <h3 class="text-center">Factura <br> <?= $factura->codigo ?></h3>
+        </div>
 
-        <?php 
-          if (is_null($factura->id_pedido)) {
-            echo "<a type='button' class='btn btn-secondary w-100 mb-2' id='btnDescargar' href='" . base_url() . "/ReportesQR/FacturaFoto/$factura->id/1/1/1' target='_blank'>
-              <i class='fas fa-camera'></i> Descargar Con Foto
-            </a>";
-          } else {
-            echo "<a type='button' class='btn btn-secondary w-100 mb-2' id='btnDescargar' href='" . base_url() . "/ReportesQR/PedidoFoto/$factura->id_pedido/1/1' target='_blank'>
-              <i class='fas fa-camera'></i> Descargar Con Foto
-            </a>";
-          }
-        ?>
-  
-        <button type="button" class="btn btn-info w-100 mb-2" onclick="verEnlinea()">
-          <i class="fas fa-eye"></i> Ver En Linea
-        </button>
-      </div>
+        <div class="container botones-acciones">
+          
+          <a type='button' class='btn btn-primary w-100 mb-2' id='btnDescargar' href='<?= base_url() ?>/ReportesQR/Factura/<?= $factura->id ?>/1/1' target='_blank'>
+            <i class='fas fa-download'></i> Descargar
+          </a>
 
-      <div class="container lista-cajas-en-linea d-none">
-        <button type="button" class="btn btn-info w-100 mb-2" onclick="regresarEnlinea()">
-          <i class="fas fa-chevron-left"></i> Regresar
-        </button>
-        <?php
+          <a type='button' class='btn btn-secondary w-100 mb-2' id='btnDescargar' href='<?= base_url() ?>/ReportesQR/FacturaFoto/<?= $factura->id ?>/1/1/1' target='_blank'>
+            <i class='fas fa-camera'></i> Descargar Con Foto
+          </a>
+    
+          <button type="button" class="btn btn-info w-100 mb-2" onclick="verEnlinea()">
+            <i class="fas fa-eye"></i> Ver En Linea
+          </button>
+        </div>
 
-          if (is_null($factura->id_pedido)) {
-            if (count($productos) > 0) {
-              $lisProd = "";
-              foreach ($productos as $key => $prod) {
-                $lisProd .= "
-                  <tr>
-                    <th scope='row'>" . $key + 1 . "</th>
-                    <td>{$prod->referencia}</td>
-                    <td>{$prod->item}</td>
-                    <td>{$prod->descripcion}</td>
-                    <td>{$prod->cantidad}</td>
-                    <td>{$prod->precio_venta}</td>
-                  </tr>
-                ";
-              }
-              echo "
-                <table class='table'>
-                  <thead>
-                    <tr>
-                      <th scope='col'>#</th>
-                      <th scope='col'>Referencia</th>
-                      <th scope='col'>Item</th>
-                      <th scope='col'>Descripción</th>
-                      <th scope='col'>Cantidad</th>
-                      <th scope='col'>Valor</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    $lisProd
-                  </tbody>
-                </table>
-              ";
-            } else {
-              echo "<div class='font-weight-bold text-center p-2 col-12'>No se encontraron productos</div>";
-            }
-          } else {
+        <div class="container lista-cajas-en-linea d-none">
+          <button type="button" class="btn btn-info w-100 mb-2" onclick="regresarEnlinea()">
+            <i class="fas fa-chevron-left"></i> Regresar
+          </button>
+          <?php
             if (count($cajas) > 0) {
               foreach ($cajas as $key => $value) {
                 $lisProd = "";
                 foreach ($value->productos as $llave => $prod) {
                   $lisProd .= "
-                    <li class='list-group-item d-flex justify-content-between align-items-center'>
-                      $prod->referencia - $prod->descripcion
-                      <span class='badge badge-primary badge-pill'>Cant: $prod->cantidad</span>
+                    <li class='list-group-item'>
+                      <div class='row'>
+                        <div class='col-3'>
+                          <img src='" . base_url() . "/fotoProductosAPP/$prod->id/$prod->imagen' alt='' class='img-thumbnail'>
+                        </div>
+                        <div class='col-9'>
+                          <div class='d-flex justify-content-between align-items-center'>
+                            $prod->item - $prod->referencia
+                            <span class='badge badge-primary badge-pill'>Cant: $prod->cantidad</span>
+                          </div>
+                          <small>$ $prod->valor</small>
+                        </div>
+                      </div>
                     </li>
                   ";
                 }
                 echo "
                   <div class='card'>
                     <h5 class='card-header'>
-                      <i class='fa-solid fa-box mr-1'></i> $value->numeroCaja
+                      <i class='fa-solid fa-box mr-1'></i> Caja $value->numeroCaja
                     </h5>
                     <ul class='list-group list-group-flush'>$lisProd</ul>
                   </div>
@@ -123,9 +85,16 @@
             } else {
               echo "<div class='font-weight-bold text-center p-2 col-12'>No se encontraron cajas</div>";
             }
-          }
-        ?>
-      </div>
+          ?>
+        </div>
+
+      <?php } else { ?>
+
+        <div class="alert alert-warning text-center">
+          No se encontro factura relacionada
+        </div>
+
+      <?php } ?>
 
     </div>
   </body>

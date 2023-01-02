@@ -8,6 +8,8 @@ use App\Models\mConfiguracion;
 use App\Models\mPedidosCajas;
 use App\Models\mPedidosCajasProductos;
 use App\Models\mManifiesto;
+use chillerlan\QRCode\QRCode;
+use chillerlan\QRCode\QROptions;
 
 class cReportes extends BaseController {
 
@@ -191,6 +193,8 @@ class cReportes extends BaseController {
 		$estrucPdf = str_replace("{observacion}", $observacion, $estrucPdf);
 		$dataVenta = $this->cargarDataVenta($estrucPdf, $id, "pedidos");
 		$estrucPdf = $dataVenta['pdf'];
+
+		$estrucPdf = $this->generarQR($id, $estrucPdf);
 
 		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		$pdf->startPageGroup();
@@ -439,6 +443,17 @@ class cReportes extends BaseController {
 		return $this->mConfiguracion
 				->select("IF(valor IS NULL OR valor = '', '', valor) AS valor")
 				->where('campo', $field)->get()->getRow('valor');
+	}
+
+	public function generarQR($pedido, $estrucPdf) {
+		$options = new QROptions([
+			'imageTransparent' => false
+		]);
+
+		$qr = (new QRCode($options))->render(base_url() . "/FacturaQR/{$pedido}");
+		$qr = '<img width="130px" height="100px" src="@' . preg_replace('#^data:image/[^;]+;base64,#', '', $qr) . '">';
+		$estrucPdf = str_replace("{imagenQR}", $qr, $estrucPdf);
+		return $estrucPdf;
 	}
 
 }

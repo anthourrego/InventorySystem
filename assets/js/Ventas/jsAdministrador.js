@@ -49,7 +49,7 @@ let DT = $("#table").DataTable({
           ${data.id_pedido == null ?
             `<button type="button" class="btn btn-danger btnEliminar" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button>` : ``
           }
-          <button type="button" class="btn btn-info btnImprimirQR" title="Código QR">
+          <button type="button" class="bt btn-inf btnImprimirQR d-none" title="Código QR">
             <i class="fa-solid fa-qrcode"></i>
           </button>
         </div>`;

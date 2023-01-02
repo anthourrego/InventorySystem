@@ -41,6 +41,8 @@ $routes->get('fotoProductosAPP/(:num)/(:any)', 'cProductos::foto/$1/$2');
 
 /* Ruta para la lectura de QR */
 $routes->get('FacturaQR/(:num)', 'cPedidos::facturaQR/$1');
+$routes->get('FotoEmpresa', 'Home::fotoEmpresa');
+
 
 //Usuarios
 $routes->group('Usuarios', ['filter' => 'authGuard:1'], function ($routes) {
@@ -224,7 +226,6 @@ $routes->group('Ubicacion/Departamentos', ['filter' => 'authGuard:92', 'namespac
 	$routes->get('Obtener/(:num)', 'cDepartamentos::getDeptos/$1');
 });
 
-
 //Ciudades
 $routes->group('Ubicacion/Ciudades', ['filter' => 'authGuard:93', 'namespace' => 'App\Controllers\Ubicacion'], function ($routes) {
 	$routes->get('/', 'cCiudades::index');
@@ -250,10 +251,6 @@ $routes->group('Pedidos', ['filter' => 'authGuard:10'], function ($routes) {
 	$routes->get('Cargar/(:num)', 'cPedidos::cargarPedido/$1', ['filter' => 'ajax']);
 	$routes->get('CajasManifiestos/(:num)', 'cPedidos::cajasManifiestos/$1', ['filter' => 'ajax']);
 	$routes->get('GenerarQR/(:num)', 'cPedidos::generarQR/$1');
-
-
-
-	$routes->get('EnviarEmail', 'cPedidos::sendEmail');
 });
 
 //Empaque
