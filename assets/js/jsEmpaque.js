@@ -256,7 +256,7 @@ function obtenerInfoPedido(pedido, sync = false) {
 
     $(".option-ref").click(function () {
       let data = pedido.productos[$(this).data('pos')];
-      $("#imgProd").removeClass('d-none').attr('src', `${base_url()}Productos/Foto/${data.id}/${data.imagen}`);
+      $("#imgProd").removeClass('d-none').attr('src', data.FotoURLSmall);
     });
   }
 
