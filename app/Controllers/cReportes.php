@@ -6,7 +6,6 @@ use App\Models\mVentasProductos;
 use App\Models\mPedidosProductos;
 use App\Models\mConfiguracion;
 use App\Models\mPedidosCajas;
-use App\Models\mPedidosCajasProductos;
 use App\Models\mManifiesto;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
@@ -59,7 +58,7 @@ class cReportes extends BaseController {
 					P.item AS itemProductoDP,
 					P.descripcion AS descripcionProductoDP,
 					P.cantPaca AS cantPacaProductoDP,
-					CAST((P.cantPaca / PCP.cantidad) AS DECIMAL(12,2)) AS paqueteProductoDP,
+					CAST((PCP.cantidad / P.cantPaca) AS DECIMAL(12,2)) AS paqueteProductoDP,
 					PCP.cantidad AS cantidadProductoDP,
 					PV.valor AS valorProductoDP,
 					(PCP.cantidad * PV.valor) AS totalProductoDP,
@@ -150,7 +149,7 @@ class cReportes extends BaseController {
 				P.item AS itemProductoDP,
 				P.descripcion AS descripcionProductoDP,
 				P.cantPaca AS cantPacaProductoDP,
-				CAST((P.cantPaca / pedidosproductos.cantidad) AS DECIMAL(12,2)) AS paqueteProductoDP,
+				CAST((pedidosproductos.cantidad / P.cantPaca) AS DECIMAL(12,2)) AS paqueteProductoDP,
 				P.ubicacion AS ubicacionProductoDP,
 				M.nombre AS manifiestoProductoDP,
 				pedidosproductos.cantidad AS cantidadProductoDP,
