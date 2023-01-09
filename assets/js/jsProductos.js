@@ -493,11 +493,12 @@ $(function () {
     let cantidad = $(this).data("cant");
     let offset = $(this).data("offset");
     let final = $(this).data("final");
+    let originales = $("#checkOriginales").is(':checked') == true ? 1 : 0;
     $(this).removeClass("list-group-item-success list-group-item-danger");
     $(this).find("i").removeClass("fa-download fa-times").addClass("fa-rotate rotacionEfecto");
 
     $.ajax({
-      url: rutaBase + `descargarFoto/${cantidad}/${offset}`,
+      url: rutaBase + `descargarFoto/${cantidad}/${offset}/${originales}`,
       xhrFields: {
         responseType: 'blob'
       },

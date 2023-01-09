@@ -440,7 +440,7 @@ class cProductos extends BaseController {
 
 	}
 
-	public function descargarFoto($limit = null, $offset = null){
+	public function descargarFoto($limit = null, $offset = null, $tipo = 0){
 		$filtros = (object) session()->get("filtrosProductos");
 		$search = [
 			"P.id",
@@ -539,9 +539,13 @@ class cProductos extends BaseController {
 			$zipFile = new ZipFile();
 			ob_start();
 			foreach ($productos as $it) {
-				$this->convertirFoto($it->id, $it->imagen, $it);
-				$nombreArchivo = strtotime($it->updated_at);
-				$zipFile->addFile(UPLOADS_PRODUCT_PATH . "{$it->id}/convert/{$nombreArchivo}.png", "{$it->referencia}.png");
+				if ($tipo == 0) {
+					$this->convertirFoto($it->id, $it->imagen, $it);
+					$nombreArchivo = strtotime($it->updated_at);
+					$zipFile->addFile(UPLOADS_PRODUCT_PATH . "{$it->id}/convert/{$nombreArchivo}.png", "{$it->referencia}.png");
+				} else {
+					$zipFile->addFile(UPLOADS_PRODUCT_PATH . "{$it->id}/01-logo.png", "{$it->referencia}.png");
+				}
 			}
 	
 			$zipFile->saveAsFile(UPLOADS_PRODUCT_PATH . "fotos.zip"); 

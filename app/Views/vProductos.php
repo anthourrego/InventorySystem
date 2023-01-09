@@ -227,6 +227,10 @@
         </button>
       </div>
       <div class="modal-body">
+        <div class="form-group form-check">
+          <input type="checkbox" class="form-check-input" value="originales" name="checkOriginales" id="checkOriginales">
+          <label class="form-check-label" for="checkOriginales">Originales</label>
+        </div>
         <div class="input-group">
           <input type="number" id="cantFiltroPaquete"  value="<?= $camposProducto["pacDescarga"] ?>" class="form-control inputFocusSelect soloNumeros noEnter" min="1" max="100" placeholder="Cantidad x paquete">
           <div class="input-group-append">
