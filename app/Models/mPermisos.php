@@ -195,7 +195,11 @@ class mPermisos extends Model {
 					[
 						"id" => 56,
 						"text" => "Sincronizar fotos"
-					]
+					],
+					[
+						"id" => 57,
+						"text" => "Ver costo inventario"
+					],
 				]
 			],
 			[

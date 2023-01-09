@@ -42,12 +42,17 @@ class cProductos extends BaseController {
 			$this->content["manifiestos"] = [];
 		}	
 
+		$mProductos = new mProductos();
+		$datosInventario = $mProductos->asObject()->select("SUM(stock * precio_venta) AS valorInventario, SUM(stock * costo) AS costoInventario", false)->where("estado", '1')->first();
+
+		$this->content["valorInventarioActual"] = 0;
 		if (validPermissions([54], true)) {
-			$mProductos = new mProductos();
-			$this->content["valorInventarioActual"] = $mProductos->asObject()->select("SUM(stock * precio_venta) AS valorInventario", false)->where("estado", '1')->findAll();
-			$this->content["valorInventarioActual"] = $this->content["valorInventarioActual"][0]->valorInventario;
-		} else {
-			$this->content["valorInventarioActual"] = 0;
+			$this->content["valorInventarioActual"] = $datosInventario->valorInventario;
+		}
+
+		$this->content["costoInventarioActual"] = 0;
+		if (validPermissions([57], true) && $this->content["camposProducto"]["costo"] == "1") {
+			$this->content["costoInventarioActual"] = $datosInventario->costoInventario;
 		}
 		
 		$this->content['js_add'][] = [

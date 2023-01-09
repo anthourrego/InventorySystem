@@ -1,34 +1,50 @@
 <div class="card">
   <div class="card-header">
     <div class="row justify-content-between">
-      <div class="col-12 col-md-8 col-lg-5 d-flex">
-        <div class="input-group mr-2">
-          <div class="input-group-prepend">
-            <div class="input-group-text">
-              <input id="verImg" type="checkbox" <?= $imagenProd == 1 ? 'checked' : '' ?>>
+      <div class="col-12 col-md-9">
+        <div class="row">
+          <div class="col-12 col-md-6 col-xl-4 mb-2 mb-xl-0">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <input id="verImg" type="checkbox" <?= $imagenProd == 1 ? 'checked' : '' ?>>
+                </div>
+              </div>
+              <label for="verImg" class="form-control">¿Ver Imagen?</label>
             </div>
           </div>
-          <label for="verImg" class="form-control">¿Ver Imagen?</label>
+          <?php if (validPermissions([54], true)) { ?>
+            <div class="col-12 col-md-6 col-xl-4 mb-2 mb-xl-0">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <label class="input-group-text" for="valorInventarioActual">Valor Inventario</label>
+                </div>
+                <input type="text" id="valorInventarioActual" class="form-control" disabled value="$ 0">
+              </div>
+            </div>
+          <?php } ?>
+          <?php if ($camposProducto['costo'] == "1" && validPermissions([57], true)) { ?>
+          <div class="col-12 col-md-6 col-xl-4 mb-2 mb-xl-0">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="costoInventarioActual">Costo Inventario</label>
+              </div>
+              <input type="text" id="costoInventarioActual" class="form-control" disabled value="$ 0">
+            </div>
+          </div>
+          <?php } ?>
         </div>
-        <?php if (validPermissions([54], true)) { ?>
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <label class="input-group-text" for="selectEstado">Valor Inventario</label>
-            </div>
-            <input type="text" id="valorInventarioActual" class="form-control" disabled value="$ 0">
-          </div>
-        <?php } ?>
       </div>
       <div class="col-12 col-md-3 mt-2 mt-md-0 text-right">
         <?php if (validPermissions([56], true)) { ?>
-        <button type="button" class="btn btn-secondary" id="btnSincronizar"><i class="fa-solid fa-sync"></i></button>
+        <button type="button" class="btn btn-secondary mb-2 mb-xl-0" id="btnSincronizar"><i class="fa-solid fa-sync"></i></button>
         <?php } ?>
         <?php if (validPermissions([55], true)) { ?>
-          <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#modalFotos"><i class="fa-solid fa-camera"></i> Fotos</button>
+          <button type="button" class="btn btn-dark mb-2 mb-xl-0" data-toggle="modal" data-target="#modalFotos"><i class="fa-solid fa-camera"></i> Fotos</button>
         <?php } ?>
-        <button type="button" class="btn btn-warning" id="btnFiltros"><i class="fa-solid fa-filter"></i> Filtros</button>
+        <button type="button" class="btn btn-warning mb-2 mb-xl-0" id="btnFiltros"><i class="fa-solid fa-filter"></i> Filtros</button>
         <?php if (validPermissions([51], true)) { ?>
-          <button type="button" class="btn btn-primary" id="btnCrear"><i class="fa-solid fa-plus"></i> Crear</button>
+          <button type="button" class="btn btn-primary mb-2 mb-xl-0" id="btnCrear"><i class="fa-solid fa-plus"></i> Crear</button>
         <?php } ?>
       </div>
     </div>
@@ -292,5 +308,6 @@
   $CAMPOSPRODUCTO = <?= json_encode($camposProducto) ?>;
   $INVENTARIONEGATIVO = "<?= $inventario_negativo ?>";
   $imagenProd = <?= $imagenProd ?>;
-  $valorInventarioActual = '<?= $valorInventarioActual ?>'
+  $valorInventarioActual = '<?= $valorInventarioActual ?>';
+  $costoInventarioActual = '<?= $costoInventarioActual ?>';
 </script>
