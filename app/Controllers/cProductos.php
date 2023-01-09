@@ -145,6 +145,10 @@ class cProductos extends BaseController {
 			}
 		}
 
+		if (isset($postData->search) && $postData->search["value"] != "") {
+			$arrayFiltro['search'] = $postData->search["value"];
+		}
+
 		session()->set('filtrosProductos', $arrayFiltro);
 		return DataTable::of($query)->toJson(true);
 	}
@@ -419,46 +423,64 @@ class cProductos extends BaseController {
 
 	public function descargarFoto($limit = null, $offset = null){
 		$filtros = (object) session()->get("filtrosProductos");
+		$search = [
+			"P.referencia",
+			"P.item",
+			"P.descripcion",
+			"P.stock",
+			"P.cantPaca",
+			"P.costo",
+			"P.precio_venta",
+			"P.ubicacion",
+			"P.created_at",
+			"C.nombre",
+			"M.nombre"
+		];
 
 		$mProducto = new mProductos();
 		$mProducto1 = new mProductos();
 
-		$mProducto->where('imagen IS NOT NULL', NULL, FALSE);
-		$mProducto1->where('imagen IS NOT NULL', NULL, FALSE);
+		$mProducto->join('categorias AS C', 'P.id_categoria = C.id', 'left')
+			->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left')
+			->where('P.imagen IS NOT NULL', NULL, FALSE);
+
+		$mProducto1->join('categorias AS C', 'P.id_categoria = C.id', 'left')
+			->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left')
+			->where('P.imagen IS NOT NULL', NULL, FALSE);
 
 		if($filtros->estado != "-1"){
-			$mProducto->where("estado", $filtros->estado);
-			$mProducto1->where("estado", $filtros->estado);
+			$mProducto->where("P.estado", $filtros->estado);
+			$mProducto1->where("P.estado", $filtros->estado);
 		}
 
 		if(isset($filtros->categoria) && $filtros->categoria > 0){
 			$arrayFiltro['categoria'] = $filtros->categoria;
-			$mProducto->where("id_categoria", $filtros->categoria);
-			$mProducto1->where("id_categoria", $filtros->categoria);
+			$mProducto->where("P.id_categoria", $filtros->categoria);
+			$mProducto1->where("P.id_categoria", $filtros->categoria);
 		}
 
 		if(isset($filtros->cantIni) && $filtros->cantIni >= 0) {
 			$arrayFiltro['cantIni'] = $filtros->cantIni;
-			$mProducto->where("stock >= $filtros->cantIni");
-			$mProducto1->where("stock >= $filtros->cantIni");
+			$mProducto->where("P.stock >= $filtros->cantIni");
+			$mProducto1->where("P.stock >= $filtros->cantIni");
 		}
 
 		if(isset($filtros->cantFin) && $filtros->cantFin >= 0){
 			$arrayFiltro['cantFin'] = $filtros->cantFin;
-			$mProducto->where("stock <= $filtros->cantFin");
-			$mProducto1->where("stock <= $filtros->cantFin");
+			$mProducto->where("P.stock <= $filtros->cantFin");
+			$mProducto1->where("P.stock <= $filtros->cantFin");
 		}
 
 		if(isset($filtros->preciIni) && $filtros->preciIni >= 0) {
 			$arrayFiltro['preciIni'] = $filtros->preciIni;
-			$mProducto->where("precio_venta >= $filtros->preciIni");
-			$mProducto1->where("precio_venta >= $filtros->preciIni");
+			$mProducto->where("P.precio_venta >= $filtros->preciIni");
+			$mProducto1->where("P.precio_venta >= $filtros->preciIni");
 		}
 
 		if(isset($filtros->preciFin) && $filtros->preciFin >= 0){
 			$arrayFiltro['preciFin'] = $filtros->preciFin;
-			$mProducto->where("precio_venta <= $filtros->preciFin");
-			$mProducto1->where("precio_venta <= $filtros->preciFin");
+			$mProducto->where("P.precio_venta <= $filtros->preciFin");
+			$mProducto1->where("P.precio_venta <= $filtros->preciFin");
 		}
 
 		//validamos si aplica para ventas para realziar algunas validaciones
@@ -466,9 +488,23 @@ class cProductos extends BaseController {
 			$arrayFiltro['ventas'] = $filtros->ventas;
 			$inventarioNegativo = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
 			if ($inventarioNegativo == "0") {
-				$mProducto->where("stock >=", 0);
-				$mProducto1->where("stock >=", 0);
+				$mProducto->where("P.stock >=", 0);
+				$mProducto1->where("P.stock >=", 0);
 			}
+		}
+
+		if (isset($filtros->search) && $filtros->search != "") {
+			$mProducto->groupStart();
+			foreach ($search as $it) {
+				$mProducto->orLike(trim($it), $filtros->search);
+			}
+			$mProducto->groupEnd();
+
+			$mProducto1->groupStart();
+			foreach ($search as $it) {
+				$mProducto1->orLike(trim($it), $filtros->search);
+			}
+			$mProducto1->groupEnd();
 		}
 
 		if (!is_null($offset)) {
