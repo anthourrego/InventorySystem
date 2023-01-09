@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class mProductos extends Model {
 	protected $DBGroup          = 'default';
-	protected $table            = 'productos AS P';
+	protected $table            = 'productos';
 	protected $primaryKey       = 'id';
 	protected $useAutoIncrement = true;
 	protected $insertID         = 0;
@@ -26,7 +26,8 @@ class mProductos extends Model {
 		"id_manifiesto",
 		"ventas",
 		"estado",
-		"cantPaca"
+		"cantPaca",
+		"updated_at",
 	];
 
 	// Dates

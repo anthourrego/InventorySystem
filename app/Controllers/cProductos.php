@@ -192,6 +192,7 @@ class cProductos extends BaseController {
 				,"id_manifiesto" => !isset($postData->manifiesto) || strlen(trim($postData->manifiesto)) == 0 ? null : trim($postData->manifiesto)
 				,"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $postData->costo))) : '0')
 				,"cantPaca" => (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($postData->paca) : 1)
+				,"updated_at" => date("Y-m-d H:i:s")
 			);
 	
 			//Validamos si eliminar la foto de perfil y buscamos el usuario
@@ -252,6 +253,7 @@ class cProductos extends BaseController {
 									);
 		
 									if ($product->save($updateFoto)) { 
+										$this->convertirFoto($product->id, $nameImg);
 										$resp["success"] = true;
 										$resp["msj"] = "El producto <b>{$product->referencia}</b> se " . (empty($postData->id) ? 'creo' : 'actualizo') . " correctamente.";
 									} else {
@@ -272,6 +274,14 @@ class cProductos extends BaseController {
 				} else {
 					$resp["success"] = true;
 					$resp["msj"] = "El producto <b>{$product->referencia}</b> se " . (empty($postData->id) ? 'creo' : 'actualizo') . " correctamente.";
+
+					if (!empty($postData->id)) {
+						$foto = $product->find($postData->id)["imagen"];
+
+						if (!is_null($foto)) {
+							$this->convertirFoto($product->id, $foto);
+						}
+					}
 				}
 			} else {
 				$resp["msj"] = "No puede " . (empty($postData->id) ? 'crear' : 'actualizar') . " el producto." . listErrors($product->errors());
@@ -352,10 +362,6 @@ class cProductos extends BaseController {
 			}
 		}
 
-		if (!is_dir(UPLOADS_PRODUCT_PATH . 'convert/')) {
-			mkdir(UPLOADS_PRODUCT_PATH . 'convert/', 0777, TRUE);
-		}
-
 		if (is_null($datos)) {
 			$mProductos = new mProductos();
 	
@@ -365,65 +371,79 @@ class cProductos extends BaseController {
 		}
 
 		$descripcion = substr($producto->descripcion, 0, 66) . (strlen($producto->descripcion) > 66 ? "..." : "");
+		$nombreArchivo = strtotime($producto->updated_at);
 
-		$servicios = new Services();
-		$servicios::image()
-    ->withFile($filename)
-    ->text($producto->referencia, [
-			'color'      => '#000',
-			'opacity'    => 0,
-			'hOffset'    => '10',
-			'vOffset'    => '-130',
-			'withShadow' => true,
-			'shadowColor' => '#fff',
-			'hAlign'     => 'left',
-			'vAlign'     => 'bottom',
-			'fontSize'   => 80,
-			'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
-    ])->text("$ " . number_format($producto->precio_venta, 0, ',', '.'), [
-			'color'      => '#000',
-			'opacity'    => 0,
-			'hOffset'    => '10',
-			'vOffset'    => '-40',
-			'withShadow' => true,
-			'shadowColor' => '#fff',
-			'hAlign'     => 'left',
-			'vAlign'     => 'bottom',
-			'fontSize'   => 80,
-			'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
-		])->text("Pac " . $producto->cantPaca, [
-			'color'      => '#000',
-			'opacity'    => 0,
-			'hOffset'    => '10',
-			'vOffset'    => '-60',
-			'withShadow' => true,
-			'shadowColor' => '#fff',
-			'hAlign'     => 'right',
-			'vAlign'     => 'bottom',
-			'fontSize'   => 40,
-			'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
-		])->text($descripcion, [
-			'color'      => '#000',
-			'opacity'    => 0,
-			'hOffset'    => '10',
-			'vOffset'    => '-4',
-			'withShadow' => true,
-			'shadowColor' => '#fff',
-			'hAlign'     => 'left',
-			'vAlign'     => 'bottom',
-			'fontSize'   => 40,
-			'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
-		])->convert(IMAGETYPE_PNG)
-		->save(UPLOADS_PRODUCT_PATH ."convert/{$producto->id}.png");
+		if (!file_exists(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/{$nombreArchivo}.png")) {
+			//Elimanos el directorio si existe lo eliminamos para crear el nuevo
+			if(is_dir(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/")){
+				$this->borrar_directorio(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/");
+			}
+
+			if (!is_dir(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/")) {
+				mkdir(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/", 0777, TRUE);
+			}
+			
+			$servicios = new Services();
+			$servicios::image()
+			->withFile($filename)
+			->text($producto->referencia, [
+				'color'      => '#000',
+				'opacity'    => 0,
+				'hOffset'    => '10',
+				'vOffset'    => '-130',
+				'withShadow' => true,
+				'shadowColor' => '#fff',
+				'hAlign'     => 'left',
+				'vAlign'     => 'bottom',
+				'fontSize'   => 80,
+				'fontPath'   => ASSETS_PATH . 'fonts/Cooper_Black_Regular.ttf'
+			])->text("$ " . number_format($producto->precio_venta, 0, ',', '.'), [
+				'color'      => '#000',
+				'opacity'    => 0,
+				'hOffset'    => '10',
+				'vOffset'    => '-40',
+				'withShadow' => true,
+				'shadowColor' => '#fff',
+				'hAlign'     => 'left',
+				'vAlign'     => 'bottom',
+				'fontSize'   => 80,
+				'fontPath'   => ASSETS_PATH . 'fonts/Cooper_Black_Regular.ttf'
+			])->text("Pac " . $producto->cantPaca, [
+				'color'      => '#000',
+				'opacity'    => 0,
+				'hOffset'    => '10',
+				'vOffset'    => '-60',
+				'withShadow' => true,
+				'shadowColor' => '#fff',
+				'hAlign'     => 'right',
+				'vAlign'     => 'bottom',
+				'fontSize'   => 40,
+				'fontPath'   => ASSETS_PATH . 'fonts/Cooper_Black_Regular.ttf'
+			])->text($descripcion, [
+				'color'      => '#000',
+				'opacity'    => 0,
+				'hOffset'    => '10',
+				'vOffset'    => '-4',
+				'withShadow' => true,
+				'shadowColor' => '#fff',
+				'hAlign'     => 'left',
+				'vAlign'     => 'bottom',
+				'fontSize'   => 40,
+				'fontPath'   => ASSETS_PATH . 'fonts/Cooper_Black_Regular.ttf'
+			])->convert(IMAGETYPE_PNG)
+			->save(UPLOADS_PRODUCT_PATH ."{$producto->id}/convert/{$nombreArchivo}.png");
+		}
 
 		if (is_null($datos)) {
-			return $this->response->download(UPLOADS_PRODUCT_PATH . "convert/{$producto->id}.png", null)->setFileName($producto->referencia . '.png');
+			return $this->response->download(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/{$nombreArchivo}.png", null)->setFileName($producto->referencia . '.png');
 		}
+
 	}
 
 	public function descargarFoto($limit = null, $offset = null){
 		$filtros = (object) session()->get("filtrosProductos");
 		$search = [
+			"P.id",
 			"P.referencia",
 			"P.item",
 			"P.descripcion",
@@ -440,11 +460,17 @@ class cProductos extends BaseController {
 		$mProducto = new mProductos();
 		$mProducto1 = new mProductos();
 
-		$mProducto->join('categorias AS C', 'P.id_categoria = C.id', 'left')
+		$mProducto->select($search)
+			->select("P.imagen, P.updated_at")
+			->from("productos AS P", true)
+			->join('categorias AS C', 'P.id_categoria = C.id', 'left')
 			->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left')
 			->where('P.imagen IS NOT NULL', NULL, FALSE);
 
-		$mProducto1->join('categorias AS C', 'P.id_categoria = C.id', 'left')
+		$mProducto1->select($search)
+			->select("P.imagen, P.updated_at")
+			->from("productos AS P", true)
+			->join('categorias AS C', 'P.id_categoria = C.id', 'left')
 			->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left')
 			->where('P.imagen IS NOT NULL', NULL, FALSE);
 
@@ -514,7 +540,8 @@ class cProductos extends BaseController {
 			ob_start();
 			foreach ($productos as $it) {
 				$this->convertirFoto($it->id, $it->imagen, $it);
-				$zipFile->addFile(UPLOADS_PRODUCT_PATH . "convert/{$it->id}.png", "{$it->referencia}.png");
+				$nombreArchivo = strtotime($it->updated_at);
+				$zipFile->addFile(UPLOADS_PRODUCT_PATH . "{$it->id}/convert/{$nombreArchivo}.png", "{$it->referencia}.png");
 			}
 	
 			$zipFile->saveAsFile(UPLOADS_PRODUCT_PATH . "fotos.zip"); 
@@ -617,6 +644,8 @@ class cProductos extends BaseController {
 				
 				$this->marcaAguaProducto($it);
 
+				$this->convertirFoto($it->id, $it->imagen, $it);
+
 				$nameSmallImg = "01-small.{$dataFoto->extension}";
 	
 				$imageSmall = Services::image()
@@ -675,5 +704,30 @@ class cProductos extends BaseController {
 					->convert(IMAGETYPE_PNG)
 					->save($ruta . "{$ext->filename}-logo.png");
 		}
+	}
+
+	function borrar_directorio($dirname) {
+		//si es un directorio lo abro
+		if (is_dir($dirname)) {
+			$dir_handle = opendir($dirname);
+			//si no es un directorio devuelvo false para avisar de que ha habido un error
+			if (!$dir_handle) return false;
+
+			//recorro el contenido del directorio fichero a fichero
+			while($file = readdir($dir_handle)) {
+				if ($file != "." && $file != "..") {
+					//si no es un directorio elemino el fichero con unlink()
+					if (!is_dir($dirname."/".$file))
+						unlink($dirname."/".$file);
+					else //si es un directorio hago la llamada recursiva con el nombre del directorio
+						$this->borrar_directorio($dirname.'/'.$file);
+				}
+			}
+			closedir($dir_handle);
+		}
+				
+		//elimino el directorio que ya he vaciado
+		rmdir($dirname);
+		return true;
 	}
 }
