@@ -9,10 +9,10 @@
           </div>
           <select class="custom-select" id="selectEstado">
             <option selected value="-1">Todos</option>
-            <option value="0">Pendiente</option>
-            <option value="1">En Proceso</option>
-            <option value="2">Empacado</option>
-            <option value="3">Facturado</option>
+            <option value="PE">Pendiente</option>
+            <option value="EP">En Proceso</option>
+            <option value="EM">Empacado</option>
+            <option value="FA">Facturado</option>
           </select>
         </div>
       </div>

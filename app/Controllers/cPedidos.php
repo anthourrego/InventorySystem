@@ -212,10 +212,10 @@ class cPedidos extends BaseController {
 			) AS TC", "P.id = TC.id_pedido", "left");
 
 		if($estado != "-1") {
-			if($estado == "3") {
+			if($estado == "FA") {
 				$query->where("V.id IS NOT NULL");
-			} else if($estado == "2") {
-				$query->where("(P.Estado IN(2, 3) AND V.id IS NULL)");
+			} else if($estado == "EM") {
+				$query->where("(P.Estado IN('EM', 'FA') AND V.id IS NULL)");
 			} else {
 				$query->where("P.Estado", $estado);
 			}
