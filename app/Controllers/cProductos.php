@@ -42,12 +42,17 @@ class cProductos extends BaseController {
 			$this->content["manifiestos"] = [];
 		}	
 
+		$mProductos = new mProductos();
+		$datosInventario = $mProductos->asObject()->select("SUM(stock * precio_venta) AS valorInventario, SUM(stock * costo) AS costoInventario", false)->where("estado", '1')->first();
+
+		$this->content["valorInventarioActual"] = 0;
 		if (validPermissions([54], true)) {
-			$mProductos = new mProductos();
-			$this->content["valorInventarioActual"] = $mProductos->asObject()->select("SUM(stock * precio_venta) AS valorInventario", false)->where("estado", '1')->findAll();
-			$this->content["valorInventarioActual"] = $this->content["valorInventarioActual"][0]->valorInventario;
-		} else {
-			$this->content["valorInventarioActual"] = 0;
+			$this->content["valorInventarioActual"] = $datosInventario->valorInventario;
+		}
+
+		$this->content["costoInventarioActual"] = 0;
+		if (validPermissions([57], true) && $this->content["camposProducto"]["costo"] == "1") {
+			$this->content["costoInventarioActual"] = $datosInventario->costoInventario;
 		}
 		
 		$this->content['js_add'][] = [
@@ -140,6 +145,10 @@ class cProductos extends BaseController {
 			}
 		}
 
+		if (isset($postData->search) && $postData->search["value"] != "") {
+			$arrayFiltro['search'] = $postData->search["value"];
+		}
+
 		session()->set('filtrosProductos', $arrayFiltro);
 		return DataTable::of($query)->toJson(true);
 	}
@@ -183,6 +192,7 @@ class cProductos extends BaseController {
 				,"id_manifiesto" => !isset($postData->manifiesto) || strlen(trim($postData->manifiesto)) == 0 ? null : trim($postData->manifiesto)
 				,"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $postData->costo))) : '0')
 				,"cantPaca" => (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($postData->paca) : 1)
+				,"updated_at" => date("Y-m-d H:i:s")
 			);
 	
 			//Validamos si eliminar la foto de perfil y buscamos el usuario
@@ -243,6 +253,7 @@ class cProductos extends BaseController {
 									);
 		
 									if ($product->save($updateFoto)) { 
+										$this->convertirFoto($product->id, $nameImg);
 										$resp["success"] = true;
 										$resp["msj"] = "El producto <b>{$product->referencia}</b> se " . (empty($postData->id) ? 'creo' : 'actualizo') . " correctamente.";
 									} else {
@@ -263,6 +274,14 @@ class cProductos extends BaseController {
 				} else {
 					$resp["success"] = true;
 					$resp["msj"] = "El producto <b>{$product->referencia}</b> se " . (empty($postData->id) ? 'creo' : 'actualizo') . " correctamente.";
+
+					if (!empty($postData->id)) {
+						$foto = $product->find($postData->id)["imagen"];
+
+						if (!is_null($foto)) {
+							$this->convertirFoto($product->id, $foto);
+						}
+					}
 				}
 			} else {
 				$resp["msj"] = "No puede " . (empty($postData->id) ? 'crear' : 'actualizar') . " el producto." . listErrors($product->errors());
@@ -343,10 +362,6 @@ class cProductos extends BaseController {
 			}
 		}
 
-		if (!is_dir(UPLOADS_PRODUCT_PATH . 'convert/')) {
-			mkdir(UPLOADS_PRODUCT_PATH . 'convert/', 0777, TRUE);
-		}
-
 		if (is_null($datos)) {
 			$mProductos = new mProductos();
 	
@@ -356,104 +371,142 @@ class cProductos extends BaseController {
 		}
 
 		$descripcion = substr($producto->descripcion, 0, 66) . (strlen($producto->descripcion) > 66 ? "..." : "");
+		$nombreArchivo = strtotime($producto->updated_at);
 
-		$servicios = new Services();
-		$servicios::image()
-    ->withFile($filename)
-    ->text($producto->referencia, [
-			'color'      => '#000',
-			'opacity'    => 0,
-			'hOffset'    => '10',
-			'vOffset'    => '-130',
-			'withShadow' => true,
-			'shadowColor' => '#fff',
-			'hAlign'     => 'left',
-			'vAlign'     => 'bottom',
-			'fontSize'   => 80,
-			'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
-    ])->text("$ " . number_format($producto->precio_venta, 0, ',', '.'), [
-			'color'      => '#000',
-			'opacity'    => 0,
-			'hOffset'    => '10',
-			'vOffset'    => '-40',
-			'withShadow' => true,
-			'shadowColor' => '#fff',
-			'hAlign'     => 'left',
-			'vAlign'     => 'bottom',
-			'fontSize'   => 80,
-			'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
-		])->text("Pac " . $producto->cantPaca, [
-			'color'      => '#000',
-			'opacity'    => 0,
-			'hOffset'    => '10',
-			'vOffset'    => '-60',
-			'withShadow' => true,
-			'shadowColor' => '#fff',
-			'hAlign'     => 'right',
-			'vAlign'     => 'bottom',
-			'fontSize'   => 40,
-			'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
-		])->text($descripcion, [
-			'color'      => '#000',
-			'opacity'    => 0,
-			'hOffset'    => '10',
-			'vOffset'    => '-4',
-			'withShadow' => true,
-			'shadowColor' => '#fff',
-			'hAlign'     => 'left',
-			'vAlign'     => 'bottom',
-			'fontSize'   => 40,
-			'fontPath'   => ASSETS_PATH . 'fonts/Cooper Black Regular.ttf'
-		])->convert(IMAGETYPE_PNG)
-		->save(UPLOADS_PRODUCT_PATH ."convert/{$producto->id}.png");
+		if (!file_exists(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/{$nombreArchivo}.png")) {
+			//Elimanos el directorio si existe lo eliminamos para crear el nuevo
+			if(is_dir(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/")){
+				$this->borrar_directorio(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/");
+			}
+
+			if (!is_dir(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/")) {
+				mkdir(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/", 0777, TRUE);
+			}
+			
+			$servicios = new Services();
+			$servicios::image()
+			->withFile($filename)
+			->text($producto->referencia, [
+				'color'      => '#000',
+				'opacity'    => 0,
+				'hOffset'    => '10',
+				'vOffset'    => '-130',
+				'withShadow' => true,
+				'shadowColor' => '#fff',
+				'hAlign'     => 'left',
+				'vAlign'     => 'bottom',
+				'fontSize'   => 80,
+				'fontPath'   => ASSETS_PATH . 'fonts/Cooper_Black_Regular.ttf'
+			])->text("$ " . number_format($producto->precio_venta, 0, ',', '.'), [
+				'color'      => '#000',
+				'opacity'    => 0,
+				'hOffset'    => '10',
+				'vOffset'    => '-40',
+				'withShadow' => true,
+				'shadowColor' => '#fff',
+				'hAlign'     => 'left',
+				'vAlign'     => 'bottom',
+				'fontSize'   => 80,
+				'fontPath'   => ASSETS_PATH . 'fonts/Cooper_Black_Regular.ttf'
+			])->text("Pac " . $producto->cantPaca, [
+				'color'      => '#000',
+				'opacity'    => 0,
+				'hOffset'    => '10',
+				'vOffset'    => '-60',
+				'withShadow' => true,
+				'shadowColor' => '#fff',
+				'hAlign'     => 'right',
+				'vAlign'     => 'bottom',
+				'fontSize'   => 40,
+				'fontPath'   => ASSETS_PATH . 'fonts/Cooper_Black_Regular.ttf'
+			])->text($descripcion, [
+				'color'      => '#000',
+				'opacity'    => 0,
+				'hOffset'    => '10',
+				'vOffset'    => '-4',
+				'withShadow' => true,
+				'shadowColor' => '#fff',
+				'hAlign'     => 'left',
+				'vAlign'     => 'bottom',
+				'fontSize'   => 40,
+				'fontPath'   => ASSETS_PATH . 'fonts/Cooper_Black_Regular.ttf'
+			])->convert(IMAGETYPE_PNG)
+			->save(UPLOADS_PRODUCT_PATH ."{$producto->id}/convert/{$nombreArchivo}.png");
+		}
 
 		if (is_null($datos)) {
-			return $this->response->download(UPLOADS_PRODUCT_PATH . "convert/{$producto->id}.png", null)->setFileName($producto->referencia . '.png');
+			return $this->response->download(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/{$nombreArchivo}.png", null)->setFileName($producto->referencia . '.png');
 		}
+
 	}
 
-	public function descargarFoto($limit = null, $offset = null){
+	public function descargarFoto($limit = null, $offset = null, $tipo = 0){
 		$filtros = (object) session()->get("filtrosProductos");
+		$search = [
+			"P.id",
+			"P.referencia",
+			"P.item",
+			"P.descripcion",
+			"P.stock",
+			"P.cantPaca",
+			"P.costo",
+			"P.precio_venta",
+			"P.ubicacion",
+			"P.created_at",
+			"C.nombre",
+			"M.nombre"
+		];
 
 		$mProducto = new mProductos();
 		$mProducto1 = new mProductos();
 
-		$mProducto->where('imagen IS NOT NULL', NULL, FALSE);
-		$mProducto1->where('imagen IS NOT NULL', NULL, FALSE);
+		$mProducto->select($search)
+			->select("P.imagen, P.updated_at")
+			->from("productos AS P", true)
+			->join('categorias AS C', 'P.id_categoria = C.id', 'left')
+			->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left')
+			->where('P.imagen IS NOT NULL', NULL, FALSE);
+
+		$mProducto1->select($search)
+			->select("P.imagen, P.updated_at")
+			->from("productos AS P", true)
+			->join('categorias AS C', 'P.id_categoria = C.id', 'left')
+			->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left')
+			->where('P.imagen IS NOT NULL', NULL, FALSE);
 
 		if($filtros->estado != "-1"){
-			$mProducto->where("estado", $filtros->estado);
-			$mProducto1->where("estado", $filtros->estado);
+			$mProducto->where("P.estado", $filtros->estado);
+			$mProducto1->where("P.estado", $filtros->estado);
 		}
 
 		if(isset($filtros->categoria) && $filtros->categoria > 0){
 			$arrayFiltro['categoria'] = $filtros->categoria;
-			$mProducto->where("id_categoria", $filtros->categoria);
-			$mProducto1->where("id_categoria", $filtros->categoria);
+			$mProducto->where("P.id_categoria", $filtros->categoria);
+			$mProducto1->where("P.id_categoria", $filtros->categoria);
 		}
 
 		if(isset($filtros->cantIni) && $filtros->cantIni >= 0) {
 			$arrayFiltro['cantIni'] = $filtros->cantIni;
-			$mProducto->where("stock >= $filtros->cantIni");
-			$mProducto1->where("stock >= $filtros->cantIni");
+			$mProducto->where("P.stock >= $filtros->cantIni");
+			$mProducto1->where("P.stock >= $filtros->cantIni");
 		}
 
 		if(isset($filtros->cantFin) && $filtros->cantFin >= 0){
 			$arrayFiltro['cantFin'] = $filtros->cantFin;
-			$mProducto->where("stock <= $filtros->cantFin");
-			$mProducto1->where("stock <= $filtros->cantFin");
+			$mProducto->where("P.stock <= $filtros->cantFin");
+			$mProducto1->where("P.stock <= $filtros->cantFin");
 		}
 
 		if(isset($filtros->preciIni) && $filtros->preciIni >= 0) {
 			$arrayFiltro['preciIni'] = $filtros->preciIni;
-			$mProducto->where("precio_venta >= $filtros->preciIni");
-			$mProducto1->where("precio_venta >= $filtros->preciIni");
+			$mProducto->where("P.precio_venta >= $filtros->preciIni");
+			$mProducto1->where("P.precio_venta >= $filtros->preciIni");
 		}
 
 		if(isset($filtros->preciFin) && $filtros->preciFin >= 0){
 			$arrayFiltro['preciFin'] = $filtros->preciFin;
-			$mProducto->where("precio_venta <= $filtros->preciFin");
-			$mProducto1->where("precio_venta <= $filtros->preciFin");
+			$mProducto->where("P.precio_venta <= $filtros->preciFin");
+			$mProducto1->where("P.precio_venta <= $filtros->preciFin");
 		}
 
 		//validamos si aplica para ventas para realziar algunas validaciones
@@ -461,9 +514,23 @@ class cProductos extends BaseController {
 			$arrayFiltro['ventas'] = $filtros->ventas;
 			$inventarioNegativo = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
 			if ($inventarioNegativo == "0") {
-				$mProducto->where("stock >=", 0);
-				$mProducto1->where("stock >=", 0);
+				$mProducto->where("P.stock >=", 0);
+				$mProducto1->where("P.stock >=", 0);
 			}
+		}
+
+		if (isset($filtros->search) && $filtros->search != "") {
+			$mProducto->groupStart();
+			foreach ($search as $it) {
+				$mProducto->orLike(trim($it), $filtros->search);
+			}
+			$mProducto->groupEnd();
+
+			$mProducto1->groupStart();
+			foreach ($search as $it) {
+				$mProducto1->orLike(trim($it), $filtros->search);
+			}
+			$mProducto1->groupEnd();
 		}
 
 		if (!is_null($offset)) {
@@ -472,8 +539,13 @@ class cProductos extends BaseController {
 			$zipFile = new ZipFile();
 			ob_start();
 			foreach ($productos as $it) {
-				$this->convertirFoto($it->id, $it->imagen, $it);
-				$zipFile->addFile(UPLOADS_PRODUCT_PATH . "convert/{$it->id}.png", "{$it->referencia}.png");
+				if ($tipo == 0) {
+					$this->convertirFoto($it->id, $it->imagen, $it);
+					$nombreArchivo = strtotime($it->updated_at);
+					$zipFile->addFile(UPLOADS_PRODUCT_PATH . "{$it->id}/convert/{$nombreArchivo}.png", "{$it->referencia}.png");
+				} else {
+					$zipFile->addFile(UPLOADS_PRODUCT_PATH . "{$it->id}/01-logo.png", "{$it->referencia}.png");
+				}
 			}
 	
 			$zipFile->saveAsFile(UPLOADS_PRODUCT_PATH . "fotos.zip"); 
@@ -576,6 +648,8 @@ class cProductos extends BaseController {
 				
 				$this->marcaAguaProducto($it);
 
+				$this->convertirFoto($it->id, $it->imagen, $it);
+
 				$nameSmallImg = "01-small.{$dataFoto->extension}";
 	
 				$imageSmall = Services::image()
@@ -634,5 +708,30 @@ class cProductos extends BaseController {
 					->convert(IMAGETYPE_PNG)
 					->save($ruta . "{$ext->filename}-logo.png");
 		}
+	}
+
+	function borrar_directorio($dirname) {
+		//si es un directorio lo abro
+		if (is_dir($dirname)) {
+			$dir_handle = opendir($dirname);
+			//si no es un directorio devuelvo false para avisar de que ha habido un error
+			if (!$dir_handle) return false;
+
+			//recorro el contenido del directorio fichero a fichero
+			while($file = readdir($dir_handle)) {
+				if ($file != "." && $file != "..") {
+					//si no es un directorio elemino el fichero con unlink()
+					if (!is_dir($dirname."/".$file))
+						unlink($dirname."/".$file);
+					else //si es un directorio hago la llamada recursiva con el nombre del directorio
+						$this->borrar_directorio($dirname.'/'.$file);
+				}
+			}
+			closedir($dir_handle);
+		}
+				
+		//elimino el directorio que ya he vaciado
+		rmdir($dirname);
+		return true;
 	}
 }

@@ -324,13 +324,12 @@ class cManifiesto extends BaseController {
 
 	public function actualizarManifiesto() {
 		$resp["success"] = false;
-		$filenameDelete = "";
 		$producto = new mProductos();
 		
     // Creamos el manifiesto y llenamos los datos
 		$dataProd = array(
 			"id" => $this->request->getPost("idProd")
-			, "id_manifiesto" => $this->request->getPost("idManifiesto") == '-1' ? null : trim($this->request->getPost("idManifiesto"))
+			,"id_manifiesto" => $this->request->getPost("idManifiesto") == '-1' ? null : trim((string) $this->request->getPost("idManifiesto"))
 		);
 
 		$this->db->transBegin();

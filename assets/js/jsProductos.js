@@ -14,6 +14,7 @@ let DTProductos = $("#table").DataTable({
       return $.extend(d, { ...dataFiltros, imagenProd: $imagenProd })
     }
   },
+  scrollX: true,
   order: [[2, "asc"]],
   search: {
     return: false,
@@ -154,9 +155,167 @@ let DTProductos = $("#table").DataTable({
   }
 });
 
+function eliminar(data) {
+  alertify.confirm('Cambiar estado', `Esta seguro de cambiar el estado del producto <b>${data.referencia} ("${(data.item || '')}")</b> a ${data.estado == "1" ? 'Ina' : 'A'}ctivo`,
+    function () {
+      $.ajax({
+        type: "POST",
+        url: rutaBase + "Eliminar",
+        dataType: 'json',
+        data: {
+          id: data.id,
+          estado: (data.estado == "1" ? 0 : 1)
+        },
+        success: function (resp) {
+          if (resp.success) {
+            alertify.success(resp.msj);
+            DTProductos.ajax.reload();
+          } else {
+            alertify.error(resp.msj);
+          }
+        }
+      });
+    }, function () { });
+}
+
+function instanciarEditorImagen(image, tamanoMax) {
+  $("#image").rcrop("destroy");
+  $("#image").attr('src', image);
+  setTimeout(() => {
+    $('#image').rcrop({
+      full: true,
+      minSize: [100, 100],
+      maxSize: [tamanoMax, tamanoMax],
+      preserveAspectRatio: true,
+      inputs: true,
+      inputsPrefix: '',
+      grid: true
+    });
+    $('#image').show();
+  }, 200);
+
+  $('#image').on('rcrop-changed', function () {
+    srcOriginal = $(this).rcrop('getDataURL');
+  });
+
+  $('#image').on('rcrop-ready', function () {
+    $(this).rcrop('resize', tamanoMax, tamanoMax);
+    srcOriginal = $(this).rcrop('getDataURL');
+  });
+}
+
+async function guardarImage() {
+  if (stream != null) {
+    recortarImagen();
+  } else {
+    const file = await baseToFile(srcOriginal, 'temp', 'image/png');
+    var dt = new DataTransfer();
+    dt.items.add(file);
+    $("#foto").prop('files', dt.files);
+    $('#imgFoto').attr('src', srcOriginal);
+    $("#modalEditarImage").modal('hide');
+    $("#modalCrearEditar").show();
+    $('#image').rcrop('destroy');
+    $("#content-preview").removeClass("d-none");
+    $("#content-upload").addClass("d-none");
+    if ($("#id").val().length > 0) {
+      $("#editFoto").val(0);
+    }
+  }
+}
+
+async function baseToFile(url, filename, mimeType) {
+  const res = await fetch(url);
+  const buf = await res.arrayBuffer();
+  return new File([buf], filename, { type: mimeType });
+}
+
+function tieneSoporteUserMedia() {
+  return !!(
+    navigator.getUserMedia
+    || (navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia)
+    || navigator.webkitGetUserMedia
+    || navigator.msGetUserMedia
+  );
+}
+
+function cambiarCamara() {
+  cameraActive = (cameraActive == 'environment' ? 'user' : 'environment');
+  srcOriginal = '';
+  $('#image').rcrop('destroy');
+  $("#video").hide();
+  iniciarCamara();
+}
+
+async function iniciarCamara() {
+  $("#imageTemp").show();
+  $(".btnGuadarFoto").prop('disabled', true);
+  $video = document.querySelector("#video");
+  capture(cameraActive);
+}
+
+const capture = async facingMode => {
+  const options = {
+    audio: false,
+    video: {
+      facingMode,
+    },
+  };
+  try {
+    if (stream) {
+      const tracks = stream.getTracks();
+      tracks.forEach(track => track.stop());
+    }
+    stream = await navigator.mediaDevices.getUserMedia(options);
+  } catch (e) {
+    alert(e);
+    return;
+  }
+  $video.srcObject = null;
+  $video.srcObject = stream;
+  $video.play();
+  $("#imageTemp").hide();
+  $(".btnGuadarFoto").prop('disabled', false);
+  $("#video, .btnsyncaction").show();
+}
+
+function recortarImagen() {
+  $('.reloadFoto').show();
+
+  //Obtener contexto del canvas y dibujar sobre él
+  let $canvas = document.querySelector("#canvas");
+  $canvas.width = $video.videoWidth;
+  $canvas.height = $video.videoHeight;
+  $canvas.getContext("2d").drawImage($video, 0, 0, $canvas.width, $canvas.height);
+
+  var image = new Image();
+  image.src = $canvas.toDataURL();
+
+  image.onload = function () {
+    var height = this.height;
+    var width = this.width;
+    let tamanoMax = height <= width ? height : width;
+    if (stream) {
+      const tracks = stream.getTracks();
+      tracks.forEach(track => track.stop());
+    }
+    $("#video, .btnsyncaction").hide();
+    instanciarEditorImagen($canvas.toDataURL(), tamanoMax);
+    stream = null;
+  };
+}
+
+function reintentarFoto() {
+  srcOriginal = '';
+  $('#image').rcrop('destroy');
+  $("#video, .reloadFoto, #image").hide();
+  iniciarCamara();
+}
+
 $(function () {
   //Enviamos el valor del inventario
-  $("#valorInventarioActual").val(formatoPesos.format($valorInventarioActual))
+  $("#valorInventarioActual").val(formatoPesos.format($valorInventarioActual));
+  $("#costoInventarioActual").val(formatoPesos.format($costoInventarioActual));
 
   //Se genera alerta informando que no hay ninguna categoria creada o habilitada
   if ($CATEGORIAS <= 0) {
@@ -334,11 +493,12 @@ $(function () {
     let cantidad = $(this).data("cant");
     let offset = $(this).data("offset");
     let final = $(this).data("final");
+    let originales = $("#checkOriginales").is(':checked') == true ? 1 : 0;
     $(this).removeClass("list-group-item-success list-group-item-danger");
     $(this).find("i").removeClass("fa-download fa-times").addClass("fa-rotate rotacionEfecto");
 
     $.ajax({
-      url: rutaBase + `descargarFoto/${cantidad}/${offset}`,
+      url: rutaBase + `descargarFoto/${cantidad}/${offset}/${originales}`,
       xhrFields: {
         responseType: 'blob'
       },
@@ -440,160 +600,3 @@ $(function () {
     });
   });
 });
-
-function eliminar(data) {
-  alertify.confirm('Cambiar estado', `Esta seguro de cambiar el estado del producto <b>${data.referencia} ("${(data.item || '')}")</b> a ${data.estado == "1" ? 'Ina' : 'A'}ctivo`,
-    function () {
-      $.ajax({
-        type: "POST",
-        url: rutaBase + "Eliminar",
-        dataType: 'json',
-        data: {
-          id: data.id,
-          estado: (data.estado == "1" ? 0 : 1)
-        },
-        success: function (resp) {
-          if (resp.success) {
-            alertify.success(resp.msj);
-            DTProductos.ajax.reload();
-          } else {
-            alertify.error(resp.msj);
-          }
-        }
-      });
-    }, function () { });
-}
-
-function instanciarEditorImagen(image, tamanoMax) {
-  $("#image").rcrop("destroy");
-  $("#image").attr('src', image);
-  setTimeout(() => {
-    $('#image').rcrop({
-      full: true,
-      minSize: [100, 100],
-      maxSize: [tamanoMax, tamanoMax],
-      preserveAspectRatio: true,
-      inputs: true,
-      inputsPrefix: '',
-      grid: true
-    });
-    $('#image').show();
-  }, 200);
-
-  $('#image').on('rcrop-changed', function () {
-    srcOriginal = $(this).rcrop('getDataURL');
-  });
-
-  $('#image').on('rcrop-ready', function () {
-    $(this).rcrop('resize', tamanoMax, tamanoMax);
-    srcOriginal = $(this).rcrop('getDataURL');
-  });
-}
-
-async function guardarImage() {
-  if (stream != null) {
-    recortarImagen();
-  } else {
-    const file = await baseToFile(srcOriginal, 'temp', 'image/png');
-    var dt = new DataTransfer();
-    dt.items.add(file);
-    $("#foto").prop('files', dt.files);
-    $('#imgFoto').attr('src', srcOriginal);
-    $("#modalEditarImage").modal('hide');
-    $("#modalCrearEditar").show();
-    $('#image').rcrop('destroy');
-    $("#content-preview").removeClass("d-none");
-    $("#content-upload").addClass("d-none");
-    if ($("#id").val().length > 0) {
-      $("#editFoto").val(0);
-    }
-  }
-}
-
-async function baseToFile(url, filename, mimeType) {
-  const res = await fetch(url);
-  const buf = await res.arrayBuffer();
-  return new File([buf], filename, { type: mimeType });
-}
-
-function tieneSoporteUserMedia() {
-  return !!(
-    navigator.getUserMedia
-    || (navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia)
-    || navigator.webkitGetUserMedia
-    || navigator.msGetUserMedia
-  );
-}
-
-function cambiarCamara() {
-  cameraActive = (cameraActive == 'environment' ? 'user' : 'environment');
-  srcOriginal = '';
-  $('#image').rcrop('destroy');
-  $("#video").hide();
-  iniciarCamara();
-}
-
-async function iniciarCamara() {
-  $("#imageTemp").show();
-  $(".btnGuadarFoto").prop('disabled', true);
-  $video = document.querySelector("#video");
-  capture(cameraActive);
-}
-
-const capture = async facingMode => {
-  const options = {
-    audio: false,
-    video: {
-      facingMode,
-    },
-  };
-  try {
-    if (stream) {
-      const tracks = stream.getTracks();
-      tracks.forEach(track => track.stop());
-    }
-    stream = await navigator.mediaDevices.getUserMedia(options);
-  } catch (e) {
-    alert(e);
-    return;
-  }
-  $video.srcObject = null;
-  $video.srcObject = stream;
-  $video.play();
-  $("#imageTemp").hide();
-  $(".btnGuadarFoto").prop('disabled', false);
-  $("#video, .btnsyncaction").show();
-}
-
-function recortarImagen() {
-  $('.reloadFoto').show();
-
-  //Obtener contexto del canvas y dibujar sobre él
-  let $canvas = document.querySelector("#canvas");
-  $canvas.width = $video.videoWidth;
-  $canvas.height = $video.videoHeight;
-  $canvas.getContext("2d").drawImage($video, 0, 0, $canvas.width, $canvas.height);
-
-  var image = new Image();
-  image.src = $canvas.toDataURL();
-
-  image.onload = function () {
-    var height = this.height;
-    var width = this.width;
-    let tamanoMax = height <= width ? height : width;
-    if (stream) {
-      const tracks = stream.getTracks();
-      tracks.forEach(track => track.stop());
-    }
-    $("#video, .btnsyncaction").hide();
-    instanciarEditorImagen($canvas.toDataURL(), tamanoMax);
-    stream = null;
-  };
-}
-
-function reintentarFoto() {
-  srcOriginal = '';
-  $('#image').rcrop('destroy');
-  $("#video, .reloadFoto, #image").hide();
-  iniciarCamara();
-}

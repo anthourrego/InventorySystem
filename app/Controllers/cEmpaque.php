@@ -164,7 +164,11 @@ class cEmpaque extends BaseController {
 				) AS cantAgregar,
 				prodCaja.CantTotalCajas,
 				pedidosproductos.id AS idPedidoProducto,
-				p.ubicacion AS ubicacionProd
+				p.ubicacion AS ubicacionProd,
+				CASE 
+					WHEN p.imagen IS NULL THEN '' 
+					ELSE CONCAT('" . base_url() . "/fotoProductosAPP/', p.id, '/', SUBSTRING(p.imagen,1,LOCATE('.', p.imagen)+-1), '-small', SUBSTRING(p.imagen,LOCATE('.', p.imagen),LENGTH(p.imagen)-LOCATE('.', p.imagen)+1)) 
+				END As FotoURLSmall		
 			")->join("productos AS p", "pedidosproductos.id_producto = p.id")
 			->join("(
 				SELECT

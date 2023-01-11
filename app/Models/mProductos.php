@@ -26,7 +26,8 @@ class mProductos extends Model {
 		"id_manifiesto",
 		"ventas",
 		"estado",
-		"cantPaca"
+		"cantPaca",
+		"updated_at",
 	];
 
 	// Dates
