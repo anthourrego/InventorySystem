@@ -38,9 +38,9 @@
             <i class='fas fa-download'></i> Descargar
           </a>
 
-          <a type='button' class='btn btn-secondary w-100 mb-2' id='btnDescargar' href='<?= base_url() ?>/ReportesQR/FacturaFoto/<?= $factura->id ?>/1/1/1' target='_blank'>
+          <!-- <a type='button' class='btn btn-secondary w-100 mb-2' id='btnDescargar' href='<?= base_url() ?>/ReportesQR/FacturaFoto/<?= $factura->id ?>/1/1/1' target='_blank'>
             <i class='fas fa-camera'></i> Descargar Con Foto
-          </a>
+          </a> -->
     
           <button type="button" class="btn btn-info w-100 mb-2" onclick="verEnlinea()">
             <i class="fas fa-eye"></i> Ver En Linea
