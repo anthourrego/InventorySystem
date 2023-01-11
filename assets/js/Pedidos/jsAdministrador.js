@@ -35,9 +35,7 @@ let DT = $("#table").DataTable({
             color = "secondary";
           } else if (data.estado == 2) {
             color = "info";
-          }
-        } else {
-          if (data.leidoQR == 1) {
+          } else if (data.estado == 4) {
             color = "warning";
           }
         }
@@ -78,15 +76,17 @@ let DT = $("#table").DataTable({
         let botones = '';
         let facturado = (data.idFactura && data.idFactura > 0);
 
-        if (data.leidoQR == 1) {
-          facturado = false;
-          data.estado = 2;
-        }
-
-        /* Si es para alistamiento o si no tiene factura y ya esta empacado */
-        if ((data.estado == 0 && validPermissions(104)) || (!facturado && data.estado == 2 && validPermissions(105))) {
+        /* Si es para alistamiento o si no tiene factura y ya esta despachado */
+        if ((data.estado == 0 && validPermissions(104)) || (!facturado && data.estado == 4 && validPermissions(105))) {
           botones += `<button type="button" class="btn btn-${color} btnConfirmarPedido" title="${estado} Pedido">
             <i class="fa-solid ${data.estado == 0 ? 'fa-boxes-stacked' : 'fa-receipt'}"></i>
+          </button>`;
+        }
+
+        /* Si es para despachar ya esta empacado */
+        if (data.estado == 2 && validPermissions(110)) {
+          botones += `<button type="button" class="btn btn-primary btnDespacharPedido" title="Despachar Pedido">
+            <i class="fa-solid fa-dolly"></i>
           </button>`;
         }
 
@@ -268,6 +268,11 @@ let DT = $("#table").DataTable({
           }
         }
       });
+    });
+
+    $(row).find(".btnDespacharPedido").click(function (e) {
+      e.preventDefault();
+      despacharPedido(data);
     });
   }
 });
@@ -453,3 +458,26 @@ alertify.imprimirRotulo || alertify.dialog('imprimirRotulo', function () {
     },
   };
 });
+
+function despacharPedido(data) {
+  alertify.confirm('Advertencia', `¿Esta seguro de despachar el pedido <b>${data.pedido}</b>?`,
+    function () {
+      $.ajax({
+        type: "POST",
+        url: rutaBase + "EstadoPedido",
+        dataType: 'json',
+        data: {
+          id: data.id,
+          estado: 4
+        },
+        success: function (resp) {
+          if (resp.success) {
+            alertify.success(resp.msj);
+            DT.ajax.reload();
+          } else {
+            alertify.error(resp.msj);
+          }
+        }
+      });
+    }, function () { });
+}

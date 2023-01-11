@@ -91,7 +91,7 @@
       <?php } else { ?>
 
         <div class="alert alert-warning text-center">
-          No se encontro factura relacionada
+          No se encontro factura relacionada o no esta disponible
         </div>
 
       <?php } ?>

@@ -181,9 +181,11 @@ class cPedidos extends BaseController {
 					WHEN V.id IS NOT NULL
 						THEN CASE
 							WHEN V.leidoQR = 1
-								THEN 'Despachado'
+								THEN 'Facturado QR'
 							ELSE 'Facturado'
 						END
+					WHEN P.Estado = 4 
+						THEN 'Despachado'
 					WHEN P.Estado = 0 
 						THEN 'Pendiente' 
 					WHEN P.Estado = 1 
@@ -654,7 +656,11 @@ class cPedidos extends BaseController {
 		if($builder->update()) {
 			$this->db->transCommit();
 			$resp["success"] = true;
-			$resp['msj'] = "Pedido en proceso alistamiento";
+			if ($data->estado == 4) {
+				$resp['msj'] = "Pedido despachado correctamente";
+			} else {
+				$resp['msj'] = "Pedido en proceso alistamiento";
+			}
 		} else {
 			$this->db->transRollback();
 			$resp['msj'] = "No fue posible guardar la información";
@@ -768,6 +774,7 @@ class cPedidos extends BaseController {
 
 	public function facturaQR($factura) {
 		$mVentas = new mVentas();
+		$mPedidos = new mPedidos();
 		$mVentasProductos = new mVentasProductos();
 		$mPedidosCajas = new mPedidosCajas();
 		$mPedidosCajasProductos = new mPedidosCajasProductos();
@@ -782,21 +789,27 @@ class cPedidos extends BaseController {
 
 		$nuevo = false;
 		if (is_null($this->content['factura'])) {
-			$prefijo = $mConfiguracion->select("valor")->where("campo", "prefijoFact")->first();
-			$data = (object) array(
-				"id" => $factura,
-				"prefijo" => (isset($prefijo->valor) && !is_null($prefijo->valor) ? $prefijo->valor : '')
-			);
-			$resp = $this->crearFacturaPedido($data, false);
 
-			if (isset($resp["id_factura"])) {
-				$this->content['factura'] = $mVentas->asObject()->find($resp["id_factura"]);
-				$nuevo = true;
+			$pedido = $mPedidos->asObject()->find($factura);
+
+			if (in_array($pedido->estado, [2, 3, 4])) {
+				$prefijo = $mConfiguracion->select("valor")->where("campo", "prefijoFact")->first();
+				$data = (object) array(
+					"id" => $factura,
+					"prefijo" => (isset($prefijo->valor) && !is_null($prefijo->valor) ? $prefijo->valor : '')
+				);
+				$resp = $this->crearFacturaPedido($data, false);
+	
+				if (isset($resp["id_factura"])) {
+					$this->content['factura'] = $mVentas->asObject()->find($resp["id_factura"]);
+					$nuevo = true;
+				}
 			}
 		}
 
-		/* Cajas del pedido */
-		$cajas = $mPedidosCajas->select("
+		if (isset($this->content['factura']->id_pedido)) {
+			/* Cajas del pedido */
+			$cajas = $mPedidosCajas->select("
 				pedidoscajas.id AS idCajaPedido,
 				pedidoscajas.numero_caja AS numeroCaja,
 				pedidoscajas.id_empacador AS empacador,
@@ -807,41 +820,42 @@ class cPedidos extends BaseController {
 			->where("pedidoscajas.id_pedido", $this->content['factura']->id_pedido)
 			->findAll();
 
-		if (count($cajas) > 0) {
+			if (count($cajas) > 0) {
 
-			$mPedidosCajasProductos = new mPedidosCajasProductos();
+				$mPedidosCajasProductos = new mPedidosCajasProductos();
 
-			foreach($cajas as $pos => $value1) {
-				$cajas[$pos]->productos = $mPedidosCajasProductos->select("
-					P.item,
-					P.referencia,
-					P.descripcion,
-					P.precio_venta,
-					P.cantPaca,
-					pedidoscajasproductos.cantidad,
-					PP.valor,
-					P.imagen,
-					P.id
-				")
-				->join("productos AS P", "pedidoscajasproductos.id_producto = P.id", "left")
-				->join("pedidosproductos AS PP", "pedidoscajasproductos.id_producto = PP.id_producto AND PP.id_pedido = '" . $this->content['factura']->id_pedido . "'", "left")
-				->where("pedidoscajasproductos.id_caja", $value1->idCajaPedido)
-				->orderBy("pedidoscajasproductos.id", "DESC")
-				->findAll();
+				foreach($cajas as $pos => $value1) {
+					$cajas[$pos]->productos = $mPedidosCajasProductos->select("
+						P.item,
+						P.referencia,
+						P.descripcion,
+						P.precio_venta,
+						P.cantPaca,
+						pedidoscajasproductos.cantidad,
+						PP.valor,
+						P.imagen,
+						P.id
+					")
+					->join("productos AS P", "pedidoscajasproductos.id_producto = P.id", "left")
+					->join("pedidosproductos AS PP", "pedidoscajasproductos.id_producto = PP.id_producto AND PP.id_pedido = '" . $this->content['factura']->id_pedido . "'", "left")
+					->where("pedidoscajasproductos.id_caja", $value1->idCajaPedido)
+					->orderBy("pedidoscajasproductos.id", "DESC")
+					->findAll();
+				}
 			}
-		}
-		$this->content['cajas'] = $cajas;
+			$this->content['cajas'] = $cajas;
 
-		$this->content['productos'] = $mVentasProductos->select("
-			P.item,
-			P.referencia,
-			P.descripcion,
-			ventasproductos.valor AS precio_venta,
-			P.cantPaca,
-			ventasproductos.cantidad
-		")->join("productos AS P", "ventasproductos.id_producto = P.id", "left")
-		->where("id_venta", $factura)
-		->findAll();
+			$this->content['productos'] = $mVentasProductos->select("
+				P.item,
+				P.referencia,
+				P.descripcion,
+				ventasproductos.valor AS precio_venta,
+				P.cantPaca,
+				ventasproductos.cantidad
+			")->join("productos AS P", "ventasproductos.id_producto = P.id", "left")
+			->where("id_venta", $factura)
+			->findAll();
+		}
 
 		if ($nuevo == true) {
 			$builder = $this->db->table('ventas')->set("leidoQR", 1)->where('id_pedido', $factura);
