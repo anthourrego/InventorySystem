@@ -18,9 +18,9 @@ let DT = $("#table").DataTable({
       className: 'text-center align-middle',
       render: function (meta, type, data, meta) {
         let color = "success";
-        if (data.estado == 0) {
+        if (data.estado == 'PE') {
           color = "primary";
-        } else if (data.estado == 1) {
+        } else if (data.estado == 'EP') {
           color = "warning";
         }
         return `<button class="btn btn-${color}">${data.NombreEstado}</button>`;

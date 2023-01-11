@@ -110,15 +110,15 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       orderable: false,
       searchable: false,
       defaultContent: '',
-      visible: ($DATOSPEDIDO != '' && $DATOSPEDIDO.estado == '3' ? false : true),
+      visible: ($DATOSPEDIDO != '' && $DATOSPEDIDO.estado == 'FA' ? false : true),
       className: 'text-center noExport',
       render: function (meta, type, data, meta) {
-        let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "0";
+        let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "PE";
         return `
-          ${(estadoPedido != 0 ? '<button type="button" class="btn btn-secondary btn-sm btnEditar" title="Editar Producto"><i class="fa-solid fa-pen-to-square"></i></button>' : '')}
+          ${(estadoPedido != 'PE' ? '<button type="button" class="btn btn-secondary btn-sm btnEditar" title="Editar Producto"><i class="fa-solid fa-pen-to-square"></i></button>' : '')}
           <div class="btn-group btn-group-sm" role="group">
-            <button type="button" class="btn btn-danger btnBorrar ${(estadoPedido != 0 || $EDITARPEDIDO == 'N' ? 'd-none' : '')}" title="Borrar Producto"><i class="fa-solid fa-trash"></i></button>
-            ${(estadoPedido != 0 ? '<button type="button" class="btn btn-success btnAceptarEdicion d-none" title="Guardar edicion"><i class="fa-solid fa-save"></i></button>' : '')}
+            <button type="button" class="btn btn-danger btnBorrar ${(estadoPedido != 'PE' || $EDITARPEDIDO == 'N' ? 'd-none' : '')}" title="Borrar Producto"><i class="fa-solid fa-trash"></i></button>
+            ${(estadoPedido != 'PE' ? '<button type="button" class="btn btn-success btnAceptarEdicion d-none" title="Guardar edicion"><i class="fa-solid fa-save"></i></button>' : '')}
           </div>
         `;
       }
@@ -142,8 +142,8 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       searchable: false,
       data: 'cantidad',
       render: function (meta, type, data, meta) {
-        let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "0";
-        return `<input type="number" ${(estadoPedido != 0 || $EDITARPEDIDO == 'N' ? 'disabled' : '')} class="form-control form-control-sm cantidadProduct inputFocusSelect soloNumeros" min="1" value="${data.cantidad}">`;
+        let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "PE";
+        return `<input type="number" ${(estadoPedido != 'PE' || $EDITARPEDIDO == 'N' ? 'disabled' : '')} class="form-control form-control-sm cantidadProduct inputFocusSelect soloNumeros" min="1" value="${data.cantidad}">`;
       }
     },
     {
@@ -151,8 +151,8 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       searchable: false,
       data: 'valorUnitario',
       render: function (meta, type, data, meta) {
-        let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "0";
-        return `<input type="tel" ${(estadoPedido != 0 || $EDITARPEDIDO == 'N' ? 'disabled' : '')} class="form-control form-control-sm inputPesos text-right inputFocusSelect soloNumeros valorUnitario" min="0" value="${data.valorUnitario}">`;
+        let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "PE";
+        return `<input type="tel" ${(estadoPedido != "PE" || $EDITARPEDIDO == 'N' ? 'disabled' : '')} class="form-control form-control-sm inputPesos text-right inputFocusSelect soloNumeros valorUnitario" min="0" value="${data.valorUnitario}">`;
       }
     },
     {
@@ -215,7 +215,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
 
     $(row).find(".btnBorrar").click(function (e) {
       e.preventDefault();
-      if ($DATOSPEDIDO.estado == 1) {
+      if ($DATOSPEDIDO.estado == "EP") {
         let mensaje = `<li> ¿Por que esta eliminando el producto (${data.item} - ${data.descripcion})?</li>`;
 
         $(row).find('input').attr('disabled', true);
@@ -258,7 +258,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       $(row).find(".btnAceptarEdicion").click(function (e) {
         e.preventDefault();
 
-        if (!data.nuevo && $DATOSPEDIDO.estado == 1) {
+        if (!data.nuevo && $DATOSPEDIDO.estado == 'EP') {
 
           let observacion = false;
           let mensaje = '';
@@ -332,7 +332,7 @@ $(function () {
 
     if ($(this).valid()) {
 
-      if ($DATOSPEDIDO != '' && $DATOSPEDIDO.estado == 1 && $('.btnAceptarEdicion:visible').length) {
+      if ($DATOSPEDIDO != '' && $DATOSPEDIDO.estado == 'EP' && $('.btnAceptarEdicion:visible').length) {
         alertify.warning(`Aún tiene productos pendientes por confirmar.`);
         return
       }

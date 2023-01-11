@@ -29,15 +29,13 @@ let DT = $("#table").DataTable({
         let color = "success";
         let facturado = (data.idFactura && data.idFactura > 0);
         if (!facturado) {
-          if (data.estado == 0) {
+          if (data.estado == 'PE') {
             color = "primary";
-          } else if (data.estado == 1) {
+          } else if (data.estado == 'EP') {
             color = "secondary";
-          } else if (data.estado == 2) {
+          } else if (data.estado == 'EM') {
             color = "info";
-          }
-        } else {
-          if (data.leidoQR == 1) {
+          } else if (data.estado == 'DE') {
             color = "warning";
           }
         }
@@ -65,28 +63,30 @@ let DT = $("#table").DataTable({
       className: 'text-center noExport',
       render: function (meta, type, data, meta) {
         /* Validamos si no maneja empaque y sea estado inicial y se factura directo */
-        if ($MANEJAEMPAQUE != '1' && data.estado == 0) {
-          data.estado = 2;
+        if ($MANEJAEMPAQUE != '1' && data.estado == 'PE') {
+          data.estado = 'EM';
         }
 
         let estado = 'Facturar';
         let color = 'success';
-        if (data.estado == 0) {
+        if (data.estado == 'PE') {
           estado = 'Enviar Alistamiento';
           color = 'warning';
         }
         let botones = '';
         let facturado = (data.idFactura && data.idFactura > 0);
 
-        if (data.leidoQR == 1) {
-          facturado = false;
-          data.estado = 2;
+        /* Si es para alistamiento o si no tiene factura y ya esta despachado */
+        if ((data.estado == 'PE' && validPermissions(104)) || (!facturado && data.estado == 'DE' && validPermissions(105))) {
+          botones += `<button type="button" class="btn btn-${color} btnConfirmarPedido" title="${estado} Pedido">
+            <i class="fa-solid ${data.estado == 'PE' ? 'fa-boxes-stacked' : 'fa-receipt'}"></i>
+          </button>`;
         }
 
-        /* Si es para alistamiento o si no tiene factura y ya esta empacado */
-        if ((data.estado == 0 && validPermissions(104)) || (!facturado && data.estado == 2 && validPermissions(105))) {
-          botones += `<button type="button" class="btn btn-${color} btnConfirmarPedido" title="${estado} Pedido">
-            <i class="fa-solid ${data.estado == 0 ? 'fa-boxes-stacked' : 'fa-receipt'}"></i>
+        /* Si es para despachar ya esta empacado */
+        if (data.estado == 'EM' && validPermissions(110)) {
+          botones += `<button type="button" class="btn btn-primary btnDespacharPedido" title="Despachar Pedido">
+            <i class="fa-solid fa-dolly"></i>
           </button>`;
         }
 
@@ -130,7 +130,7 @@ let DT = $("#table").DataTable({
         }
 
         /* Si esta empacado o facturado */
-        if (data.estado >= 2) {
+        if (['EM', 'FA', 'DE'].includes(data.estado)) {
           /* Si tiene permiso para imprimir el rotulo */
           if (validPermissions(107)) {
             botones += `<button type="button" class="btn btn-dark btnImprimirRotulo" title="Imprimir rotulo">
@@ -269,6 +269,11 @@ let DT = $("#table").DataTable({
         }
       });
     });
+
+    $(row).find(".btnDespacharPedido").click(function (e) {
+      e.preventDefault();
+      despacharPedido(data);
+    });
   }
 });
 
@@ -279,22 +284,22 @@ $(function () {
 });
 
 function alistarPedido(data) {
-  let msj = (data.estado == 0 ? 'iniciar alistamiento para' : 'facturar');
+  let msj = (data.estado == 'PE' ? 'iniciar alistamiento para' : 'facturar');
   alertify.confirm('Advertencia', `¿Esta seguro de ${msj} el pedido <b>${data.pedido}</b>?`,
     function () {
       $.ajax({
         type: "POST",
-        url: rutaBase + (data.estado == 0 ? "EstadoPedido" : "FacturarPedido"),
+        url: rutaBase + (data.estado == 'PE' ? "EstadoPedido" : "FacturarPedido"),
         dataType: 'json',
         data: {
           id: data.id,
-          estado: (data.estado == 0 ? 1 : 3)
+          estado: (data.estado == 'PE' ? 'EP' : 'FA')
         },
         success: function (resp) {
           if (resp.success) {
             alertify.success(resp.msj);
             DT.ajax.reload();
-            if (data.estado == 0) {
+            if (data.estado == 'PE') {
               window.open(base_url() + "Reportes/Pedido/" + data.id + "/0");
             } else {
               window.open(base_url() + "Reportes/Factura/" + resp.id_factura);
@@ -453,3 +458,26 @@ alertify.imprimirRotulo || alertify.dialog('imprimirRotulo', function () {
     },
   };
 });
+
+function despacharPedido(data) {
+  alertify.confirm('Advertencia', `¿Esta seguro de despachar el pedido <b>${data.pedido}</b>?`,
+    function () {
+      $.ajax({
+        type: "POST",
+        url: rutaBase + "EstadoPedido",
+        dataType: 'json',
+        data: {
+          id: data.id,
+          estado: 'DE'
+        },
+        success: function (resp) {
+          if (resp.success) {
+            alertify.success(resp.msj);
+            DT.ajax.reload();
+          } else {
+            alertify.error(resp.msj);
+          }
+        }
+      });
+    }, function () { });
+}

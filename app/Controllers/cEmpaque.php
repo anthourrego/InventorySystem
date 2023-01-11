@@ -45,7 +45,7 @@ class cEmpaque extends BaseController {
 				P.created_at,
 				P.updated_at,
 				P.estado,
-				CASE WHEN P.Estado = 0 THEN 'Pendiente' WHEN P.Estado = 1 THEN 'Alistamiento' ELSE 'Facturado' END AS NombreEstado,
+				CASE WHEN P.Estado = 'PE' THEN 'Pendiente' WHEN P.Estado = 'EP' THEN 'Alistamiento' ELSE 'Facturado' END AS NombreEstado,
 				P.total,
 				S.direccion,
 				S.nombre AS NombreSucursal,
@@ -58,7 +58,7 @@ class cEmpaque extends BaseController {
 			->join('ciudades AS CUI', 'S.id_ciudad = CUI.id', 'left')
 			->join('usuarios AS U', 'P.id_vendedor = U.id', 'left')
 			->join('ventas AS V', 'P.id = V.id_pedido', 'left')
-			->where('P.Estado', 1);
+			->where('P.Estado', 'EP');
 
 		return DataTable::of($query)->toJson(true);
 	}
@@ -482,7 +482,7 @@ class cEmpaque extends BaseController {
 		
 					$builder = $this->db->table('pedidos')
 						->set("fin_empaque", date("Y-m-d H:i:s"))
-						->set("estado", 2)
+						->set("estado", 'EM')
 						->where('id', $data->idPedido);
 		
 					if($builder->update()) {
@@ -669,7 +669,7 @@ class cEmpaque extends BaseController {
 
 				$builder = $this->db->table('pedidos')
 					->set("fin_empaque", date("Y-m-d H:i:s"))
-					->set("estado", 2)
+					->set("estado", 'EM')
 					->where('id', $data->idPedido);
 	
 				if($builder->update()) {

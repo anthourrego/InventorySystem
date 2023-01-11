@@ -384,10 +384,10 @@ class mPermisos extends Model {
 						"id" => 109,
 						"text" => "Imprmir Orden de Envio"
 					],
-					/* [
+					[
 						"id" => 110,
-						"text" => "Imprmir Código QR"
-					] */
+						"text" => "Despachar"
+					]
 				]
 			]
 		];
