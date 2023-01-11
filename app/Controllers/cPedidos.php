@@ -123,7 +123,7 @@ class cPedidos extends BaseController {
 		if (!validPermissions([102], true)) {
 			$this->content["editarPedido"] = 'N';
 		} else {
-			if (!is_null($pedido) && $pedido->estado == 3) {
+			if (!is_null($pedido) && $pedido->estado == 'FA') {
 				$this->content["editarPedido"] = 'N';
 			}
 		}
@@ -132,7 +132,7 @@ class cPedidos extends BaseController {
 
 		$this->content["cantidad_despachar"] = (session()->has("cantDespachar") ? session()->get("cantDespachar") : '6');
 
-		$this->content['title'] = ($pedido->estado == 2 ? "Ver" : "Editar") . " pedido " . $pedido->pedido;
+		$this->content['title'] = ($pedido->estado == 'EM' ? "Ver" : "Editar") . " pedido " . $pedido->pedido;
 		$this->content['view'] = "Pedidos/vCrear";
 
 		$this->LDataTables();
@@ -184,11 +184,11 @@ class cPedidos extends BaseController {
 								THEN 'Facturado QR'
 							ELSE 'Facturado'
 						END
-					WHEN P.Estado = 4 
+					WHEN P.Estado = 'DE'
 						THEN 'Despachado'
-					WHEN P.Estado = 0 
+					WHEN P.Estado = 'PE'
 						THEN 'Pendiente' 
-					WHEN P.Estado = 1 
+					WHEN P.Estado = 'EP'
 						THEN 'En Proceso' 
 					ELSE 'Empacado' 
 				END AS NombreEstado,
@@ -344,6 +344,7 @@ class cPedidos extends BaseController {
 				"impuesto" => 0,
 				"neto" => 0,
 				"total" => 0,
+				"estado" => "PE",
 				"metodo_pago" => $dataPost->metodoPago,
 				"observacion" => $dataPost->observacion
 			);
@@ -455,8 +456,8 @@ class cPedidos extends BaseController {
 				"observacion" => $dataPost->observacion
 			);
 
-			if ($dataPost->estado == '2') {
-				$dataSave['estado'] = 1;
+			if ($dataPost->estado == 'EM') {
+				$dataSave['estado'] = 'EP';
 				$dataSave['fin_empaque'] = null;
 			} 
 
@@ -656,7 +657,7 @@ class cPedidos extends BaseController {
 		if($builder->update()) {
 			$this->db->transCommit();
 			$resp["success"] = true;
-			if ($data->estado == 4) {
+			if ($data->estado == 'DE') {
 				$resp['msj'] = "Pedido despachado correctamente";
 			} else {
 				$resp['msj'] = "Pedido en proceso alistamiento";
@@ -686,9 +687,9 @@ class cPedidos extends BaseController {
 			if ($resp['success'] == true) {
 				$builder = $this->db->table('pedidos')->set("estado", $data->estado)->where('id', $data->id);
 				if($builder->update()) {
-					$resp['msj'] = "No fue posible generar la factura";
 					$this->db->transCommit();
 				} else {
+					$resp['msj'] = "No fue posible generar la factura";
 					$this->db->transRollback();
 				}
 			} else {
@@ -792,7 +793,7 @@ class cPedidos extends BaseController {
 
 			$pedido = $mPedidos->asObject()->find($factura);
 
-			if (in_array($pedido->estado, [2, 3, 4])) {
+			if (in_array($pedido->estado, ['EM', 'FA', 'DE'])) {
 				$prefijo = $mConfiguracion->select("valor")->where("campo", "prefijoFact")->first();
 				$data = (object) array(
 					"id" => $factura,
