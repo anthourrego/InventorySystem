@@ -895,6 +895,11 @@ class cPedidos extends BaseController {
 				$this->content['respuestaCorreo'] = sendEmail($mConfiguracion, [$emailEmpresa], "Descarga Factura " . $this->content['factura']->codigo, $body);
 			}
 		}
+
+		$this->content['nitEmpresa'] = $mConfiguracion
+				->select("IF(valor IS NULL OR valor = '', '', valor) AS valor")
+				->where('campo', 'documentoEmpresa')->get()->getRow('valor');
+
 		return view('vFacturaQR', $this->content);
 	}
 
