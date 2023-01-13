@@ -799,11 +799,16 @@ class cPedidos extends BaseController {
 					"id" => $factura,
 					"prefijo" => (isset($prefijo->valor) && !is_null($prefijo->valor) ? $prefijo->valor : '')
 				);
-				$resp = $this->crearFacturaPedido($data, false);
+				$resp = $this->crearFacturaPedido($data, true);
 	
 				if (isset($resp["id_factura"])) {
 					$this->content['factura'] = $mVentas->asObject()->find($resp["id_factura"]);
 					$nuevo = true;
+
+					$builder = $this->db->table('pedidos')->set("estado", 'FA')->where('id', $factura);
+					if(!$builder->update()) {
+						$this->content['factura'] = null;
+					}
 				}
 			}
 		}
@@ -893,7 +898,7 @@ class cPedidos extends BaseController {
 		return view('vFacturaQR', $this->content);
 	}
 
-	private function crearFacturaPedido($data) {
+	private function crearFacturaPedido($data, $qr = false) {
 		$resp["success"] = false;
 
 		// Facturamos el pedido
@@ -924,6 +929,10 @@ class cPedidos extends BaseController {
 			"id_sucursal" => $pedido->id_sucursal,
 			"id_pedido" => $data->id
 		];
+
+		if ($qr == true) {
+			$ventaSave['leidoQR'] = 1;
+		}
 
 		if($ventaModel->save($ventaSave)){
 			$ventaSave["id"] = $ventaModel->getInsertID();
