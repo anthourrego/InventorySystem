@@ -900,6 +900,7 @@ class cPedidos extends BaseController {
 
 			$this->content['factura'] = $mVentas->select("
 				ventas.*,
+				C.documento AS documentoEmpresa,
 				C.nombre AS Cliente,
 				U.nombre AS Vendedor,
 				S.nombre AS Sucursal,
@@ -918,9 +919,7 @@ class cPedidos extends BaseController {
 
 		}
 
-		$this->content['nitEmpresa'] = $mConfiguracion
-				->select("IF(valor IS NULL OR valor = '', '', valor) AS valor")
-				->where('campo', 'documentoEmpresa')->get()->getRow('valor');
+		$this->content['nitEmpresa'] = $this->content['factura']->documentoEmpresa;
 
 		return view('vFacturaQR', $this->content);
 	}
