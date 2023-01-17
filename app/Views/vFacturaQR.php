@@ -23,7 +23,7 @@
   </head>
 
   <body>
-    <div class="container-fluid p-3">
+    <div class="container-fluid p-3 d-none" id="validaClave">
 
       <?php if (!is_null($factura)) { ?>
 
@@ -32,15 +32,56 @@
           <h3 class="text-center">Factura <br> <?= $factura->codigo ?></h3>
         </div>
 
+        <div class="container my-2">
+          <div class="row">
+            <div class="col-3">
+              <div class="font-weight-bold">Cliente:</div>
+            </div>
+            <div class="col-9">
+              <div class="text-weight"><?= $factura->Cliente ?></div>
+            </div>
+            <div class="col-3">
+              <div class="font-weight-bold">Fecha:</div>
+            </div>
+            <div class="col-9">
+              <div class="text-weight"><?= $factura->Fecha ?></div>
+            </div>
+            <div class="col-3">
+              <div class="font-weight-bold">Dirección:</div>
+            </div>
+            <div class="col-9">
+              <div class="text-weight"><?= $factura->Direccion ?></div>
+            </div>
+            <div class="col-3">
+              <div class="font-weight-bold">Teléfono:</div>
+            </div>
+            <div class="col-9">
+              <div class="text-weight"><?= $factura->Telefono ?></div>
+            </div>
+            <div class="col-3">
+              <div class="font-weight-bold">Ciudad:</div>
+            </div>
+            <div class="col-9">
+              <div class="text-weight"><?= $factura->Ciudad ?>, <?= $factura->Depto ?></div>
+            </div>
+            <div class="col-3">
+              <div class="font-weight-bold">Vendedor:</div>
+            </div>
+            <div class="col-9">
+              <div class="text-weight"><?= $factura->Vendedor ?></div>
+            </div>
+          </div>
+        </div>
+
         <div class="container botones-acciones">
           
-          <a type='button' class='btn btn-primary w-100 mb-2' id='btnDescargar' href='<?= base_url() ?>/ReportesQR/Factura/<?= $factura->id ?>/1/1' target='_blank'>
+          <a type='button' class='btn btn-primary w-100 mb-2' id='btnDescargar' href='<?= base_url() ?>/ReportesQR/Factura/<?= $factura->id ?>/1/0' target='_blank'>
             <i class='fas fa-download'></i> Descargar
           </a>
 
-          <a type='button' class='btn btn-secondary w-100 mb-2' id='btnDescargar' href='<?= base_url() ?>/ReportesQR/FacturaFoto/<?= $factura->id ?>/1/1/1' target='_blank'>
+          <!-- <a type='button' class='btn btn-secondary w-100 mb-2' id='btnDescargar' href='<?= base_url() ?>/ReportesQR/FacturaFoto/<?= $factura->id ?>/1/0/1' target='_blank'>
             <i class='fas fa-camera'></i> Descargar Con Foto
-          </a>
+          </a> -->
     
           <button type="button" class="btn btn-info w-100 mb-2" onclick="verEnlinea()">
             <i class="fas fa-eye"></i> Ver En Linea
@@ -97,6 +138,19 @@
       <?php } ?>
 
     </div>
+
+    <div class="container-fluid p-3" id="nitNoValido">
+      <?php if ($nitEmpresa == '') { ?>
+          <div class="alert alert-warning text-center d-none">
+            Los datos de la empresa no son validos o no estan registrados
+          </div>
+      <?php } else { ?>
+        <button type="button" class="btn btn-info w-100 mb-2 d-none" onclick="validarClave()">
+          <i class="fas fa-refresh"></i> Reintentar Acceso
+        </button>
+      <?php } ?>
+    </div>
+
   </body>
 
   <?php 
@@ -114,6 +168,24 @@
   ?>
 
   <script>
+
+    let $nit = <?= $nitEmpresa ?>;
+
+    document.addEventListener('DOMContentLoaded', function (e) {
+      alertify.defaults.theme.ok = "btn btn-primary";
+      alertify.defaults.theme.cancel = "btn btn-danger";
+      alertify.defaults.theme.input = "form-control";
+      alertify.defaults.glossary.ok = '<i class="fas fa-check"></i> Aceptar';
+      alertify.defaults.glossary.cancel = '<i class="fas fa-times"></i> Cancelar';
+      
+      if ($nit == '') {
+        $("#nitNoValido").find('div').removeClass('d-none');
+      } else {
+        $("#nitNoValido").find('button').removeClass('d-none');
+        validarClave();
+      }
+    });
+
     function regresarEnlinea() {
       $('.lista-cajas-en-linea').addClass('d-none');
       $('.botones-acciones').removeClass('d-none');
@@ -122,6 +194,32 @@
     function verEnlinea() {
       $('.lista-cajas-en-linea').removeClass('d-none');
       $('.botones-acciones').addClass('d-none');
+    }
+
+    function validarClave() {
+      alertify.prompt('Advertencia', 'Digite el nit de la empresa', '', function (evt, value) {
+        if (value != '') {
+
+          if ($nit == value) {
+
+            $("#nitNoValido").addClass('d-none');
+            $("#validaClave").removeClass('d-none');
+
+          } else {
+            alertify.warning('El nit no es valido');
+            setTimeout(() => {
+              validarClave();
+            }, 0);
+          }
+        } else {
+          alertify.warning('Ingrese un valor valido');
+          setTimeout(() => {
+            validarClave();
+          }, 0);
+        }
+      }, function () { });
+
+      // validaClave
     }
   </script>
 
