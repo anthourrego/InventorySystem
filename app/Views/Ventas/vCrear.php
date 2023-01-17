@@ -1,3 +1,8 @@
+<style>
+	div.dataTables_wrapper div.dataTables_filter input {
+		width: 100%;
+	}
+</style>
 <div class="row">
 	<div class="col-7">
 		<div class="card">
@@ -96,22 +101,20 @@
 				</div>
 			</div>
 			<div class="card-body">
-				<div class="table-responsive">
-					<table id="table" class="table table-sm table-striped table-hover table-bordered w-100">
-						<thead> 
-							<tr>
-								<th>Imagen</th>
-								<th>Referencia</th>
-								<th>Item</th>
-								<th>Descripción</th>
-								<th>Pac</th>
-								<th>Stock</th>
-								<th>Acciones</th>
-							</tr>
-						</thead>
-						<tbody></tbody>
-					</table>
-				</div>
+				<table id="table" class="table table-sm table-striped table-hover table-bordered w-100">
+					<thead> 
+						<tr>
+							<th>Imagen</th>
+							<th>Referencia</th>
+							<th>Item</th>
+							<th>Descripción</th>
+							<th>Pac</th>
+							<th>Stock</th>
+							<th>Acciones</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
 			</div>
 		</div>
 	</div>

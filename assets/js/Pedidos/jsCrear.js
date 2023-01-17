@@ -14,7 +14,7 @@ let DTProductos = {
   scroller: {
     loadingIndicator: true
   },
-  dom: domBftrip,
+  dom: domBftri50,
   order: [[2, "asc"]],
   columns: [
     {
