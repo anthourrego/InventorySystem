@@ -702,6 +702,12 @@ class cProductos extends BaseController {
 
 			imagepng($im, $ruta ."{$ext->filename}-logo.png", 0);
 			imagedestroy($im);
+
+			//convertimos de nuevo la imagen para reducirle el peso
+			Services::image()
+				->withFile($ruta ."{$ext->filename}-logo.png")
+				->convert(IMAGETYPE_PNG)
+				->save($ruta . "{$ext->filename}-logo.png");
 		} else {
 			Services::image()
 					->withFile($filename)
