@@ -1,3 +1,8 @@
+<style>
+	div.dataTables_wrapper div.dataTables_filter input {
+		width: 100%;
+	}
+</style>
 <div class="row">
 	<div class="col-<?= ($editarPedido == 'S' ? '7' : '12') ?>">
 		<div class="card">

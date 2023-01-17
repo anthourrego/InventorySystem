@@ -9,11 +9,11 @@ let DTProductos = {
       return $.extend(d, { "estado": 1, "ventas": 1 })
     }
   },
-  scrollY: screen.availHeight - ((screen.availHeight * 50) / 100),
+  scrollY: screen.availHeight - ((screen.availHeight * 45) / 100),
   scroller: {
     loadingIndicator: true
   },
-  dom: domBftrip50,
+  dom: domBftri50,
   order: [[2, "asc"]],
   columns: [{
     orderable: false,

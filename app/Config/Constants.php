@@ -99,4 +99,4 @@ defined('TIPOCORREO')      || define('TIPOCORREO', array(
   , 2 => array("valor" => "O", "titulo" => "Otro", "smtp" => "N/A")
 ));// Tipos de documentos
 
-defined('DOMINIO') || define('DOMINIO', 1);
+defined('DOMINIO') || define('DOMINIO', 0);

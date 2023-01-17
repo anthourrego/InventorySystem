@@ -31,7 +31,7 @@ var language = {
 };
 
 var domBftrip = "<'row no-gutters pt-1 px-1'<'col-sm-12 col-md-8 mb-2 mb-md-0'B><'col-sm-12 col-md-4'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>";
-var domBftrip50 = "<'row no-gutters pt-1 px-1'<'col-12 col-xl-8 mb-2 mb-md-0'B><'col-12 col-xl-4'f>><'row'<'col-12'tr>><'row'<'col-12 col-xl-5'i><'col-12 col-xl-7'p>>";
+var domBftri50 = "<'row no-gutters pt-1 px-1'<'col-12 col-xl-8 mb-2 mb-md-0'B><'col-12 col-xl-4'f>><'row'<'col-12'tr>><'row'<'col-12'i>>";
 var domBftri = "<'row no-gutters pt-1 px-1'<'col-sm-12 col-md-8 mb-2 mb-md-0'B><'col-sm-12 col-md-4'f>><'row'<'col-sm-12'tr>><'row'<'col-12'i>>";
 var domlftrip = "<'row no-gutters pt-1 px-1'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>";
 var domftrip = "<'row no-gutters pt-1 px-1'<'col-sm-12'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>";
