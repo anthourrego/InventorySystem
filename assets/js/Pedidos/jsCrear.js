@@ -10,7 +10,7 @@ let DTProductos = {
       return $.extend(d, { "estado": 1, "ventas": 1 })
     }
   },
-  scrollY: screen.height - 460,
+  scrollY: screen.availHeight - ((screen.availHeight * 45) / 100),
   scroller: {
     loadingIndicator: true
   },
