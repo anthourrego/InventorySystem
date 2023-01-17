@@ -894,6 +894,28 @@ class cPedidos extends BaseController {
 
 				$this->content['respuestaCorreo'] = sendEmail($mConfiguracion, [$emailEmpresa], "Descarga Factura " . $this->content['factura']->codigo, $body);
 			}
+
+			$mClientes = new mClientes();
+			$this->content['factura']->cliente =  $mClientes->asObject()->find($this->content['factura']->id_cliente);
+
+			$this->content['factura'] = $mVentas->select("
+				ventas.*,
+				C.nombre AS Cliente,
+				U.nombre AS Vendedor,
+				S.nombre AS Sucursal,
+				D.nombre AS Depto,
+				CI.nombre AS Ciudad,
+				S.telefono AS Telefono,
+				S.direccion AS Direccion,
+				DATE_FORMAT(ventas.created_at, '%d-%m-%Y') AS Fecha
+			")->join('clientes AS C', 'ventas.id_cliente = C.id', 'left')
+			->join('usuarios AS U', 'ventas.id_vendedor = U.id', 'left')
+			->join('sucursales AS S', 'ventas.id_sucursal = S.id', 'left')
+			->join('departamentos AS D', 'S.id_depto = D.id', 'left')
+			->join('ciudades AS CI', 'S.id_ciudad = C.id', 'left')
+			->where("ventas.id", $this->content['factura']->id)
+			->first();
+
 		}
 
 		$this->content['nitEmpresa'] = $mConfiguracion

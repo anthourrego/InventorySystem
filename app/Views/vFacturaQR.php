@@ -32,6 +32,47 @@
           <h3 class="text-center">Factura <br> <?= $factura->codigo ?></h3>
         </div>
 
+        <div class="container my-2">
+          <div class="row">
+            <div class="col-3">
+              <div class="font-weight-bold">Cliente:</div>
+            </div>
+            <div class="col-9">
+              <div class="text-weight"><?= $factura->Cliente ?></div>
+            </div>
+            <div class="col-3">
+              <div class="font-weight-bold">Fecha:</div>
+            </div>
+            <div class="col-9">
+              <div class="text-weight"><?= $factura->Fecha ?></div>
+            </div>
+            <div class="col-3">
+              <div class="font-weight-bold">Dirección:</div>
+            </div>
+            <div class="col-9">
+              <div class="text-weight"><?= $factura->Direccion ?></div>
+            </div>
+            <div class="col-3">
+              <div class="font-weight-bold">Teléfono:</div>
+            </div>
+            <div class="col-9">
+              <div class="text-weight"><?= $factura->Telefono ?></div>
+            </div>
+            <div class="col-3">
+              <div class="font-weight-bold">Ciudad:</div>
+            </div>
+            <div class="col-9">
+              <div class="text-weight"><?= $factura->Ciudad ?>, <?= $factura->Depto ?></div>
+            </div>
+            <div class="col-3">
+              <div class="font-weight-bold">Vendedor:</div>
+            </div>
+            <div class="col-9">
+              <div class="text-weight"><?= $factura->Vendedor ?></div>
+            </div>
+          </div>
+        </div>
+
         <div class="container botones-acciones">
           
           <a type='button' class='btn btn-primary w-100 mb-2' id='btnDescargar' href='<?= base_url() ?>/ReportesQR/Factura/<?= $factura->id ?>/1/0' target='_blank'>
