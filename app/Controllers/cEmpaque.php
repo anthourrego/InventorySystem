@@ -326,7 +326,7 @@ class cEmpaque extends BaseController {
 	}
 
 	public function agregarProductoCaja() {
-		$res['success'] = true;
+		$res['success'] = false;
 		$res['msj'] = 'Producto agregado correctamente';
 		$mPedidos = new mPedidos();
 		$pedidoModel = new mPedidos();
@@ -335,7 +335,6 @@ class cEmpaque extends BaseController {
 		$pedido = $pedidoModel->cargarPedido($data->idPedido);
 
 		if (!isset($pedido[0])) {
-			$res['success'] = false;
 			$res['msj'] = "El Pedido fue eliminado";
 			$res['recargar'] = true;
 			return $this->response->setJSON($res);
@@ -357,7 +356,6 @@ class cEmpaque extends BaseController {
 			->get()->getResultObject();
 
 		if (!isset($producPedi[0]->cantidad)) {
-			$res['success'] = false;
 			$res['msj'] = 'No se encontro el producto en el pedido';
 		} else {
 
@@ -375,15 +373,17 @@ class cEmpaque extends BaseController {
 				$cantiFalta = ((double) $producPedi[0]->cantidad - ((double) $producActual[0]->cantidad));
 
 				if (!($cantiFalta > 0 && $dataCajaProd["cantidad"] <= $cantiFalta)) {
-					$res['success'] = false;
 					$res['msj'] = 'La cantidad supera a la cantidad faltante del pedido';	
+				} else {
+					$res['success'] = true;
 				}
 	
 			} else {
 	
 				if (!($dataCajaProd['cantidad'] > 0 && $dataCajaProd['cantidad'] <= $producPedi[0]->cantidad)) {
-					$res['success'] = false;
 					$res['msj'] = 'La cantidad supera a la registrada en el pedido';	
+				} else {
+					$res['success'] = true;
 				}
 			}
 		}
@@ -395,7 +395,6 @@ class cEmpaque extends BaseController {
 				$res['pedido'] = $this->obtenerProductosPedido($data->idPedido, false);
 			} else {
 				$this->db->transRollback();
-				$res['success'] = false;
 				$res['msj'] = 'No fue posible agregar los productos a la caja';
 			}
 		}
