@@ -212,16 +212,14 @@
             $("#validaClave").removeClass('d-none');
 
           } else {
-            alertify.warning('El nit no es valido');
-            setTimeout(() => {
+            alertify.alert("Advertencias", 'El nit no es valido', function(){
               validarClave();
-            }, 0);
+            });
           }
         } else {
-          alertify.warning('Ingrese un valor valido');
-          setTimeout(() => {
+          alertify.alert("Advertencias", 'Ingrese un valor valido', function(){
             validarClave();
-          }, 0);
+          });
         }
       }, function () { });
 

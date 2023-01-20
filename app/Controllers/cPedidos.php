@@ -901,6 +901,7 @@ class cPedidos extends BaseController {
 
 			$this->content['factura'] = $mVentas->select("
 				ventas.*,
+				C.documento AS documentoEmpresa,
 				C.nombre AS Cliente,
 				U.nombre AS Vendedor,
 				S.nombre AS Sucursal,
@@ -913,15 +914,13 @@ class cPedidos extends BaseController {
 			->join('usuarios AS U', 'ventas.id_vendedor = U.id', 'left')
 			->join('sucursales AS S', 'ventas.id_sucursal = S.id', 'left')
 			->join('departamentos AS D', 'S.id_depto = D.id', 'left')
-			->join('ciudades AS CI', 'S.id_ciudad = C.id', 'left')
+			->join('ciudades AS CI', 'S.id_ciudad = CI.id', 'left')
 			->where("ventas.id", $this->content['factura']->id)
 			->first();
 
 		}
 
-		$this->content['nitEmpresa'] = $mConfiguracion
-				->select("IF(valor IS NULL OR valor = '', '', valor) AS valor")
-				->where('campo', 'documentoEmpresa')->get()->getRow('valor');
+		$this->content['nitEmpresa'] = $this->content['factura']->documentoEmpresa;
 
 		return view('vFacturaQR', $this->content);
 	}
