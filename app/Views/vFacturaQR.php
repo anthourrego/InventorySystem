@@ -139,17 +139,19 @@
 
     </div>
 
-    <div class="container-fluid p-3" id="nitNoValido">
-      <?php if ($nitEmpresa == '') { ?>
-          <div class="alert alert-warning text-center d-none">
-            Los datos de la empresa no son validos o no estan registrados
-          </div>
-      <?php } else { ?>
-        <button type="button" class="btn btn-info w-100 mb-2 d-none" onclick="validarClave()">
-          <i class="fas fa-refresh"></i> Reintentar Acceso
-        </button>
-      <?php } ?>
-    </div>
+    <?php if ($creaFactura == 0) { ?>
+      <div class="container-fluid p-3" id="nitNoValido">
+        <?php if ($nitEmpresa == '') { ?>
+            <div class="alert alert-warning text-center d-none">
+              Los datos de la empresa no son validos o no estan registrados
+            </div>
+        <?php } else { ?>
+          <button type="button" class="btn btn-info w-100 mb-2 d-none" onclick="validarClave()">
+            <i class="fas fa-refresh"></i> Reintentar Acceso
+          </button>
+        <?php } ?>
+      </div>
+    <?php } ?>
 
   </body>
 
@@ -178,11 +180,13 @@
       alertify.defaults.glossary.ok = '<i class="fas fa-check"></i> Aceptar';
       alertify.defaults.glossary.cancel = '<i class="fas fa-times"></i> Cancelar';
       
-      if ($nit == '') {
-        $("#nitNoValido").find('div').removeClass('d-none');
-      } else {
-        $("#nitNoValido").find('button').removeClass('d-none');
-        validarClave();
+      if (<?= $creaFactura ?> == 0) {
+        if ($nit == '') {
+          $("#nitNoValido").find('div').removeClass('d-none');
+        } else {
+          $("#nitNoValido").find('button').removeClass('d-none');
+          validarClave();
+        }
       }
     });
 
@@ -201,6 +205,8 @@
         if (value != '') {
 
           if ($nit == value) {
+
+            $($creaFactura)
 
             $("#nitNoValido").addClass('d-none');
             $("#validaClave").removeClass('d-none');

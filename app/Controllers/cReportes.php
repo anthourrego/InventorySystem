@@ -449,7 +449,7 @@ class cReportes extends BaseController {
 			'imageTransparent' => false
 		]);
 
-		$qr = (new QRCode($options))->render(base_url() . "/FacturaQR/{$pedido}");
+		$qr = (new QRCode($options))->render(base_url() . "/FacturaQR/{$pedido}/0");
 		$qr = '<img width="130px" height="100px" src="@' . preg_replace('#^data:image/[^;]+;base64,#', '', $qr) . '">';
 		$estrucPdf = str_replace("{imagenQR}", $qr, $estrucPdf);
 		return $estrucPdf;

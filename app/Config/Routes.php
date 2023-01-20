@@ -40,7 +40,7 @@ $routes->get('productosAPP', 'cProductos::productosAPP');
 $routes->get('fotoProductosAPP/(:num)/(:any)', 'cProductos::foto/$1/$2');
 
 /* Ruta para la lectura de QR */
-$routes->get('FacturaQR/(:num)', 'cPedidos::facturaQR/$1');
+$routes->get('FacturaQR/(:num)/(:num)', 'cPedidos::facturaQR/$1/$2');
 $routes->get('FotoEmpresa', 'Home::fotoEmpresa');
 
 

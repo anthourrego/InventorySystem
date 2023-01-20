@@ -769,11 +769,11 @@ class cPedidos extends BaseController {
 		$options = new QROptions([
 			'imageTransparent' => false
 		]);
-		$resp["qr"] = (new QRCode($options))->render(base_url() . "/FacturaQR/{$pedido}");
+		$resp["qr"] = (new QRCode($options))->render(base_url() . "/FacturaQR/{$pedido}/0");
 		return $this->response->setJSON($resp);
 	}
 
-	public function facturaQR($factura) {
+	public function facturaQR($factura, $creaFactura) {
 		$mVentas = new mVentas();
 		$mPedidos = new mPedidos();
 		$mVentasProductos = new mVentasProductos();
@@ -783,13 +783,14 @@ class cPedidos extends BaseController {
 
 		$this->content['cajas'] = [];
 		$this->content['productos'] = [];
+		$this->content['creaFactura'] = $creaFactura;
 
 		$this->content['factura'] = $mVentas->asObject()->where("id_pedido", $factura)->first();
 
 		$this->db->transBegin();
 
 		$nuevo = false;
-		if (is_null($this->content['factura'])) {
+		if ($creaFactura == 1 && is_null($this->content['factura'])) {
 
 			$pedido = $mPedidos->asObject()->find($factura);
 
