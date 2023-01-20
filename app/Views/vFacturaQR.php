@@ -29,7 +29,7 @@
 
         <div class="d-flex justify-content-around align-items-center mb-3">
           <img src="<?= base_url() ?>/FotoEmpresa" width="130px" height="100px">
-          <h3 class="text-center">Factura <br> <?= $factura->codigo ?></h3>
+          <h3 class="text-center">Orden de Compra <br> <?= $factura->codigo ?></h3>
         </div>
 
         <div class="container my-2">
