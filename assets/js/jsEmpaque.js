@@ -520,13 +520,14 @@ function eliminarCaja(idCaja, idPedido, idProdCaja = 0) {
 function buscarValores(valor) {
   $(".item-prod-agregar").removeClass('d-none');
   $("#listaproductospedidonohay").addClass('d-none');
-
+  console.log($(".item-prod-agregar h6"));
   $.each($(".item-prod-agregar h6"), function () {
 
     let item = $(this).data("item");
-
-    if (!$(this).text().toLowerCase().includes(valor.toLowerCase()) && !(item + "").toLowerCase().includes(valor.toLowerCase())) {
-      $(this).closest(".item-prod-agregar").addClass('d-none');
+    if (item != undefined) {
+      if (!$(this).text().toLowerCase().includes(valor.toLowerCase()) && !(item + "").toLowerCase().includes(valor.toLowerCase())) {
+        $(this).closest(".item-prod-agregar").addClass('d-none');
+      }
     }
   });
 
