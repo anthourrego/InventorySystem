@@ -172,6 +172,9 @@
   <script>
 
     let $nit = <?= $nitEmpresa ?>;
+    let $creaFactura = <?= $creaFactura ?>;
+    let $codPedido = '<?= $codPedido ?>';
+    let baseUrl = '<?= base_url() ?>';
 
     document.addEventListener('DOMContentLoaded', function (e) {
       alertify.defaults.theme.ok = "btn btn-primary";
@@ -180,13 +183,15 @@
       alertify.defaults.glossary.ok = '<i class="fas fa-check"></i> Aceptar';
       alertify.defaults.glossary.cancel = '<i class="fas fa-times"></i> Cancelar';
       
-      if (<?= $creaFactura ?> == 0) {
+      if ($creaFactura == 0) {
         if ($nit == '') {
           $("#nitNoValido").find('div').removeClass('d-none');
         } else {
           $("#nitNoValido").find('button').removeClass('d-none');
           validarClave();
         }
+      } else {
+        $("#validaClave").removeClass('d-none');
       }
     });
 
@@ -205,12 +210,8 @@
         if (value != '') {
 
           if ($nit == value) {
-
-            $($creaFactura)
-
-            $("#nitNoValido").addClass('d-none');
-            $("#validaClave").removeClass('d-none');
-
+            alertify.success("Datos correctos, redirigiendo a la Factura...");
+            location.href =  baseUrl + "/FacturaQR/" + $codPedido + "/1";
           } else {
             alertify.alert("Advertencias", 'El nit no es valido', function(){
               validarClave();
@@ -222,8 +223,6 @@
           });
         }
       }, function () { });
-
-      // validaClave
     }
   </script>
 

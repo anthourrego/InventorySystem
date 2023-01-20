@@ -784,6 +784,7 @@ class cPedidos extends BaseController {
 		$this->content['cajas'] = [];
 		$this->content['productos'] = [];
 		$this->content['creaFactura'] = $creaFactura;
+		$this->content['codPedido'] = $factura;
 
 		$this->content['factura'] = $mVentas->asObject()->where("id_pedido", $factura)->first();
 
@@ -917,10 +918,19 @@ class cPedidos extends BaseController {
 			->join('ciudades AS CI', 'S.id_ciudad = CI.id', 'left')
 			->where("ventas.id", $this->content['factura']->id)
 			->first();
+			
+			$this->content['nitEmpresa'] = $this->content['factura']->documentoEmpresa;
+		} else {
 
+			$dataPedido = $mPedidos->select("
+				C.documento AS documentoEmpresa
+			")->join('clientes AS C', 'pedidos.id_cliente = C.id', 'left')
+			->where("pedidos.id", $factura)
+			->first();
+			
+			$this->content['nitEmpresa'] = $dataPedido->documentoEmpresa;
 		}
 
-		$this->content['nitEmpresa'] = $this->content['factura']->documentoEmpresa;
 
 		return view('vFacturaQR', $this->content);
 	}
