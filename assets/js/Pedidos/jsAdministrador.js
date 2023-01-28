@@ -15,7 +15,7 @@ let DT = $("#table").DataTable({
     {
       data: 'pedido',
       render: function (meta, type, data, meta) {
-        return (data.idFactura && data.idFactura > 0 && data.leidoQR != 1 && validPermissions(6)) ? `<a target="_blank" title="${data.factura}" href="${base_url()}Ventas/Editar/${data.idFactura}">${data.pedido} | ${data.factura}</a>` : data.pedido;
+        return (data.idFactura && data.idFactura > 0 && validPermissions(6)) ? `<a target="_blank" title="${data.factura}" href="${base_url()}Ventas/Editar/${data.idFactura}">${data.pedido} | ${data.factura}</a>` : data.pedido;
       }
     },
     { data: 'NombreCliente' },

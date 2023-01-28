@@ -43,7 +43,7 @@ class cReportes extends BaseController {
 					ventasproductos.cantidad AS cantidadProductoDP,
 					ventasproductos.valor AS valorProductoDP,
 					(ventasproductos.cantidad * ventasproductos.valor) AS totalProductoDP,
-					'' AS numeroCaja,
+					'' AS numeroCajaDP,
 					P.imagen AS imagenDP,
 					P.id AS idProducto
 				")->join("productos AS P", "ventasproductos.id_producto = P.id", "left")
@@ -62,7 +62,7 @@ class cReportes extends BaseController {
 					PCP.cantidad AS cantidadProductoDP,
 					PV.valor AS valorProductoDP,
 					(PCP.cantidad * PV.valor) AS totalProductoDP,
-					numero_caja AS numeroCaja,
+					numero_caja AS numeroCajaDP,
 					M.ruta_archivo AS archivoManifiesto,
 					M.id AS idManifiesto,
 					P.imagen AS imagenDP,
