@@ -12,7 +12,9 @@
             <option value="PE">Pendiente</option>
             <option value="EP">En Proceso</option>
             <option value="EM">Empacado</option>
+            <option value="DE">Despachado</option>
             <option value="FA">Facturado</option>
+            <option value="FQ">Facturado QR</option>
           </select>
         </div>
       </div>

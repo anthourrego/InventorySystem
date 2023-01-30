@@ -215,7 +215,17 @@ class cPedidos extends BaseController {
 
 		if($estado != "-1") {
 			if($estado == "FA") {
-				$query->where("V.id IS NOT NULL");
+				$query->where("V.id IS NOT NULL")
+					->groupStart()
+							->where("V.leidoQR IS NULL")
+							->orWhere('V.leidoQR', '0')
+					->groupEnd();
+			} else if ($estado == "FQ") {
+				$query->where("V.id IS NOT NULL")
+					->groupStart()
+							->where("V.leidoQR IS NOT NULL")
+							->Where('V.leidoQR', 1)
+					->groupEnd();
 			} else if($estado == "EM") {
 				$query->where("(P.Estado IN('EM', 'FA') AND V.id IS NULL)");
 			} else {
