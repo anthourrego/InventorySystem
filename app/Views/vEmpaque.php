@@ -61,13 +61,7 @@
             <div class="list-group" id="listaproductoscaja"></div>
           </div>
           <div class="col-7">
-
-            <div class="imagen-producto d-flex justify-content-end">
-              <img style="max-width: 160px;" src="" class="rounded border" id="imgProd" alt="Producto">
-            </div>
-
-            <h5 class="text-center">Productos Por Empacar</h5>
-
+            
             <div class="input-group mb-3">
               <input type="text" class="form-control form-control-sm" id="inputBuscarProd" placeholder="Ingrese referencia producto" aria-describedby="btnBuscar">
               <div class="input-group-append">
@@ -78,12 +72,28 @@
               </div>
             </div>
 
-            <!-- Lista de los productos pendientes por empacar -->
-            <div class="row" id="listaproductospedido"></div>
+            <ul class="nav nav-tabs" id="tabsEmpaqueProds" role="tablist">
+              <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="productos-empacar-tab" data-toggle="tab" href="#productosEmpacarTab" role="tab" aria-controls="productosEmpacarTab" aria-selected="true">Por Empacar</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="productos-proceso-tab" data-toggle="tab" href="#productosProcesoTab" role="tab" aria-controls="productosProcesoTab" aria-selected="true">En Proceso</a>
+              </li>
+            </ul>
+            <div class="tab-content" id="contentTab">
+              <div class="tab-pane fade show active" id="productosEmpacarTab" role="tabpanel" aria-labelledby="productos-empacar-tab">
+                <div class="row" id="listaproductospedidoempacar"></div>
+              </div>
+              <div class="tab-pane fade" id="productosProcesoTab" role="tabpanel" aria-labelledby="productos-proceso-tab">
+                <!-- Lista de los productos pendientes por empacar -->
+                <div class="row" id="listaproductospedido"></div>
 
-            <div class="list-group d-none" id="listaproductospedidonohay">
-              <div class="font-weight-bold text-center p-2">No se encontraron productos</div>
+                <div class="list-group d-none" id="listaproductospedidonohay">
+                  <div class="font-weight-bold text-center p-2">No se encontraron productos</div>
+                </div>
+              </div>
             </div>
+
           </div>
         </div>
 

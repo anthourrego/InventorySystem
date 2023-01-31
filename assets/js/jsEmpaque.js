@@ -1,4 +1,5 @@
 let rutaBase = base_url() + "Empaque/";
+let productosPedido = [];
 
 let DT = $("#table").DataTable({
   ajax: {
@@ -181,8 +182,6 @@ $(function () {
 /* Funcion para organizar info de pedido en caja */
 function obtenerInfoPedido(pedido, sync = false) {
 
-  $("#imgProd").attr('src', `${base_url()}Productos/Foto`);
-
   if (!pedido || !pedido.id) {
     alertify.alert('¡Advertencia!', "El Pedido fue eliminado", function () {
       $("#modalEmpaque").modal('hide');
@@ -192,33 +191,67 @@ function obtenerInfoPedido(pedido, sync = false) {
   }
 
   $("#listaproductospedido").html(`<div class="font-weight-bold text-center p-2">No se encontraron productos</div>`);
+  $("#listaproductospedidoempacar").html(`<div class="font-weight-bold text-center p-2">No se encontraron productos</div>`);
   if (pedido.productos.length) {
-    let estructura = '';
+    let estructura = '', estructuraProceso = '';
     pedido.productos.forEach((it, x) => {
-      estructura += `<div class="item-prod-agregar col-12">
+      estructuraProceso += `<div class="item-prod-agregar col-12">
         <div class="card p-2">
-          <div class="d-flex align-items-center">
-            <button title="Ver Foto" type="button" class="btn btn-info btn-sm mr-2 option-ref" data-pos=${x}>
-              <i class="fas fa-image"></i>
-            </button>
-            <h6 class="mb-0" style="width: 65%" data-item="${it.item}">${it.referencia} - ${(it.item || '')}</h6>
-            <div class="input-group" style="width: 35%">
-              <input id="prod${it.id}" type="number" class="form-control form-control-sm cantAgregarProd soloNumeros p-1 font-weight-bold" min="1" value="${it.cantAgregar}" max="${it.CantTotalCajas}" aria-describedby="btnCantidad">
-              <div class="input-group-append">
-                <button class="btn btn-info btn-sm" type="button" id="btnCantidad">/${it.cantidad}</button>
+          <div class="row">
+            <div class="col-2 col-md-1">
+              <a class="imgProd" href="${(it.FotoURLSmall || `${base_url()}Productos/Foto`)}" data-fancybox="images${it.id}" data-caption="${it.referencia} - ${(it.item || '')}" data-pos=${x}>
+                <img class="img-thumbnail" src="" alt="Producto"/>
+              </a>
+            </div>
+            <div class="col-10 col-md-11">
+              <div class="d-flex align-items-center">
+                <h6 class="mb-0" style="width: 65%" data-item="${it.item}">${it.referencia} - ${(it.item || '')}</h6>
+                <div class="input-group" style="width: 35%">
+                  <input id="prod${it.id}" type="number" class="form-control form-control-sm cantAgregarProd soloNumeros p-1 font-weight-bold" min="1" value="${it.cantAgregar}" max="${it.CantTotalCajas}" aria-describedby="btnCantidad">
+                  <div class="input-group-append">
+                    <button class="btn btn-info btn-sm" type="button" id="btnCantidad">/${it.cantidad}</button>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-between mt-1">
+                <h6 class="mb-0" data-item="${it.item}">${it.descripcion} - ${(it.ubicacionProd || '')}</h6>
+                <button type="button" class="btn btn-sm btn-primary btn-agregar-prod d-none" data-input="#prod${it.id}" data-pos=${x}>
+                  <i class="fas fa-plus"></i> Agregar
+                </button>
               </div>
             </div>
           </div>
-          <div class="d-flex justify-content-between mt-1">
-            <h6 class="mb-0">${it.descripcion} - ${(it.ubicacionProd || '')}</h6>
-            <button type="button" class="btn btn-sm btn-primary btn-agregar-prod" data-input="#prod${it.id}" data-pos=${x}>
-              <i class="fas fa-plus"></i> Agregar
-            </button>
+        </div>
+      </div>`;
+
+      estructura += `<div class="item-prod-agregar col-12">
+        <div class="card p-2">
+          <div class="row">
+            <div class="col-2 col-md-1 text-center option-ref" data-pos=${x}>
+              <button title="Ver Foto" type="button" class="btn btn-info btn-sm">
+                <i class="fas fa-image"></i>
+              </button>
+              <a class="d-none" href="" data-fancybox="imagesEmpacar${it.id}" data-caption="${it.referencia} - ${(it.item || '')}">
+                <img class="img-thumbnail" src="" alt="Producto"/>
+              </a>
+            </div>
+            <div class="col-8 col-md-10">
+              <div class="d-flex align-items-center">      
+                <h6 class="mb-0" data-item="${it.item}">${it.referencia} - ${(it.item || '')}</h6>
+              </div>
+              <div class="d-flex justify-content-between mt-1">
+                <h6 class="mb-0" data-item="${it.item}">${it.descripcion} - ${(it.ubicacionProd || '')}</h6>
+              </div>
+            </div>
+            <div class="col-2 col-md-1 d-flex align-items-center justify-content-center">
+              <h5>${it.cantidad}</h5>
+            </div>
           </div>
         </div>
       </div>`;
     });
-    $("#listaproductospedido").html(estructura);
+    $("#listaproductospedido").html(estructuraProceso);
+    $("#listaproductospedidoempacar").html(estructura);
 
     $(".btn-agregar-prod").click(function () {
 
@@ -256,9 +289,20 @@ function obtenerInfoPedido(pedido, sync = false) {
 
     $(".option-ref").click(function () {
       let data = pedido.productos[$(this).data('pos')];
-      $("#imgProd").removeClass('d-none').attr('src', data.FotoURLSmall);
+      let aElement = $(this).find('a');
+      let buttonElement = $(this).find('button');
+      if (aElement.hasClass('d-none')) {
+        aElement.removeClass('d-none').attr('href', (data.FotoURLSmall || `${base_url()}Productos/Foto`));
+        aElement.find('img').attr('src', (data.FotoURLSmall || `${base_url()}Productos/Foto`));
+        buttonElement.addClass('d-none');
+      }
+      $(this).unbind('click');
     });
+
+    buscarValores('');
   }
+
+  productosPedido = pedido.productos;
 
   $("#listacajas").html(`<div class="font-weight-bold text-center p-2 col-12">No se encontraron cajas</div>`);
   $("#btnAgregarCaja").show();
@@ -521,17 +565,33 @@ function buscarValores(valor) {
   $(".item-prod-agregar").removeClass('d-none');
   $("#listaproductospedidonohay").addClass('d-none');
 
-  $.each($(".item-prod-agregar h6"), function () {
+  if (!valor.length) {
+    $("#listaproductospedido .item-prod-agregar").addClass('d-none');
+    $("#listaproductospedidonohay").removeClass('d-none');
+    return;
+  }
+
+  $.each($("#listaproductospedido .item-prod-agregar h6"), function () {
     let item = $(this).data("item");
     if (item != undefined) {
+      let itemAgregar = $(this).closest(".item-prod-agregar");
       if (!$(this).text().toLowerCase().includes(valor.toLowerCase()) && !(item + "").toLowerCase().includes(valor.toLowerCase())) {
-        $(this).closest(".item-prod-agregar").addClass('d-none');
+        itemAgregar.addClass('d-none');
+      } else {
+        if (valor.length) {
+          let imagen = itemAgregar.find('a.imgProd');
+          let prodActual = productosPedido[imagen.data('pos')];
+          itemAgregar.find('a.imgProd img').attr('src', (prodActual.FotoURLSmall || `${base_url()}Productos/Foto`));
+          itemAgregar.find('button.btn-agregar-prod').removeClass('d-none');
+        } else {
+          itemAgregar.find('button.btn-agregar-prod').addClass('d-none');
+        }
       }
     }
   });
 
-  if ($(".item-prod-agregar:not(.d-none)").length) {
-    $("#listaproductospedidonohay").addClass('d-none');
+  if (!$("#listaproductospedido .item-prod-agregar:not(.d-none)").length) {
+    $("#listaproductospedidonohay").removeClass('d-none');
   }
 }
 

@@ -18,6 +18,7 @@ class cEmpaque extends BaseController {
 		$this->LDataTables();
 		$this->LMoment();
 		$this->LJQueryValidation();
+		$this->LFancybox();
 
 		$this->content['js_add'][] = [
 			'jsEmpaque.js'
