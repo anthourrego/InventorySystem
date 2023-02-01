@@ -466,7 +466,7 @@ class cPedidos extends BaseController {
 				"observacion" => $dataPost->observacion
 			);
 
-			if ($dataPost->estado == 'EM') {
+			if ($dataPost->estado == 'EM' && $dataPost->regresarEmpaque == 1) {
 				$dataSave['estado'] = 'EP';
 				$dataSave['fin_empaque'] = null;
 			} 

@@ -356,8 +356,15 @@ $(function () {
         form.append("observacion", $("#observacion").val());
         form.append("productos", JSON.stringify(productosPedido));
 
+        /* Valor por si esta en empacado y modifican cantidad se regrese a empaque */
+        form.append("regresarEmpaque", '0');
         if ($DATOSPEDIDO != '') {
           form.append("estado", $DATOSPEDIDO.estado);
+
+          if ($DATOSPEDIDO.estado == 'EM') {
+            let pos = productosPedido.findIndex(it => it.cantidad != it.cantidadOriginal);
+            pos != -1 ? form.set("regresarEmpaque", '1') : null;
+          }
         }
 
         $.ajax({
