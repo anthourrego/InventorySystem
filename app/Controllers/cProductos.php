@@ -32,6 +32,10 @@ class cProductos extends BaseController {
 		$this->LInputMask();
 		$this->LCropperImageEditor();
 
+		$this->content['css_add'][] = [
+			'cssProductos.css'
+		];
+
 		$categorias = new mCategorias();
 		$this->content["categorias"] = $categorias->asObject()->where("estado", 1)->findAll();
 
@@ -599,6 +603,8 @@ class cProductos extends BaseController {
 	} 
 
 	public function sincronizar(){
+		ini_set('max_execution_time', -1);
+		ini_set('memory_limit', -1);
 		$resp['success'] = false;
 		$resp['listProd'] = "";
 		$contProd = 0;

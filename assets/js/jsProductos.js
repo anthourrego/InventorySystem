@@ -453,12 +453,12 @@ $(function () {
   });
 
   $("#cantFiltroPaquete").on("keydown", function (e) {
-		if(e.which == 13) {
+    if (e.which == 13) {
       $("#btnFiltrarPaquetes").trigger("click");
     }
-	});
+  });
 
-  $("#btnFiltrarPaquetes").on("click", function(e){
+  $("#btnFiltrarPaquetes").on("click", function (e) {
     e.preventDefault();
     let TotalFotos = 0;
     let pac = $("#cantFiltroPaquete").val();
@@ -469,7 +469,7 @@ $(function () {
       dataType: "json",
       async: false,
       success: (resp) => {
-        TotalFotos = resp; 
+        TotalFotos = resp;
       }
     });
 
@@ -478,17 +478,17 @@ $(function () {
 
     for (let i = 0; i < TotalFotos.totalPaginas; i++) {
       let offset = i * pac;
-      let final = (i+1) * pac; 
+      let final = (i + 1) * pac;
 
-      if (final > TotalFotos.totalRegistros){
+      if (final > TotalFotos.totalRegistros) {
         final = TotalFotos.totalRegistros;
       }
 
-      $("#listaPaquetes").append(`<a href="#" id="pac${(i+1)}" data-cant="${pac}" data-offset="${offset}" data-final="${final}" class="descargarPaquete list-group-item list-group-item-action d-flex justify-content-between align-items-center">Paquete ${(i+1)} | ${(offset+1)}-${final} <i class="fa-solid fa-download"></i></a>`);
+      $("#listaPaquetes").append(`<a href="#" id="pac${(i + 1)}" data-cant="${pac}" data-offset="${offset}" data-final="${final}" class="descargarPaquete list-group-item list-group-item-action d-flex justify-content-between align-items-center">Paquete ${(i + 1)} | ${(offset + 1)}-${final} <i class="fa-solid fa-download"></i></a>`);
     }
   });
 
-  $(document).on("click", ".descargarPaquete", function(e){
+  $(document).on("click", ".descargarPaquete", function (e) {
     e.preventDefault();
     let cantidad = $(this).data("cant");
     let offset = $(this).data("offset");
@@ -507,7 +507,7 @@ $(function () {
           var a = document.createElement('a');
           var url = window.URL.createObjectURL(resp);
           a.href = url;
-          a.download = `${(offset+1)}-${final}.zip`;
+          a.download = `${(offset + 1)}-${final}.zip`;
           a.click();
           window.URL.revokeObjectURL(url);
           $(this).find("i").removeClass("fa-rotate rotacionEfecto").addClass("fa-check");
@@ -584,7 +584,9 @@ $(function () {
     DTProductos.ajax.reload();
   });
 
-  $("#btnSincronizar").on("click", function(e){
+  $("#btnSincronizar").on("click", function (e) {
+    $(".botones-acciones").addClass('d-none');
+    $(".loading-fotos").removeClass('d-none');
     $.ajax({
       url: rutaBase + "Sincronizar",
       dataType: "json",
@@ -596,6 +598,10 @@ $(function () {
         } else {
           alertify.alert('¡Advertencia!', resp.msj);
         }
+      },
+      complete: () => {
+        $(".botones-acciones").removeClass('d-none');
+        $(".loading-fotos").addClass('d-none');
       }
     });
   });

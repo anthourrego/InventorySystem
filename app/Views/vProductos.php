@@ -35,7 +35,7 @@
           <?php } ?>
         </div>
       </div>
-      <div class="col-12 col-md-3 mt-2 mt-md-0 text-right">
+      <div class="col-12 col-md-3 mt-2 mt-md-0 text-right botones-acciones">
         <?php if (validPermissions([56], true)) { ?>
         <button type="button" class="btn btn-secondary mb-2 mb-xl-0" id="btnSincronizar"><i class="fa-solid fa-sync"></i></button>
         <?php } ?>
@@ -46,6 +46,9 @@
         <?php if (validPermissions([51], true)) { ?>
           <button type="button" class="btn btn-primary mb-2 mb-xl-0" id="btnCrear"><i class="fa-solid fa-plus"></i> Crear</button>
         <?php } ?>
+      </div>
+      <div class="col-12 col-md-3 mt-2 mt-md-0 text-right loading-fotos d-none">
+        <span class="loaderprod text-primary">Sincronizando fotos...</span>
       </div>
     </div>
   </div>
