@@ -74,10 +74,10 @@
 					</div>
 					<div class="offset-4 col-4 d-flex align-items-end justify-content-end">
 						<?php if(is_null($pedido)) { ?>
-							<button type="button" id="btnCancelarCreacion" class="btn btn-danger mr-2"><i class="fas fa-times"></i> Cancelar</button>
+							<button type="button" id="btnCancelarCreacion" class="btn btn-danger mr-2 deshabilitarboton"><i class="fas fa-times"></i> Cancelar</button>
 						<?php } ?>
 						<?php if($editarPedido == 'S') { ?>
-							<button <?= $prefijoValido == 'N' ? 'disabled' : '' ?> type="submit" form="formPedido" class="btn btn-success"><i class="fas fa-save"></i> Guardar</button>
+							<button <?= $prefijoValido == 'N' ? 'disabled' : '' ?> type="submit" form="formPedido" class="btn btn-success deshabilitarboton"><i class="fas fa-save"></i> Guardar</button>
 						<?php } ?>
 					</div>
 				</div> 

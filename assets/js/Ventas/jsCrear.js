@@ -222,6 +222,8 @@ $(function () {
         form.append("observacion", $("#observacion").val());
         form.append("productos", JSON.stringify(productosVentas));
 
+        $('.deshabilitarboton').prop('disabled', true);
+
         $.ajax({
           url: rutaBase + ($DATOSVENTA == '' ? "Crear" : 'Editar'),
           type: 'POST',
@@ -253,6 +255,9 @@ $(function () {
             } else {
               alertify.alert('¡Advertencia!', resp.msj);
             }
+          },
+          complete: () => {
+            $('.deshabilitarboton').prop('disabled', false);
           }
         });
       } else {

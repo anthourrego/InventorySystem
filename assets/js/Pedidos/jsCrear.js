@@ -367,6 +367,8 @@ $(function () {
           }
         }
 
+        $('.deshabilitarboton').prop('disabled', true);
+
         $.ajax({
           url: rutaBase + ($DATOSPEDIDO == '' ? "Crear" : 'Editar'),
           type: 'POST',
@@ -398,6 +400,9 @@ $(function () {
             } else {
               alertify.alert('¡Advertencia!', resp.msj);
             }
+          },
+          complete: () => {
+            $('.deshabilitarboton').prop('disabled', false);
           }
         });
       } else {
