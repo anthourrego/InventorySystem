@@ -160,14 +160,13 @@ let DTProductosVenta = $("#tblProductos").DataTable({
         resultado.valorUnitario = valorUnitario;
         resultado.valorTotal = resultado.cantidad * resultado.valorUnitario;
 
-        $(row).find(".valorTotal").text(formatoPesos.format(resultado.valorTotal));
       } else {
         alertify.alert("Advertencia", `Ha superado la cantidad maxima, solo hay <b>${data.stock}</b> disponibles`);
-        resultado.cantidad = 1;
-        resultado.valorTotal = resultado.valorUnitario;
-        $(this).val(1);
-        $(row).find(".valorTotal").text(formatoPesos.format(data.valorUnitario));
+        resultado.cantidad = +data.stock;
+        resultado.valorTotal = +data.stock * resultado.valorUnitario;
+        $(this).val(+data.stock);
       }
+      $(row).find(".valorTotal").text(formatoPesos.format(resultado.valorTotal));
 
       data = resultado;
 
