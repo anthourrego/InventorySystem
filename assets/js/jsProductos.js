@@ -424,7 +424,7 @@ $(function () {
         data: new FormData(this),
         success: function (resp) {
           if (resp.success) {
-            DTProductos.ajax.reload();
+            DTProductos.ajax.reload(null, false);
             $("#modalCrearEditar").modal("hide");
             alertify.success(resp.msj);
           } else {
@@ -442,7 +442,7 @@ $(function () {
       $imagenProd = 0;
     }
     DTProductos.column('.imgProdTb').column().visible($imagenProd)
-    DTProductos.ajax.reload();
+    DTProductos.ajax.reload(null, false);
   });
 
 

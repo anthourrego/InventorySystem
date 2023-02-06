@@ -120,11 +120,11 @@
               </div>
               <div class="form-group form-valid">
                 <label class="mb-0" for="referencia">Referencia <span class="text-danger">*</span></label>
-                <input placeholder="Ingrese la referencia" data-campo="referencia" class="form-control soloLetras validaCampo inputVer" id="referencia" name="referencia" type="text" minlength="1" maxlength="255" required autocomplete="off">
+                <input placeholder="Ingrese la referencia" data-campo="referencia" class="form-control soloLetras validarenie validaCampo inputVer" id="referencia" name="referencia" type="text" minlength="1" maxlength="255" required autocomplete="off">
               </div>
               <div class="form-group form-valid <?= $camposProducto["item"] == "1" ? '' : 'd-none' ?>">
                 <label class="mb-0" for="item">Item <span class="text-danger">*</span></label>
-                <input placeholder="Ingrese el ítem" type="text" <?= $camposProducto["item"] == "1" ? '' : 'disabled' ?> data-campo="item" id="item" name="item" class="form-control soloLetras inputVer" minlength="1" maxlength="300" required autocomplete="off">
+                <input placeholder="Ingrese el ítem" type="text" <?= $camposProducto["item"] == "1" ? '' : 'disabled' ?> data-campo="item" id="item" name="item" class="form-control soloLetras validarPuntoComa inputVer" minlength="1" maxlength="300" required autocomplete="off">
               </div>
             </div>
             <div class="col-6 form-group form-valid">
@@ -145,7 +145,7 @@
             </div>
             <div class="col-6 form-group form-valid <?= $camposProducto["ubicacion"] == "1" ? '' : 'd-none' ?>">
               <label class="mb-0" for="ubicacion">Ubicación</label>
-              <input class="form-control inputVer" id="ubicacion" <?= $camposProducto["ubicacion"] == "1" ? '' : 'disabled' ?> name="ubicacion" type="text" minlength="0" maxlength="255" placeholder="Ingrese la ubicación" autocomplete="off">
+              <input class="form-control inputVer volverMayuscula" id="ubicacion" <?= $camposProducto["ubicacion"] == "1" ? '' : 'disabled' ?> name="ubicacion" type="text" minlength="0" maxlength="255" placeholder="Ingrese la ubicación" autocomplete="off">
             </div>
             <div class="col-6 form-group form-valid <?= $camposProducto["manifiesto"] == "1" ? '' : 'd-none' ?>">
               <label class="mb-0" for="manifiesto">Manifiesto</label>

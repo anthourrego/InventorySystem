@@ -180,6 +180,10 @@ document.addEventListener('DOMContentLoaded', function (e) {
 		letras = "abcdefghijklmnopqrstuvwxyz-_1234567890";
 		especiales = "8-37-39-46";
 
+		if ($(e.target).hasClass('validarenie')) letras += 'ñ';
+
+		if ($(e.target).hasClass('validarPuntoComa')) letras += '.,';
+
 		tecla_especial = false
 		for (var i in especiales) {
 			if (key == especiales[i]) {
@@ -231,6 +235,9 @@ document.addEventListener('DOMContentLoaded', function (e) {
 		}
 	});
 
+	$(document).on("keyup", ".volverMayuscula", function (e) {
+		$(this).val(('' + $(this).val()).toUpperCase());
+	});
 });
 
 alertify.globalConfirm || alertify.dialog('globalConfirm', function () {
