@@ -97,6 +97,9 @@ class cReportes extends BaseController {
 			}
 		}
 
+		$totalProds = $this->obtenerTotalFactura($productosFactura);
+		$estrucPdf = str_replace("{totalGeneral}", '$ ' . number_format($totalProds, 0, ',', '.'), $estrucPdf);
+
 		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		$pdf->startPageGroup();
 		$pdf->AddPage();
@@ -163,6 +166,9 @@ class cReportes extends BaseController {
 			->findAll();
 
 		$estrucPdf = $this->estructuraProductos($estrucPdf, $productosFactura, $fotoProd);
+
+		$totalProds = $this->obtenerTotalFactura($productosFactura);
+		$estrucPdf = str_replace("{totalGeneral}", '$ ' . number_format($totalProds, 0, ',', '.'), $estrucPdf);
 
 		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		$pdf->startPageGroup();
@@ -260,7 +266,6 @@ class cReportes extends BaseController {
 				V." . ($tabla == 'pedidos' ? 'pedido' : 'codigo') . " AS numeracion,
 				C.nombre AS nombreCliente,
 				U.nombre AS nombreVendedor,
-				V.total AS totalGeneral,
 				DATE_FORMAT(V.created_at, '%d-%m-%Y') AS fechaCreacion,
 				DATE_FORMAT(V.created_at, '%H:%i:%s') AS horaCreacion,
 				S.direccion AS direccionSucursal,
@@ -453,6 +458,14 @@ class cReportes extends BaseController {
 		$qr = '<img width="130px" height="100px" src="@' . preg_replace('#^data:image/[^;]+;base64,#', '', $qr) . '">';
 		$estrucPdf = str_replace("{imagenQR}", $qr, $estrucPdf);
 		return $estrucPdf;
+	}
+
+	private function obtenerTotalFactura($productos) {
+		$totalProductos = 0;
+		foreach ($productos as $key => $value) {
+			$totalProductos += $value->totalProductoDP;
+		}
+		return $totalProductos;
 	}
 
 }
