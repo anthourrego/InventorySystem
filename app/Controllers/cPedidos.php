@@ -954,6 +954,7 @@ class cPedidos extends BaseController {
 		$mPedidosProductos = new mPedidosProductos();
 		$ventaModel = new mVentas();
 		$mVentasProductos = new mVentasProductos();
+		$mPedidosCajas = new mPedidosCajas();
 
 		$dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoFact")->first();
 		$cantDigitos = (session()->has("digitosFact") ? session()->get("digitosFact") : 0);
@@ -963,6 +964,14 @@ class cPedidos extends BaseController {
 
 		$pedido = $pedidoModel->find($data->id);
 		$pedidoProductos = $mPedidosProductos->where("id_pedido", $data->id)->findAll();
+
+		$pedido->neto = $mPedidosCajas->select('SUM(PCP.cantidad * PP.valor) AS Total')
+			->join("pedidoscajasproductos AS PCP", "pedidoscajas.id = PCP.id_caja")
+			->join("pedidosproductos AS PP", "PCP.id_producto = PP.id_producto AND pedidoscajas.id_pedido = PP.id_pedido")
+			->where('pedidoscajas.id_pedido', $data->id)
+			->first()->Total;
+		
+		$pedido->total = $pedido->neto;
 
 		$ventaSave = [
 			"codigo" => $codigo,
