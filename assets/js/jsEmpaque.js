@@ -205,7 +205,7 @@ function obtenerInfoPedido(pedido, sync = false) {
             </div>
             <div class="col-10 col-md-11">
               <div class="d-flex align-items-center">
-                <h6 class="mb-0" style="width: 65%" data-item="${it.item}">${it.referencia} - ${(it.item || '')}</h6>
+                <h6 class="mb-0" style="width: 65%" data-item="${it.referencia} - ${(it.item || '')}">${it.referencia} - ${(it.item || '')}</h6>
                 <div class="input-group" style="width: 35%">
                   <input id="prod${it.id}" type="number" class="form-control form-control-sm cantAgregarProd soloNumeros p-1 font-weight-bold" min="1" value="${it.cantAgregar}" max="${it.CantTotalCajas}" aria-describedby="btnCantidad">
                   <div class="input-group-append">
@@ -214,7 +214,7 @@ function obtenerInfoPedido(pedido, sync = false) {
                 </div>
               </div>
               <div class="d-flex justify-content-between mt-1">
-                <h6 class="mb-0" data-item="${it.item}">${it.descripcion} - ${(it.ubicacionProd || '')}</h6>
+                <h6 class="mb-0" data-item="${it.referencia} - ${(it.item || '')}">${it.descripcion} - ${(it.ubicacionProd || '')}</h6>
                 <button type="button" class="btn btn-sm btn-primary btn-agregar-prod d-none" data-input="#prod${it.id}" data-pos=${x}>
                   <i class="fas fa-plus"></i> Agregar
                 </button>
@@ -237,10 +237,10 @@ function obtenerInfoPedido(pedido, sync = false) {
             </div>
             <div class="col-8 col-md-10">
               <div class="d-flex align-items-center">      
-                <h6 class="mb-0" data-item="${it.item}">${it.referencia} - ${(it.item || '')}</h6>
+                <h6 class="mb-0" data-item="${it.referencia} - ${(it.item || '')}">${it.referencia} - ${(it.item || '')}</h6>
               </div>
               <div class="d-flex justify-content-between mt-1">
-                <h6 class="mb-0" data-item="${it.item}">${it.descripcion} - ${(it.ubicacionProd || '')}</h6>
+                <h6 class="mb-0" data-item="${it.referencia} - ${(it.item || '')}">${it.descripcion} - ${(it.ubicacionProd || '')}</h6>
               </div>
             </div>
             <div class="col-2 col-md-1 d-flex align-items-center justify-content-center">
@@ -573,6 +573,7 @@ function buscarValores(valor) {
 
   $.each($("#listaproductospedido .item-prod-agregar h6"), function () {
     let item = $(this).data("item");
+    console.log($(this));
     if (item != undefined) {
       let itemAgregar = $(this).closest(".item-prod-agregar");
       if (!$(this).text().toLowerCase().includes(valor.toLowerCase()) && !(item + "").toLowerCase().includes(valor.toLowerCase())) {
