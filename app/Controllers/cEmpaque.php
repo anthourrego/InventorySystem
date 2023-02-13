@@ -182,6 +182,7 @@ class cEmpaque extends BaseController {
 			->where("pedidosproductos.id_pedido", $idPedido)
 			->where("pedidosproductos.cantidad > 0")
 			->where("(prodCaja.CantTotalCajas IS NULL OR pedidosproductos.cantidad > prodCaja.CantTotalCajas)")
+			->orderBy("cantAgregar", "ASC")
 			->findAll();
 	}
 

@@ -244,7 +244,7 @@ function obtenerInfoPedido(pedido, sync = false) {
               </div>
             </div>
             <div class="col-2 col-md-1 d-flex align-items-center justify-content-center">
-              <h5>${it.cantidad}</h5>
+              <h5>${+it.CantTotalCajas}/${it.cantidad}</h5>
             </div>
           </div>
         </div>
