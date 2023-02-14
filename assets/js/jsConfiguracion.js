@@ -40,6 +40,13 @@ $(function () {
     let valor = $(this).val();
     let nombre = $(this).data("nombre");
 
+    if (campo == "consecutivoPed" || campo == "consecutivoFact") {
+      let tipo = (campo == "consecutivoFact" ? "Fact" : "Ped");
+      let digitos = $(`#digitos${tipo}`).val();
+      valor = valor.substr(Array.from(valor).findIndex(it => +it > 0)).padStart(digitos, '0');
+      $(this).val(valor);
+    }
+
     let formDataSave = new FormData();
     formDataSave.set('campo', campo);
     formDataSave.set('valor', valor);
@@ -85,6 +92,10 @@ $(function () {
             $('#imgFoto' + campo).attr('src', base_url() + "Configuracion/Foto/" + resp.file);
             $("#content-preview-" + campo).removeClass("d-none");
             $("#content-upload-" + campo).addClass("d-none");
+          }
+
+          if (campo == "digitosPed" || campo == "digitosFact") {
+            $(`#consecutivo${(campo == "digitosFact" ? "Fact" : "Ped")}`).change();
           }
         } else {
           alertify.error(resp.msj);

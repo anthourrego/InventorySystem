@@ -229,9 +229,11 @@ class cVentas extends BaseController {
 		$mVentasProductos = new mVentasProductos();
 		$mConfiguracion = new mConfiguracion();
 
+		$cantDigitos = (session()->has("digitosFact") ? session()->get("digitosFact") : 0);
 		$dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoFact")->first();
 
-		$numerVenta = (is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1));
+		$numerVenta = str_pad((is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1)), $cantDigitos, "0", STR_PAD_LEFT);
+
 		$codigo = (session()->has("prefijoFact") ? session()->get("prefijoFact") : '') . $numerVenta;
 
 		if (count($prod) > 0) {

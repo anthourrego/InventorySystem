@@ -2,9 +2,11 @@
 
 namespace App\Controllers;
 
+use \Config\Services;
 use App\Controllers\BaseController;
 use App\Models\mConfiguracion;
-use \Config\Services;
+use App\Models\mPedidos;
+use App\Models\mVentas;
 
 class cConfiguracion extends BaseController {
 	private $instrucciones = [
@@ -288,6 +290,60 @@ class cConfiguracion extends BaseController {
 		}
 
 		if($mConfiguracion->save($dataSave)) {
+
+      $registros = [];
+      $tabla = '';
+
+      if ($dataSave["campo"] == "digitosFact") {
+
+        $ventaModel = new mVentas();
+        $dataPref = (session()->has("prefijoFact") ? session()->get("prefijoFact") : '');
+        
+        $registros = $ventaModel
+        ->select("
+          SUBSTRING_INDEX(codigo, '$dataPref', -1) AS Delimitado, 
+          ventas.id
+        ")
+        ->where("codigo LIKE '$dataPref%'")
+        ->findAll();
+
+        $tabla = 'ventas';
+
+      } else if ($dataSave["campo"] == "digitosPed") {
+
+        $pedidosModel = new mPedidos();
+        $dataPref = (session()->has("prefijoPed") ? session()->get("prefijoPed") : '');
+
+        $registros = $pedidosModel
+        ->select("
+          SUBSTRING_INDEX(pedido, '$dataPref', -1) AS Delimitado, 
+          pedidos.id
+        ")
+        ->where("pedido LIKE '$dataPref%'")
+        ->findAll();
+
+        $tabla = 'pedidos';
+      }
+
+      if (count($registros) > 0) {
+        foreach ($registros as $value) {
+          $index = 0;
+          foreach (str_split($value->Delimitado) as $llave2 => $value2) {
+            if ((int) $value2 > 0) {
+              $index = $llave2;
+              break;
+            }
+          }
+          
+          $numeroActual = substr($value->Delimitado, $index);
+          $padAgregar = str_pad($numeroActual, $dataPost["valor"], "0", STR_PAD_LEFT);
+          
+          $builder = $this->db->table($tabla)
+            ->set(($tabla == 'ventas' ? 'codigo' : 'pedido'), "{$dataPref}{$padAgregar}")
+            ->where('id', $value->id)->update();
+        }
+      }
+
 			$resp["success"] = true;
 			$resp["msj"] = "<b>{$dataPost['nombre']}</b> se actualizo correctamente.";
 		}	else {
