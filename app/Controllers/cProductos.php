@@ -374,6 +374,13 @@ class cProductos extends BaseController {
 			$producto = $datos;
 		}
 
+		/* Se valida proceso error con imagen al convertir */
+		try {
+			imagecreatefrompng($filename);
+		} catch (\Throwable $th) {
+			$this->marcaAguaProducto($producto);
+		}
+
 		$descripcion = substr($producto->descripcion, 0, 66) . (strlen($producto->descripcion) > 66 ? "..." : "");
 		$nombreArchivo = strtotime($producto->updated_at);
 
