@@ -179,6 +179,7 @@ $routes->group('Reportes', ['filter' => 'authGuard'], function ($routes) {
 	$routes->get('Rotulo/(:num)/(:num)', 'cReportes::rotulo/$1/$2');
 	$routes->get('Manifiestos/(:any)', 'cReportes::manifiestos/$1');
 	$routes->get('Envio/(:num)/(:any)', 'cReportes::envio/$1/$2');
+	$routes->get('Empaque/(:num)/(:num)', 'cReportes::empaque/$1/$2');
 	//$routes->get('DT', 'cManifiesto::listaDT');
 });
 
@@ -252,6 +253,7 @@ $routes->group('Pedidos', ['filter' => 'authGuard:10'], function ($routes) {
 	$routes->get('Cargar/(:num)', 'cPedidos::cargarPedido/$1', ['filter' => 'ajax']);
 	$routes->get('CajasManifiestos/(:num)', 'cPedidos::cajasManifiestos/$1', ['filter' => 'ajax']);
 	$routes->get('GenerarQR/(:num)', 'cPedidos::generarQR/$1');
+	$routes->get('DetallePedido/(:num)', 'cPedidos::detallePedido/$1');
 });
 
 //Empaque

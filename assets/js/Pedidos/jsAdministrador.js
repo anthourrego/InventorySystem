@@ -160,6 +160,13 @@ let DT = $("#table").DataTable({
           </button>`;
         } */
 
+        /* Se valida permiso para detalle del pedido */
+        if (validPermissions(111) && ['EM', 'FA', 'DE'].includes(data.estado)) {
+          botones += `<button type="button" class="btn btn-info btnDetallePedido" title="Detalle Pedido">
+            <i class="fa-solid fa-file-invoice"></i>
+          </button>`;
+        }
+
         return `<div class="btn-group btn-group-sm" role="group">${botones}</div>`;
       }
     },
@@ -274,6 +281,58 @@ let DT = $("#table").DataTable({
       e.preventDefault();
       despacharPedido(data);
     });
+
+    $(row).find(".btnDetallePedido").click(function (e) {
+      $.ajax({
+        type: "GET",
+        url: `${rutaBase}DetallePedido/${data.id}`,
+        dataType: 'json',
+        success: function (pedido) {
+          $("#modalDetallePedidoLabel").html(`Detalle Pedido ${pedido.pedido}`)
+
+          $("#listacajasDetalle").html(`<div class="font-weight-bold text-center p-2 col-12">No se encontraron cajas</div>`);
+          if (pedido.cajas.length) {
+            let estrcutura = '';
+            pedido.cajas.forEach((it, pos) => {
+              estrcutura += `<div class="col-8 col-lg-3">
+                <div class="card mb-2 item-caja" data-pos="${pos}" style="border-width: 3px !important;">
+                  <div class="card-body" style="cursor: pointer;">
+                    <h5 class="card-title">
+                      <i class="fa-solid fa-box mr-1"></i> ${it.numero_caja}
+                    </h5>
+                    <p class="card-text">${it.nombreEmpacador}</p>
+                  </div>
+                </div>
+              </div>`;
+            });
+            $("#listacajasDetalle").html(estrcutura);
+
+            $("#inicioEmpaque").html(moment(pedido.inicio_empaque).format('DD/MM/YYYY hh:mm:ss A'))
+            $("#finEmpaque").html(moment(pedido.fin_empaque).format('DD/MM/YYYY hh:mm:ss A'));
+            $("#tiempoEmpaque").html(pedido.TiempoEmpaque);
+
+            $(".item-caja").on('click', function () {
+              $(".item-caja").removeClass(['selected', 'border', 'border-info']);
+              let caja = pedido.cajas[$(this).data('pos')];
+              $(this).addClass('selected border border-info');
+
+              $("#inicioEmpaqueCaja").html(moment(caja.inicio_empaque).format('DD/MM/YYYY hh:mm:ss A'));
+              $("#finEmpaqueCaja").html(moment(caja.fin_empaque).format('DD/MM/YYYY hh:mm:ss A'));
+              $("#tiempoEmpaqueCaja").html(caja.TiempoEmpaque);
+              $("#totalReferenciasCaja").html(caja.infoCaja.TotalRef);
+              $("#totalProductos").html(caja.infoCaja.Total);
+            });
+
+            $(".item-caja:first").click()
+          }
+          $("#modalDetallePedido").modal('show');
+        }
+      });
+
+      $("#btnImprimirDetallePedido").off('click').on('click', function () {
+        window.open(base_url() + "Reportes/Empaque/" + data.id + "/0");
+      });
+    });
   }
 });
 
@@ -281,6 +340,10 @@ $(function () {
   $("#selectEstado").on("change", function () {
     DT.ajax.reload();
   });
+
+  $("#modalDetallePedido").on('hidden.bs.modal', function () {
+    $("#listacajasPadre").css("height", ``);
+  })
 });
 
 function alistarPedido(data) {

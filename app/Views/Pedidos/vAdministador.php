@@ -131,6 +131,81 @@
   </div>
 </div>
 
+<div class="modal fade" id="modalDetallePedido" data-backdrop="static" data-keyboard="false" aria-labelledby="modalDetallePedidoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content" style="min-height: 92vh;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalDetallePedidoLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+  
+        <div class="row">
+          <div class="col-12 col-md-4 d-flex">
+            <p class="font-weight-bold mb-0">Inicio Empaque:</p>&nbsp
+            <p class="font-weight-normal mb-0" id="inicioEmpaque"></p>
+          </div>
+          <div class="col-12 col-md-4 d-flex">
+            <p class="font-weight-bold mb-0">Fin Empaque: </p>&nbsp
+            <p class="font-weight-normal mb-0" id="finEmpaque"></p>
+          </div>
+          <div class="col-12 col-md-4 d-flex">
+            <p class="font-weight-bold mb-0">Tiempo Empaque: </p>&nbsp
+            <p class="font-weight-normal mb-0" id="tiempoEmpaque"></p>
+          </div>
+        </div>
+
+        <hr class="my-2">
+
+        <div class="row">
+          <div class="col-8">
+            <h4 class="text-center">Cajas</h4>
+            <!-- Lista de cajas del pedido -->
+            <div id="listacajasPadre">
+              <div class="d-flex flex-wrap" id="listacajasDetalle"></div>
+            </div>
+          </div>
+          <div class="col-4 bg-light p-3 lista-detalle-caja">
+            <h6 class="text-center">Detalle Caja</h6>
+            <div class="col-12 d-flex">
+              <p class="font-weight-bold mb-0">Inicio Empaque:</p>&nbsp
+              <p class="font-weight-normal mb-0" id="inicioEmpaqueCaja"></p>
+            </div>
+            <div class="col-12 d-flex">
+              <p class="font-weight-bold mb-0">Fin Empaque: </p>&nbsp
+              <p class="font-weight-normal mb-0" id="finEmpaqueCaja"></p>
+            </div>
+            <div class="col-12 d-flex">
+              <p class="font-weight-bold mb-0">Tiempo Empaque: </p>&nbsp
+              <p class="font-weight-normal mb-0" id="tiempoEmpaqueCaja"></p>
+            </div>
+            <div class="col-12 d-flex">
+              <p class="font-weight-bold mb-0">Total Referencias: </p>&nbsp
+              <p class="font-weight-normal mb-0" id="totalReferenciasCaja"></p>
+            </div>
+            <div class="col-12 d-flex">
+              <p class="font-weight-bold mb-0">Total Productos: </p>&nbsp
+              <p class="font-weight-normal mb-0" id="totalProductos"></p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          <i class="fas fa-times"></i> Cerrar
+        </button>
+        <button type="button" id="btnImprimirDetallePedido" class="btn btn-primary">
+          <i class="fas fa-print"></i> Imprimir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 	$MANEJAEMPAQUE = "<?= $manejaEmpaque ?>";
+  $USUARIOID = <?= $usuario ?>;
 </script>

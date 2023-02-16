@@ -1,0 +1,8 @@
+#listacajasPadre {
+  overflow-y: auto;
+  height: calc(100vh - 303px)
+}
+
+.lista-detalle-caja {
+  border-radius: 5px;
+}

@@ -27,8 +27,15 @@
       <div class="card">
         <div class="card-header">
           <div class="row">
-            <div class="col-12 text-right">
-              <button type="button" class="btn btn-primary" id="btnGuardar"><i class="fa-solid fa-edit"></i> Guardar Reporte</button>
+            <div class="col-6 text-left">
+              <button type="button" class="btn btn-secondary" id="btnRegresar">
+                <i class="fa-solid fa-arrow-left"></i> Regresar
+              </button>
+            </div>
+            <div class="col-6 text-right">
+              <button type="button" class="btn btn-primary" id="btnGuardar">
+                <i class="fa-solid fa-edit"></i> Guardar
+              </button>
             </div>
           </div>
         </div>

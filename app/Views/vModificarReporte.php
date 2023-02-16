@@ -5,7 +5,7 @@
         <?php
           foreach ($reportes as $key => $value) {
             echo "<button type='button' class='btn btn-" . $value['color'] . " ml-2 btn-reporte' title='" . $key . "' data-btn='" . str_replace(" ", "", $key) . "'>
-              <span class='badge'><i class='" . $value['icono'] . "'></i></span> " . $key . "
+              <span class='badge'><i class='" . $value['icono'] . "'></i></span> " . str_replace("_", " ", $key) . "
             </button>";
           }
         ?>
@@ -57,9 +57,9 @@
         <div class="row">
           <?php
             foreach ($reportes as $key => $value) {
-              echo "<div class='col-12 col-md-3 mt-2'>
+              echo "<div class='col-12 col-md-4 mt-2'>
                 <button type='button' class='btn btn-" . $value['color'] . " btn-modifica-reporte w-100' title='Editar " . $key . "' data-btn='" . str_replace(" ", "_", $key) . "'>
-                <span class='badge'><i class='" . $value['icono'] . "'></i></span>" . $key . "
+                <span class='badge'><i class='" . $value['icono'] . "'></i></span>" . str_replace("_", " ", $key) . "
                 </button>
               </div>";
             }
@@ -70,9 +70,9 @@
         <div class="row">
           <?php
             foreach ($reportes as $key => $value) {
-              echo "<div class='col-12 col-md-3 mt-2'>
+              echo "<div class='col-12 col-md-4 mt-2'>
                 <button type='button' class='btn btn-" . $value['color'] . " btn-plantilla-reporte w-100' title='Reemplazar " . $key . "' data-btn='" . str_replace(" ", "_", $key) . "'>
-                <span class='badge'><i class='" . $value['icono'] . "'></i></span>" . $key . "
+                <span class='badge'><i class='" . $value['icono'] . "'></i></span>" . str_replace("_", " ", $key) . "
                 </button>
               </div>";
             }

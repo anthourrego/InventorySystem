@@ -33,4 +33,8 @@ $(function () {
       alertify.warning("El reporte no puede quedar vacio");
     }
   });
+
+  $("#btnRegresar").on('click', function () {
+    location.href = base_url() + "Configuracion/Tab/Reportes";
+  });
 });

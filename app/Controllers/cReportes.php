@@ -1,14 +1,15 @@
 <?php
 
 namespace App\Controllers;
-use setasign\Fpdi\TcpdfFpdi;
-use App\Models\mVentasProductos;
-use App\Models\mPedidosProductos;
 use App\Models\mConfiguracion;
-use App\Models\mPedidosCajas;
 use App\Models\mManifiesto;
+use App\Models\mPedidosCajas;
+use App\Models\mPedidosCajasProductos;
+use App\Models\mPedidosProductos;
+use App\Models\mVentasProductos;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
+use setasign\Fpdi\TcpdfFpdi;
 
 class cReportes extends BaseController {
 
@@ -282,6 +283,14 @@ class cReportes extends BaseController {
 		
 		if ($tabla == 'ventas') {
 			$venta = $venta->select("id_pedido");
+		} else {
+			$venta = $venta->select("
+				DATE_FORMAT(V.inicio_empaque, '%d-%m-%Y') AS fechaIniEmpa,
+				DATE_FORMAT(V.inicio_empaque, '%h:%i:%s %p') AS horaIniEmpa,
+				DATE_FORMAT(V.fin_empaque, '%d-%m-%Y') AS fechaFinEmpa,
+				DATE_FORMAT(V.fin_empaque, '%h:%i:%s %p') AS horaFinEmpa,
+				TIMEDIFF(V.fin_empaque, V.inicio_empaque) AS tiempoEmpa
+			");
 		}
 		$venta = $venta->get()->getResultObject()[0];
 
@@ -453,6 +462,100 @@ class cReportes extends BaseController {
 		$qr = '<img width="130px" height="100px" src="@' . preg_replace('#^data:image/[^;]+;base64,#', '', $qr) . '">';
 		$estrucPdf = str_replace("{imagenQR}", $qr, $estrucPdf);
 		return $estrucPdf;
+	}
+
+	public function empaque($id, $download = 0) {
+		$mPedidosCajas = new mPedidosCajas();
+		$mPedidosCajasProductos = new mPedidosCajasProductos();
+
+		$estrucPdf = $this->estructuraReporte("Empaque");
+
+		$estrucPdf = $this->setValuesCompany($estrucPdf);
+
+		$dataVenta = $this->cargarDataVenta($estrucPdf, $id, "pedidos");
+		$estrucPdf = $dataVenta['pdf'];
+
+		$cajas = $mPedidosCajas->select("
+			pedidoscajas.id AS idCajaBuscar,
+			pedidoscajas.numero_caja AS numeroCajaCJ,
+			DATE_FORMAT(pedidoscajas.inicio_empaque, '%d-%m-%Y') AS fechaIniEmpaCJ,
+			DATE_FORMAT(pedidoscajas.inicio_empaque, '%h:%i:%s %p') AS horaIniEmpaCJ,
+			DATE_FORMAT(pedidoscajas.fin_empaque, '%d-%m-%Y') AS fechaFinEmpaCJ,
+			DATE_FORMAT(pedidoscajas.fin_empaque, '%h:%i:%s %p') AS horaFinEmpaCJ,
+			TIMEDIFF(pedidoscajas.fin_empaque, pedidoscajas.inicio_empaque) AS tiempoEmpaCJ,
+			U.nombre AS empacadorCJ
+		")->join('usuarios AS U', 'pedidoscajas.id_empacador = U.id', 'left')
+		->where("id_pedido", $id)->findAll();
+
+		foreach ($cajas as $key => $value) {
+			$infoCaja = $mPedidosCajasProductos->select("
+				COUNT(*) AS Total
+				, COUNT(DISTINCT(P.referencia)) AS TotalRef
+				, pedidoscajasproductos.id_caja
+			")->join('productos P', 'pedidoscajasproductos.id_producto = P.id', 'left')
+			->where("pedidoscajasproductos.id_caja", $value->idCajaBuscar)
+			->groupBy("pedidoscajasproductos.id_caja")
+			->first();
+
+			$value->{'totalRefsCJ'} = $infoCaja->TotalRef;
+			$value->{'totalProdsCJ'} = $infoCaja->Total;
+		}
+		
+		$estrucPdf = $this->estructuraCajas($estrucPdf, $cajas);
+
+		$totCajas = $mPedidosCajas->where("id_pedido", $id)->countAllResults();
+		$estrucPdf = str_replace("{totalCajas}", $totCajas, $estrucPdf);
+
+		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$pdf->startPageGroup();
+		$pdf->AddPage();
+		$pdf->writeHTML($estrucPdf, false, false, false, false, '');
+
+		if ($download == 1) {
+			$nit = $this->getValConfig("documentoEmpresa");
+			if ($nit != '') {
+				$pdf->SetProtection(array('print','copy'), $nit, null, 0);
+			}
+		}
+		$pdf->setTitle('Pedido ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
+		$pdf->Output($dataVenta['codigo'] . ".pdf", ($download == "1" ? 'D' : 'I'));
+		exit;
+	}
+
+	private function estructuraCajas($pdf, $productos) {
+		$contentReplace = "";
+		if (strpos($pdf, "[CJ")) {
+			$contentReplace = explode("[CJ", $pdf);
+			$contentReplace = explode("CJ]", $contentReplace[1])[0];
+		}
+
+		if ($contentReplace != "") {
+			if (strpos($contentReplace, "<tbody>")) {
+				$table = explode("<tbody>", $contentReplace);
+				$table = explode("</tbody>", $table[1])[0];
+
+				$estructura = "";
+				foreach ($productos as $key => $value) {
+					$estructura .= $table;
+					foreach ($value as $key => $value2) {
+						$estructura = str_replace("{{$key}}", (is_null($value2) ? '' : $value2), $estructura);
+					}
+				}
+				$parte1 = explode("<tbody>", $contentReplace)[0];
+				$estructura = $parte1 . $estructura . explode("</tbody>", $contentReplace)[1];
+			} else {
+				$estructura = "";
+				foreach ($productos as $key => $value) {
+					$estructura .= $contentReplace;
+					foreach ($value as $key => $value) {
+						$estructura = str_replace("{{$key}}", (is_null($value) ? '' : $value), $estructura);
+					}
+				}
+			}
+			$parte1 = explode("[CJ", $pdf)[0];
+			$pdf = $parte1 . $estructura . explode("CJ]", $pdf)[1];
+		}
+		return $pdf;
 	}
 
 }

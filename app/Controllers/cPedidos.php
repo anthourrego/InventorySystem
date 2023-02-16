@@ -23,10 +23,16 @@ class cPedidos extends BaseController {
 		$this->content['title'] = "Administador Pedidos";
 		$this->content['view'] = "Pedidos/vAdministador";
 
+		$this->content['css_add'][] = [
+			'Pedidos/cssAdministrador.css'
+		];
+
 		$this->LDataTables();
 		$this->LMoment();
 
 		$this->content['manejaEmpaque'] = (!session()->has("manejaEmpaque") || session()->get("manejaEmpaque") == "1" ? "1" : "0");
+
+		$this->content['usuario'] = (session()->has("id_user") ? session()->get("id_user") : null);
 
 		$this->content['js_add'][] = [
 			'Pedidos/jsAdministrador.js'
@@ -1035,6 +1041,37 @@ class cPedidos extends BaseController {
 			}
 		}
 		return $resp;
+	}
+
+	public function detallePedido($idPedido) {
+		$mPedidos = new mPedidos();
+		$mPedidosCajas = new mPedidosCajas();
+		$mPedidosCajasProductos = new mPedidosCajasProductos();
+
+		$pedido = $mPedidos
+			->select("
+				pedidos.*,
+				TIMEDIFF(pedidos.fin_empaque, pedidos.inicio_empaque) AS TiempoEmpaque
+			")
+			->find($idPedido);
+
+		$pedido->{'cajas'} = $mPedidosCajas->select("
+			pedidoscajas.*,
+			TIMEDIFF(pedidoscajas.fin_empaque, pedidoscajas.inicio_empaque) AS TiempoEmpaque,
+			U.nombre AS nombreEmpacador
+		")->join('usuarios AS U', 'pedidoscajas.id_empacador = U.id', 'left')
+		->where("id_pedido", $idPedido)->findAll();
+
+		foreach ($pedido->cajas as $key => $value) {
+			$value->{'infoCaja'} = $mPedidosCajasProductos->select("
+				COUNT(*) AS Total, COUNT(DISTINCT(P.referencia)) AS TotalRef, pedidoscajasproductos.id_caja
+			")->join('productos P', 'pedidoscajasproductos.id_producto = P.id', 'left')
+			->where("pedidoscajasproductos.id_caja", $value->id)
+			->groupBy("pedidoscajasproductos.id_caja")
+			->first();
+		}
+
+		return $this->response->setJSON($pedido);
 	}
 
 }

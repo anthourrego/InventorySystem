@@ -4,14 +4,14 @@ namespace App\Controllers;
 
 class cModificarReporte extends BaseController {
 
-  private $instrucciones = [
+  public $instrucciones = [
     "[HEAD HEAD] - Encabezado del reporte"
     , "[BODY BODY] - Contenido del reporte"
     , "[FOOTER FOOTER] - Pie de pagina del reporte"
     , "[DP DP] - Lista detallada de productos"
   ];
 
-  private $reportes = [
+  public $reportes = [
     "Factura" => [
       "icono" => "fa-solid fa-store",
       "color" => "primary",
@@ -31,88 +31,93 @@ class cModificarReporte extends BaseController {
       "icono" => "fa-solid fa-paper-plane",
       "color" => "success",
       "url" => ""
+    ],
+    "Empaque" => [
+      "icono" => "fa-solid fa-file-invoice",
+      "color" => "warning",
+      "url" => ""
     ]
   ];
 
-	private $variables = [
+	public $variables = [
     "logoEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
       "descripcion" => "Logo de la empresa"
     ],
     "nombreEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
       "descripcion" => "Nombre de la empresa"
     ],
     "digitoVeriEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
       "descripcion" => "Digito de verificación de la empresa"
     ],
     "direccionEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
       "descripcion" => "Dirección de la empresa"
     ],
     "telefonoEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
       "descripcion" => "Telefono de la empresa"
     ],
     "emailEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
       "descripcion" => "Correo electrónico de la empresa"
     ],
     "numeracion" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Empaque"],
       "descripcion" => "Consecutivo de documento"
     ],
     "nombreSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
       "descripcion" => "Nombre de la sucursal"
     ],
     "nombreCliente" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
       "descripcion" => "Nombre del cliente"
     ],
     "fechaCreacion" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
       "descripcion" => "Fecha de generación del documento"
     ],
     "horaCreacion" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
       "descripcion" => "Hora de generación del documento"
     ],
     "direccionSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
       "descripcion" => "Dirección de la sucursal"
     ],
     "telefonoSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
       "descripcion" => "Telefono de la sucursal"
     ],
     "barrioSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
       "descripcion" => "Barrio de la sucursal"
     ],
     "adminSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
       "descripcion" => "Administrador de la sucursal"
     ],
     "carteraSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
       "descripcion" => "Cartera de la sucursal"
     ],
     "telCartSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
       "descripcion" => "Telefono cartera de la sucursal"
     ],
     "ciudadSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
       "descripcion" => "Ciudad de la sucursal"
     ],
     "deptoSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
       "descripcion" => "Departamento de la sucursal"
     ],
     "nombreVendedor" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Empaque"],
       "descripcion" => "Nombre del vendedor"
     ],
     "itemProductoDP" => [
@@ -156,7 +161,7 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Manifiesto del producto"
     ],
     "observacion" => [
-      "aplica" => ["Pedido", "Factura", "Rotulo"],
+      "aplica" => ["Pedido", "Factura", "Rotulo", "Empaque"],
       "descripcion" => "Observación del reporte"
     ],
     "numeroRotulo" => [
@@ -168,7 +173,7 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Caja del producto"
     ],
     "totalCajas" => [
-      "aplica" => ["Envio"],
+      "aplica" => ["Envio", "Empaque"],
       "descripcion" => "Total de cajas para el pedido"
     ],
     "costoEnvio" => [
@@ -178,6 +183,62 @@ class cModificarReporte extends BaseController {
     "imagenQR" => [
       "aplica" => ["Rotulo"],
       "descripcion" => "Imagen del Qr para descarga de la factura"
+    ],
+    "fechaIniEmpa" => [
+      "aplica" => ["Empaque"],
+      "descripcion" => "Fecha inicio del empaque de los productos del pedido"
+    ],
+    "horaIniEmpa" => [
+      "aplica" => ["Empaque"],
+      "descripcion" => "Hora inicio del empaque de los productos del pedido"
+    ],
+    "fechaFinEmpa" => [
+      "aplica" => ["Empaque"],
+      "descripcion" => "Fecha final del empaque de los productos del pedido"
+    ],
+    "horaFinEmpa" => [
+      "aplica" => ["Empaque"],
+      "descripcion" => "Hora final del empaque de los productos del pedido"
+    ],
+    "tiempoEmpa" => [
+      "aplica" => ["Empaque"],
+      "descripcion" => "Tiempo de empaque de los productos del pedido"
+    ],
+    "numeroCajaCJ" => [
+      "aplica" => ["Empaque"],
+      "descripcion" => "Número de caja del pedido"
+    ],
+    "empacadorCJ" => [
+      "aplica" => ["Empaque"],
+      "descripcion" => "Nombre persona empaco la caja"
+    ],
+    "fechaIniEmpaCJ" => [
+      "aplica" => ["Empaque"],
+      "descripcion" => "Fecha inicio de empaque de caja"
+    ],
+    "horaIniEmpaCJ" => [
+      "aplica" => ["Empaque"],
+      "descripcion" => "Hora inicio de empaque de caja"
+    ],
+    "fechaFinEmpaCJ" => [
+      "aplica" => ["Empaque"],
+      "descripcion" => "Fecha fin de empaque de caja"
+    ],
+    "horaFinEmpaCJ" => [
+      "aplica" => ["Empaque"],
+      "descripcion" => "Hora fin de empaque de caja"
+    ],
+    "tiempoEmpaCJ" => [
+      "aplica" => ["Empaque"],
+      "descripcion" => "Tiempo de empaque de la caja"
+    ],
+    "totalRefsCJ" => [
+      "aplica" => ["Empaque"],
+      "descripcion" => "Total de referencias dentro de la caja"
+    ],
+    "totalProdsCJ" => [
+      "aplica" => ["Empaque"],
+      "descripcion" => "Total de productos dentro de la caja"
     ]
   ];
 

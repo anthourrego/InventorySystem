@@ -1,0 +1,97 @@
+<table border="0" cellpadding="1" cellspacing="1" style="width:100%">
+	<tbody>
+		<tr>
+			<td rowspan="5" style="width:20%">{logoEmpresa}</td>
+			<td style="text-align:center; width:60%"><span style="font-size:14px"><span style="font-family:Arial,Helvetica,sans-serif"><strong>{nombreEmpresa}</strong></span></span></td>
+			<td rowspan="5" style="text-align:center; vertical-align:middle; width:20%">
+			<h2><span style="color:#c0392b">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Pedido&nbsp;N. {numeracion}</span></h2>
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align:center"><span style="font-family:Arial,Helvetica,sans-serif">NIT: {documentoEmpresa}-{digitoVeriEmpresa}</span></td>
+		</tr>
+		<tr>
+			<td style="text-align:center"><span style="font-family:Arial,Helvetica,sans-serif">Direcci&oacute;n: {direccionEmpresa}</span></td>
+		</tr>
+		<tr>
+			<td style="text-align:center"><span style="font-family:Arial,Helvetica,sans-serif">Tel&eacute;fono: {telefonoEmpresa}</span></td>
+		</tr>
+		<tr>
+			<td style="text-align:center"><span style="font-family:Arial,Helvetica,sans-serif">{emailEmpresa}</span></td>
+		</tr>
+	</tbody>
+</table>
+
+<table border="0" cellpadding="1" cellspacing="1" style="width:100%">
+	<tbody>
+		<tr>
+			<td style="width:60%">&nbsp;</td>
+			<td style="width:40%">&nbsp;</td>
+		</tr>
+		<tr>
+			<td style="width:60%"><span style="font-family:Arial,Helvetica,sans-serif"><strong>Cliente:</strong>&nbsp; &nbsp; &nbsp;{nombreSucursal} - {nombreCliente}</span></td>
+			<td style="width:40%"><span style="font-family:Arial,Helvetica,sans-serif"><strong>Fecha:</strong>&nbsp; &nbsp; &nbsp; {fechaCreacion} {horaCreacion}</span></td>
+		</tr>
+		<tr>
+			<td><span style="font-family:Arial,Helvetica,sans-serif"><strong>Direcci&oacute;n:&nbsp;</strong>{direccionSucursal}</span></td>
+			<td><span style="font-family:Arial,Helvetica,sans-serif"><strong>Telefono:&nbsp;</strong>&nbsp;{telefonoSucursal}</span></td>
+		</tr>
+		<tr>
+			<td><span style="font-family:Arial,Helvetica,sans-serif"><strong>Ciudad:&nbsp; &nbsp;&nbsp;</strong> {ciudadSucursal}, {deptoSucursal}</span></td>
+			<td><span style="font-family:Arial,Helvetica,sans-serif"><strong>Vendedor: </strong>{nombreVendedor}</span></td>
+		</tr>
+		<tr>
+			<td><span style="font-family:Arial,Helvetica,sans-serif"><strong>Adm.&nbsp;Sucursal: </strong>{nombreVendedor}</span></td>
+			<td><span style="font-family:Arial,Helvetica,sans-serif"><strong>Barrio: </strong>{barrioSucursal}</span></td>
+		</tr>
+		<tr>
+			<td><span style="font-family:Arial,Helvetica,sans-serif"><strong>Cart Sucursal: </strong>{carteraSucursal}</span></td>
+			<td><span style="font-family:Arial,Helvetica,sans-serif"><strong>Tel Cartera: </strong>{telCartSucursal}</span></td>
+		</tr>
+		<tr>
+			<td><span style="font-family:Arial,Helvetica,sans-serif"><strong>Fecha Inicio Empaque: </strong>{fechaIniEmpa} {horaIniEmpa}</span></td>
+			<td><span style="font-family:Arial,Helvetica,sans-serif"><strong>Fecha Fin Empaque: </strong>{fechaFinEmpa} {horaFinEmpa}</span></td>
+		</tr>
+		<tr>
+			<td><span style="font-family:Arial,Helvetica,sans-serif"><strong>Tiempo Empaque: </strong>{tiempoEmpa}</span></td>
+			<td><span style="font-family:Arial,Helvetica,sans-serif"><strong>Total Cajas: </strong>{totalCajas}</span></td>
+		</tr>
+	</tbody>
+</table>
+
+<p>[CJ</p>
+
+<table border="1" cellpadding="3" cellspacing="0" style="width:100%">
+	<thead>
+		<tr>
+			<th scope="col" style="width:8%"><strong><span style="font-family:Arial,Helvetica,sans-serif">Caja</span></strong></th>
+			<th scope="col" style="width:14%"><strong><span style="font-family:Arial,Helvetica,sans-serif">Empacador</span></strong></th>
+			<th scope="col" style="width:12%"><strong><span style="font-family:Arial,Helvetica,sans-serif">Fecha Inicio</span></strong></th>
+			<th scope="col" style="width:12%"><span style="font-family:Arial,Helvetica,sans-serif"><strong>Hora Inicio</strong></span></th>
+			<th scope="col" style="width:12%"><span style="font-family:Arial,Helvetica,sans-serif"><strong>&nbsp;Fecha Fin</strong></span></th>
+			<th scope="col" style="width:11%"><span style="font-family:Arial,Helvetica,sans-serif"><strong>Hora Fin</strong></span></th>
+			<th scope="col" style="width:11%"><strong>Tiempo</strong></th>
+			<th scope="col" style="width:10%"><strong>Total Refs</strong></th>
+			<th scope="col" style="width:10%"><strong>Total Prods</strong></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="width:8%"><span style="font-size:10px">{numeroCajaCJ}</span></td>
+			<td style="width:14%"><span style="font-size:10px"><span style="font-family:Arial,Helvetica,sans-serif">{empacadorCJ}</span></span></td>
+			<td style="width:12%"><span style="font-size:10px"><span style="font-family:Arial,Helvetica,sans-serif">{fechaIniEmpaCJ}</span></span></td>
+			<td style="text-align:center; width:12%"><span style="font-size:10px"><span style="font-family:Arial,Helvetica,sans-serif">{horaIniEmpaCJ}</span></span></td>
+			<td style="text-align:right; width:12%"><span style="font-size:10px"><span style="font-family:Arial,Helvetica,sans-serif">{fechaFinEmpaCJ}</span></span></td>
+			<td style="text-align:right; width:11%"><span style="font-size:10px"><span style="font-family:Arial,Helvetica,sans-serif">{horaFinEmpaCJ}</span></span></td>
+			<td style="text-align:right; width:11%"><span style="font-size:10px">{tiempoEmpaCJ}</span></td>
+			<td style="text-align:right; width:10%"><span style="font-size:10px">{totalRefsCJ}</span></td>
+			<td style="text-align:right; width:10%"><span style="font-size:10px">{totalProdsCJ}</span></td>
+		</tr>
+	</tbody>
+</table>
+
+<p>CJ]</p>
+
+<p><strong>Observaci&oacute;n:</strong> {observacion}</p>
+
+<p>&nbsp;</p>

@@ -387,6 +387,10 @@ class mPermisos extends Model {
 					[
 						"id" => 110,
 						"text" => "Despachar"
+					],
+					[
+						"id" => 111,
+						"text" => "Detalle Pedido"
 					]
 				]
 			]
