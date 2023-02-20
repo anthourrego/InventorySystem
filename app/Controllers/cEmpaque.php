@@ -551,7 +551,6 @@ class cEmpaque extends BaseController {
 				} else {
 					$resp['msj'] = "No fue posible abrir la caja";
 				}
-
 			}
 
 		} else {
@@ -625,6 +624,7 @@ class cEmpaque extends BaseController {
 
 		$this->db->transBegin();
 
+		$valorTotalPedido = 0;
 		$cantidad = 0;
 		foreach ($data->productos as $it) {
 
@@ -641,10 +641,12 @@ class cEmpaque extends BaseController {
 					"observacion" => $it['observacion'],
 					"cantidad_anterior" => $pedidoProd->cantidad,
 					"cantidad_actual" => ($pedidoProd->cantidad - $it['cantidad']),
-					"valor_anterior" => 0,
-					"valor_actual" => 0,
+					"valor_anterior" => $pedidoProd->valor,
+					"valor_actual" => $pedidoProd->valor,
 					"tipo" => "E"
 				);
+	
+				$valorTotalPedido += ($dataObserSave['cantidad_actual'] * $pedidoProd->valor);
 			
 				if(!$mObservacionProductos->save($dataObserSave)){
 					$resp["msj"] = "Error al guardar la observación del producto. " . listErrors($mObservacionProductos->errors());
@@ -671,6 +673,8 @@ class cEmpaque extends BaseController {
 				$builder = $this->db->table('pedidos')
 					->set("fin_empaque", date("Y-m-d H:i:s"))
 					->set("estado", 'EM')
+					->set('neto', $valorTotalPedido)
+					->set('total', $valorTotalPedido)
 					->where('id', $data->idPedido);
 	
 				if($builder->update()) {
