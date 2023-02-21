@@ -527,6 +527,7 @@ class cPedidos extends BaseController {
 								"cantidad_actual" => $it->cantidad,
 								"valor_anterior" => $it->valorUnitarioOriginal,
 								"valor_actual" => $it->valorUnitario,
+								"id_usuario" => (session()->has("id_user") ? session()->get("id_user") : null)
 							);
 						
 							if(!$mObservacionProductos->save($dataObserSave)){
@@ -583,6 +584,7 @@ class cPedidos extends BaseController {
 								"cantidad_actual" => $it->cantidad,
 								"valor_anterior" => isset($it->valorUnitarioOriginal) ? $it->valorUnitarioOriginal : 0,
 								"valor_actual" => $it->valorUnitario,
+								"id_usuario" => (session()->has("id_user") ? session()->get("id_user") : null)
 							);
 						
 							if(!$mObservacionProductos->save($dataObserSave)){

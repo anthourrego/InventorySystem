@@ -643,7 +643,8 @@ class cEmpaque extends BaseController {
 					"cantidad_actual" => ($pedidoProd->cantidad - $it['cantidad']),
 					"valor_anterior" => $pedidoProd->valor,
 					"valor_actual" => $pedidoProd->valor,
-					"tipo" => "E"
+					"tipo" => "E",
+					"id_usuario" => (session()->has("id_user") ? session()->get("id_user") : null)
 				);
 	
 				$valorTotalPedido += ($dataObserSave['cantidad_actual'] * $pedidoProd->valor);
