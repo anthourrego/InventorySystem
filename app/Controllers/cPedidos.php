@@ -171,6 +171,8 @@ class cPedidos extends BaseController {
 	public function listaDT(){
 		$estado = $this->request->getPost("estado");
 
+		$dataPref = (session()->has("prefijoPed") ? session()->get("prefijoPed") : '');
+
 		$query = $this->db->table('pedidos AS P')
 			->select("
 				P.id,
@@ -205,7 +207,8 @@ class cPedidos extends BaseController {
 				CUI.nombre AS Ciudad,
 				TC.TotalCajas,
 				V.codigo AS factura,
-				V.leidoQR
+				V.leidoQR,
+				CAST(SUBSTRING_INDEX(codigo, '$dataPref', -1) AS UNSIGNED) AS Delimitado
 			")->join('clientes AS C', 'P.id_cliente = C.id', 'left')
 			->join('sucursales AS S', 'P.id_sucursal = S.id', 'left')
 			->join('ciudades AS CUI', 'S.id_ciudad = CUI.id', 'left')
@@ -238,6 +241,8 @@ class cPedidos extends BaseController {
 				$query->where("P.Estado", $estado);
 			}
 		}
+
+		$query->orderBy("Delimitado", "DESC");
 
 		return DataTable::of($query)->toJson(true);
 	}

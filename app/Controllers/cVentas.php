@@ -133,7 +133,10 @@ class cVentas extends BaseController {
 		return view('UI/viewDefault', $this->content);
 	}
 
-	public function listaDT(){
+	public function listaDT() {
+
+		$dataPref = (session()->has("prefijoFact") ? session()->get("prefijoFact") : '');
+
 		$query = $this->db->table('ventas AS V')
 			->select("
 				V.id,
@@ -153,11 +156,13 @@ class cVentas extends BaseController {
 				V.updated_at,
 				S.nombre AS NombreSucursal,
 				V.id_pedido,
-				CUI.nombre AS Ciudad
+				CUI.nombre AS Ciudad,
+				CAST(SUBSTRING_INDEX(codigo, '$dataPref', -1) AS UNSIGNED) AS Delimitado
 			")->join('clientes AS C', 'V.id_cliente = C.id', 'left')
 			->join('sucursales AS S', 'V.id_sucursal = S.id', 'left')
 			->join('ciudades AS CUI', 'S.id_ciudad = CUI.id', 'left')
-			->join('usuarios AS U', 'V.id_vendedor = U.id', 'left');
+			->join('usuarios AS U', 'V.id_vendedor = U.id', 'left')
+			->orderBy("Delimitado", "DESC");
 
 		return DataTable::of($query)->toJson(true);
 	}
