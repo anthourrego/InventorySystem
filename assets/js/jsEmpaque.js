@@ -190,8 +190,8 @@ function obtenerInfoPedido(pedido, sync = false) {
     return
   }
 
-  $("#listaproductospedido").html(`<div class="font-weight-bold text-center p-2">No se encontraron productos</div>`);
-  $("#listaproductospedidoempacar").html(`<div class="font-weight-bold text-center p-2">No se encontraron productos</div>`);
+  $("#listaproductospedido").html(`<div class="font-weight-bold text-center p-2 col-12">No se encontraron productos</div>`);
+  $("#listaproductospedidoempacar").html(`<div class="font-weight-bold text-center p-2 col-12">No se encontraron productos</div>`);
   if (pedido.productos.length) {
     let estructura = '', estructuraProceso = '';
     pedido.productos.forEach((it, x) => {
@@ -244,7 +244,7 @@ function obtenerInfoPedido(pedido, sync = false) {
               </div>
             </div>
             <div class="col-2 col-md-1 d-flex align-items-center justify-content-center">
-              <h5>${+it.CantTotalCajas}/${it.cantidad}</h5>
+              <h5>${+it.cantAgregar}</h5>
             </div>
           </div>
         </div>
