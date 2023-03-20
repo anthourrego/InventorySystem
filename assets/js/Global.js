@@ -184,6 +184,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
 		if ($(e.target).hasClass('validarPuntoComa')) letras += '.,';
 
+		if ($(e.target).hasClass('validarSlash')) letras += '/';
+
 		tecla_especial = false
 		for (var i in especiales) {
 			if (key == especiales[i]) {

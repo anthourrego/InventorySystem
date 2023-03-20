@@ -124,7 +124,7 @@
               </div>
               <div class="form-group form-valid <?= $camposProducto["item"] == "1" ? '' : 'd-none' ?>">
                 <label class="mb-0" for="item">Item <span class="text-danger">*</span></label>
-                <input placeholder="Ingrese el ítem" type="text" <?= $camposProducto["item"] == "1" ? '' : 'disabled' ?> data-campo="item" id="item" name="item" class="form-control soloLetras validarPuntoComa inputVer" minlength="1" maxlength="300" required autocomplete="off">
+                <input placeholder="Ingrese el ítem" type="text" <?= $camposProducto["item"] == "1" ? '' : 'disabled' ?> data-campo="item" id="item" name="item" class="form-control soloLetras validarPuntoComa validarSlash inputVer" minlength="1" maxlength="300" required autocomplete="off">
               </div>
             </div>
             <div class="col-6 form-group form-valid">
