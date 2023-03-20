@@ -355,6 +355,9 @@ class cReportes extends BaseController {
 						if ($key == 'valorProductoDP' || $key == 'totalProductoDP') {
 							$value2 = '$ ' . number_format($value2, 0, ',', '.');
 						}
+						if ($key == 'paqueteProductoDP') {
+							$value2 = (fmod($value2, 1) == 0 ? (int) $value2 : $value2);
+						}
 						$estructura = str_replace("{{$key}}", (is_null($value2) ? '' : $value2), $estructura);
 					}
 				}
@@ -372,6 +375,9 @@ class cReportes extends BaseController {
 					foreach ($value as $key => $value) {
 						if ($key == 'valorProductoDP' || $key == 'totalProductoDP') {
 							$value = '$ ' . number_format($value, 0, ',', '.');
+						}
+						if ($key == 'paqueteProductoDP') {
+							$value = (fmod($value, 1) == 0 ? (int) $value : $value);
 						}
 						$estructura = str_replace("{{$key}}", (is_null($value) ? '' : $value), $estructura);
 					}
