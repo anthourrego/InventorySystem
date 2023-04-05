@@ -7,6 +7,7 @@ use App\Models\mPedidosCajas;
 use App\Models\mPedidosCajasProductos;
 use App\Models\mPedidosProductos;
 use App\Models\mVentasProductos;
+use App\Models\mCompraProductos;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
 use setasign\Fpdi\TcpdfFpdi;
@@ -210,6 +211,51 @@ class cReportes extends BaseController {
 		exit;
 	}
 
+	public function compra($id, $download = 0) {
+		
+		$estrucPdf = $this->estructuraReporte("Compra");
+
+		$estrucPdf = $this->setValuesCompany($estrucPdf);
+
+		$dataVenta = $this->cargarDataVenta($estrucPdf, $id, "compras");
+		$estrucPdf = $dataVenta['pdf'];
+
+		$mCompraProductos = new mCompraProductos();
+
+		$productosFactura = $mCompraProductos->select("
+				P.item AS itemProductoDP,
+				P.referencia AS referenciaProductoDP,
+				P.descripcion AS descripcionProductoDP,
+				comprasproductos.cantPaca AS cantPacaProductoDP,
+				CAST(
+					(comprasproductos.cantPaca / comprasproductos.cantidad) AS DECIMAL(12,2)
+				) AS paqueteProductoDP,
+				comprasproductos.cantidad AS cantidadProductoDP,
+				comprasproductos.valor AS valorProductoDP,
+				(comprasproductos.cantidad * comprasproductos.valor) AS totalProductoDP,
+			")->join("productos AS P", "comprasproductos.id_producto = P.id", "left")
+			->where("id_compra", $id)
+			->findAll();
+
+		$estrucPdf = $this->estructuraProductos($estrucPdf, $productosFactura);
+
+		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$pdf->startPageGroup();
+		$pdf->AddPage();
+		$pdf->writeHTML($estrucPdf, false, false, false, false, '');
+
+		if ($download == 1) {
+			$nit = $this->getValConfig("documentoEmpresa");
+			if ($nit != '') {
+				$pdf->SetProtection(array('print','copy'), $nit, null, 0);
+			}
+		}
+
+		$pdf->setTitle('Compra ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
+		$pdf->Output($dataVenta['codigo'] . ".pdf", ($download == "1" ? 'D' : 'I'));
+		exit;
+	}
+
 	private function estructuraReporte($reporte) {
 		$path = UPLOADS_REPOR_PATH . "$reporte.txt";
 
@@ -256,42 +302,67 @@ class cReportes extends BaseController {
 	}
 
 	private function cargarDataVenta($pdf, $id, $tabla) {
-		$venta = $this->db->table("$tabla AS V")
-			->select("
-				V." . ($tabla == 'pedidos' ? 'pedido' : 'codigo') . " AS numeracion,
-				C.nombre AS nombreCliente,
-				U.nombre AS nombreVendedor,
-				V.total AS totalGeneral,
-				DATE_FORMAT(V.created_at, '%d-%m-%Y') AS fechaCreacion,
-				DATE_FORMAT(V.created_at, '%H:%i:%s') AS horaCreacion,
-				S.direccion AS direccionSucursal,
-				S.nombre AS nombreSucursal,
-				S.telefono AS telefonoSucursal,
-				S.barrio AS barrioSucursal,
-				S.administrador AS adminSucursal,
-				S.cartera AS carteraSucursal,
-				S.telefonoCart AS telCartSucursal,
-				CI.nombre AS ciudadSucursal,
-				DEP.nombre AS deptoSucursal,
-				V.observacion
-			")->join("clientes AS C", "V.id_cliente = C.id", "left")
-			->join("usuarios AS U", "V.id_vendedor = U.id", "left")
-			->join("sucursales AS S", "V.id_sucursal = S.id", "left")
-			->join("ciudades AS CI", "S.id_ciudad = CI.id", "left")
-			->join("departamentos AS DEP", "CI.id_depto = DEP.codigo", "left")
-			->where("V.id", $id);
-		
-		if ($tabla == 'ventas') {
-			$venta = $venta->select("id_pedido");
+		$venta = null;
+		if ($tabla == 'compras') {
+
+			$venta = $this->db->table("{$tabla} AS C")
+				->select("
+					C.codigo AS numeracion,
+					U.nombre AS nombreVendedor,
+					C.total AS totalGeneral,
+					DATE_FORMAT(C.created_at, '%d-%m-%Y') AS fechaCreacion,
+					DATE_FORMAT(C.created_at, '%H:%i:%s') AS horaCreacion,
+					C.observacion,
+					CASE
+						WHEN C.estado = 'AN'
+							THEN 'Anulado'
+						WHEN C.estado = 'CO'
+							THEN 'Confirmado'
+						ELSE 'Pendiente'
+					END AS estadoRegistro
+				")->join("usuarios AS U", "C.id_usuario = U.id", "left")
+				->where("C.id", $id);
+
 		} else {
-			$venta = $venta->select("
-				DATE_FORMAT(V.inicio_empaque, '%d-%m-%Y') AS fechaIniEmpa,
-				DATE_FORMAT(V.inicio_empaque, '%h:%i:%s %p') AS horaIniEmpa,
-				DATE_FORMAT(V.fin_empaque, '%d-%m-%Y') AS fechaFinEmpa,
-				DATE_FORMAT(V.fin_empaque, '%h:%i:%s %p') AS horaFinEmpa,
-				TIMEDIFF(V.fin_empaque, V.inicio_empaque) AS tiempoEmpa
-			");
+
+			$venta = $this->db->table("{$tabla} AS V")
+				->select("
+					V." . ($tabla == 'pedidos' ? 'pedido' : 'codigo') . " AS numeracion,
+					C.nombre AS nombreCliente,
+					U.nombre AS nombreVendedor,
+					V.total AS totalGeneral,
+					DATE_FORMAT(V.created_at, '%d-%m-%Y') AS fechaCreacion,
+					DATE_FORMAT(V.created_at, '%H:%i:%s') AS horaCreacion,
+					S.direccion AS direccionSucursal,
+					S.nombre AS nombreSucursal,
+					S.telefono AS telefonoSucursal,
+					S.barrio AS barrioSucursal,
+					S.administrador AS adminSucursal,
+					S.cartera AS carteraSucursal,
+					S.telefonoCart AS telCartSucursal,
+					CI.nombre AS ciudadSucursal,
+					DEP.nombre AS deptoSucursal,
+					V.observacion
+				")->join("clientes AS C", "V.id_cliente = C.id", "left")
+				->join("usuarios AS U", "V.id_vendedor = U.id", "left")
+				->join("sucursales AS S", "V.id_sucursal = S.id", "left")
+				->join("ciudades AS CI", "S.id_ciudad = CI.id", "left")
+				->join("departamentos AS DEP", "CI.id_depto = DEP.codigo", "left")
+				->where("V.id", $id);
+			
+			if ($tabla == 'ventas') {
+				$venta = $venta->select("id_pedido");
+			} else {
+				$venta = $venta->select("
+					DATE_FORMAT(V.inicio_empaque, '%d-%m-%Y') AS fechaIniEmpa,
+					DATE_FORMAT(V.inicio_empaque, '%h:%i:%s %p') AS horaIniEmpa,
+					DATE_FORMAT(V.fin_empaque, '%d-%m-%Y') AS fechaFinEmpa,
+					DATE_FORMAT(V.fin_empaque, '%h:%i:%s %p') AS horaFinEmpa,
+					TIMEDIFF(V.fin_empaque, V.inicio_empaque) AS tiempoEmpa
+				");
+			}
 		}
+
 		$venta = $venta->get()->getResultObject()[0];
 
 		foreach ($venta as $key => $value) {

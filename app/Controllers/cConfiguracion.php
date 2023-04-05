@@ -6,6 +6,7 @@ use \Config\Services;
 use App\Controllers\BaseController;
 use App\Models\mConfiguracion;
 use App\Models\mPedidos;
+use App\Models\mCompras;
 use App\Models\mVentas;
 
 class cConfiguracion extends BaseController {
@@ -153,6 +154,20 @@ class cConfiguracion extends BaseController {
         ->findAll();
 
         $tabla = 'pedidos';
+      } else if ($dataSave["campo"] == "digitosCompra") {
+
+        $comprasModel = new mCompras();
+        $dataPref = (session()->has("prefijoCompra") ? session()->get("prefijoCompra") : '');
+
+        $registros = $comprasModel
+        ->select("
+          SUBSTRING_INDEX(codigo, '$dataPref', -1) AS Delimitado, 
+          compras.id
+        ")
+        ->where("codigo LIKE '$dataPref%'")
+        ->findAll();
+
+        $tabla = 'compras';
       }
 
       if (count($registros) > 0) {
@@ -169,7 +184,7 @@ class cConfiguracion extends BaseController {
           $padAgregar = str_pad($numeroActual, $dataPost["valor"], "0", STR_PAD_LEFT);
           
           $builder = $this->db->table($tabla)
-            ->set(($tabla == 'ventas' ? 'codigo' : 'pedido'), "{$dataPref}{$padAgregar}")
+            ->set(($tabla == 'ventas' || $tabla == 'compras' ? 'codigo' : 'pedido'), "{$dataPref}{$padAgregar}")
             ->where('id', $value->id)->update();
         }
       }

@@ -36,36 +36,41 @@ class cModificarReporte extends BaseController {
       "icono" => "fa-solid fa-file-invoice",
       "color" => "warning",
       "url" => ""
+    ],
+    "Compra" => [
+      "icono" => "fa-solid fa-dollar",
+      "color" => "dark",
+      "url" => ""
     ]
   ];
 
 	public $variables = [
     "logoEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
       "descripcion" => "Logo de la empresa"
     ],
     "nombreEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
       "descripcion" => "Nombre de la empresa"
     ],
     "digitoVeriEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
       "descripcion" => "Digito de verificación de la empresa"
     ],
     "direccionEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
       "descripcion" => "Dirección de la empresa"
     ],
     "telefonoEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
       "descripcion" => "Telefono de la empresa"
     ],
     "emailEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
       "descripcion" => "Correo electrónico de la empresa"
     ],
     "numeracion" => [
-      "aplica" => ["Factura", "Pedido", "Empaque"],
+      "aplica" => ["Factura", "Pedido", "Empaque", "Compra"],
       "descripcion" => "Consecutivo de documento"
     ],
     "nombreSucursal" => [
@@ -77,11 +82,11 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Nombre del cliente"
     ],
     "fechaCreacion" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
       "descripcion" => "Fecha de generación del documento"
     ],
     "horaCreacion" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
       "descripcion" => "Hora de generación del documento"
     ],
     "direccionSucursal" => [
@@ -117,39 +122,39 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Departamento de la sucursal"
     ],
     "nombreVendedor" => [
-      "aplica" => ["Factura", "Pedido", "Empaque"],
+      "aplica" => ["Factura", "Pedido", "Empaque", "Compra"],
       "descripcion" => "Nombre del vendedor"
     ],
     "itemProductoDP" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Compra"],
       "descripcion" => "Número de item del producto"
     ],
     "referenciaProductoDP" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Compra"],
       "descripcion" => "Referencia del producto"
     ],
     "descripcionProductoDP" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Compra"],
       "descripcion" => "Descripcion del producto"
     ],
     "cantPacaProductoDP" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Compra"],
       "descripcion" => "Cantidad paca del producto"
     ],
     "paqueteProductoDP" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Compra"],
       "descripcion" => "Cantidad paca x cantidad solicitada del producto"
     ],
     "valorProductoDP" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Compra"],
       "descripcion" => "Valor de venta del producto"
     ],
     "totalProductoDP" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Compra"],
       "descripcion" => "Total por producto"
     ],
     "totalGeneral" => [
-      "aplica" => ["Factura", "Pedido"],
+      "aplica" => ["Factura", "Pedido", "Compra"],
       "descripcion" => "Valor total de la venta"
     ],
     "ubicacionProductoDP" => [
@@ -161,7 +166,7 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Manifiesto del producto"
     ],
     "observacion" => [
-      "aplica" => ["Pedido", "Factura", "Rotulo", "Empaque"],
+      "aplica" => ["Pedido", "Factura", "Rotulo", "Empaque", "Compra"],
       "descripcion" => "Observación del reporte"
     ],
     "numeroRotulo" => [
@@ -239,6 +244,10 @@ class cModificarReporte extends BaseController {
     "totalProdsCJ" => [
       "aplica" => ["Empaque"],
       "descripcion" => "Total de productos dentro de la caja"
+    ],
+    "estadoRegistro" => [
+      "aplica" => ["Compra"],
+      "descripcion" => "Estado de la informacion cargada"
     ]
   ];
 

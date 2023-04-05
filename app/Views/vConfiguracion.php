@@ -165,6 +165,20 @@
             <input type="number" id="digitosPed"  data-nombre="Consecutivo Factura" name="digitosPed" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad de digitos">
           </div>
           <hr class="col-12 my-2">
+          <h5 class="mb-1 col-12">Compras:</h5>
+          <div class="col-12 col-md-6 col-lg-3">
+            <label for="prefijoCompra">Prefijo:</label>
+            <input type="text" id="prefijoCompra" data-nombre="Prefijo Compra" name="prefijoCompra" <?= !$editar ? 'disabled' : '' ?> class="soloLetras form-control configAct" required autocomplete="off"placeholder="Ingrese el Prefijo">
+          </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <label for="consecutivoCompra">Consecutivo:</label>
+            <input type="number" id="consecutivoCompra"  data-nombre="Consecutivo Compra" name="consecutivoCompra" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
+          </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <label for="digitosCompra">Cant digitos:</label>
+            <input type="number" id="digitosCompra"  data-nombre="Consecutivo Compra" name="digitosCompra" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad de digitos">
+          </div>
+          <hr class="col-12 my-2">
         </div>
       </div>
       <div class="tab-pane fade" id="ventasTab" role="tabpanel" aria-labelledby="ventas-tab">

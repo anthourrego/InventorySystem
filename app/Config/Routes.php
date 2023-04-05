@@ -180,6 +180,7 @@ $routes->group('Reportes', ['filter' => 'authGuard'], function ($routes) {
 	$routes->get('Manifiestos/(:any)', 'cReportes::manifiestos/$1');
 	$routes->get('Envio/(:num)/(:any)', 'cReportes::envio/$1/$2');
 	$routes->get('Empaque/(:num)/(:num)', 'cReportes::empaque/$1/$2');
+	$routes->get('Compra/(:num)/(:num)', 'cReportes::compra/$1/$2');
 	//$routes->get('DT', 'cManifiesto::listaDT');
 });
 
@@ -270,6 +271,20 @@ $routes->group('Empaque', ['filter' => 'authGuard:30'], function ($routes) {
 	$routes->post('ReabrirCaja', 'cEmpaque::reabrirCaja');
 	$routes->post('ReabrirEmpaque', 'cEmpaque::reabrirEmpaque');
 	$routes->post('ObservacionProductos', 'cEmpaque::observacionProductos');
+});
+
+//Compras
+$routes->group('Compras', ['filter' => 'authGuard:40'], function ($routes) {
+	$routes->get('/', 'cCompras::index');
+	$routes->post('DT', 'cCompras::listaDT');
+	$routes->post('Crear', 'cCompras::crear', ['filter' => ['authGuard:401', 'ajax']]);
+	$routes->post('Editar', 'cCompras::guardarEditar', ['filter' => ['authGuard:402', 'ajax']]);
+	$routes->post('Confirmar', 'cCompras::confirmBuy', ['filter' => ['authGuard:403', 'ajax']]);
+	$routes->post('Anular', 'cCompras::anular', ['filter' => ['authGuard:404', 'ajax']]);
+	$routes->post('Clonar', 'cCompras::clonar', ['filter' => ['authGuard:405', 'ajax']]);
+	$routes->get('ValidaProducto/(:any)/(:any)', 'cCompras::validarProducto/$1/$2', ['filter' => ['authGuard:401,402', 'ajax']]);
+	$routes->get('CurrentBuy', 'cCompras::getCurrentBuy');
+	$routes->get('ObtenerCompra/(:any)', 'cCompras::getBuy/$1');
 });
 
 

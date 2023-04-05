@@ -393,6 +393,39 @@ class mPermisos extends Model {
 						"text" => "Detalle Pedido"
 					]
 				]
+			],
+			[
+				"id" => 40,
+				"text" => "Compras",
+				"uri" => "Compras",
+				"icon" => "fa-solid fa-cart-shopping",
+				"color" => "bg-warning",
+				"children" => [
+					[
+						"id" => 401,
+						"text" => "Crear"
+					],
+					[
+						"id" => 402,
+						"text" => "Editar"
+					],
+					[
+						"id" => 403,
+						"text" => "Confirmar compra"
+					],
+					[
+						"id" => 404,
+						"text" => "Anular compra"
+					],
+					[
+						"id" => 405,
+						"text" => "Clonar compra"
+					],
+					[
+						"id" => 406,
+						"text" => "Imprimir compra"
+					]
+				]
 			]
 		];
 
@@ -404,7 +437,7 @@ class mPermisos extends Model {
 					"text" => "Empaque",
 					"uri" => "Empaque",
 					"icon" => "fa-solid fa-box-open",
-					"color" => "bg-primary",
+					"color" => "bg-info",
 					"children" => [
 						[
 							"id" => 301,

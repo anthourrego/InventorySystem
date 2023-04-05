@@ -95,6 +95,14 @@
               </a>
             </li>
 						<?php } ?>
+						<?php if (validPermissions([40], true)) { ?> 
+						<li class="nav-item">
+              <a href="<?= base_url("Compras") ?>" class="nav-link <?= current_url(true)->getSegment((2 + DOMINIO)) == 'Compras' ? 'active' : '' ?>">
+								<i class="nav-icon fa-solid fa-cart-shopping"></i>
+                <p>Compras</p>
+              </a>
+            </li>
+						<?php } ?>
 						<?php if (validPermissions([5], true)) { ?> 
 						<li class="nav-item">
               <a href="<?= base_url("Productos") ?>" class="nav-link <?= current_url(true)->getSegment((2 + DOMINIO)) == 'Productos' ? 'active' : '' ?>">
