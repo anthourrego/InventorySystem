@@ -2,7 +2,7 @@
 
   <div class="card-header">
     <div class="row justify-content-between">
-      <div class="col-8 col-md-3">
+      <div class="col-8 col-md-3 d-sm-block d-md-none">
         <div class="input-group">
           <div class="input-group-prepend">
             <label class="input-group-text" for="selectEstado">Estado</label>
@@ -17,6 +17,15 @@
             <option value="FQ">Facturado QR</option>
           </select>
         </div>
+      </div>
+      <div class="col-8 col-md-9 d-none d-md-block">
+        <button type="button" class="btn-filtro-pedido btn btn-primary btn-lg" data-valor="-1">Todos</button>
+        <button type="button" class="btn-filtro-pedido btn btn-warning" data-valor="PE">Pendiente</button>
+        <button type="button" class="btn-filtro-pedido btn btn-secondary" data-valor="EP">En Proceso</button>
+        <button type="button" class="btn-filtro-pedido btn btn-info" data-valor="EM">Empacado</button>
+        <button type="button" class="btn-filtro-pedido btn btn-warning" data-valor="DE">Despachado</button>
+        <button type="button" class="btn-filtro-pedido btn btn-success" data-valor="FA">Facturado</button>
+        <button type="button" class="btn-filtro-pedido btn btn-success" data-valor="FQ">Facturado QR</button>
       </div>
       <?php if (validPermissions([101], true)) { ?>
         <div class="col-4 col-md-3 text-right">

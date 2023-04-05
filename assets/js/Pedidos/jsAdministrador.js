@@ -1,12 +1,13 @@
 let rutaBase = base_url() + "Pedidos/";
 let limiteRotulo = 1000;
+let estadoFiltro = '-1';
 
 let DT = $("#table").DataTable({
   ajax: {
     url: rutaBase + "DT",
     type: "POST",
     data: function (d) {
-      return $.extend(d, { "estado": $("#selectEstado").val() })
+      return $.extend(d, { "estado": estadoFiltro })
     }
   },
   order: [[0, "desc"]],
@@ -338,6 +339,17 @@ let DT = $("#table").DataTable({
 
 $(function () {
   $("#selectEstado").on("change", function () {
+    estadoFiltro = $("#selectEstado").val();
+    $(".btn-filtro-pedido").removeClass('btn-lg');
+    $(`.btn-filtro-pedido[data-valor=${estadoFiltro}]`).addClass('btn-lg');
+    DT.ajax.reload();
+  });
+
+  $(".btn-filtro-pedido").on('click', function () {
+    $(".btn-filtro-pedido").removeClass('btn-lg');
+    $(this).addClass('btn-lg');
+    estadoFiltro = $(this).data('valor');
+    $("#selectEstado").val(estadoFiltro)
     DT.ajax.reload();
   });
 
