@@ -340,14 +340,14 @@ let DT = $("#table").DataTable({
 $(function () {
   $("#selectEstado").on("change", function () {
     estadoFiltro = $("#selectEstado").val();
-    $(".btn-filtro-pedido").removeClass('btn-lg');
-    $(`.btn-filtro-pedido[data-valor=${estadoFiltro}]`).addClass('btn-lg');
+    $(".btn-filtro-pedido").removeClass(['btn-lg', 'active']);
+    $(`.btn-filtro-pedido[data-valor=${estadoFiltro}]`).addClass('btn-lg active');
     DT.ajax.reload();
   });
 
   $(".btn-filtro-pedido").on('click', function () {
-    $(".btn-filtro-pedido").removeClass('btn-lg');
-    $(this).addClass('btn-lg');
+    $(".btn-filtro-pedido").removeClass(['btn-lg', 'active']);
+    $(this).addClass('btn-lg active');
     estadoFiltro = $(this).data('valor');
     $("#selectEstado").val(estadoFiltro)
     DT.ajax.reload();

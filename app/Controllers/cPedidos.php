@@ -186,19 +186,24 @@ class cPedidos extends BaseController {
 				P.updated_at,
 				P.estado,
 				CASE 
-					WHEN V.id IS NOT NULL
-						THEN CASE
-							WHEN V.leidoQR = 1
-								THEN 'Facturado QR'
-							ELSE 'Facturado'
-						END
 					WHEN P.Estado = 'DE'
 						THEN 'Despachado'
 					WHEN P.Estado = 'PE'
 						THEN 'Pendiente' 
 					WHEN P.Estado = 'EP'
-						THEN 'En Proceso' 
-					ELSE 'Empacado' 
+						THEN 'En Proceso'
+					WHEN P.Estado = 'EM'
+						THEN 'Empacado' 
+					ELSE 
+						CASE 
+							WHEN V.id IS NOT NULL
+								THEN 
+									CASE
+										WHEN V.leidoQR = 1
+											THEN 'Facturado QR'
+										ELSE 'Facturado'
+									END
+						END
 				END AS NombreEstado,
 				P.total,
 				S.direccion,

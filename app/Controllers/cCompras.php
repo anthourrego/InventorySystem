@@ -455,6 +455,7 @@ class cCompras extends BaseController {
 				, "precio_venta" => 0
 				, "costo" => '0'
 				, "cantPaca" => 1
+				, "estado" => 0
 				/* , "stock" => $product->stock
 				, "precio_venta" => $product->valorCompra
 				, "costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0')
