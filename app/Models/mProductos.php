@@ -41,7 +41,7 @@ class mProductos extends Model {
 	protected $validationRules      = [
 		'id_categoria' => "permit_empty|numeric|min_length[1]|is_not_unique[categorias.id]",
 		'referencia'   => "required|alpha_numeric_punct|min_length[1]|max_length[255]|is_unique[productos.referencia, id, {id}]",
-		'item'         => 'permit_empty|alpha_numeric_punct|min_length[1]|max_length[255]',
+		'item'         => 'permit_empty|min_length[1]|max_length[255]', // |alpha_numeric_punct
 		'descripcion'  => 'permit_empty|min_length[1]|max_length[500]',
 		'stock'        => 'required|numeric|min_length[1]|max_length[11]',
 		'precio_venta' => 'required|decimal|min_length[1]|max_length[20]',
