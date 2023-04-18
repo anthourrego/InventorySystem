@@ -21,7 +21,10 @@ class mCompraProductos extends Model {
 		"valor_original",
 		"creado_compra",
 		"cantPaca",
-		"costo"
+		"costo",
+		"ubicacion",
+		"id_categoria",
+		"id_manifiesto"
 	];
 
 	// Dates
@@ -34,10 +37,13 @@ class mCompraProductos extends Model {
 	// Validation
 	protected $validationRules      = [
 		'id_compra'       => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[compras.id]',
-		'id_producto'    => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[productos.id]',
-		'cantidad'       => 'required|numeric|min_length[1]|max_length[11]',
-		'valor'          => 'required|decimal|min_length[1]|max_length[20]',
-		'valor_original' => 'required|decimal|min_length[1]|max_length[20]',
+		'id_producto'     => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[productos.id]',
+		'cantidad'        => 'required|numeric|min_length[1]|max_length[11]',
+		'valor'           => 'required|decimal|min_length[1]|max_length[20]',
+		'valor_original'  => 'required|decimal|min_length[1]|max_length[20]',
+		'ubicacion'       => 'permit_empty|alpha_numeric_punct|min_length[1]|max_length[255]',
+		'id_manifiesto'   => 'permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[manifiestos.id]',
+		'id_categoria'    => "permit_empty|numeric|min_length[1]|is_not_unique[categorias.id]",
 	];
 	protected $validationMessages   = [];
 	protected $skipValidation       = false;

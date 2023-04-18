@@ -21,6 +21,7 @@ let DTCompras = $("#table").DataTable({
     }, {
       data: 'Nombre_Usuario'
     }, {
+      className: 'text-center',
       data: 'Descripcion_Estado',
       render: function (meta, type, data, meta) {
         let color = "warning";
@@ -99,15 +100,18 @@ let DTCompras = $("#table").DataTable({
 
           $("#btn-confirm-buy").addClass('d-none');
 
+          let showColumnActions = false;
           if ($btnClick.hasClass("btnVer")) {
             $("#modalCrearEditarCompraLabel").html(`<i class="fa-solid fa-eye"></i> Ver compra ${compra.codigo}`);
             $(".inputVer").addClass("disabled").prop("disabled", true).trigger('change');
-            $("#btn-save-buy, #formCrearEditar").addClass("d-none");
+            $("#btn-save-buy, #accordionProdAddBuy").addClass("d-none");
           } else {
             $("#modalCrearEditarCompraLabel").html(`<i class="fa-solid fa-edit"></i> Editar compra ${compra.codigo}`);
             $(".inputVer").removeClass("disabled").prop("disabled", false).trigger('change');
-            $("#btn-save-buy, #formCrearEditar").removeClass("d-none");
+            $("#btn-save-buy, #accordionProdAddBuy").removeClass("d-none");
+            showColumnActions = true;
           }
+          DTDataProdsAdd.column('.actions-product-buy').visible(showColumnActions);
 
           $("#modalCrearEditarCompra").modal('show');
         }
@@ -179,45 +183,41 @@ let DTCompras = $("#table").DataTable({
 
           $("#modalCrearEditarCompraLabel").html(`<i class="fa-solid fa-check"></i> Confirmar compra ${compra.codigo}`);
 
+          $(".inputVer").removeClass("disabled").prop("disabled", false).trigger('change');
+
           $("#btn-save-buy").addClass('d-none');
-          $("#btn-confirm-buy").removeClass('d-none');
+          $("#btn-confirm-buy, #accordionProdAddBuy").removeClass('d-none');
+          DTDataProdsAdd.column('.actions-product-buy').visible(true);
 
           $("#modalCrearEditarCompra").modal('show');
 
           $("#btn-confirm-buy").off('click').on('click', function () {
 
-            let formDataBuy = new FormData();
-            formDataBuy.set('dataProdsBuy', JSON.stringify(dataProdsAdd));
-            formDataBuy.set('observacion', $('#observacion-compra').val());
-            formDataBuy.set('idCompra', idBuyEdit);
-            formDataBuy.set('canConfirmBuy', 1);
+            let prodValueNegative = dataProdsAdd.filter(
+              product => validateColorRow(product) == 'bg-rojo'
+            ).map(
+              (productFilter) => `<li class='mt-2'>
+                <b>${productFilter.referenciaItem}:</b>
+                <div class='row'>
+                  <div class='col-6'>
+                    <b>Precio actual:</b> ${formatoPesos.format(productFilter.valorOriginal)}
+                  </div>
+                  <div class='col-6'>
+                    <b>Precio nuevo:</b> ${formatoPesos.format(productFilter.precioVenta)}
+                  </div>
+                </div>
+              </li>`
+            ).join('');
 
-            $.ajax({
-              type: "POST",
-              url: rutaBase + "Editar",
-              processData: false,
-              contentType: false,
-              cache: false,
-              dataType: 'json',
-              data: formDataBuy,
-              success: function (resp) {
-                if (resp.success) {
-                  clearValuesBuy('hide');
-                  idBuyEdit = -1;
+            if (prodValueNegative != '') {
 
-                  alertify.alert(
-                    `Compra confirmada correctamente`
-                    , `Nro de compra: <b>${resp.msj.codigo}</b>, por valor de <b>${formatoPesos.format(resp.msj.total)}</b>`
-                    , function () {
-                      DTCompras.ajax.reload();
-                    }
-                  );
+              alertify.confirm("Advertencia", `Los siguientes productos tendran un valor de venta <b>menor</b> al actual: <ul class='pl-4 mt-3'>${prodValueNegative}</ul>`, function () {
+                saveConfirmBuy();
+              }, function () { });
 
-                } else {
-                  alertify.error(resp.msj);
-                }
-              }
-            });
+            } else {
+              saveConfirmBuy();
+            }
           });
         }
       });
@@ -263,13 +263,19 @@ let DTDataProdsAdd = $("#tblProducts").DataTable({
     searchable: false,
     visible: validPermissions(402),
     defaultContent: '',
-    className: 'text-center noExport',
+    className: 'text-center actions-product-buy noExport',
     render: function (meta, type, data, meta) {
-      let btnDelete = `<button type="button" class="btn btn-danger btnDelete" title="Eliminar">
+      let buttons = `<button type="button" class="btn btn-danger btnDelete" title="Eliminar">
         <i class="fa-solid fa-trash"></i>
       </button>`;
 
-      return `<div class="btn-group btn-group-sm" role="group">${btnDelete}</div>`;
+      if (+data.precioVenta != +data.valorOriginal) {
+        buttons += `<button type="button" class="btn btn-info btnValorOriginal" title="Valor original">
+          <i class="fa-solid fa-refresh"></i>
+        </button>`;
+      }
+
+      return `<div class="btn-group btn-group-sm" role="group">${buttons}</div>`;
     }
   }],
   createdRow: function (row, data, dataIndex) {
@@ -282,6 +288,19 @@ let DTDataProdsAdd = $("#tblProducts").DataTable({
       DTDataProdsAdd.clear().rows.add(dataProdsAdd).draw();
       calculateDataProds();
     });
+
+    $(row).find(".btnValorOriginal").click(function (e) {
+      e.preventDefault();
+
+      let indexProd = dataProdsAdd.findIndex(product => product.id == data.id)
+      dataProdsAdd[indexProd].precioVenta = dataProdsAdd[indexProd].valorOriginal;
+
+      DTDataProdsAdd.row(dataIndex).data(dataProdsAdd[indexProd]).draw();
+      calculateDataProds();
+    });
+
+    let clase = validateColorRow(data);
+    $(row).addClass(clase);
   }
 });
 
@@ -292,7 +311,8 @@ $(function () {
 
     clearValuesBuy('show');
     idBuyEdit = -1;
-    $("#btn-save-buy").removeClass('d-none');
+    DTDataProdsAdd.column('.actions-product-buy').visible(true);
+    $("#btn-save-buy, #accordionProdAddBuy").removeClass('d-none');
     $("#btn-confirm-buy").addClass('d-none');
 
     $.ajax({
@@ -308,8 +328,10 @@ $(function () {
   $(".validaCampo").on("focusout", function () {
     $('.input-search').removeClass('input-group');
     $('.input-search').find('.input-group-append').addClass('d-none');
-    $("#item, #descripcion, #paca").val("");
+    $("#item, #descripcion, #paca, #ubicacion").val("");
+    $("#cateFiltro, #manifiesto").val('').change();
     $("#idProducto").val(0);
+    $("#precioVent").data('valororiginal', 0);
     let campo = $(this).data("campo");
     let valor = $(this).val();
     if (valor.length > 0) {
@@ -317,15 +339,20 @@ $(function () {
         type: "GET",
         url: rutaBase + "ValidaProducto/" + campo + "/" + valor,
         dataType: 'json',
-        success: function (resp) {
-          if (resp.infoProd) {
-            $("#item").val(resp.infoProd.item);
-            $("#referencia").val(resp.infoProd.referencia);
-            $("#descripcion").val(resp.infoProd.descripcion);
-            $("#paca").val(resp.infoProd.cantPaca);
-            $("#idProducto").val(resp.infoProd.id);
+        success: function ({ infoProd, dataProds }) {
+          if (infoProd) {
+            $("#item").val(infoProd.item);
+            $("#referencia").val(infoProd.referencia);
+            $("#descripcion").val(infoProd.descripcion);
+            $("#paca").val(infoProd.cantPaca);
+            $("#idProducto").val(infoProd.id);
+            $("#precioVent").data('valororiginal', infoProd.precio_venta);
+
+            $("#cateFiltro").val(infoProd.id_categoria).change();
+            $("#manifiesto").val(infoProd.id_manifiesto).change();
+            $("#ubicacion").val(infoProd.ubicacion);
           } else {
-            dataProdSearchAproximate = resp.dataProds;
+            dataProdSearchAproximate = dataProds;
             if (dataProdSearchAproximate.length) {
               $('.input-search').addClass('input-group');
               $('.input-search').find('.input-group-append').removeClass('d-none');
@@ -350,19 +377,31 @@ $(function () {
         referencia: $("#referencia").val(),
         item: $("#item").val(),
         id: $("#referencia").val().split(' ').join('') + dataProdsAdd.length,
-        valorCompra: $("#precioVent").val().replace("$", ''),
         costoCompra: $("#costo").val().replace("$", ''),
         idProducto: $("#idProducto").val(),
-        idCompraProd: null
+        idCompraProd: null,
+        valorOriginal: +$("#idProducto").val() > 0 ? $("#precioVent").data('valororiginal') : $("#precioVent").val().replace("$", '').split(' ').join(''),
+        creadoCompra: +$("#idProducto").val() > 0 ? 0 : 1,
+        idManifiesto: ($("#manifiesto").val() || null),
+        idCategoria: ($("#cateFiltro").val() || null),
+        ubicacion: $("#ubicacion").val()
       }
       dataProdsAdd.push(dataProd);
       DTDataProdsAdd.clear().rows.add(dataProdsAdd).draw();
 
-      $("#descripcion, #paca, #stock, #precioVent, #costo, #referencia, #item").val('');
+      calculateDataProds();
+
+      if (+dataProd.idProducto > 0 && +dataProd.valorOriginal > +dataProd.precioVenta) {
+        alertify.error(`El precio ingresado del producto ${dataProd.descripcion} es <b>menor</b> al precio de venta actual`);
+      }
+
+      $("#descripcion, #paca, #stock, #precioVent, #costo, #referencia, #item, #ubicacion").val('');
+      $("#cateFiltro, #manifiesto").val('').change();
       $("#idProducto").val(0);
+      $("#precioVent").data('valororiginal', 0)
       dataProdSearchAproximate = [];
 
-      calculateDataProds();
+      DTDataProdsAdd.page('last').draw('page')
     }
   });
 
@@ -435,6 +474,7 @@ $(function () {
     formDataBuy.set('dataProdsBuy', JSON.stringify(dataProdsAdd));
     formDataBuy.set('observacion', $('#observacion-compra').val());
     formDataBuy.set('idCompra', idBuyEdit);
+    formDataBuy.set('canConfirmBuy', 0);
 
     $.ajax({
       type: "POST",
@@ -464,14 +504,22 @@ $(function () {
     });
   });
 
+  $('#collapseAddProduct').on('shown.bs.collapse', function () {
+    $(".icono-collapse").removeClass('fa-arrow-down').addClass('fa-arrow-up');
+  });
+
+  $('#collapseAddProduct').on('hidden.bs.collapse', function () {
+    $(".icono-collapse").removeClass('fa-arrow-up').addClass('fa-arrow-down');
+  });
+
 });
 
 function calculateDataProds() {
   let totalCompra = 0, totalCosto = 0;
 
   dataProdsAdd.forEach(product => {
-    totalCompra += (+product.stock * (+product.valorCompra.split(',').join('')));
-    totalCosto += (+product.stock * (+product.costoCompra.split(',').join('')));
+    totalCompra += (+product.stock * (+product.precioVenta));
+    totalCosto += (+product.stock * (+product.costo));
   });
   $(".valor-compra").text(formatoPesos.format(totalCompra));
   $(".valor-costo").text(formatoPesos.format(totalCosto));
@@ -481,8 +529,11 @@ function setValuesBuy(compra, productos) {
   idBuyEdit = compra.id;
   $('#observacion-compra').val(compra.observacion);
   dataProdsAdd = productos;
-  DTDataProdsAdd.clear().rows.add(dataProdsAdd).draw();
+  DTDataProdsAdd.clear().rows.add(dataProdsAdd);
   calculateDataProds();
+  setTimeout(() => {
+    DTDataProdsAdd.draw();
+  }, 200);
 }
 
 function clearValuesBuy(actionModal) {
@@ -491,4 +542,49 @@ function clearValuesBuy(actionModal) {
   $('#observacion-compra').val('');
   $(".valor-compra, .valor-costo").text('');
   $("#modalCrearEditarCompra").modal(actionModal);
+}
+
+function saveConfirmBuy() {
+  let formDataBuy = new FormData();
+  formDataBuy.set('dataProdsBuy', JSON.stringify(dataProdsAdd));
+  formDataBuy.set('observacion', $('#observacion-compra').val());
+  formDataBuy.set('idCompra', idBuyEdit);
+  formDataBuy.set('canConfirmBuy', 1);
+
+  $.ajax({
+    type: "POST",
+    url: rutaBase + "Editar",
+    processData: false,
+    contentType: false,
+    cache: false,
+    dataType: 'json',
+    data: formDataBuy,
+    success: function (resp) {
+      if (resp.success) {
+        clearValuesBuy('hide');
+        idBuyEdit = -1;
+
+        alertify.alert(
+          `Compra confirmada correctamente`
+          , `Nro de compra: <b>${resp.msj.codigo}</b>, por valor de <b>${formatoPesos.format(resp.msj.total)}</b>`
+          , function () {
+            DTCompras.ajax.reload();
+          }
+        );
+
+      } else {
+        alertify.error(resp.msj);
+      }
+    }
+  });
+}
+
+function validateColorRow(data) {
+  if (data.creadoCompra == 0) {
+    if (+data.valorOriginal > +data.precioVenta) {
+      return 'bg-rojo'
+    }
+    return 'bg-azul';
+  }
+  return 'bg-verde';
 }

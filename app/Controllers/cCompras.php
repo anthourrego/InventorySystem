@@ -4,12 +4,14 @@ namespace App\Controllers;
 
 use \Config\Services;
 use \Hermawan\DataTables\DataTable;
-use App\Models\mConfiguracion;
-use App\Models\mProductos;
-use App\Models\mCompras;
+use App\Models\mCategorias;
 use App\Models\mCompraProductos;
-use App\Models\mVentasProductos;
+use App\Models\mCompras;
+use App\Models\mConfiguracion;
+use App\Models\mManifiesto;
 use App\Models\mPedidosProductos;
+use App\Models\mProductos;
+use App\Models\mVentasProductos;
 
 class cCompras extends BaseController {
 
@@ -22,9 +24,30 @@ class cCompras extends BaseController {
 		$this->LJQueryValidation();
 		$this->LSelect2();
 		$this->LInputMask();
+
+		$this->content["camposProducto"] = [
+			"item" => (session()->has("itemProducto") ? session()->get("itemProducto") : '0'),
+			"ubicacion" => (session()->has("ubicacionProducto") ? session()->get("ubicacionProducto") : '0'),
+			"costo" => (session()->has("costoProducto") ? session()->get("costoProducto") : '0'),
+			"manifiesto" => (session()->has("manifiestoProducto") ? session()->get("manifiestoProducto") : '0'),
+			"paca" => (session()->has("pacaProducto") ? session()->get("pacaProducto") : '0')
+ 		];
+ 
+		$categorias = new mCategorias();
+		$this->content["categorias"] = $categorias->asObject()->where("estado", 1)->findAll();
+		 
+		$this->content["manifiestos"] = [];
+		if ($this->content["camposProducto"]["manifiesto"] == "1") {
+			$manifiestos = new mManifiesto();
+			$this->content["manifiestos"] = $manifiestos->asObject()->where("estado", 1)->findAll();
+		}	
 		
 		$this->content['js_add'][] = [
 			'jsCompras.js'
+		];
+
+		$this->content['css_add'][] = [
+			'cssCompras.css'
 		];
 
 		return view('UI/viewDefault', $this->content);
@@ -58,7 +81,8 @@ class cCompras extends BaseController {
 						COUNT(id) AS Total_Productos, id_compra
 					FROM comprasproductos
 					GROUP BY id_compra
-				) AS CP', 'C.id = CP.id_compra', 'left');
+				) AS CP', 'C.id = CP.id_compra', 'left')
+				->orderBy('C.codigo', 'ASC');
 
 		return DataTable::of($query)->toJson(true);
 	}
@@ -130,28 +154,33 @@ class cCompras extends BaseController {
 
 				foreach ($dataProdsBuy as $product) {
 
-					$product->valorCompra = str_replace(",", "", trim(str_replace("$", "", $product->valorCompra)));
+					$product->precioVenta = str_replace(",", "", trim(str_replace("$", "", $product->precioVenta)));
 
 					$dataProductoCompra = [
 						"id_compra" => $dataBuy["id"],
 						"cantidad" => $product->stock,
-						"valor" => $product->valorCompra,
-						"valor_original" => $product->valorCompra,
+						"valor" => $product->precioVenta,
+						"valor_original" => $product->valorOriginal,
+						"creado_compra" => $product->creadoCompra,
 						"cantPaca" => (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($product->pacaX) : 1),
-						"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0')
+						"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0'),
+						'ubicacion' => $product->ubicacion,
+						'id_categoria' => $product->idCategoria,
+						'id_manifiesto' => $product->idManifiesto
 					];
 
 					$respSaveProd = $this->saveProdBuy($product, $mProductos, $mCompraProductos, $dataProductoCompra);
 
 					if (is_string($respSaveProd)) {
 						$resp["msj"] = $respSaveProd;
+						$resp["errorProd"] = true;
 						break;
 					}
 
-					$valorTotal = $valorTotal + (((double) $product->stock) * ((double) $product->valorCompra));
+					$valorTotal = $valorTotal + (((double) $product->stock) * ((double) $product->precioVenta));
 				}
 
-				if ($this->db->transStatus() !== false) {
+				if (!isset($resp["errorProd"]) && $this->db->transStatus() !== false) {
 					$dataBuy["total"] = $valorTotal;
 					$dataBuy["neto"] = $valorTotal;
 
@@ -228,22 +257,22 @@ class cCompras extends BaseController {
 
 				foreach ($dataProdsBuy as $product) {
 
-					$product->valorCompra = str_replace(",", "", trim(str_replace("$", "", $product->valorCompra)));
+					$product->precioVenta = str_replace(",", "", trim(str_replace("$", "", $product->precioVenta)));
 
 					$currentProd = array_search($product->idCompraProd, array_column($dataProdsCurrent, 'id'));
 
 					if ($currentProd !== false) {
 
-						if($product->stock != $dataProdsCurrent[$currentProd]["cantidad"] || $product->valorCompra != $dataProdsCurrent[$currentProd]["valor"]) {
+						if($product->stock != $dataProdsCurrent[$currentProd]["cantidad"] || $product->precioVenta != $dataProdsCurrent[$currentProd]["valor"]) {
 							
 							$dataProductoCompra = [
 								"id" => $product->idCompraProd,
 								"cantidad" => $product->stock,
-								"valor" => $product->valorCompra,
+								"valor" => $product->precioVenta,
 							];
 
-							if (!$mVentasProductos->save($dataProductoCompra)) {
-								$resp["msj"] = "Ha ocurrido un error al actualizar los productos." . listErrors($mVentasProductos->errors());
+							if (!$mCompraProductos->save($dataProductoCompra)) {
+								$resp["msj"] = "Ha ocurrido un error al actualizar los productos." . listErrors($mCompraProductos->errors());
 								break;
 							}
 						}
@@ -255,11 +284,14 @@ class cCompras extends BaseController {
 						$dataProductoCompra = [
 							"id_compra" => $dataBuy["id"],
 							"cantidad" => $product->stock,
-							"valor" => $product->valorCompra,
-							"valor_original" => $product->valorCompra,
-							"creado_compra" => 0,
+							"valor" => $product->precioVenta,
+							"valor_original" => $product->valorOriginal,
+							"creado_compra" => $product->creadoCompra,
 							"cantPaca" => (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($product->pacaX) : 1),
-							"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0')
+							"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0'),
+							'ubicacion' => $product->ubicacion,
+							'id_categoria' => $product->idCategoria,
+							'id_manifiesto' => $product->idManifiesto
 						];
 
 						$respSaveProd = $this->saveProdBuy($product, $mProductos, $mCompraProductos, $dataProductoCompra);
@@ -270,7 +302,7 @@ class cCompras extends BaseController {
 						}
 					}
 					
-					$valorTotal = $valorTotal + (((double) $product->stock) * ((double) $product->valorCompra));
+					$valorTotal = $valorTotal + (((double) $product->stock) * ((double) $product->precioVenta));
 				}
 
 				//Eliminamos los productos restantes de la compra
@@ -346,20 +378,27 @@ class cCompras extends BaseController {
 		$dataBuy = $mCompras->cargarCompra($idBuy);
 
 		$dataProdsBuy = $mCompraProductos->select("
-				CONCAT(P.referencia, ' | ', P.item) AS referenciaItem,
+				CONCAT(UPPER(P.referencia), ' | ', P.item) AS referenciaItem,
 				P.descripcion,
 				P.cantPaca AS pacaX,
 				comprasproductos.cantidad AS stock,
-				comprasproductos.valor_original AS precioVenta,
+				comprasproductos.valor AS precioVenta,
 				comprasproductos.costo,
 				P.referencia,
 				P.item,
-				comprasproductos.valor_original AS valorCompra,
+				comprasproductos.valor_original AS valorOriginal,
 				P.costo AS costoCompra,
 				P.id AS idProducto,
 				comprasproductos.creado_compra AS creadoCompra,
-				comprasproductos.id AS idCompraProd
+				comprasproductos.id AS idCompraProd,
+				comprasproductos.ubicacion,
+				C.nombre AS categoriaNombre,
+				comprasproductos.id_categoria AS idCategoria,
+				M.nombre AS manifiestoNombre,
+				comprasproductos.id_manifiesto AS idManifiesto
 			")->join("productos AS P", "comprasproductos.id_producto = P.id", "left")
+			->join("categorias AS C", "comprasproductos.id_categoria = C.id", "left")
+			->join("manifiestos AS M", "comprasproductos.id_manifiesto = M.id", "left")
 			->where("comprasproductos.id_compra", $idBuy)
 			->findAll();
 
@@ -419,6 +458,14 @@ class cCompras extends BaseController {
 			$productSaved["costo"] = (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? $product->costo : '0');
 			$productSaved["cantPaca"] = (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? $product->cantPaca : 1);
 
+			$productSaved["ubicacion"] = $product->ubicacion;
+			$productSaved["id_categoria"] = $product->id_categoria;
+			$productSaved["id_manifiesto"] = $product->id_manifiesto;
+
+			if ($product->creado_compra == 1) {
+				$productSaved['estado'] = 1;
+			}
+
 			if(!$mProductos->save($productSaved)){
 				$response = "Error al inventario del producto. " . listErrors($mProductos->errors());
 				break;
@@ -457,7 +504,7 @@ class cCompras extends BaseController {
 				, "cantPaca" => 1
 				, "estado" => 0
 				/* , "stock" => $product->stock
-				, "precio_venta" => $product->valorCompra
+				, "precio_venta" => $product->precioVenta
 				, "costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0')
 				, "cantPaca" => (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($product->pacaX) : 1) */
 			);
@@ -476,7 +523,7 @@ class cCompras extends BaseController {
 		}
 
 		if (!$mCompraProductos->save($dataProductoCompra)) {
-			return "Ha ocurrido un error al guardar los productos." . listErrors($mCompraProductos->errors());
+			return "Ha ocurrido un error al guardar los productos. " . listErrors($mCompraProductos->errors());
 		}
 		return true;
 	}
@@ -520,11 +567,14 @@ class cCompras extends BaseController {
 						"id_compra" => $dataBuy["id"],
 						"cantidad" => $product->stock,
 						"id_producto" => $product->idProducto,
-						"valor" => $product->valorCompra,
-						"valor_original" => $product->valorCompra,
+						"valor" => $product->precioVenta,
+						"valor_original" => $product->valorOriginal,
 						"cantPaca" => (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($product->pacaX) : 1),
 						"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0'),
-						"creado_compra" => 0
+						"creado_compra" => 0,
+						'ubicacion' => $product->ubicacion,
+						'id_categoria' => $product->idCategoria,
+						'id_manifiesto' => $product->idManifiesto
 					];
 
 					if (!$mCompraProductos->save($dataProductoCompra)) {

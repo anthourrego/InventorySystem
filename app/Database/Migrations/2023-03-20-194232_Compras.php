@@ -43,7 +43,7 @@ class Compras extends Migration
 				'constraint'  => '20,2',
 				'default'     => 0
 			],
-            'estado' => [
+      'estado' => [
 				'type'        => 'CHAR',
 				'constraint'  => 2,
 				'null'        => false,

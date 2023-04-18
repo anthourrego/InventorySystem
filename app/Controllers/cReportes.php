@@ -224,7 +224,7 @@ class cReportes extends BaseController {
 
 		$productosFactura = $mCompraProductos->select("
 				P.item AS itemProductoDP,
-				P.referencia AS referenciaProductoDP,
+				UPPER(P.referencia) AS referenciaProductoDP,
 				P.descripcion AS descripcionProductoDP,
 				comprasproductos.cantPaca AS cantPacaProductoDP,
 				CAST(
