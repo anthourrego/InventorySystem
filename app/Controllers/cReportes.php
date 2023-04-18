@@ -162,8 +162,9 @@ class cReportes extends BaseController {
 			")->join("productos AS P", "pedidosproductos.id_producto = P.id", "left")
 			->join("manifiestos AS M", "P.id_manifiesto = M.id", "left")
 			->where("id_pedido", $id)
+			->orderBy("P.ubicacion ASC, P.referencia")
 			->findAll();
-
+		
 		$estrucPdf = $this->estructuraProductos($estrucPdf, $productosFactura, $fotoProd);
 
 		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
