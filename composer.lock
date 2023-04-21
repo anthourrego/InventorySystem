@@ -553,12 +553,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/DataTables/Dist-DataTables.git",
-                "reference": "68f133d42c4daba62be82156c54e33ef9aa1d780"
+                "reference": "2463122b50f9565c15f76a028e7a8e1851564e9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DataTables/Dist-DataTables/zipball/68f133d42c4daba62be82156c54e33ef9aa1d780",
-                "reference": "68f133d42c4daba62be82156c54e33ef9aa1d780",
+                "url": "https://api.github.com/repos/DataTables/Dist-DataTables/zipball/2463122b50f9565c15f76a028e7a8e1851564e9c",
+                "reference": "2463122b50f9565c15f76a028e7a8e1851564e9c",
                 "shasum": ""
             },
             "require": {
@@ -587,7 +587,7 @@
                 "forum": "https://datatables.net/forums",
                 "source": "https://github.com/DataTables/Dist-DataTables"
             },
-            "time": "2023-04-11T15:00:32+00:00"
+            "time": "2023-04-20T08:41:21+00:00"
         },
         {
             "name": "datatables.net/datatables.net-bs4",
@@ -595,12 +595,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/DataTables/Dist-DataTables-Bootstrap4.git",
-                "reference": "1eefa1b1eccae880cb0683278834c8f519238e14"
+                "reference": "c66d16eed38b85bccf1aba35c4d7fc68d57346db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DataTables/Dist-DataTables-Bootstrap4/zipball/1eefa1b1eccae880cb0683278834c8f519238e14",
-                "reference": "1eefa1b1eccae880cb0683278834c8f519238e14",
+                "url": "https://api.github.com/repos/DataTables/Dist-DataTables-Bootstrap4/zipball/c66d16eed38b85bccf1aba35c4d7fc68d57346db",
+                "reference": "c66d16eed38b85bccf1aba35c4d7fc68d57346db",
                 "shasum": ""
             },
             "require": {
@@ -632,7 +632,7 @@
                 "forum": "https://datatables.net/forums",
                 "source": "https://github.com/DataTables/Dist-DataTables-Bootstrap4"
             },
-            "time": "2023-04-11T15:01:27+00:00"
+            "time": "2023-04-20T08:42:32+00:00"
         },
         {
             "name": "datatables.net/datatables.net-buttons",
@@ -2579,16 +2579,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.6.6",
+            "version": "9.6.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "b65d59a059d3004a040c16a82e07bbdf6cfdd115"
+                "reference": "c993f0d3b0489ffc42ee2fe0bd645af1538a63b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b65d59a059d3004a040c16a82e07bbdf6cfdd115",
-                "reference": "b65d59a059d3004a040c16a82e07bbdf6cfdd115",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c993f0d3b0489ffc42ee2fe0bd645af1538a63b2",
+                "reference": "c993f0d3b0489ffc42ee2fe0bd645af1538a63b2",
                 "shasum": ""
             },
             "require": {
@@ -2662,7 +2662,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.6"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.7"
             },
             "funding": [
                 {
@@ -2678,7 +2678,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-27T11:43:46+00:00"
+            "time": "2023-04-14T08:58:40+00:00"
         },
         {
             "name": "psr/container",
