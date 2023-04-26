@@ -148,6 +148,9 @@
                     </div>
                   </div>
                   <div class="col-12 text-right">
+                    <button type="button" class="btn btn-secondary" id="btnCancelarProdCompra">
+                      <i class="fas fa-times"></i> Cancelar
+                    </button>
                     <button type="submit" class="btn btn-primary" form="formCrearEditar">
                       <i class="fas fa-check"></i> Agregar
                     </button>

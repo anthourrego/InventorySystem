@@ -2,6 +2,7 @@ let rutaBase = `${base_url()}Compras/`;
 let dataProdsAdd = [];
 let dataProdSearchAproximate = [];
 let idBuyEdit = -1;
+let idProductoCompraEditar = '';
 let DTCompras = $("#table").DataTable({
   ajax: {
     url: rutaBase + "DT",
@@ -265,9 +266,14 @@ let DTDataProdsAdd = $("#tblProducts").DataTable({
     defaultContent: '',
     className: 'text-center actions-product-buy noExport',
     render: function (meta, type, data, meta) {
-      let buttons = `<button type="button" class="btn btn-danger btnDelete" title="Eliminar">
-        <i class="fa-solid fa-trash"></i>
-      </button>`;
+      let buttons = `
+        <button type="button" class="btn btn-danger btnDelete" title="Eliminar">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+        <button type="button" class="btn btn-secondary btnEditarProductoCompra" title="Editar producto">
+          <i class="fa-solid fa-edit"></i>
+        </button>
+      `;
 
       if (+data.precioVenta != +data.valorOriginal) {
         buttons += `<button type="button" class="btn btn-info btnValorOriginal" title="Valor original">
@@ -292,11 +298,39 @@ let DTDataProdsAdd = $("#tblProducts").DataTable({
     $(row).find(".btnValorOriginal").click(function (e) {
       e.preventDefault();
 
+      let currentPage = DTDataProdsAdd.page();
+
       let indexProd = dataProdsAdd.findIndex(product => product.id == data.id)
       dataProdsAdd[indexProd].precioVenta = dataProdsAdd[indexProd].valorOriginal;
 
-      DTDataProdsAdd.row(dataIndex).data(dataProdsAdd[indexProd]).draw();
+      DTDataProdsAdd.clear().rows.add(dataProdsAdd).page(currentPage).draw();
       calculateDataProds();
+    });
+
+    $(row).find('.btnEditarProductoCompra').click(function (e) {
+      e.preventDefault();
+
+      $("#referencia").val(data.referencia);
+      $("#item").val(data.item);
+      $("#descripcion").val(data.descripcion);
+      $("#cateFiltro").val(data.idCategoria).change();
+      $("#ubicacion").val(data.ubicacion);
+      $("#manifiesto").val(data.idCategoria).change();
+      $("#paca").val(data.pacaX);
+      $("#stock").val(data.stock);
+      $("#precioVent").val(data.precioVenta);
+      $("#costo").val(data.costo);
+
+      $("#idProducto").val(data.idProducto ? data.idProducto : 0);
+      $("#precioVent").data('valororiginal', data.valorOriginal);
+
+      idProductoCompraEditar = data.id;
+
+      $("[form=formCrearEditar]").html('<i class="fas fa-edit"></i> Modificar')
+
+      if (!$("#collapseAddProduct.collapse.show").length) {
+        $("[data-target='#collapseAddProduct']").click();
+      }
     });
 
     let clase = validateColorRow(data);
@@ -323,6 +357,16 @@ $(function () {
         $("#modalCrearEditarCompraLabel").html(`<i class="fa-solid fa-plus"></i> Crear compra ${codigo}`);
       }
     });
+  });
+
+  $("#btnCancelarProdCompra").on('click', function () {
+    $("#descripcion, #paca, #stock, #precioVent, #costo, #referencia, #item, #ubicacion").val('');
+    $("#cateFiltro, #manifiesto").val('').change();
+    $("#idProducto").val(0);
+    $("#precioVent").data('valororiginal', 0);
+    dataProdSearchAproximate = [];
+    idProductoCompraEditar = '';
+    $("[form=formCrearEditar]").html('<i class="fas fa-check"></i> Agregar')
   });
 
   $(".validaCampo").on("focusout", function () {
@@ -386,7 +430,16 @@ $(function () {
         idCategoria: ($("#cateFiltro").val() || null),
         ubicacion: $("#ubicacion").val()
       }
-      dataProdsAdd.push(dataProd);
+
+      if (idProductoCompraEditar != '') {
+
+        let indexProduct = dataProdsAdd.findIndex(product => product.id == idProductoCompraEditar);
+        dataProdsAdd[indexProduct] = dataProd;
+
+      } else {
+        dataProdsAdd.push(dataProd);
+      }
+
       DTDataProdsAdd.clear().rows.add(dataProdsAdd).draw();
 
       calculateDataProds();
@@ -395,14 +448,16 @@ $(function () {
         alertify.error(`El precio ingresado del producto ${dataProd.descripcion} es <b>menor</b> al precio de venta actual`);
       }
 
-      $("#descripcion, #paca, #stock, #precioVent, #costo, #referencia, #item, #ubicacion").val('');
-      $("#cateFiltro, #manifiesto").val('').change();
-      $("#idProducto").val(0);
-      $("#precioVent").data('valororiginal', 0)
-      dataProdSearchAproximate = [];
+      if (idProductoCompraEditar == '') {
+        DTDataProdsAdd.page('last').draw('page')
+      }
 
-      DTDataProdsAdd.page('last').draw('page')
+      $("#btnCancelarProdCompra").click();
     }
+  });
+
+  $('#modalCrearEditarCompra').on('hidden.bs.modal', function (event) {
+    $("#btnCancelarProdCompra").click();
   });
 
   $('#modalCrearEditarCompra').on('show.bs.modal', function (event) {
@@ -433,7 +488,6 @@ $(function () {
 
       $("#modalCrearEditarCompra").modal('hide');
       $("#modalSearchProd").modal('show');
-
     });
   });
 

@@ -160,7 +160,7 @@ class cCompras extends BaseController {
 						"id_compra" => $dataBuy["id"],
 						"cantidad" => $product->stock,
 						"valor" => $product->precioVenta,
-						"valor_original" => $product->valorOriginal,
+						"valor_original" => number_format((float) $product->valorOriginal, 0, '.'),
 						"creado_compra" => $product->creadoCompra,
 						"cantPaca" => (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($product->pacaX) : 1),
 						"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0'),
@@ -298,6 +298,7 @@ class cCompras extends BaseController {
 
 						if (is_string($respSaveProd)) {
 							$resp["msj"] = $respSaveProd;
+							$resp["isSavedProd"] = false;
 							break;
 						}
 					}
@@ -329,7 +330,7 @@ class cCompras extends BaseController {
 					}
 				}
 
-				if ($this->db->transStatus() !== false) {
+				if (!isset($resp["isSavedProd"]) && $this->db->transStatus() !== false) {
 					$dataBuy["total"] = $valorTotal;
 					$dataBuy["neto"] = $valorTotal;
 
@@ -380,7 +381,7 @@ class cCompras extends BaseController {
 		$dataProdsBuy = $mCompraProductos->select("
 				CONCAT(UPPER(P.referencia), ' | ', P.item) AS referenciaItem,
 				P.descripcion,
-				P.cantPaca AS pacaX,
+				comprasproductos.cantPaca AS pacaX,
 				comprasproductos.cantidad AS stock,
 				comprasproductos.valor AS precioVenta,
 				comprasproductos.costo,
