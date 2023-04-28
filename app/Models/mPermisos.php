@@ -200,6 +200,10 @@ class mPermisos extends Model {
 						"id" => 57,
 						"text" => "Ver costo inventario"
 					],
+					[
+						"id" => 58,
+						"text" => "Plantilla excel"
+					],
 				]
 			],
 			[

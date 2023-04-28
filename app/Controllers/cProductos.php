@@ -8,6 +8,7 @@ use App\Models\mProductos;
 use App\Models\mManifiesto;
 use \Config\Services;
 use \PhpZip\ZipFile;
+use \Shuchkin\SimpleXLSXGen;
 
 class cProductos extends BaseController {
 	public function index() {
@@ -31,6 +32,7 @@ class cProductos extends BaseController {
 		$this->LFancybox();
 		$this->LInputMask();
 		$this->LCropperImageEditor();
+		$this->LExport();
 
 		$this->content['css_add'][] = [
 			'cssProductos.css'
@@ -62,6 +64,10 @@ class cProductos extends BaseController {
 		$this->content['js_add'][] = [
 			'jsProductos.js'
 		];
+
+		if (validPermissions([58], true)) {
+			$this->content['js_add'][] = ['jsExportarExcel.js'];
+		}
 
 		return view('UI/viewDefault', $this->content);
 	}
@@ -752,5 +758,71 @@ class cProductos extends BaseController {
 		//elimino el directorio que ya he vaciado
 		rmdir($dirname);
 		return true;
+	}
+
+	public function downloadExcelProducts() {
+		$filtros = (object) session()->get("filtrosProductos");
+		$search = [
+			"P.id AS Id",
+			"CASE
+				WHEN P.imagen IS NULL OR P.imagen = ''
+					THEN CONCAT('" . base_url() . "', 'Productos/Foto/', P.id, '/0')
+				ELSE
+					CONCAT('" . base_url() . "', 'Productos/Foto/', P.id, '/', P.imagen)
+			END AS Imagen",
+			"P.referencia AS Referencia",
+			"P.descripcion AS Descripcion"
+		];
+
+		$mProducto = new mProductos();
+
+		$mProducto->select($search)
+			->from("productos AS P", true)
+			->join('categorias AS C', 'P.id_categoria = C.id', 'left')
+			->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left');
+
+		if($filtros->estado != "-1"){
+			$mProducto->where("P.estado", $filtros->estado);
+		}
+
+		if(isset($filtros->categoria) && $filtros->categoria > 0){
+			$mProducto->where("P.id_categoria", $filtros->categoria);
+		}
+
+		if(isset($filtros->cantIni) && $filtros->cantIni >= 0) {
+			$mProducto->where("P.stock >= $filtros->cantIni");
+		}
+
+		if(isset($filtros->cantFin) && $filtros->cantFin >= 0){
+			$mProducto->where("P.stock <= $filtros->cantFin");
+		}
+
+		if(isset($filtros->preciIni) && $filtros->preciIni >= 0) {
+			$mProducto->where("P.precio_venta >= $filtros->preciIni");
+		}
+
+		if(isset($filtros->preciFin) && $filtros->preciFin >= 0){
+			$mProducto->where("P.precio_venta <= $filtros->preciFin");
+		}
+
+		//validamos si aplica para ventas para realziar algunas validaciones
+		if (isset($filtros->ventas) && $filtros->ventas == 1) {
+			$inventarioNegativo = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
+			if ($inventarioNegativo == "0") {
+				$mProducto->where("P.stock >=", 0);
+			}
+		}
+
+		if (isset($filtros->search) && $filtros->search != "") {
+			$mProducto->groupStart();
+			foreach ($search as $it) {
+				$mProducto->orLike(trim($it), $filtros->search);
+			}
+			$mProducto->groupEnd();
+		}
+
+		$productos = $mProducto->asArray()->findAll();
+
+		return $this->response->setJSON($productos);
 	}
 }

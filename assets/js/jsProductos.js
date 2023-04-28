@@ -605,4 +605,13 @@ $(function () {
       }
     });
   });
+
+  $("#btnPlantillaExcel").on("click", function (e) {
+    $(".loading-fotos").find('span').text('Generando archivo excel...');
+    $(".botones-acciones").addClass('d-none');
+    $(".loading-fotos").removeClass('d-none');
+    const gridDiv = document.querySelector('#myGrid');
+    new agGrid.Grid(gridDiv, gridOptions);
+  });
+
 });

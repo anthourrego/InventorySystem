@@ -1,7 +1,7 @@
 <div class="card">
   <div class="card-header">
     <div class="row justify-content-between">
-      <div class="col-12 col-md-9">
+      <div class="col-12 col-md-8">
         <div class="row">
           <div class="col-12 col-md-6 col-xl-4 mb-2 mb-xl-0">
             <div class="input-group">
@@ -35,12 +35,15 @@
           <?php } ?>
         </div>
       </div>
-      <div class="col-12 col-md-3 mt-2 mt-md-0 text-right botones-acciones">
+      <div class="col-12 col-md-4 mt-2 mt-md-0 text-right botones-acciones">
         <?php if (validPermissions([56], true)) { ?>
         <button type="button" class="btn btn-secondary mb-2 mb-xl-0" id="btnSincronizar"><i class="fa-solid fa-sync"></i></button>
         <?php } ?>
         <?php if (validPermissions([55], true)) { ?>
           <button type="button" class="btn btn-dark mb-2 mb-xl-0" data-toggle="modal" data-target="#modalFotos"><i class="fa-solid fa-camera"></i> Fotos</button>
+        <?php } ?>
+        <?php if (validPermissions([58], true)) { ?>
+          <button type="button" type="button" id="btnPlantillaExcel" class="btn btn-info mb-2 mb-xl-0"><i class="fa-solid fa-file-excel"></i> Plantilla</button>
         <?php } ?>
         <button type="button" class="btn btn-warning mb-2 mb-xl-0" id="btnFiltros"><i class="fa-solid fa-filter"></i> Filtros</button>
         <?php if (validPermissions([51], true)) { ?>
@@ -75,6 +78,7 @@
         <tbody></tbody>
       </table>
     </div>
+    <div id="myGrid" class="ag-theme-alpine d-none"></div>
   </div>
 </div>
 

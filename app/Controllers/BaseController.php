@@ -137,6 +137,12 @@ class BaseController extends Controller {
             'Global.js'
         ];
     }
+
+    public function LExport() {
+        $this->content['js'][] = [
+            'assets/Libraries/ExportExcel/export-excel.js'
+        ];
+    }
     
     public function LOverlayScrollbars(){
         $this->content['css'][] = [
