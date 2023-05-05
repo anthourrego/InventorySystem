@@ -825,4 +825,27 @@ class cProductos extends BaseController {
 
 		return $this->response->setJSON($productos);
 	}
+
+	public function editarUbicacion() {
+		$resp["success"] = false;
+		$postData = (object) $this->request->getPost();
+
+		$mProductos = new mProductos();
+		$producto = $mProductos->find($postData->id);
+		
+		$producto['ubicacion'] = (session()->has("ubicacionProducto") && session()->get("ubicacionProducto") == '1' ? trim($postData->ubicacion) : null);
+		$producto['updated_at'] = date("Y-m-d H:i:s");
+
+		$this->db->transBegin();
+
+		if ($mProductos->save($producto)) {
+			$resp["success"] = true;
+			$resp["msj"] = "La ubicación del producto <b>" . $producto['referencia'] . "</b> se actualizo correctamente.";
+			$this->db->transCommit();
+		} else {
+			$resp["msj"] = "No fue posible actualizar la ubicación del producto." . listErrors($product->errors());
+			$this->db->transRollback();
+		}
+		return $this->response->setJSON($resp);
+	}
 }

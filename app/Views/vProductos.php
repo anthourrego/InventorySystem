@@ -256,6 +256,35 @@
 </div>
 <?php } ?>
 
+<?php if (validPermissions([59], true) && $camposProducto["ubicacion"] == "1") { ?>
+<div class="modal fade modalFormulario" id="modalEditarUbicacion" data-backdrop="static" data-keyboard="false" aria-labelledby="modalEditarUbicacionLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEditarUbicacionLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="formEditarUbicacion">
+          <input type="hidden" name="idProductoUbicacion" class="inputVer" id="idProductoUbicacion">
+          <div class="form-row">
+            <div class="col-12 form-group form-valid">
+              <label class="mb-0" for="ubicacionProducto">Ubicación</label>
+              <input class="form-control inputVer volverMayuscula" id="ubicacionProducto" name="ubicacionProducto" type="text" minlength="0" maxlength="255" placeholder="Ingrese la ubicación" autocomplete="off">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success" form="formEditarUbicacion"><i class="fas fa-save"></i> Guardar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<?php } ?>
 
 <div class="modal fade" id="modalFiltros" data-backdrop="static" data-keyboard="false" aria-labelledby="modalFiltrosLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-width">

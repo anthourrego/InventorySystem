@@ -90,10 +90,13 @@ let DTProductos = $("#table").DataTable({
       btnCambiarEstado = validPermissions(53) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
       convertirFoto = (validPermissions(55) && data.imagen != null) ? `<a href="${base_url()}Productos/fotoEditada/${data.id}/${data.imagen}" download class="btn btn-info" title="Convertir foto"><i class="fa-solid fa-download"></i></a>` : '';
 
+      btnUbicacionBodeguero = validPermissions(59) && $CAMPOSPRODUCTO.ubicacion == '1' ? '<button type="button" class="btn btn-warning btnUbicacionBodeguero" title="Modificar ubicación"><i class="fa-solid fa-pen"></i></button>' : '';
+
       return `<div class="btn-group btn-group-sm" role="group">
                   ${btnEditar}
                   ${convertirFoto}
                   ${btnCambiarEstado}
+                  ${btnUbicacionBodeguero}
                 </div>`;
     }
   }],
@@ -151,6 +154,15 @@ let DTProductos = $("#table").DataTable({
       }
       $(".form-group-edit").removeClass("d-none");
       $("#modalCrearEditar").modal("show");
+    });
+
+    $(row).find('.btnUbicacionBodeguero').on('click', function () {
+      $("#idProductoUbicacion").val(data.id);
+      $("#ubicacionProducto").val(data.ubicacion);
+
+      $("#modalEditarUbicacionLabel").html('<i class="fa fa-edit"></i> Ubicación ' + data.descripcion);
+
+      $("#modalEditarUbicacion").modal('show');
     });
   }
 });
@@ -445,7 +457,6 @@ $(function () {
     DTProductos.ajax.reload(null, false);
   });
 
-
   $("#modalFotos").on('show.bs.modal', function (event) {
     $("#cantFiltroPaquete").val($CAMPOSPRODUCTO.pacDescarga);
     $("#nroPaquetes").addClass("d-none");
@@ -614,4 +625,27 @@ $(function () {
     new agGrid.Grid(gridDiv, gridOptions);
   });
 
+  $("#formEditarUbicacion").submit(function (e) {
+    e.preventDefault();
+    let id = $("#idProductoUbicacion").val().trim();
+    let ubicacion = $("#ubicacionProducto").val();
+
+    if ($(this).valid()) {
+      $.ajax({
+        url: rutaBase + "EditarUbicacion",
+        type: 'POST',
+        dataType: 'json',
+        data: {id, ubicacion},
+        success: function (resp) {
+          if (resp.success) {
+            DTProductos.ajax.reload(null, false);
+            $("#modalEditarUbicacion").modal("hide");
+            alertify.success(resp.msj);
+          } else {
+            alertify.alert('¡Advertencia!', resp.msj);
+          }
+        }
+      });
+    }
+  });
 });

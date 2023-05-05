@@ -204,6 +204,10 @@ class mPermisos extends Model {
 						"id" => 58,
 						"text" => "Plantilla excel"
 					],
+					[
+						"id" => 59,
+						"text" => "Modificar ubicación (Bodeguero)"
+					],
 				]
 			],
 			[
