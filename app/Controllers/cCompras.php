@@ -160,7 +160,7 @@ class cCompras extends BaseController {
 						"id_compra" => $dataBuy["id"],
 						"cantidad" => $product->stock,
 						"valor" => $product->precioVenta,
-						"valor_original" => number_format((float) $product->valorOriginal, 0, '.'),
+						"valor_original" => $product->valorOriginal,
 						"creado_compra" => $product->creadoCompra,
 						"cantPaca" => (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($product->pacaX) : 1),
 						"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0'),
@@ -396,7 +396,8 @@ class cCompras extends BaseController {
 				C.nombre AS categoriaNombre,
 				comprasproductos.id_categoria AS idCategoria,
 				M.nombre AS manifiestoNombre,
-				comprasproductos.id_manifiesto AS idManifiesto
+				comprasproductos.id_manifiesto AS idManifiesto,
+				0 AS ganancia
 			")->join("productos AS P", "comprasproductos.id_producto = P.id", "left")
 			->join("categorias AS C", "comprasproductos.id_categoria = C.id", "left")
 			->join("manifiestos AS M", "comprasproductos.id_manifiesto = M.id", "left")
@@ -459,7 +460,9 @@ class cCompras extends BaseController {
 			$productSaved["costo"] = (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? $product->costo : '0');
 			$productSaved["cantPaca"] = (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? $product->cantPaca : 1);
 
-			$productSaved["ubicacion"] = $product->ubicacion;
+			$ubicacionNew = (strlen(trim($product->ubicacion)) > 0 ? (' - ' . $product->ubicacion) : '');
+
+			$productSaved["ubicacion"] = $productSaved["ubicacion"] . $ubicacionNew;
 			$productSaved["id_categoria"] = $product->id_categoria;
 			$productSaved["id_manifiesto"] = $product->id_manifiesto;
 

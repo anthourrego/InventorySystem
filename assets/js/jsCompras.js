@@ -3,6 +3,7 @@ let dataProdsAdd = [];
 let dataProdSearchAproximate = [];
 let idBuyEdit = -1;
 let idProductoCompraEditar = '';
+let isOpenModalProducto = false;
 let DTCompras = $("#table").DataTable({
   ajax: {
     url: rutaBase + "DT",
@@ -112,6 +113,8 @@ let DTCompras = $("#table").DataTable({
             $("#btn-save-buy, #accordionProdAddBuy").removeClass("d-none");
             showColumnActions = true;
           }
+          $("#precioVent, #costo").attr('required', false);
+
           DTDataProdsAdd.column('.actions-product-buy').visible(showColumnActions);
 
           $("#modalCrearEditarCompra").modal('show');
@@ -194,6 +197,15 @@ let DTCompras = $("#table").DataTable({
 
           $("#btn-confirm-buy").off('click').on('click', function () {
 
+            let prodsWithoutPrice = verifyProductWithoutPrice();
+            if (prodsWithoutPrice != '') {
+              alertify.alert("Advertencia", `Los siguientes productos no poseen costo o precio de venta: <ul class='pl-4 mt-3'>${prodsWithoutPrice}</ul>`, function () { });
+              return
+            }
+
+            debugger
+            return
+
             let prodValueNegative = dataProdsAdd.filter(
               product => validateColorRow(product) == 'bg-rojo'
             ).map(
@@ -220,6 +232,8 @@ let DTCompras = $("#table").DataTable({
               saveConfirmBuy();
             }
           });
+
+          $("#precioVent, #costo").attr('required', true);
         }
       });
     });
@@ -230,7 +244,7 @@ let DTDataProdsAdd = $("#tblProducts").DataTable({
   scrollX: true,
   data: dataProdsAdd,
   order: [],
-  pageLength: 3,
+  pageLength: 5,
   processing: false,
   serverSide: false,
   search: {
@@ -258,6 +272,9 @@ let DTDataProdsAdd = $("#tblProducts").DataTable({
     render: function (meta, type, data, meta) {
       return formatoPesos.format(data.costo);
     }
+  }, {
+    data: 'ganancia',
+    className: 'ganancia'
   }, {
     data: 'Acciones',
     orderable: false,
@@ -310,28 +327,33 @@ let DTDataProdsAdd = $("#tblProducts").DataTable({
     $(row).find('.btnEditarProductoCompra').click(function (e) {
       e.preventDefault();
 
-      $("#referencia").val(data.referencia);
-      $("#item").val(data.item);
-      $("#descripcion").val(data.descripcion);
-      $("#cateFiltro").val(data.idCategoria).change();
-      $("#ubicacion").val(data.ubicacion);
-      $("#manifiesto").val(data.idCategoria).change();
-      $("#paca").val(data.pacaX);
-      $("#stock").val(data.stock);
-      $("#precioVent").val(data.precioVenta);
-      $("#costo").val(data.costo);
+      $("#modalCrearEditarCompra").modal('hide');
+      setTimeout(() => {
+        isOpenModalProducto = true;
+        $("#modalProdCuenta").modal('show');
 
-      $("#idProducto").val(data.idProducto ? data.idProducto : 0);
-      $("#precioVent").data('valororiginal', data.valorOriginal);
+        $("#referencia").val(data.referencia);
+        $("#item").val(data.item);
+        $("#descripcion").val(data.descripcion);
+        $("#cateFiltro").val(data.idCategoria).change();
+        $("#ubicacion").val(data.ubicacion);
+        $("#manifiesto").val(data.idCategoria).change();
+        $("#paca").val(data.pacaX);
+        $("#stock").val(data.stock);
+        $("#precioVent").val(data.precioVenta);
+        $("#costo").val(data.costo);
 
-      idProductoCompraEditar = data.id;
+        $("#idProducto").val(data.idProducto ? data.idProducto : 0);
+        $("#precioVent").data('valororiginal', data.valorOriginal);
 
-      $("[form=formCrearEditar]").html('<i class="fas fa-edit"></i> Modificar')
+        idProductoCompraEditar = data.id;
 
-      if (!$("#collapseAddProduct.collapse.show").length) {
-        $("[data-target='#collapseAddProduct']").click();
-      }
+        $("[form=formCrearEditar]").html('<i class="fas fa-edit"></i> Modificar')
+      }, 500);
     });
+
+    let porcentajeGanancia = calculateBenefit(+data.precioVenta, +data.costo);
+    $(row).find('.ganancia').html(porcentajeGanancia + ' %');
 
     let clase = validateColorRow(data);
     $(row).addClass(clase);
@@ -348,6 +370,7 @@ $(function () {
     DTDataProdsAdd.column('.actions-product-buy').visible(true);
     $("#btn-save-buy, #accordionProdAddBuy").removeClass('d-none');
     $("#btn-confirm-buy").addClass('d-none');
+    $("#precioVent, #costo").attr('required', false);
 
     $.ajax({
       type: "GET",
@@ -366,7 +389,15 @@ $(function () {
     $("#precioVent").data('valororiginal', 0);
     dataProdSearchAproximate = [];
     idProductoCompraEditar = '';
-    $("[form=formCrearEditar]").html('<i class="fas fa-check"></i> Agregar')
+    $("[form=formCrearEditar]").html('<i class="fas fa-check"></i> Agregar');
+
+    if (isOpenModalProducto) {
+      setTimeout(() => {
+        $("#modalProdCuenta").modal('hide');
+        isOpenModalProducto = false;
+        $("#modalCrearEditarCompra").modal('show');
+      }, 300);
+    }
   });
 
   $(".validaCampo").on("focusout", function () {
@@ -410,25 +441,29 @@ $(function () {
   $("#formCrearEditar").submit(function (e) {
     e.preventDefault();
 
+    let precioVentaProducto = $("#precioVent").val().replace("$", '');
+    let costoProducto = $("#costo").val().replace("$", '');
+
     if ($(this).valid()) {
       let dataProd = {
         referenciaItem: `${$("#referencia").val()} | ${$("#item").val()}`,
         descripcion: $("#descripcion").val(),
         pacaX: $("#paca").val(),
         stock: $("#stock").val(),
-        precioVenta: $("#precioVent").val().replace("$", '').split(",").join(''),
-        costo: $("#costo").val().replace("$", '').split(",").join(''),
+        precioVenta: (precioVentaProducto.split(",").join('') || 0),
+        costo: (costoProducto.split(",").join('') || 0),
         referencia: $("#referencia").val(),
         item: $("#item").val(),
         id: $("#referencia").val().split(' ').join('') + dataProdsAdd.length,
-        costoCompra: $("#costo").val().replace("$", ''),
+        costoCompra: (costoProducto || 0),
         idProducto: $("#idProducto").val(),
         idCompraProd: null,
-        valorOriginal: +$("#idProducto").val() > 0 ? $("#precioVent").data('valororiginal') : $("#precioVent").val().replace("$", '').split(' ').join(''),
+        valorOriginal: +$("#idProducto").val() > 0 ? $("#precioVent").data('valororiginal') : (precioVentaProducto.split(' ').join('') || 0),
         creadoCompra: +$("#idProducto").val() > 0 ? 0 : 1,
         idManifiesto: ($("#manifiesto").val() || null),
         idCategoria: ($("#cateFiltro").val() || null),
-        ubicacion: $("#ubicacion").val()
+        ubicacion: $("#ubicacion").val(),
+        ganancia: 0
       }
 
       if (idProductoCompraEditar != '') {
@@ -558,14 +593,17 @@ $(function () {
     });
   });
 
-  $('#collapseAddProduct').on('shown.bs.collapse', function () {
-    $(".icono-collapse").removeClass('fa-arrow-down').addClass('fa-arrow-up');
+  $("#btnAgregarProductoCompra").on('click', function () {
+    $("#modalCrearEditarCompra").modal('hide');
+    setTimeout(() => {
+      isOpenModalProducto = true;
+      $("#modalProdCuenta").modal('show');
+    }, 500);
   });
 
-  $('#collapseAddProduct').on('hidden.bs.collapse', function () {
-    $(".icono-collapse").removeClass('fa-arrow-up').addClass('fa-arrow-down');
+  $('#modalProdCuenta').on('hidden.bs.modal', function (event) {
+    $("#btnCancelarProdCompra").click();
   });
-
 });
 
 function calculateDataProds() {
@@ -641,4 +679,31 @@ function validateColorRow(data) {
     return 'bg-azul';
   }
   return 'bg-verde';
+}
+
+function verifyProductWithoutPrice() {
+  let prodsWithoutPrice = dataProdsAdd.filter(
+    product => (!product.costo || product.costo == 0) || (!product.precioVenta || product.precioVenta == 0)
+  ).map(
+    (productFilter) => `<li class='mt-2'>
+      <b>${productFilter.referenciaItem}:</b>
+    </li>`
+  ).join('');
+  return prodsWithoutPrice;
+}
+
+function calculateBenefit(precioVenta, costo) {
+  if (precioVenta > 0 || costo > 0) {
+
+    let porcentajeGanancia = (precioVenta - costo);
+
+    if (porcentajeGanancia > 0) {
+      porcentajeGanancia = (porcentajeGanancia / precioVenta) * 100;
+    } else {
+      porcentajeGanancia = - ((costo - precioVenta) / costo) * 100;
+    }
+
+    return (porcentajeGanancia % 1 != 0 ? porcentajeGanancia.toFixed(2) : porcentajeGanancia);
+  }
+  return 0;
 }
