@@ -41,6 +41,11 @@ class cModificarReporte extends BaseController {
       "icono" => "fa-solid fa-dollar",
       "color" => "dark",
       "url" => ""
+    ],
+    "Sticker" => [
+      "icono" => "fa-solid fa-note-sticky",
+      "color" => "danger",
+      "url" => ""
     ]
   ];
 
@@ -130,15 +135,15 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Número de item del producto"
     ],
     "referenciaProductoDP" => [
-      "aplica" => ["Factura", "Pedido", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Compra", "Sticker"],
       "descripcion" => "Referencia del producto"
     ],
     "descripcionProductoDP" => [
-      "aplica" => ["Factura", "Pedido", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Compra", "Sticker"],
       "descripcion" => "Descripcion del producto"
     ],
     "cantPacaProductoDP" => [
-      "aplica" => ["Factura", "Pedido", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Compra", "Sticker"],
       "descripcion" => "Cantidad paca del producto"
     ],
     "paqueteProductoDP" => [
@@ -146,7 +151,7 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Cantidad paca x cantidad solicitada del producto"
     ],
     "valorProductoDP" => [
-      "aplica" => ["Factura", "Pedido", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Compra", "Sticker"],
       "descripcion" => "Valor de venta del producto"
     ],
     "totalProductoDP" => [

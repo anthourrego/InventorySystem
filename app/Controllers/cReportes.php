@@ -257,6 +257,44 @@ class cReportes extends BaseController {
 		exit;
 	}
 
+	public function stickerCompra($id, $download = 0) {
+		
+		$estrucPdf = $this->estructuraReporte("Sticker");
+
+		// $estrucPdf = $this->setValuesCompany($estrucPdf);
+
+		$dataVenta = $this->cargarDataVenta($estrucPdf, $id, "compras");
+ 		// $estrucPdf = $dataVenta['pdf'];/
+
+		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$pdf->startPageGroup();
+		$pdf->AddPage();
+
+		$mCompraProductos = new mCompraProductos();
+
+		$productosCompra = $mCompraProductos->select("
+				comprasproductos.cantPaca AS cantPacaProductoDP,
+				P.descripcion AS descripcionProductoDP,
+				UPPER(P.referencia) AS referenciaProductoDP,
+				comprasproductos.valor AS valorProductoDP
+			")->join("productos AS P", "comprasproductos.id_producto = P.id", "left")
+			->where("id_compra", $id)
+			->findAll();
+
+		$pdf = $this->estructuraProductosSticker($estrucPdf, $productosCompra, $pdf);
+
+		if ($download == 1) {
+			$nit = $this->getValConfig("documentoEmpresa");
+			if ($nit != '') {
+				$pdf->SetProtection(array('print','copy'), $nit, null, 0);
+			}
+		}
+
+		$pdf->setTitle('Sticker Compra ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
+		$pdf->Output($dataVenta['codigo'] . ".pdf", ($download == "1" ? 'D' : 'I'));
+		exit;
+	}
+
 	private function estructuraReporte($reporte) {
 		$path = UPLOADS_REPOR_PATH . "$reporte.txt";
 
@@ -634,6 +672,46 @@ class cReportes extends BaseController {
 			$pdf = $parte1 . $estructura . explode("CJ]", $pdf)[1];
 		}
 		return $pdf;
+	}
+
+	private function estructuraProductosSticker($pdf, $productos, $filePdf) {
+		$contentReplace = "";
+		if (strpos($pdf, "[SC")) {
+			$contentReplace = explode("[SC", $pdf);
+			$contentReplace = explode("SC]", $contentReplace[1])[0];
+		}
+
+		if ($contentReplace != "") {
+
+			$filePdf->resetColumns();
+			$filePdf->setEqualColumns(3);
+			$estructura = '';
+			$totalColumns = 1;
+
+			foreach ($productos as $key => $value) {
+				$filePdf->selectColumn($totalColumns - 1);
+
+				$estructura = $contentReplace;
+				
+				foreach ($value as $key2 => $value2) {
+					if ($key2 == 'valorProductoDP') {
+						$value2 = '$ ' . number_format($value2, 0, ',', '.');
+					}
+					$estructura = str_replace("{{$key2}}", (is_null($value2) ? '' : $value2), $estructura);
+				}
+
+				$filePdf->writeHTML($estructura, true, false, true, false, '');
+				
+				$totalColumns++;
+
+				if (($totalColumns - 1) % 3 == 0) {
+					$totalColumns = 1;
+					$filePdf->resetColumns();
+					$filePdf->setEqualColumns(3);
+				}
+			}
+		}
+		return $filePdf;
 	}
 
 }

@@ -432,6 +432,10 @@ class mPermisos extends Model {
 					[
 						"id" => 406,
 						"text" => "Imprimir compra"
+					],
+					[
+						"id" => 407,
+						"text" => "Imprimir sticker"
 					]
 				]
 			]

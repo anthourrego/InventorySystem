@@ -64,25 +64,25 @@ let DTCompras = $("#table").DataTable({
       className: 'text-center noExport',
       render: function (meta, type, data, meta) {
 
-        btnImprimirCompra = validPermissions(406) ? `<a href="${base_url()}Reportes/Compra/${data.id}/0" target="_blank" type="button" class="btn btn-info" title="Imprimir Compra">
+        let botones = ``;
+
+        botones += validPermissions(406) ? `<a href="${base_url()}Reportes/Compra/${data.id}/0" target="_blank" type="button" class="btn btn-info" title="Imprimir Compra">
           <i class="fa-solid fa-print"></i>
         </a>` : '';
 
-        btnEditar = validPermissions(402) && !['AN', 'CO'].includes(data.Estado) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
+        botones += validPermissions(407) && ['CO'].includes(data.Estado) ? `<a href="${base_url()}Reportes/StickerCompra/${data.id}/0" target="_blank" type="button" class="btn btn-primary" title="Imprimir Sticker">
+          <i class="fa-solid fa-note-sticky"></i>
+        </a>` : '';
 
-        btnConfirmarCompra = validPermissions(403) && !['AN', 'CO'].includes(data.Estado) ? '<button type="button" class="btn btn-success btnConfirmar" title="Confirmar Compra"><i class="fa-solid fa-check"></i></button>' : '';
+        botones += validPermissions(402) && !['AN', 'CO'].includes(data.Estado) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
 
-        btnAnularCompra = validPermissions(404) && !['AN'].includes(data.Estado) ? '<button type="button" class="btn btn-danger btnEliminar" title="Anular Compra"><i class="fa-solid fa-ban"></i></button>' : '';
+        botones += validPermissions(403) && !['AN', 'CO'].includes(data.Estado) ? '<button type="button" class="btn btn-success btnConfirmar" title="Confirmar Compra"><i class="fa-solid fa-check"></i></button>' : '';
 
-        btnClonarCompra = validPermissions(405) ? '<button type="button" class="btn btn-warning btnClonar" title="Clonar Compra"><i class="fa-solid fa-copy"></i></button>' : '';
+        botones += validPermissions(404) && !['AN'].includes(data.Estado) ? '<button type="button" class="btn btn-danger btnEliminar" title="Anular Compra"><i class="fa-solid fa-ban"></i></button>' : '';
 
-        return `<div class="btn-group btn-group-sm" role="group">
-                    ${btnImprimirCompra}
-                    ${btnEditar}
-                    ${btnConfirmarCompra}
-                    ${btnAnularCompra}
-                    ${btnClonarCompra}
-                  </div>`;
+        botones += validPermissions(405) ? '<button type="button" class="btn btn-warning btnClonar" title="Clonar Compra"><i class="fa-solid fa-copy"></i></button>' : '';
+
+        return `<div class="btn-group btn-group-sm" role="group">${botones}</div>`;
       }
     }
   ],
@@ -202,9 +202,6 @@ let DTCompras = $("#table").DataTable({
               alertify.alert("Advertencia", `Los siguientes productos no poseen costo o precio de venta: <ul class='pl-4 mt-3'>${prodsWithoutPrice}</ul>`, function () { });
               return
             }
-
-            debugger
-            return
 
             let prodValueNegative = dataProdsAdd.filter(
               product => validateColorRow(product) == 'bg-rojo'

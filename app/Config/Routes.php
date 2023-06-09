@@ -181,6 +181,7 @@ $routes->group('Reportes', ['filter' => 'authGuard'], function ($routes) {
 	$routes->get('Envio/(:num)/(:any)', 'cReportes::envio/$1/$2');
 	$routes->get('Empaque/(:num)/(:num)', 'cReportes::empaque/$1/$2');
 	$routes->get('Compra/(:num)/(:num)', 'cReportes::compra/$1/$2');
+	$routes->get('StickerCompra/(:num)/(:num)', 'cReportes::stickerCompra/$1/$2');
 	//$routes->get('DT', 'cManifiesto::listaDT');
 });
 

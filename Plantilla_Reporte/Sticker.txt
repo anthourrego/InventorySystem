@@ -1,0 +1,20 @@
+<p>[SC</p>
+
+<table border="0" cellpadding="3" cellspacing="0" style="width:170px">
+	<tbody>
+		<tr>
+			<td style="text-align:center"><strong><span style="font-size:14px">{referenciaProductoDP}</span></strong></td>
+		</tr>
+		<tr>
+			<td style="text-align:center">{descripcionProductoDP}</td>
+		</tr>
+		<tr>
+			<td style="text-align:center"><strong>{valorProductoDP}</strong></td>
+		</tr>
+		<tr>
+			<td style="text-align:center">PAC X {cantPacaProductoDP}</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>SC]</p>
