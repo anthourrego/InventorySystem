@@ -438,6 +438,27 @@ class mPermisos extends Model {
 						"text" => "Imprimir sticker"
 					]
 				]
+			],
+			[
+				"id" => 50,
+				"text" => "Proveedor",
+				"uri" => "Proveedor",
+				"icon" => "fa-solid fa-boxes-packing",
+				"color" => "bg-info",
+				"children" => [
+					[
+						"id" => 501,
+						"text" => "Crear"
+					],
+					[
+						"id" => 502,
+						"text" => "Editar"
+					],
+					[
+						"id" => 503,
+						"text" => "Activar/Inactivar"
+					]
+				]
 			]
 		];
 
@@ -449,7 +470,7 @@ class mPermisos extends Model {
 					"text" => "Empaque",
 					"uri" => "Empaque",
 					"icon" => "fa-solid fa-box-open",
-					"color" => "bg-info",
+					"color" => "bg-light",
 					"children" => [
 						[
 							"id" => 301,

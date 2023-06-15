@@ -122,6 +122,7 @@ $routes->group('Busqueda', ['filter' => 'authGuard'], function ($routes) {
 	$routes->post('Clientes', 'cClientes::getClientes', ['filter' => 'ajax']);
 	$routes->post('Sucursales', 'cSucursales::getSucursales', ['filter' => 'ajax']);
 	$routes->post('SucursalesClientes', 'cSucursales::getSucursalesClientes', ['filter' => 'ajax']);
+	$routes->post('Proveedores', 'cProveedores::getProveedores', ['filter' => 'ajax']);
 });
 
 //Permisos
@@ -217,6 +218,7 @@ $routes->group('Ubicacion/Paises', ['filter' => 'authGuard:91', 'namespace' => '
 	$routes->post('Crear', 'cPaises::crearEditar', ['filter' => ['authGuard:911', 'ajax']]);
 	$routes->post('Editar', 'cPaises::crearEditar', ['filter' => ['authGuard:912', 'ajax']]);
 	$routes->post('Eliminar', 'cPaises::eliminar', ['filter' => ['authGuard:913', 'ajax']]);
+	$routes->get('Obtener', 'cPaises::getPaises');
 });
 
 //Departamentos
@@ -286,6 +288,16 @@ $routes->group('Compras', ['filter' => 'authGuard:40'], function ($routes) {
 	$routes->get('ValidaProducto/(:any)/(:any)', 'cCompras::validarProducto/$1/$2', ['filter' => ['authGuard:401,402', 'ajax']]);
 	$routes->get('CurrentBuy', 'cCompras::getCurrentBuy');
 	$routes->get('ObtenerCompra/(:any)', 'cCompras::getBuy/$1');
+});
+
+// Proveedores
+$routes->group('Proveedores', ['filter' => 'authGuard:50'], function ($routes) {
+	$routes->get('/', 'cProveedores::index');
+	$routes->post('DT', 'cProveedores::listaDT');
+	$routes->post('Crear', 'cProveedores::crearEditar', ['filter' => ['authGuard:501', 'ajax']]);
+	$routes->post('Editar', 'cProveedores::crearEditar', ['filter' => ['authGuard:502', 'ajax']]);
+	$routes->post('Eliminar', 'cProveedores::eliminar', ['filter' => ['authGuard:503', 'ajax']]);
+	$routes->get('Validar/(:any)/(:num)', 'cProveedores::validaProveedor/$1/$2', ['filter' => ['authGuard:501,502', 'ajax']]);
 });
 
 

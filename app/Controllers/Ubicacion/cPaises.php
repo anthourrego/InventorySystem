@@ -88,4 +88,11 @@ class cPaises extends BaseController {
 
 		return $this->response->setJSON($resp);
 	}
+
+	public function getPaises() {
+		$resp["success"] = true;
+		$mPaises = new mPaises();
+		$resp["data"] = $mPaises->asObject()->select("nombre, id")->where("estado", 1)->findAll();
+		return $this->response->setJSON($resp);
+	}
 }

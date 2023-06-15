@@ -87,6 +87,14 @@
               </a>
             </li>
 						<?php } ?>
+						<?php if (validPermissions([50], true)) { ?> 
+						<li class="nav-item">
+              <a href="<?= base_url("Proveedores") ?>" class="nav-link <?= current_url(true)->getSegment((2 + DOMINIO)) == 'Proveedores' ? 'active' : '' ?>">
+								<i class="nav-icon fa-solid fa-boxes-packing"></i>
+                <p>Proveedores</p>
+              </a>
+            </li>
+						<?php } ?>
 						<?php if (validPermissions([4], true)) { ?> 
 						<li class="nav-item">
               <a href="<?= base_url("Clientes") ?>" class="nav-link <?= current_url(true)->getSegment((2 + DOMINIO)) == 'Clientes' ? 'active' : '' ?>">
