@@ -1,0 +1,84 @@
+<table border="0" cellpadding="1" cellspacing="1" style="width:100%">
+	<tbody>
+		<tr>
+			<td rowspan="5">{logoEmpresa}</td>
+			<td><strong>{nombreEmpresa}</strong></td>
+			<td rowspan="5" style="text-align:center; vertical-align:middle">
+			<h2><span style="color:#c0392b">Compra N.{numeracion}</span></h2>
+			</td>
+		</tr>
+		<tr>
+			<td>NIT: {documentoEmpresa}-{digitoVeriEmpresa}</td>
+		</tr>
+		<tr>
+			<td>Direcci&oacute;n: {direccionEmpresa}</td>
+		</tr>
+		<tr>
+			<td>Tel&eacute;fono: {telefonoEmpresa}</td>
+		</tr>
+		<tr>
+			<td>{emailEmpresa}</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>&nbsp;</p>
+
+<table border="0" cellpadding="1" cellspacing="1" style="width:100%">
+	<tbody>
+		<tr>
+			<td><strong>Fecha:</strong> {fechaCreacion}</td>
+			<td><strong>Hora:</strong> {horaCreacion}</td>
+		</tr>
+		<tr>
+			<td><strong>Usuario:</strong> {nombreVendedor}</td>
+			<td><strong>Estado:</strong> {estadoRegistro}</td>
+		</tr>
+		<tr>
+			<td><strong>Proveedor:&nbsp;</strong>{proveedor}</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>[DP</p>
+
+<table border="1" cellpadding="3" cellspacing="0" style="width:100%">
+	<thead>
+		<tr>
+			<th scope="col" style="width:13%"><strong><span style="font-family:Arial,Helvetica,sans-serif">Referencia</span></strong></th>
+			<th scope="col" style="width:13%"><span style="font-family:Arial,Helvetica,sans-serif"><strong>&nbsp; &nbsp;&nbsp; Item</strong></span></th>
+			<th scope="col" style="width:23%"><span style="font-family:Arial,Helvetica,sans-serif"><strong>&nbsp; Descripci&oacute;n</strong></span></th>
+			<th scope="col" style="width:7%"><span style="font-family:Arial,Helvetica,sans-serif"><strong>&nbsp; Und</strong></span></th>
+			<th scope="col" style="width:13%"><span style="font-family:Arial,Helvetica,sans-serif"><strong>&nbsp;Valor Und</strong></span></th>
+			<th scope="col" style="width:13%"><span style="font-family:Arial,Helvetica,sans-serif"><strong>Valor Total</strong></span></th>
+			<th scope="col" style="width:11%"><strong>Paquete</strong></th>
+			<th scope="col" style="width:7%"><strong>Paca</strong></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="width:13%"><span style="font-size:10px">{referenciaProductoDP}</span></td>
+			<td style="width:13%"><span style="font-size:10px"><span style="font-family:Arial,Helvetica,sans-serif">{itemProductoDP}</span></span></td>
+			<td style="width:23%"><span style="font-size:10px"><span style="font-family:Arial,Helvetica,sans-serif">{descripcionProductoDP}</span></span></td>
+			<td style="text-align:center; width:7%"><span style="font-size:10px"><span style="font-family:Arial,Helvetica,sans-serif">{cantidadProductoDP}</span></span></td>
+			<td style="text-align:right; width:13%"><span style="font-size:10px"><span style="font-family:Arial,Helvetica,sans-serif">{valorProductoDP}</span></span></td>
+			<td style="text-align:right; width:13%"><span style="font-size:10px"><span style="font-family:Arial,Helvetica,sans-serif">{totalProductoDP}</span></span></td>
+			<td style="text-align:right; width:11%"><span style="font-size:10px"><span style="font-family:Arial,Helvetica,sans-serif">{paqueteProductoDP}</span></span></td>
+			<td style="text-align:right; width:7%">{cantPacaProductoDP}</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>DP]</p>
+
+<table border="1" cellpadding="3" cellspacing="0" style="width:100%">
+	<tbody>
+		<tr>
+			<td style="text-align:right; width:80%"><strong>Total:</strong></td>
+			<td style="text-align:right; width:20%"><strong>{totalGeneral}</strong></td>
+		</tr>
+	</tbody>
+</table>
+
+<p><strong>Observaci&oacute;n:</strong> {observacion}</p>

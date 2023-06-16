@@ -35,13 +35,16 @@ let DTCompras = $("#table").DataTable({
         return `<button class="btn btn-${color}">${data.Descripcion_Estado}</button>`;
       }
     }, {
-      data: 'Total_Productos'
+      data: 'Total_Productos',
+      className: 'text-center'
     }, {
       data: 'observacion',
-      width: "25%",
+      width: "15%",
       render: function (meta, type, data, meta) {
         return `<span title="${data.observacion}" class="text-descripcion">${data.observacion}</span>`;
       }
+    }, {
+      data: 'Proveedor'
     }, {
       data: 'Neto',
       render: function (meta, type, data, meta) {
@@ -559,6 +562,7 @@ $(function () {
     let formDataBuy = new FormData();
     formDataBuy.set('dataProdsBuy', JSON.stringify(dataProdsAdd));
     formDataBuy.set('observacion', $('#observacion-compra').val());
+    formDataBuy.set('id_proveedor', $("#proveedor").val());
     formDataBuy.set('idCompra', idBuyEdit);
     formDataBuy.set('canConfirmBuy', 0);
 
@@ -601,6 +605,35 @@ $(function () {
   $('#modalProdCuenta').on('hidden.bs.modal', function (event) {
     $("#btnCancelarProdCompra").click();
   });
+
+  $("#proveedor").select2({
+    ajax: {
+      url: base_url() + "Busqueda/Proveedores",
+      type: "POST",
+      dataType: 'json',
+      delay: 250,
+      data: function (params) {
+        var query = {
+          search: params.term,
+          page: params.page || 1,
+          _type: "query_append",
+        }
+        return query;
+      },
+      processResults: function (data, params) {
+        params.page = params.page || 1;
+        return {
+          results: data.data,
+          pagination: {
+            more: (params.page * 10) < data.total_count
+          }
+        };
+      },
+      async: false,
+      cache: true
+      // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+    }
+  });
 });
 
 function calculateDataProds() {
@@ -617,6 +650,10 @@ function calculateDataProds() {
 function setValuesBuy(compra, productos) {
   idBuyEdit = compra.id;
   $('#observacion-compra').val(compra.observacion);
+
+  var vendedorOption = new Option(compra.textSelectCompra, (compra.id_proveedor || ''), true, true);
+  $('#proveedor').append(vendedorOption).trigger('change');
+
   dataProdsAdd = productos;
   DTDataProdsAdd.clear().rows.add(dataProdsAdd);
   calculateDataProds();
@@ -629,6 +666,7 @@ function clearValuesBuy(actionModal) {
   dataProdsAdd = [];
   DTDataProdsAdd.clear().draw();
   $('#observacion-compra').val('');
+  $("#proveedor").val('').trigger('change');
   $(".valor-compra, .valor-costo").text('');
   $("#modalCrearEditarCompra").modal(actionModal);
 }
@@ -637,6 +675,7 @@ function saveConfirmBuy() {
   let formDataBuy = new FormData();
   formDataBuy.set('dataProdsBuy', JSON.stringify(dataProdsAdd));
   formDataBuy.set('observacion', $('#observacion-compra').val());
+  formDataBuy.set('id_proveedor', $("#proveedor").val());
   formDataBuy.set('idCompra', idBuyEdit);
   formDataBuy.set('canConfirmBuy', 1);
 

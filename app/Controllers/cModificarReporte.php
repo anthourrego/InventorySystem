@@ -253,7 +253,11 @@ class cModificarReporte extends BaseController {
     "estadoRegistro" => [
       "aplica" => ["Compra"],
       "descripcion" => "Estado de la informacion cargada"
-    ]
+    ],
+    "proveedor" => [
+      "aplica" => ["Compra"],
+      "descripcion" => "Proveedor de la compra"
+    ],
   ];
 
 	function index() {

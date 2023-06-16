@@ -68,6 +68,8 @@ class cCompras extends BaseController {
 						C.total AS Total,
 						C.created_at AS Fecha_Creacion,
 						C.estado AS Estado,
+						C.id_proveedor,
+						P.nombre AS Proveedor,
 						CASE
 							WHEN C.estado = 'AN'
 								THEN 'Anulado'
@@ -76,6 +78,7 @@ class cCompras extends BaseController {
 							ELSE 'Pendiente'
 						END AS Descripcion_Estado
 				")->join('usuarios AS U', 'C.id_usuario = U.id', 'left')
+				->join('proveedores AS P', 'C.id_proveedor = P.id', 'left')
 				->join('(
 					SELECT
 						COUNT(id) AS Total_Productos, id_compra
@@ -142,6 +145,7 @@ class cCompras extends BaseController {
 				"codigo" => $codigo['codigo'],
 				"id_usuario" => session()->get("id_user"),
 				"observacion" => $dataPost->observacion,
+				"id_proveedor" => $dataPost->id_proveedor,
 				"impuesto" => 0,
 				"neto" => 0,
 				"total" => 0,
@@ -244,7 +248,8 @@ class cCompras extends BaseController {
 
 			$dataBuy = array(
 				"id" => $dataPost->idCompra,
-				"observacion" => $dataPost->observacion
+				"observacion" => $dataPost->observacion,
+				"id_proveedor" => $dataPost->id_proveedor
 			);
 
 			if ($dataPost->canConfirmBuy == "1") {
@@ -553,6 +558,7 @@ class cCompras extends BaseController {
 				"codigo" => $codigo['codigo'],
 				"id_usuario" => session()->get("id_user"),
 				"observacion" => $informationBuy['compra']->observacion,
+				"id_proveedor" => $informationBuy['compra']->id_proveedor,
 				"impuesto" => $informationBuy['compra']->impuesto,
 				"neto" => $informationBuy['compra']->neto,
 				"total" => $informationBuy['compra']->total,

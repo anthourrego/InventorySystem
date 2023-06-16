@@ -16,8 +16,9 @@
             <th>Código</th>
             <th>Usuario</th>
             <th>Estado</th>
-            <th>Total Productos</th>
+            <th>T. Productos</th>
             <th>Observación</th>
+            <th>Proveedor</th>
             <th>Neto</th>
             <th>Total</th>
             <th>Fecha Creación</th>
@@ -70,9 +71,19 @@
 
         <div class="row">
           <div class="col-12 col-md-7">
-            <label for="observacion-compra">Observación</label>
-            <textarea class="form-control" placeholder="Observación..." name="observacion-compra" id="observacion-compra" cols="30" rows="2"></textarea>
+            <div class="form-group">
+              <label for="observacion-compra">Observación</label>
+              <textarea class="form-control" placeholder="Observación..." name="observacion-compra" id="observacion-compra" cols="30" rows="2"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-0" for="proveedor">Proveedor</label>
+              <select id="proveedor" name="proveedor" class="custom-select custom-select-sm select2" data-placeholder="Seleccione un proveedor..." data-allow-clear="1">
+                <option></option>
+              </select>
+            </div>
           </div>
+
           <div class="col-12 col-md-5">
             <div class="row">
               <div class="col-12 mt-3 d-flex justify-content-end">

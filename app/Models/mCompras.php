@@ -21,7 +21,8 @@ class mCompras extends Model {
 		"impuesto",
 		"neto",
 		"total",
-		"estado"
+		"estado",
+		"id_proveedor"
 	];
 
 	// Dates
@@ -72,7 +73,12 @@ class mCompras extends Model {
 				C.estado,
 				C.created_at,
 				U.usuario AS Usuario,
+				C.id_proveedor,
+				P.nombre AS Proveedor,
+				CONCAT(P.nit, ' | ', P.nombre, ' | ', IF(CP.nombre IS NULL, '', CP.nombre)) AS textSelectCompra
 			")->join("usuarios AS U", "C.id_usuario = U.id", "left")
+			->join('proveedores AS P', 'C.id_proveedor = P.id', 'left')
+			->join("ciudades AS CP", "P.id_ciudad = CP.id", "left")
 			->where("C.id", $id)
 			->get()->getResultObject();
 

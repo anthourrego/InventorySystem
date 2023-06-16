@@ -358,8 +358,10 @@ class cReportes extends BaseController {
 						WHEN C.estado = 'CO'
 							THEN 'Confirmado'
 						ELSE 'Pendiente'
-					END AS estadoRegistro
+					END AS estadoRegistro,
+					P.nombre AS proveedor
 				")->join("usuarios AS U", "C.id_usuario = U.id", "left")
+				->join("proveedores AS P", "C.id_proveedor = P.id", "left")
 				->where("C.id", $id);
 
 		} else {
