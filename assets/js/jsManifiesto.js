@@ -37,6 +37,7 @@ let DTManifiestos = $("#table").DataTable({
     { data: 'Nombre_Estado' },
     {
       data: 'created_at',
+      searchable: false,
       render: function (meta, type, data, meta) {
         return moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A");
       }
