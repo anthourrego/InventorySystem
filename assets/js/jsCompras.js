@@ -562,7 +562,9 @@ $(function () {
     let formDataBuy = new FormData();
     formDataBuy.set('dataProdsBuy', JSON.stringify(dataProdsAdd));
     formDataBuy.set('observacion', $('#observacion-compra').val());
-    formDataBuy.set('id_proveedor', $("#proveedor").val());
+    if ($("#proveedor").val() != '') {
+      formDataBuy.set('id_proveedor', $("#proveedor").val());
+    }
     formDataBuy.set('idCompra', idBuyEdit);
     formDataBuy.set('canConfirmBuy', 0);
 
@@ -675,7 +677,9 @@ function saveConfirmBuy() {
   let formDataBuy = new FormData();
   formDataBuy.set('dataProdsBuy', JSON.stringify(dataProdsAdd));
   formDataBuy.set('observacion', $('#observacion-compra').val());
-  formDataBuy.set('id_proveedor', $("#proveedor").val());
+  if ($("#proveedor").val() != '') {
+    formDataBuy.set('id_proveedor', $("#proveedor").val());
+  }
   formDataBuy.set('idCompra', idBuyEdit);
   formDataBuy.set('canConfirmBuy', 1);
 

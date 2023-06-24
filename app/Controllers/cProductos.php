@@ -96,6 +96,7 @@ class cProductos extends BaseController {
 						END AS ColorStock,
 						P.stock,
 						P.precio_venta,
+						P.precio_venta_dos,
 						P.costo,
 						P.ubicacion,
 						M.nombre AS nombreManifiesto,
@@ -198,6 +199,7 @@ class cProductos extends BaseController {
 				,"descripcion" => trim($postData->descripcion)
 				,"stock" => $postData->stock
 				,"precio_venta" => str_replace(",", "", trim(str_replace("$", "", $postData->precioVent)))
+				,"precio_venta_dos" => str_replace(",", "", trim(str_replace("$", "", $postData->precioVentDos)))
 				,"ubicacion" => (session()->has("ubicacionProducto") && session()->get("ubicacionProducto") == '1' ? trim($postData->ubicacion) : null)
 				,"id_manifiesto" => !isset($postData->manifiesto) || strlen(trim($postData->manifiesto)) == 0 ? null : trim($postData->manifiesto)
 				,"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $postData->costo))) : '0')
@@ -264,6 +266,9 @@ class cProductos extends BaseController {
 		
 									if ($product->save($updateFoto)) { 
 										$this->convertirFoto($product->id, $nameImg);
+
+										/* Se llama de nuevo para crear la imagen con precio 2 */
+										$this->convertirFoto($product->id, $nameImg, null, 'dos');
 										$resp["success"] = true;
 										$resp["msj"] = "El producto <b>{$product->referencia}</b> se " . (empty($postData->id) ? 'creo' : 'actualizo') . " correctamente.";
 									} else {
@@ -290,6 +295,9 @@ class cProductos extends BaseController {
 
 						if (!is_null($foto)) {
 							$this->convertirFoto($product->id, $foto);
+
+							/* Se llama de nuevo para crear la imagen con precio 2 */
+							$this->convertirFoto($product->id, $foto, null, 'dos');
 						}
 					}
 				}
@@ -356,7 +364,7 @@ class cProductos extends BaseController {
 		return $this->response->setJSON($resp);
 	}
 
-	public function convertirFoto($id, $img, $datos = null){
+	public function convertirFoto($id, $img, $datos = null, $precioVenta = ''){
 		$ruta = UPLOADS_PRODUCT_PATH ."{$id}/";
 		$filename = $ruta . $img; //<-- specify the image  file
 
@@ -390,15 +398,23 @@ class cProductos extends BaseController {
 		$descripcion = substr($producto->descripcion, 0, 66) . (strlen($producto->descripcion) > 66 ? "..." : "");
 		$nombreArchivo = strtotime($producto->updated_at);
 
+		if ($precioVenta == 'dos') {
+			$nombreArchivo .= '_precio_dos';
+		}
+
 		if (!file_exists(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/{$nombreArchivo}.png")) {
 			//Elimanos el directorio si existe lo eliminamos para crear el nuevo
-			if(is_dir(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/")){
-				$this->borrar_directorio(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/");
+			if ($precioVenta == '') {
+				if(is_dir(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/")){
+					$this->borrar_directorio(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/");
+				}
+	
+				if (!is_dir(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/")) {
+					mkdir(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/", 0777, TRUE);
+				}
 			}
 
-			if (!is_dir(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/")) {
-				mkdir(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/", 0777, TRUE);
-			}
+			$valorPrecioVenta = ($precioVenta == 'dos' ? $producto->precio_venta_dos : $producto->precio_venta);
 			
 			$servicios = new Services();
 			$servicios::image()
@@ -414,7 +430,7 @@ class cProductos extends BaseController {
 				'vAlign'     => 'bottom',
 				'fontSize'   => 80,
 				'fontPath'   => ASSETS_PATH . 'fonts/Cooper_Black_Regular.ttf'
-			])->text("$ " . number_format($producto->precio_venta, 0, ',', '.'), [
+			])->text("$ " . number_format($valorPrecioVenta, 0, ',', '.'), [
 				'color'      => '#000',
 				'opacity'    => 0,
 				'hOffset'    => '10',
@@ -457,7 +473,7 @@ class cProductos extends BaseController {
 
 	}
 
-	public function descargarFoto($limit = null, $offset = null, $tipo = 0){
+	public function descargarFoto($limit = null, $offset = null, $tipo = 0, $precioVenta = ''){
 		$filtros = (object) session()->get("filtrosProductos");
 		$search = [
 			"P.id",
@@ -468,6 +484,7 @@ class cProductos extends BaseController {
 			"P.cantPaca",
 			"P.costo",
 			"P.precio_venta",
+			"P.precio_venta_dos",
 			"P.ubicacion",
 			"P.created_at",
 			"C.nombre",
@@ -559,6 +576,11 @@ class cProductos extends BaseController {
 				if ($tipo == 0) {
 					$this->convertirFoto($it->id, $it->imagen, $it);
 					$nombreArchivo = strtotime($it->updated_at);
+
+					if ($precioVenta == 'dos') {
+						$nombreArchivo .= '_precio_dos';
+					}
+
 					$zipFile->addFile(UPLOADS_PRODUCT_PATH . "{$it->id}/convert/{$nombreArchivo}.png", "{$it->referencia}.png");
 				} else {
 					$zipFile->addFile(UPLOADS_PRODUCT_PATH . "{$it->id}/01-logo.png", "{$it->referencia}.png");
@@ -625,7 +647,6 @@ class cProductos extends BaseController {
 		$mProducto = new mProductos();
 		$productos = $mProducto->where('imagen IS NOT NULL', NULL, FALSE)->asObject()->findAll();
 
-
 		foreach ($productos as $it) {
 			$ruta = UPLOADS_PRODUCT_PATH ."/" . $it->id  ."/";
 			$filename = UPLOADS_PRODUCT_PATH ."{$it->id}/{$it->imagen}"; //<-- specify the image  file
@@ -668,6 +689,9 @@ class cProductos extends BaseController {
 				$this->marcaAguaProducto($it);
 
 				$this->convertirFoto($it->id, $it->imagen, $it);
+
+				/* Se llama de nuevo para crear la imagen con precio 2 */
+				$this->convertirFoto($it->id, $it->imagen, $it, 'dos');
 
 				$nameSmallImg = "01-small.{$dataFoto->extension}";
 	

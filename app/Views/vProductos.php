@@ -147,6 +147,10 @@
               <label class="mb-0" for="costo">Costo <span class="text-danger">*</span></label>
               <input class="form-control inputPesos inputVer" id="costo" <?= $camposProducto["costo"] == "1" ? '' : 'disabled' ?> name="costo" type="tel" value="0" placeholder="Ingrese el costo" autocomplete="off" required autocomplete="off">
             </div>
+            <div class="col-6 form-group form-valid">
+              <label class="mb-0" for="precioVentDos">Precio venta 2<span class="text-danger">*</span></label>
+              <input class="form-control inputPesos inputVer" id="precioVentDos" name="precioVentDos" type="tel" value="0" placeholder="Ingrese el precio de venta" autocomplete="off" required autocomplete="off">
+            </div>
             <div class="col-6 form-group form-valid <?= $camposProducto["ubicacion"] == "1" ? '' : 'd-none' ?>">
               <label class="mb-0" for="ubicacion">Ubicación</label>
               <input class="form-control inputVer volverMayuscula" id="ubicacion" <?= $camposProducto["ubicacion"] == "1" ? '' : 'disabled' ?> name="ubicacion" type="text" minlength="0" maxlength="255" placeholder="Ingrese la ubicación" autocomplete="off">
@@ -237,6 +241,10 @@
         <div class="form-group form-check">
           <input type="checkbox" class="form-check-input" value="originales" name="checkOriginales" id="checkOriginales">
           <label class="form-check-label" for="checkOriginales">Originales</label>
+        </div>
+        <div class="form-group form-check">
+          <input type="checkbox" class="form-check-input" value="precioVentaDos" name="checkPrecioVentaDos" id="checkPrecioVentaDos">
+          <label class="form-check-label" for="checkPrecioVentaDos">Precio Venta Dos</label>
         </div>
         <div class="input-group">
           <input type="number" id="cantFiltroPaquete"  value="<?= $camposProducto["pacDescarga"] ?>" class="form-control inputFocusSelect soloNumeros noEnter" min="1" max="100" placeholder="Cantidad x paquete">

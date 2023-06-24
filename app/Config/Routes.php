@@ -97,6 +97,7 @@ $routes->group('Productos', ['filter' => 'authGuard:5'], function ($routes) {
 	$routes->get('descargarFoto/(:num)', 'cProductos::descargarFoto/$1', ['filter' => ['authGuard:55']]);
 	$routes->get('descargarFoto/(:num)/(:num)', 'cProductos::descargarFoto/$1/$2', ['filter' => ['authGuard:55']]);
 	$routes->get('descargarFoto/(:num)/(:num)/(:num)', 'cProductos::descargarFoto/$1/$2/$3', ['filter' => ['authGuard:55']]);
+	$routes->get('descargarFoto/(:num)/(:num)/(:num)/(:any)', 'cProductos::descargarFoto/$1/$2/$3/$4', ['filter' => ['authGuard:55']]);
 	$routes->get('Sincronizar', 'cProductos::sincronizar', ['filter' => ['authGuard:56']]);
 	$routes->get('ExportarExcel', 'cProductos::downloadExcelProducts');
 	$routes->post('EditarUbicacion', 'cProductos::editarUbicacion', ['filter' => ['authGuard:59', 'ajax']]);

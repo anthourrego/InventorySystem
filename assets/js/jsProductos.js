@@ -131,6 +131,7 @@ let DTProductos = $("#table").DataTable({
       $("#item").val(data.item);
       $("#stock").val(data.stock);
       $("#precioVent").val(data.precio_venta);
+      $("#precioVentDos").val(data.precio_venta_dos);
       $("#costo").val(data.costo);
       $("#ubicacion").val(data.ubicacion);
       $("#manifiesto").val(data.manifiesto).trigger('change');
@@ -505,11 +506,12 @@ $(function () {
     let offset = $(this).data("offset");
     let final = $(this).data("final");
     let originales = $("#checkOriginales").is(':checked') == true ? 1 : 0;
+    let precioVenta = $("#checkPrecioVentaDos").is(':checked') == true ? 'dos' : '';
     $(this).removeClass("list-group-item-success list-group-item-danger");
     $(this).find("i").removeClass("fa-download fa-times").addClass("fa-rotate rotacionEfecto");
 
     $.ajax({
-      url: rutaBase + `descargarFoto/${cantidad}/${offset}/${originales}`,
+      url: rutaBase + `descargarFoto/${cantidad}/${offset}/${originales}/${precioVenta}`,
       xhrFields: {
         responseType: 'blob'
       },

@@ -145,7 +145,7 @@ class cCompras extends BaseController {
 				"codigo" => $codigo['codigo'],
 				"id_usuario" => session()->get("id_user"),
 				"observacion" => $dataPost->observacion,
-				"id_proveedor" => $dataPost->id_proveedor,
+				"id_proveedor" => (isset($dataPost->id_proveedor) && $dataPost->id_proveedor ? $dataPost->id_proveedor : null),
 				"impuesto" => 0,
 				"neto" => 0,
 				"total" => 0,
@@ -249,7 +249,7 @@ class cCompras extends BaseController {
 			$dataBuy = array(
 				"id" => $dataPost->idCompra,
 				"observacion" => $dataPost->observacion,
-				"id_proveedor" => $dataPost->id_proveedor
+				"id_proveedor" => (isset($dataPost->id_proveedor) && $dataPost->id_proveedor ? $dataPost->id_proveedor : null)
 			);
 
 			if ($dataPost->canConfirmBuy == "1") {
