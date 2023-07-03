@@ -19,7 +19,7 @@
                 </div>
                 <div class="form-label-group form-valid">
                   <div class="input-group">
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña" required autocomplete="">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña" required autocomplete="off">
                     <label for="password">Contraseña</label>
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary btn-pass" type="button">
