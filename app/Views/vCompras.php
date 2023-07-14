@@ -205,17 +205,17 @@
                 <input class="form-control inputVer volverMayuscula" id="ubicacion" <?= $camposProducto["ubicacion"] == "1" ? '' : 'disabled' ?> name="ubicacion" type="text" minlength="0" maxlength="255" placeholder="Ingrese la ubicación" autocomplete="off">
               </div>
             </div>
-            <div class="col-12 col-md-3 <?= $camposProducto["manifiesto"] == "1" ? '' : 'd-none' ?>">
+            <!-- <div class="col-12 col-md-3 ?= $camposProducto['manifiesto'] == '1' ? '' : 'd-none' ?>">
               <div class="form-group form-valid">
                 <label class="mb-0" for="manifiesto">Manifiesto</label>
-                <select id="manifiesto" name="manifiesto" class="custom-select select2 inputVer" <?= $camposProducto["manifiesto"] == "1" ? '' : 'disabled' ?> data-placeholder="Seleccione..." data-allow-clear="1">
+                <select id="manifiesto" name="manifiesto" class="custom-select select2 inputVer" ?= $camposProducto['manifiesto'] == '1' ? '' : 'disabled' ?> data-placeholder="Seleccione..." data-allow-clear="1">
                   <option></option>
-                  <?php foreach ($manifiestos as $it) : ?>
-                    <option value="<?=  $it->id?>"><?= $it->nombre ?></option>
-                  <?php endforeach ?>
+                  ?php foreach ($manifiestos as $it) : ?>
+                    <option value="?=  $it->id?>">?= $it->nombre ?></option>
+                  ?php endforeach ?>
                 </select>
               </div>
-            </div>
+            </div> -->
             <div class="col-12 col-md-3 <?= $camposProducto["paca"] == "1" ? '' : 'd-none' ?>">
               <div class="form-group form-valid">
                 <label class="mb-0" for="paca">
