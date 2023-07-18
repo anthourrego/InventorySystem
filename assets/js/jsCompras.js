@@ -7,16 +7,9 @@ let isOpenModalProducto = false;
 let DTCompras = $("#table").DataTable({
   ajax: {
     url: rutaBase + "DT",
-    type: "POST",
-    data: function (d) {
-      return $.extend(d, {})
-    }
+    type: "POST"
   },
-  scrollX: true,
-  order: [[2, "asc"]],
-  search: {
-    return: false,
-  },
+  order: [[0, "asc"]],
   columns: [
     {
       data: 'Codigo'

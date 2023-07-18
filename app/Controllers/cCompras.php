@@ -84,8 +84,7 @@ class cCompras extends BaseController {
 						COUNT(id) AS Total_Productos, id_compra
 					FROM comprasproductos
 					GROUP BY id_compra
-				) AS CP', 'C.id = CP.id_compra', 'left')
-				->orderBy('C.codigo', 'ASC');
+				) AS CP', 'C.id = CP.id_compra', 'left');
 
 		return DataTable::of($query)->toJson(true);
 	}
