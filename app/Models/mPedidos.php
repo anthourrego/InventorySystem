@@ -36,15 +36,16 @@ class mPedidos extends Model {
 
 	// Validation
 	protected $validationRules      = [
-		'pedido' => 'required|string|min_length[1]|max_length[20]|is_unique[pedidos.pedido, id, {id}]',
-		'id_cliente' => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[clientes.id]',
-		'id_vendedor' => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[usuarios.id]',
-    'id_sucursal' => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[sucursales.id]',
-		'impuesto' => 'required|decimal|min_length[1]|max_length[20]',
-		'neto' => 'required|decimal|min_length[1]|max_length[20]',
-		'total' => 'required|decimal|min_length[1]|max_length[20]',
-		'metodo_pago' => 'required|string|min_length[1]|max_length[50]',
-		'observacion' => 'permit_empty|string|min_length[1]|max_length[500]',
+		'id'           => "permit_empty|is_natural_no_zero",
+		'pedido'       => 'required|string|min_length[1]|max_length[20]|is_unique[pedidos.pedido, id, {id}]',
+		'id_cliente'   => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[clientes.id]',
+		'id_vendedor'  => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[usuarios.id]',
+    'id_sucursal'  => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[sucursales.id]',
+		'impuesto'     => 'required|decimal|min_length[1]|max_length[20]',
+		'neto'         => 'required|decimal|min_length[1]|max_length[20]',
+		'total'        => 'required|decimal|min_length[1]|max_length[20]',
+		'metodo_pago'  => 'required|string|min_length[1]|max_length[50]',
+		'observacion'  => 'permit_empty|string|min_length[1]|max_length[500]',
 	];
 	protected $validationMessages   = [];
 	protected $skipValidation       = false;

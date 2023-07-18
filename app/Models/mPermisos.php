@@ -30,9 +30,10 @@ class mPermisos extends Model {
 
 	// Validation
 	protected $validationRules      = [
-		'usuarioId' => 'permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[usuarios.id]',
-		'perfilId' => 'permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[perfiles.id]',
-		'permiso' => 'required|numeric|min_length[1]|max_length[11]',
+		'id'         => "permit_empty|is_natural_no_zero",
+		'usuarioId'  => 'permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[usuarios.id]',
+		'perfilId'   => 'permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[perfiles.id]',
+		'permiso'    => 'required|numeric|min_length[1]|max_length[11]',
 	];
 	protected $validationMessages   = [];
 	protected $skipValidation       = false;

@@ -34,6 +34,7 @@ class mObservacionProductos extends Model {
 
 	// Validation
 	protected $validationRules      = [
+		'id'                  => "permit_empty|is_natural_no_zero",
 		'id_pedido_producto'  => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[pedidosproductos.id]',
 		'motivo'              => 'required|numeric|min_length[1]|max_length[11]',
 		'observacion' 	     	=> 'permit_empty|string|min_length[1]|max_length[500]',

@@ -27,6 +27,7 @@ class mUsuarios extends Model {
   protected $updatedField  = 'updated_at';
 
   protected $validationRules    = [
+    'id'            => "permit_empty|is_natural_no_zero",
     'usuario'       => 'required|alpha_dash|min_length[3]|max_length[255]|is_unique[usuarios.usuario, id, {id}]',
     'nombre'        => 'required|string|min_length[3]|max_length[255]',
     'perfil'        => 'permit_empty|min_length[1]|numeric',

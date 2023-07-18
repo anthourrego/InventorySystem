@@ -35,13 +35,14 @@ class mClientes extends Model {
 
 	// Validation
 	protected $validationRules      = [
-		"documento" =>'permit_empty|numeric|min_length[1]|max_length[30]|is_unique[clientes.documento, id, {id}]',
-		"nombre" => "required|alpha_numeric_space|min_length[1]|max_length[255]",
-		"direccion" => 'required|string|min_length[1]|max_length[300]',
-		"telefono" => "required|string|min_length[10]|max_length[50]",
+		'id'            => "permit_empty|is_natural_no_zero",
+		"documento"     =>'permit_empty|numeric|min_length[1]|max_length[30]|is_unique[clientes.documento, id, {id}]',
+		"nombre"        => "required|alpha_numeric_space|min_length[1]|max_length[255]",
+		"direccion"     => 'required|string|min_length[1]|max_length[300]',
+		"telefono"      => "required|string|min_length[10]|max_length[50]",
 		"administrador" => "permit_empty|alpha_numeric_space|min_length[1]|max_length[255]",
-		"cartera" => "permit_empty|alpha_numeric_space|min_length[1]|max_length[255]",
-		"telefonocart" => "permit_empty|string|min_length[10]|max_length[50]"
+		"cartera"       => "permit_empty|alpha_numeric_space|min_length[1]|max_length[255]",
+		"telefonocart"  => "permit_empty|string|min_length[10]|max_length[50]"
 	];
 	protected $validationMessages   = [
 		"documento" => [

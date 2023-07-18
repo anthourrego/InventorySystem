@@ -40,6 +40,7 @@ class mProductos extends Model {
 
 	// Validation
 	protected $validationRules      = [
+		'id'                => "permit_empty|is_natural_no_zero",
 		'id_categoria' 			=> "permit_empty|numeric|min_length[1]|is_not_unique[categorias.id]",
 		'referencia'   			=> "required|alpha_numeric_punct|min_length[1]|max_length[255]|is_unique[productos.referencia, id, {id}]",
 		'item'         			=> 'permit_empty|min_length[1]|max_length[255]', // |alpha_numeric_punct

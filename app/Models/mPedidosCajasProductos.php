@@ -28,6 +28,7 @@ class mPedidosCajasProductos extends Model {
 
 	// Validation
 	protected $validationRules      = [
+		'id'          => "permit_empty|is_natural_no_zero",
 		'id_caja'     => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[pedidoscajas.id]',
 		'id_producto' => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[productos.id]',
     'cantidad'    => 'required|numeric|min_length[1]|max_length[11]',

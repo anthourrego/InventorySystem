@@ -34,12 +34,13 @@ class mCompras extends Model {
 
 	// Validation
 	protected $validationRules = [
-		'codigo' => 'required|string|min_length[1]|max_length[20]|is_unique[compras.codigo, id, {id}]',
-		'id_usuario' => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[usuarios.id]',
-		'observacion' => 'permit_empty|string|min_length[1]|max_length[500]',
-		'impuesto' => 'required|decimal|min_length[1]|max_length[20]',
-		'neto' => 'required|decimal|min_length[1]|max_length[20]',
-		'total' => 'required|decimal|min_length[1]|max_length[20]'
+		'id'           => "permit_empty|is_natural_no_zero",
+		'codigo'       => 'required|string|min_length[1]|max_length[20]|is_unique[compras.codigo, id, {id}]',
+		'id_usuario'   => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[usuarios.id]',
+		'observacion'  => 'permit_empty|string|min_length[1]|max_length[500]',
+		'impuesto'     => 'required|decimal|min_length[1]|max_length[20]',
+		'neto'         => 'required|decimal|min_length[1]|max_length[20]',
+		'total'        => 'required|decimal|min_length[1]|max_length[20]'
 	];
 	protected $validationMessages   = [
 		"codigo" => [
