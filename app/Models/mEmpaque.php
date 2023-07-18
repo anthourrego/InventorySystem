@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class MEmpaque extends Model
+class mEmpaque extends Model
 {
     protected $DBGroup          = 'default';
     protected $table            = 'pedidocajas';

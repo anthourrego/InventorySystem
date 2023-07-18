@@ -30,6 +30,7 @@ class mPedidosCajas extends Model {
 
 	// Validation
 	protected $validationRules      = [
+		'id'             => "permit_empty|is_natural_no_zero",
 		'id_pedido'      => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[pedidos.id]',
     'numero_caja'    => 'required|numeric|min_length[1]|max_length[11]',
 		'id_empacador'   => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[usuarios.id]',

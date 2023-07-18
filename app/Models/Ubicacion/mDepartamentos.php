@@ -31,6 +31,7 @@ class mDepartamentos extends Model {
 
 	// Validation
 	protected $validationRules      = [
+		'id'           => "permit_empty|is_natural_no_zero",
 		'codigo'       => "required|min_length[1]|max_length[11]|is_unique[departamentos.codigo, id, {id}]",
 		'nombre'       => "required|alpha_numeric_space|min_length[1]|max_length[255]|is_unique[departamentos.nombre, id, {id}]",
     'id_pais'      => "required|numeric|min_length[1]|is_not_unique[paises.id]",

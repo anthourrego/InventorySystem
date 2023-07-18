@@ -35,15 +35,16 @@ class mProveedores extends Model {
 
 	// Validation
 	protected $validationRules      = [
-		"nit" =>'required|numeric|min_length[1]|max_length[30]|is_unique[proveedores.nit, id, {id}]',
-		"nombre" => "required|alpha_numeric_space|min_length[1]|max_length[255]",
-		"direccion" => 'required|string|min_length[1]|max_length[300]',
-		"telefono" => "required|string|min_length[10]|max_length[50]",
-		"contacto" => "permit_empty|alpha_numeric_space|min_length[1]|max_length[255]",
+		'id'               => "permit_empty|is_natural_no_zero",
+		"nit"              =>'required|numeric|min_length[1]|max_length[30]|is_unique[proveedores.nit, id, {id}]',
+		"nombre"           => "required|alpha_numeric_space|min_length[1]|max_length[255]",
+		"direccion"        => 'required|string|min_length[1]|max_length[300]',
+		"telefono"         => "required|string|min_length[10]|max_length[50]",
+		"contacto"         => "permit_empty|alpha_numeric_space|min_length[1]|max_length[255]",
 		"telefonocontacto" => "permit_empty|string|min_length[10]|max_length[50]",
-		"id_pais"=> "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[paises.id]",
-		"id_depto"=> "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[departamentos.id]",
-		"id_ciudad"=> "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[ciudades.id]",
+		"id_pais"          => "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[paises.id]",
+		"id_depto"         => "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[departamentos.id]",
+		"id_ciudad"        => "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[ciudades.id]",
 	];
 	protected $validationMessages   = [
 		"nit" => [

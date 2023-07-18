@@ -20,6 +20,7 @@ class mManifiesto extends Model {
   protected $updatedField  = 'updated_at';
 
   protected $validationRules    = [
+    'id'     => "permit_empty|is_natural_no_zero",
     'nombre' => 'required|string|min_length[3]|max_length[255]|is_unique[manifiestos.nombre, id, {id}]',
     'foto'   => 'permit_empty'
   ];

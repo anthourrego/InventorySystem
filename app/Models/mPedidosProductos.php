@@ -31,6 +31,7 @@ class mPedidosProductos extends Model {
 
 	// Validation
 	protected $validationRules      = [
+		'id'             => "permit_empty|is_natural_no_zero",
 		'id_pedido'      => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[pedidos.id]',
     'pedido'         => 'required|min_length[1]|max_length[20]|is_not_unique[pedidos.pedido]',
 		'id_producto'    => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[productos.id]',
