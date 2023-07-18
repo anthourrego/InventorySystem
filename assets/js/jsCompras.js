@@ -137,7 +137,6 @@ let DTCompras = $("#table").DataTable({
             idCompra: data.id
           },
           success: function (resp) {
-            console.log('respp -> ', resp);
             if (resp.success) {
               alertify.success(resp.msj);
               DTCompras.ajax.reload();
@@ -337,7 +336,7 @@ let DTDataProdsAdd = $("#tblProducts").DataTable({
         $("#descripcion").val(data.descripcion);
         $("#cateFiltro").val(data.idCategoria).change();
         $("#ubicacion").val(data.ubicacion);
-        $("#manifiesto").val(data.idCategoria).change();
+        // $("#manifiesto").val(data.idCategoria).change();
         $("#paca").val(data.pacaX);
         $("#stock").val(data.stock);
         $("#precioVent").val(data.precioVenta);
@@ -384,7 +383,7 @@ $(function () {
 
   $("#btnCancelarProdCompra").on('click', function () {
     $("#descripcion, #paca, #stock, #precioVent, #costo, #referencia, #item, #ubicacion").val('');
-    $("#cateFiltro, #manifiesto").val('').change();
+    $("#cateFiltro").val('').change(); // , #manifiesto
     $("#idProducto").val(0);
     $("#precioVent").data('valororiginal', 0);
     dataProdSearchAproximate = [];
@@ -404,7 +403,7 @@ $(function () {
     $('.input-search').removeClass('input-group');
     $('.input-search').find('.input-group-append').addClass('d-none');
     $("#item, #descripcion, #paca, #ubicacion").val("");
-    $("#cateFiltro, #manifiesto").val('').change();
+    $("#cateFiltro").val('').change(); // , #manifiesto
     $("#idProducto").val(0);
     $("#precioVent").data('valororiginal', 0);
     let campo = $(this).data("campo");
@@ -424,7 +423,7 @@ $(function () {
             $("#precioVent").data('valororiginal', infoProd.precio_venta);
 
             $("#cateFiltro").val(infoProd.id_categoria).change();
-            $("#manifiesto").val(infoProd.id_manifiesto).change();
+            // $("#manifiesto").val(infoProd.id_manifiesto).change();
             $("#ubicacion").val(infoProd.ubicacion);
           } else {
             dataProdSearchAproximate = dataProds;
@@ -460,7 +459,7 @@ $(function () {
         idCompraProd: null,
         valorOriginal: +$("#idProducto").val() > 0 ? $("#precioVent").data('valororiginal') : (precioVentaProducto.split(' ').join('') || 0),
         creadoCompra: +$("#idProducto").val() > 0 ? 0 : 1,
-        idManifiesto: ($("#manifiesto").val() || null),
+        // idManifiesto: ($("#manifiesto").val() || null),
         idCategoria: ($("#cateFiltro").val() || null),
         ubicacion: $("#ubicacion").val(),
         ganancia: 0
