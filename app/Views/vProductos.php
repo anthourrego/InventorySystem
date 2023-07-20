@@ -238,13 +238,25 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="form-group form-check">
-          <input type="checkbox" class="form-check-input" value="originales" name="checkOriginales" id="checkOriginales">
-          <label class="form-check-label" for="checkOriginales">Originales</label>
-        </div>
-        <div class="form-group form-check">
-          <input type="checkbox" class="form-check-input" value="precioVentaDos" name="checkPrecioVentaDos" id="checkPrecioVentaDos">
-          <label class="form-check-label" for="checkPrecioVentaDos">Precio Venta Dos</label>
+        <div class="inputs-tipo-fotos mb-3">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="tipoFoto" id="tipoFotoOriginal" value="original" checked>
+            <label class="form-check-label" for="tipoFotoOriginal">
+              Originales
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="tipoFoto" id="tipoFotoPrecio1" value="precio1">
+            <label class="form-check-label" for="tipoFotoPrecio1">
+              Precio de venta uno
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="tipoFoto" id="tipoFotoPrecio2" value="precio2">
+            <label class="form-check-label" for="tipoFotoPrecio2">
+              Precio de venta dos
+            </label>
+          </div>
         </div>
         <div class="input-group">
           <input type="number" id="cantFiltroPaquete"  value="<?= $camposProducto["pacDescarga"] ?>" class="form-control inputFocusSelect soloNumeros noEnter" min="1" max="100" placeholder="Cantidad x paquete">

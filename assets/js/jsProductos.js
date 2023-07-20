@@ -502,11 +502,27 @@ $(function () {
 
   $(document).on("click", ".descargarPaquete", function (e) {
     e.preventDefault();
+    let tipoFoto = $("[name=tipoFoto]:checked").val();
+    if (!tipoFoto || tipoFoto == '') {
+      alertify.warning('No se ha seleccionado el tipo de foto a descargar');
+      return
+    }
+
+    let originales = 0;
+    let precioVenta = '';
+    if (tipoFoto == 'original') {
+      originales = 1;
+    } else {
+      
+      if (tipoFoto == 'precio2') precioVenta = 'dos';
+      
+    }
+
     let cantidad = $(this).data("cant");
     let offset = $(this).data("offset");
     let final = $(this).data("final");
-    let originales = $("#checkOriginales").is(':checked') == true ? 1 : 0;
-    let precioVenta = $("#checkPrecioVentaDos").is(':checked') == true ? 'dos' : '';
+    // let originales = $("#checkOriginales").is(':checked') == true ? 1 : 0;
+    // let precioVenta = $("#checkPrecioVentaDos").is(':checked') == true ? 'dos' : '';
     $(this).removeClass("list-group-item-success list-group-item-danger");
     $(this).find("i").removeClass("fa-download fa-times").addClass("fa-rotate rotacionEfecto");
 
@@ -637,7 +653,7 @@ $(function () {
         url: rutaBase + "EditarUbicacion",
         type: 'POST',
         dataType: 'json',
-        data: {id, ubicacion},
+        data: { id, ubicacion },
         success: function (resp) {
           if (resp.success) {
             DTProductos.ajax.reload(null, false);
