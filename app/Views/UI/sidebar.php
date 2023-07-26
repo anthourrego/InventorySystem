@@ -15,8 +15,12 @@
 		<!-- Main Sidebar Container -->
 		<aside class="main-sidebar sidebar-dark-warning elevation-4">
 			<!-- Brand Logo -->
-			<a href="<?= base_url() ?>" class="brand-link">
-				<img src="<?= base_url("assets/img/icono-blanco.png") ?>" alt="Inventory System" class="brand-image">
+			<a href="<?= base_url() ?>" class="brand-link d-flex align-items-center">
+				<?php if (session()->has('logoEmpresa') && session()->get('logoEmpresa') != '') {
+					echo '<img src="' . base_url("Configuracion/Foto/" . str_replace(" ", ".", session()->get('logoEmpresa'))) . '" alt="Inventory System" class="brand-image" style="width: 35px;">';
+				} else {
+					echo '<img src="' . base_url("assets/img/icono-blanco.png") . '" alt="Inventory System" class="brand-image">';
+				} ?>
 				<span class="brand-text font-weight-light">Inventory System</span>
 			</a>
 
