@@ -15,8 +15,7 @@ class mPedidosProductos extends Model {
 	protected $protectFields    = true;
 	protected $allowedFields    = [
 		"id_pedido",
-    "pedido",
-		"id_producto",
+    "id_producto",
 		"cantidad",
 		"valor",
 		"valor_original"
@@ -33,8 +32,7 @@ class mPedidosProductos extends Model {
 	protected $validationRules      = [
 		'id'             => "permit_empty|is_natural_no_zero",
 		'id_pedido'      => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[pedidos.id]',
-    'pedido'         => 'required|min_length[1]|max_length[20]|is_not_unique[pedidos.pedido]',
-		'id_producto'    => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[productos.id]',
+    'id_producto'    => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[productos.id]',
 		'cantidad'       => 'required|numeric|min_length[1]|max_length[11]',
 		'valor'          => 'required|decimal|min_length[1]|max_length[20]',
 		'valor_original' => 'required|decimal|min_length[1]|max_length[20]',

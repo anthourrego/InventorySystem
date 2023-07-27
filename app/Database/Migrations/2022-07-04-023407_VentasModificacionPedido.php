@@ -22,13 +22,17 @@ class VentasModificacionPedido extends Migration {
 				'constraint'     => 11,
 				'unsigned'       => true,
 			],
+			'CONSTRAINT ventas_sucursales_foreign FOREIGN KEY(`id_sucursal`) REFERENCES `sucursales`(`id`)'
+		];
+		$this->forge->addColumn('ventas', $addFields);
+
+		$addFields = [
 			'id_pedido' => [
 				'type'           => 'INT',
 				'constraint'     => 11,
 				'unsigned'       => true,
 				'null'           => true,
 			],
-			'CONSTRAINT ventas_sucursales_foreign FOREIGN KEY(`id_sucursal`) REFERENCES `sucursales`(`id`)',
 			'CONSTRAINT ventas_pedidos_foreign FOREIGN KEY(`id_pedido`) REFERENCES `pedidos`(`id`)'
 		];
 		$this->forge->addColumn('ventas', $addFields);

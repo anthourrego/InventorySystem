@@ -20,14 +20,18 @@ class CamposComprasProductos extends Migration
                 'constraint'     => 11,
                 'unsigned'       => true
             ],
-            'id_manifiesto' => [
+			'CONSTRAINT categorias_compras_productos_foreign FOREIGN KEY(`id_categoria`) REFERENCES `categorias`(`id`)'
+		];
+		$this->forge->addColumn('comprasproductos', $addFields);
+
+        $addFields = [
+			'id_manifiesto' => [
                 'type'           => 'INT',
                 'constraint'     => 11,
                 'null'		       => true,
                 'unsigned'       => true
             ],
-			'CONSTRAINT categorias_compras_productos_foreign FOREIGN KEY(`id_categoria`) REFERENCES `categorias`(`id`)',
-            'CONSTRAINT manifiestos_compras_productos_foreign FOREIGN KEY(`id_manifiesto`) REFERENCES `manifiestos`(`id`)'
+			'CONSTRAINT manifiestos_compras_productos_foreign FOREIGN KEY(`id_manifiesto`) REFERENCES `manifiestos`(`id`)'
 		];
 		$this->forge->addColumn('comprasproductos', $addFields);
     }

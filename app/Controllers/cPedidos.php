@@ -380,8 +380,7 @@ class cPedidos extends BaseController {
 				foreach ($prod as $it) {
 					$dataProductoPedido = [
 						"id_pedido" => $dataSave["id"],
-            "pedido" => $pedido,
-						"id_producto" => $it->id,
+            "id_producto" => $it->id,
 						"cantidad" => $it->cantidad,
 						"valor" => $it->valorUnitario,
 						"valor_original" => $it->precio_venta
@@ -563,7 +562,6 @@ class cPedidos extends BaseController {
 					} else {
 						$dataProductoPedido = [
 							"id_pedido" => $dataPost->idPedido,
-							"pedido" => $pediOrigi->pedido,
 							"id_producto" => $it->id,
 							"cantidad" => $it->cantidad,
 							"valor" => $it->valorUnitario,
