@@ -8,7 +8,7 @@ use App\Models\mCategorias;
 use App\Models\mCompraProductos;
 use App\Models\mCompras;
 use App\Models\mConfiguracion;
-// use App\Models\mManifiesto;
+use App\Models\mManifiesto;
 use App\Models\mPedidosProductos;
 use App\Models\mProductos;
 use App\Models\mVentasProductos;
@@ -29,18 +29,18 @@ class cCompras extends BaseController {
 			"item" => (session()->has("itemProducto") ? session()->get("itemProducto") : '0'),
 			"ubicacion" => (session()->has("ubicacionProducto") ? session()->get("ubicacionProducto") : '0'),
 			"costo" => (session()->has("costoProducto") ? session()->get("costoProducto") : '0'),
-			// "manifiesto" => (session()->has("manifiestoProducto") ? session()->get("manifiestoProducto") : '0'),
+			"manifiesto" => (session()->has("manifiestoProducto") ? session()->get("manifiestoProducto") : '0'),
 			"paca" => (session()->has("pacaProducto") ? session()->get("pacaProducto") : '0')
  		];
  
 		$categorias = new mCategorias();
 		$this->content["categorias"] = $categorias->asObject()->where("estado", 1)->findAll();
 		 
-		/* $this->content["manifiestos"] = [];
+		$this->content["manifiestos"] = [];
 		if ($this->content["camposProducto"]["manifiesto"] == "1") {
 			$manifiestos = new mManifiesto();
 			$this->content["manifiestos"] = $manifiestos->asObject()->where("estado", 1)->findAll();
-		}	 */
+		}	
 		
 		$this->content['js_add'][] = [
 			'jsCompras.js'
@@ -159,17 +159,22 @@ class cCompras extends BaseController {
 
 					$product->precioVenta = str_replace(",", "", trim(str_replace("$", "", $product->precioVenta)));
 
+					$valorOriginal = $product->valorOriginal;
+					if ($product->creadoCompra == 1) {
+						$valorOriginal = number_format((float) $product->valorOriginal, 0, '.');
+					}
+
 					$dataProductoCompra = [
 						"id_compra" => $dataBuy["id"],
 						"cantidad" => $product->stock,
 						"valor" => $product->precioVenta,
-						"valor_original" => $product->valorOriginal,
+						"valor_original" => $valorOriginal,
 						"creado_compra" => $product->creadoCompra,
 						"cantPaca" => (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($product->pacaX) : 1),
 						"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0'),
 						'ubicacion' => $product->ubicacion,
 						'id_categoria' => $product->idCategoria,
-						// 'id_manifiesto' => $product->idManifiesto
+						'id_manifiesto' => $product->idManifiesto
 					];
 
 					$respSaveProd = $this->saveProdBuy($product, $mProductos, $mCompraProductos, $dataProductoCompra);
@@ -285,17 +290,22 @@ class cCompras extends BaseController {
 						$dataProdsCurrent = array_values($dataProdsCurrent);
 					} else {
 
+						$valorOriginal = $product->valorOriginal;
+						if ($product->creadoCompra == 1) {
+							$valorOriginal = number_format((float) $product->valorOriginal, 0, '.');
+						}
+
 						$dataProductoCompra = [
 							"id_compra" => $dataBuy["id"],
 							"cantidad" => $product->stock,
 							"valor" => $product->precioVenta,
-							"valor_original" => $product->valorOriginal,
+							"valor_original" => $valorOriginal,
 							"creado_compra" => $product->creadoCompra,
 							"cantPaca" => (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($product->pacaX) : 1),
 							"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0'),
 							'ubicacion' => $product->ubicacion,
 							'id_categoria' => $product->idCategoria,
-							// 'id_manifiesto' => $product->idManifiesto
+							'id_manifiesto' => $product->idManifiesto
 						];
 
 						$respSaveProd = $this->saveProdBuy($product, $mProductos, $mCompraProductos, $dataProductoCompra);
@@ -399,15 +409,15 @@ class cCompras extends BaseController {
 				comprasproductos.ubicacion,
 				C.nombre AS categoriaNombre,
 				comprasproductos.id_categoria AS idCategoria,
+				comprasproductos.id_manifiesto AS idManifiesto,
+				M.nombre AS manifiestoNombre,
 				0 AS ganancia
 			")->join("productos AS P", "comprasproductos.id_producto = P.id", "left")
 			->join("categorias AS C", "comprasproductos.id_categoria = C.id", "left")
-			// ->join("manifiestos AS M", "comprasproductos.id_manifiesto = M.id", "left")
+			->join("manifiestos AS M", "comprasproductos.id_manifiesto = M.id", "left")
 			->where("comprasproductos.id_compra", $idBuy)
 			->findAll();
 
-			// comprasproductos.id_manifiesto AS idManifiesto,
-			// M.nombre AS manifiestoNombre,
 
 		foreach ($dataProdsBuy as $key => $value) {	
 			$dataProdsBuy[$key]->id = $dataProdsBuy[$key]->referencia . $key;
@@ -469,10 +479,12 @@ class cCompras extends BaseController {
 
 			$productSaved["ubicacion"] = $productSaved["ubicacion"] . $ubicacionNew;
 			$productSaved["id_categoria"] = $product->id_categoria;
-			// $productSaved["id_manifiesto"] = $product->id_manifiesto;
-
+			
 			if ($product->creado_compra == 1) {
 				$productSaved['estado'] = 1;
+				$productSaved["id_manifiesto"] = $product->id_manifiesto;
+			} else {
+				$productSaved["id_manifiesto"] = null;
 			}
 
 			if(!$mProductos->save($productSaved)){
@@ -585,7 +597,7 @@ class cCompras extends BaseController {
 						"creado_compra" => 0,
 						'ubicacion' => $product->ubicacion,
 						'id_categoria' => $product->idCategoria,
-						// 'id_manifiesto' => $product->idManifiesto
+						'id_manifiesto' => $product->idManifiesto
 					];
 
 					if (!$mCompraProductos->save($dataProductoCompra)) {
