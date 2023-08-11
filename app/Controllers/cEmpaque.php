@@ -647,7 +647,7 @@ class cEmpaque extends BaseController {
 					"id_usuario" => (session()->has("id_user") ? session()->get("id_user") : null)
 				);
 	
-				$valorTotalPedido += ($dataObserSave['cantidad_actual'] * $pedidoProd->valor);
+				$valorTotalPedido += ($it['cantidad'] * $pedidoProd->valor);
 			
 				if(!$mObservacionProductos->save($dataObserSave)){
 					$resp["msj"] = "Error al guardar la observación del producto. " . listErrors($mObservacionProductos->errors());
@@ -670,6 +670,8 @@ class cEmpaque extends BaseController {
 				->where('id_pedido', $data->idPedido);
 
 			if($builder->update()) {
+				
+				$valorTotalPedido = $pedido[0]->total - $valorTotalPedido;
 
 				$builder = $this->db->table('pedidos')
 					->set("fin_empaque", date("Y-m-d H:i:s"))
