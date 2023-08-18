@@ -29,18 +29,18 @@ class cCompras extends BaseController {
 			"item" => (session()->has("itemProducto") ? session()->get("itemProducto") : '0'),
 			"ubicacion" => (session()->has("ubicacionProducto") ? session()->get("ubicacionProducto") : '0'),
 			"costo" => (session()->has("costoProducto") ? session()->get("costoProducto") : '0'),
-			"manifiesto" => (session()->has("manifiestoProducto") ? session()->get("manifiestoProducto") : '0'),
+			// "manifiesto" => (session()->has("manifiestoProducto") ? session()->get("manifiestoProducto") : '0'),
 			"paca" => (session()->has("pacaProducto") ? session()->get("pacaProducto") : '0')
  		];
  
 		$categorias = new mCategorias();
 		$this->content["categorias"] = $categorias->asObject()->where("estado", 1)->findAll();
 		 
-		$this->content["manifiestos"] = [];
+		/* $this->content["manifiestos"] = [];
 		if ($this->content["camposProducto"]["manifiesto"] == "1") {
 			$manifiestos = new mManifiesto();
 			$this->content["manifiestos"] = $manifiestos->asObject()->where("estado", 1)->findAll();
-		}	
+		}	 */
 		
 		$this->content['js_add'][] = [
 			'jsCompras.js'
@@ -475,7 +475,10 @@ class cCompras extends BaseController {
 			$productSaved["costo"] = (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? $product->costo : '0');
 			$productSaved["cantPaca"] = (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? $product->cantPaca : 1);
 
-			$ubicacionNew = (strlen(trim($product->ubicacion)) > 0 ? (' - ' . $product->ubicacion) : '');
+			$ubicacionNew = '';
+			if (strlen(trim($product->ubicacion)) > 0 && !str_contains($productSaved["ubicacion"], $product->ubicacion)) {
+				$ubicacionNew = ' - ' . $product->ubicacion;
+			}
 
 			$productSaved["ubicacion"] = $productSaved["ubicacion"] . $ubicacionNew;
 			$productSaved["id_categoria"] = $product->id_categoria;

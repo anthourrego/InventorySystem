@@ -194,7 +194,7 @@ let DTCompras = $("#table").DataTable({
 
             let prodsWithoutPrice = verifyProductWithoutPrice();
             if (prodsWithoutPrice != '') {
-              alertify.alert("Advertencia", `Los siguientes productos no poseen costo o precio de venta: <ul class='pl-4 mt-3'>${prodsWithoutPrice}</ul>`, function () { });
+              alertify.alert("Advertencia", `No se puede confirmar la compra, los siguientes productos no poseen costo o precio de venta: <ul class='pl-4 mt-3'>${prodsWithoutPrice}</ul>`, function () { });
               return
             }
 
@@ -337,7 +337,7 @@ let DTDataProdsAdd = $("#tblProducts").DataTable({
 
         $("#idProducto").val(data.idProducto ? data.idProducto : 0);
         $("#precioVent").data('valororiginal', data.valorOriginal);
-
+        $("#idCompraProd").val(data.idCompraProd);
         idProductoCompraEditar = data.id;
 
         $("[form=formCrearEditar]").html('<i class="fas fa-edit"></i> Modificar')
@@ -376,7 +376,7 @@ $(function () {
 
   $("#btnCancelarProdCompra").on('click', function () {
     $("#descripcion, #paca, #stock, #precioVent, #costo, #referencia, #item, #ubicacion").val('');
-    $("#cateFiltro, #manifiesto ").val('').change();
+    $("#cateFiltro, #manifiesto").val('').change();
     $("#idProducto").val(0);
     $("#precioVent").data('valororiginal', 0);
     dataProdSearchAproximate = [];
@@ -417,7 +417,7 @@ $(function () {
 
             $("#cateFiltro").val(infoProd.id_categoria).change();
             $("#manifiesto").val(infoProd.id_manifiesto).change();
-            $("#ubicacion").val(infoProd.ubicacion);
+            // $("#ubicacion").val(infoProd.ubicacion);
           } else {
             dataProdSearchAproximate = dataProds;
             if (dataProdSearchAproximate.length) {
@@ -449,7 +449,7 @@ $(function () {
         id: $("#referencia").val().split(' ').join('') + dataProdsAdd.length,
         costoCompra: (costoProducto || 0),
         idProducto: $("#idProducto").val(),
-        idCompraProd: null,
+        idCompraProd: ($("#idCompraProd").val() > 0 ? $("#idCompraProd").val() : null),
         valorOriginal: +$("#idProducto").val() > 0 ? $("#precioVent").data('valororiginal') : (precioVentaProducto.split(' ').join('') || 0),
         creadoCompra: +$("#idProducto").val() > 0 ? 0 : 1,
         idManifiesto: ($("#manifiesto").val() || null),

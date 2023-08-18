@@ -510,7 +510,7 @@ $(function () {
   });
 
   if ($DATOSPEDIDO == '') {
-    $(".nav-item, .brand-link").addClass('pe-none');
+    $(".nav-item:not(.no-blocked-menu), .brand-link").addClass('pe-none');
 
     $("#btnCancelarCreacion").on('click', function () {
       alertify.confirm("Cancelar pedido", `Esta seguro de cancelar el pedido ${$("#nroPedido").val()}?`, function () {

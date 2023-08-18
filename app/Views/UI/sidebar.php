@@ -1,7 +1,7 @@
 <div class="wrapper">
 		<!-- navbar -->
 		<nav class="main-header navbar navbar-expand navbar-white navbar-light" style="padding: .5rem .3rem">
-			<li class="nav-item" style="list-style-type: none;">
+			<li class="nav-item no-blocked-menu" style="list-style-type: none;">
 				<a class="nav-link text-dark" data-widget="pushmenu" href="#" role="button">
 					<i class="fas fa-bars"></i>
 				</a>

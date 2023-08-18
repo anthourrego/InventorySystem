@@ -156,6 +156,7 @@
       <div class="modal-body">
         <form id="formCrearEditar" class="formValid">
           <input type="hidden" name="idProducto" class="inputVer" id="idProducto">
+          <input type="hidden" name="idCompraProd" class="inputVer" id="idCompraProd">
           <div class="form-row">
             <div class="col-12 col-md-3">
               <div class="form-group form-valid">
@@ -163,7 +164,7 @@
                   Referencia <span class="text-danger">*</span>
                 </label>
                 <div class="input-search">
-                  <input placeholder="Ingrese la referencia" data-campo="referencia" class="form-control soloLetras validarenie validaCampo inputVer" id="referencia" name="referencia" type="text" minlength="1" maxlength="255" required autocomplete="off">
+                  <input placeholder="Ingrese la referencia" data-campo="referencia" class="form-control soloLetras validarenie validaCampo inputVer volverMayuscula" id="referencia" name="referencia" type="text" minlength="1" maxlength="255" required autocomplete="off">
                   <div class="input-group-append d-none">
                     <button type="button" class="btn btn-secondary" id="btnSearchReferecnia">
                       <i class="fas fa-filter"></i>
@@ -205,17 +206,17 @@
                 <input class="form-control inputVer volverMayuscula" id="ubicacion" <?= $camposProducto["ubicacion"] == "1" ? '' : 'disabled' ?> name="ubicacion" type="text" minlength="0" maxlength="255" placeholder="Ingrese la ubicación" autocomplete="off">
               </div>
             </div>
-            <div class="col-12 col-md-3 <?= $camposProducto['manifiesto'] == '1' ? '' : 'd-none' ?>">
+            <!-- <div class="col-12 col-md-3 ?= $camposProducto['manifiesto'] == '1' ? '' : 'd-none' ?>">
               <div class="form-group form-valid">
                 <label class="mb-0" for="manifiesto">Manifiesto</label>
-                <select id="manifiesto" name="manifiesto" class="custom-select select2 inputVer" <?= $camposProducto['manifiesto'] == '1' ? '' : 'disabled' ?> data-placeholder="Seleccione..." data-allow-clear="1">
+                <select id="manifiesto" name="manifiesto" class="custom-select select2 inputVer" ?= $camposProducto['manifiesto'] == '1' ? '' : 'disabled' ?> data-placeholder="Seleccione..." data-allow-clear="1">
                   <option></option>
-                  <?php foreach ($manifiestos as $it) : ?>
-                    <option value="<?=  $it->id?>"><?= $it->nombre ?></option>
-                  <?php endforeach ?>
+                  ?php foreach ($manifiestos as $it) : ?>
+                    <option value="?=  $it->id?>">?= $it->nombre ?></option>
+                  ?php endforeach ?>
                 </select>
               </div>
-            </div>
+            </div> -->
             <div class="col-12 col-md-3 <?= $camposProducto["paca"] == "1" ? '' : 'd-none' ?>">
               <div class="form-group form-valid">
                 <label class="mb-0" for="paca">

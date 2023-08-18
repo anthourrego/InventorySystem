@@ -367,7 +367,7 @@ $(function () {
   });
 
   if ($DATOSVENTA == '') {
-    $(".nav-item, .brand-link").addClass('pe-none');
+    $(".nav-item:not(.no-blocked-menu), .brand-link").addClass('pe-none');
 
     $("#btnCancelarCreacion").on('click', function () {
       alertify.confirm("Cancelar venta", `Esta seguro de cancelar la Factura ${$("#nroVenta").val()}?`, function () {
