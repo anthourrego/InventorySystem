@@ -9,21 +9,56 @@ use App\Models\mManifiesto;
 use \Config\Services;
 use \PhpZip\ZipFile;
 use \Shuchkin\SimpleXLSXGen;
+use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\HTTP\ResponseInterface;
+use Psr\Log\LoggerInterface;
 
 class cProductos extends BaseController {
+
+	private $inventarioBajo = '0';
+	private $inventarioMedio = '24';
+	private $manifiestoProducto = '0';
+	private $itemProducto = '0';
+	private $ubicacionProducto = '0';
+	private $costoProducto = '0';
+	private $pacaProducto = '0';
+	private $pacDescarga = '1';
+	private $inventarioNegativo = '0';
+	private $imageProd = 0;
+
+	public function initController(
+		RequestInterface $request,
+		ResponseInterface $response,
+		LoggerInterface $logger
+	) {
+		parent::initController($request, $response, $logger);
+
+		$this->inventarioBajo = (int) (session()->has("inventarioBajo") ? session()->get("inventarioBajo") : '0');
+		$this->inventarioMedio = (int) (session()->has("inventarioMedio") ? session()->get("inventarioMedio") : '24');
+		$this->manifiestoProducto = (int) (session()->has("manifiestoProducto") ? session()->get("manifiestoProducto") : '0');
+		$this->itemProducto = (session()->has("itemProducto") ? session()->get("itemProducto") : '0');
+		$this->ubicacionProducto = (session()->has("ubicacionProducto") ? session()->get("ubicacionProducto") : '0');
+		$this->costoProducto = (session()->has("costoProducto") ? session()->get("costoProducto") : '0');
+		$this->pacaProducto = (session()->has("pacaProducto") ? session()->get("pacaProducto") : '0');
+		$this->pacDescarga = (session()->has("pacDescarga") ? session()->get("pacDescarga") : '1');
+		$this->inventarioNegativo = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
+		$this->imageProd = (session()->has("imageProd") ? session()->get("imageProd") : 0);
+	}
+
 	public function index() {
+
 		$this->content['title'] = "Productos";
 		$this->content['view'] = "vProductos";
 		$this->content["camposProducto"] = [
-			"item" => (session()->has("itemProducto") ? session()->get("itemProducto") : '0'),
-			"ubicacion" => (session()->has("ubicacionProducto") ? session()->get("ubicacionProducto") : '0'),
-			"costo" => (session()->has("costoProducto") ? session()->get("costoProducto") : '0'),
-			"manifiesto" => (session()->has("manifiestoProducto") ? session()->get("manifiestoProducto") : '0'),
-			"paca" => (session()->has("pacaProducto") ? session()->get("pacaProducto") : '0'),
-			"pacDescarga" => (session()->has("pacDescarga") ? session()->get("pacDescarga") : '1')
+			"item" => $this->itemProducto,
+			"ubicacion" => $this->ubicacionProducto,
+			"costo" => $this->costoProducto,
+			"manifiesto" => $this->manifiestoProducto,
+			"paca" => $this->pacaProducto,
+			"pacDescarga" => $this->pacDescarga
  		];
-		$this->content["inventario_negativo"] = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
-		$this->content['imagenProd'] = (session()->has("imageProd") ? session()->get("imageProd") : 0);
+		$this->content["inventario_negativo"] = $this->inventarioNegativo;
+		$this->content['imagenProd'] = $this->imageProd;
 
 		$this->LDataTables();
 		$this->LMoment();
@@ -49,7 +84,7 @@ class cProductos extends BaseController {
 		}	
 
 		$mProductos = new mProductos();
-		$datosInventario = $mProductos->asObject()->select("SUM(stock * precio_venta) AS valorInventario, SUM(stock * costo) AS costoInventario", false)->where("estado", '1')->first();
+		$datosInventario = $mProductos->totalInventario();
 
 		$this->content["valorInventarioActual"] = 0;
 		if (validPermissions([54], true)) {
@@ -76,6 +111,19 @@ class cProductos extends BaseController {
 		$postData = (object) $this->request->getPost();
 		session()->remove(['filtrosProductos']);
 		$arrayFiltro['estado'] = $postData->estado;
+		$stringStock = "P.stock";
+
+		if ($postData->sumarPedidos == 1) {
+			//Creamos la consulta del subquery para validar el stock que actualmente se encuentra en pedidos
+			$subQuery = $this->db->table("pedidos AS P")
+				->select("PP.id_producto, SUM(PP.cantidad) AS cantidad")
+				->join("ventas AS V", "P.id = V.id_pedido", "left")
+				->join("pedidosproductos AS PP", "P.id = PP.id_pedido", "inner")
+				->where("V.id_pedido IS NULL", null, false)
+				->groupBy("PP.id_producto")->getCompiledSelect();
+
+			$stringStock = "(P.stock + CASE WHEN PP.cantidad IS NULL THEN 0 ELSE PP.cantidad END)";
+		}
 
 		$query = $this->db
 				->table('productos AS P')
@@ -87,14 +135,14 @@ class cProductos extends BaseController {
 						P.descripcion,
 						P.imagen,
 						CASE 
-							WHEN P.stock < 0 THEN 'dark'
-							WHEN P.stock <= " . ((int) (session()->has("inventarioBajo") ? session()->get("inventarioBajo") : '0')) . "
+							WHEN {$stringStock} < 0 THEN 'dark'
+							WHEN {$stringStock} <= {$this->inventarioBajo}
 								THEN 'danger'
-							WHEN P.stock > " . ((int) (session()->has("inventarioBajo") ? session()->get("inventarioBajo") : '0')) . " AND P.stock <= " . ((int) (session()->has("inventarioMedio") ? session()->get("inventarioMedio") : '24')) . "
+							WHEN {$stringStock} > {$this->inventarioBajo} AND {$stringStock} <= {$this->inventarioMedio}
 								THEN 'warning'
 							ELSE 'success' 
 						END AS ColorStock,
-						P.stock,
+						{$stringStock} As stock,
 						P.precio_venta,
 						P.precio_venta_dos,
 						P.costo,
@@ -111,12 +159,16 @@ class cProductos extends BaseController {
 						END AS Estadito,
 						P.cantPaca,
 						CASE 
-								WHEN 1 = "  . ((int) (session()->has("manifiestoProducto") ? session()->get("manifiestoProducto") : '0')) . "
+								WHEN 1 = {$this->manifiestoProducto}
 									THEN P.id_manifiesto
 								ELSE '0'
 						END AS manifiesto
 				")->join('categorias AS C', 'P.id_categoria = C.id', 'left')
 				->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left');
+
+		if ($postData->sumarPedidos == 1) {
+			$query->join("({$subQuery}) PP", "P.id = PP.id_producto", "left");
+		}
 
 		if($postData->estado != "-1"){
 			$query->where("P.estado", $postData->estado);
@@ -150,8 +202,7 @@ class cProductos extends BaseController {
 		//validamos si aplica para ventas para realziar algunas validaciones
 		if (isset($postData->ventas) && $postData->ventas == 1) {
 			$arrayFiltro['ventas'] = $postData->ventas;
-			$inventarioNegativo = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
-			if ($inventarioNegativo == "0") {
+			if ($this->inventarioNegativo == "0") {
 				$query->where("P.stock >=", 0);
 			}
 		}
@@ -179,13 +230,10 @@ class cProductos extends BaseController {
 		$filenameDelete = "";
 		$postData = (object) $this->request->getPost();
 
-		$inventarioNegativo = (session()->has("inventarioNegativo") ?  session()->get("inventarioNegativo") : '0');
-
 		//Validamos si se puede guardar inventario negativo
-		if ($inventarioNegativo == '0' && intval($postData->stock) < 0) {
+		$inventarioNegativo = true;
+		if ($this->inventarioNegativo == '0' && intval($postData->stock) < 0) {
 			$inventarioNegativo = false;
-		} else {
-			$inventarioNegativo = true;
 		}
 
 		if ($inventarioNegativo) {
@@ -195,15 +243,15 @@ class cProductos extends BaseController {
 				"id" => $postData->id
 				,"id_categoria" => ($postData->categoria == '' ? null : trim($postData->categoria))
 				,"referencia" => trim($postData->referencia)
-				,"item" => (session()->has("itemProducto") && session()->get("itemProducto") == '1' ? trim($postData->item) : null)
+				,"item" => ($this->itemProducto == '1' ? trim($postData->item) : null)
 				,"descripcion" => trim($postData->descripcion)
 				,"stock" => $postData->stock
 				,"precio_venta" => str_replace(",", "", trim(str_replace("$", "", $postData->precioVent)))
 				,"precio_venta_dos" => str_replace(",", "", trim(str_replace("$", "", $postData->precioVentDos)))
-				,"ubicacion" => (session()->has("ubicacionProducto") && session()->get("ubicacionProducto") == '1' ? trim($postData->ubicacion) : null)
+				,"ubicacion" => ($this->ubicacionProducto == '1' ? trim($postData->ubicacion) : null)
 				,"id_manifiesto" => !isset($postData->manifiesto) || strlen(trim($postData->manifiesto)) == 0 ? null : trim($postData->manifiesto)
-				,"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $postData->costo))) : '0')
-				,"cantPaca" => (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($postData->paca) : 1)
+				,"costo" => ($this->costoProducto == '1' ? str_replace(",", "", trim(str_replace("$", "", $postData->costo))) : '0')
+				,"cantPaca" => ($this->pacaProducto == '1' ? trim($postData->paca) : 1)
 				,"updated_at" => date("Y-m-d H:i:s")
 			);
 	
@@ -546,8 +594,7 @@ class cProductos extends BaseController {
 		//validamos si aplica para ventas para realziar algunas validaciones
 		if (isset($filtros->ventas) && $filtros->ventas == 1) {
 			$arrayFiltro['ventas'] = $filtros->ventas;
-			$inventarioNegativo = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
-			if ($inventarioNegativo == "0") {
+			if ($this->inventarioNegativo == "0") {
 				$mProducto->where("P.stock >=", 0);
 				$mProducto1->where("P.stock >=", 0);
 			}
@@ -769,7 +816,7 @@ class cProductos extends BaseController {
 			//recorro el contenido del directorio fichero a fichero
 			while($file = readdir($dir_handle)) {
 				if ($file != "." && $file != "..") {
-					//si no es un directorio elemino el fichero con unlink()
+					//si no es un directorio elimino el fichero con unlink()
 					if (!is_dir($dirname."/".$file))
 						unlink($dirname."/".$file);
 					else //si es un directorio hago la llamada recursiva con el nombre del directorio
@@ -829,10 +876,9 @@ class cProductos extends BaseController {
 			$mProducto->where("P.precio_venta <= $filtros->preciFin");
 		}
 
-		//validamos si aplica para ventas para realziar algunas validaciones
+		//validamos si aplica para ventas para realizar algunas validaciones
 		if (isset($filtros->ventas) && $filtros->ventas == 1) {
-			$inventarioNegativo = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
-			if ($inventarioNegativo == "0") {
+			if ($this->inventarioNegativo == "0") {
 				$mProducto->where("P.stock >=", 0);
 			}
 		}
@@ -857,7 +903,7 @@ class cProductos extends BaseController {
 		$mProductos = new mProductos();
 		$producto = $mProductos->find($postData->id);
 		
-		$producto['ubicacion'] = (session()->has("ubicacionProducto") && session()->get("ubicacionProducto") == '1' ? trim($postData->ubicacion) : null);
+		$producto['ubicacion'] = ($this->ubicacionProducto == '1' ? trim($postData->ubicacion) : null);
 		$producto['updated_at'] = date("Y-m-d H:i:s");
 
 		$this->db->transBegin();
@@ -867,9 +913,14 @@ class cProductos extends BaseController {
 			$resp["msj"] = "La ubicación del producto <b>" . $producto['referencia'] . "</b> se actualizo correctamente.";
 			$this->db->transCommit();
 		} else {
-			$resp["msj"] = "No fue posible actualizar la ubicación del producto." . listErrors($product->errors());
+			$resp["msj"] = "No fue posible actualizar la ubicación del producto." . listErrors($mProductos->errors());
 			$this->db->transRollback();
 		}
 		return $this->response->setJSON($resp);
+	}
+
+	public function totalInventario($sumaPedidos) {
+		$mProductos = new mProductos();
+		return $this->response->setJSON($mProductos->totalInventario($sumaPedidos));
 	}
 }

@@ -76,4 +76,27 @@ class mProductos extends Model {
 	protected $afterFind      = [];
 	protected $beforeDelete   = [];
 	protected $afterDelete    = [];
+
+	public function totalInventario($sumarPedidos = false){
+		if ($sumarPedidos) {
+			$subQuery = $this->db->table("pedidos AS P")
+					->select("PP.id_producto, SUM(PP.cantidad) AS cantidad")
+					->join("ventas AS V", "P.id = V.id_pedido", "left")
+					->join("pedidosproductos AS PP", "P.id = PP.id_pedido", "inner")
+					->where("V.id_pedido IS NULL", null, false)
+					->groupBy("PP.id_producto")->getCompiledSelect();
+
+			$this->join("({$subQuery}) PP", "{$this->table}.id = PP.id_producto", "left")
+				->select("
+					SUM(({$this->table}.stock + IFNULL(PP.cantidad, 0)) * {$this->table}.precio_venta) As valorInventario,
+					SUM(({$this->table}.stock + IFNULL(PP.cantidad, 0)) * {$this->table}.costo) As costoInventario
+				");
+		} else {
+			$this->selectSum("({$this->table}.stock * {$this->table}.precio_venta)", "valorInventario")
+				->selectSum("({$this->table}.stock * {$this->table}.costo)", "costoInventario");
+		}
+
+		$this->where("{$this->table}.estado", "1");
+		return $this->asObject()->first();
+	}
 }

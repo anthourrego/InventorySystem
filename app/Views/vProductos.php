@@ -56,6 +56,10 @@
     </div>
   </div>
   <div class="card-body">
+    <div id="alertaSumaPedidos" class="alert alert-warning d-none" role="alert">
+      Actualmente tiene activo la suma de pedidos, este modo sumara el inventario de los productos que se tienen en el modulo de pedidos y no se han facturado se sumaran y veran afectos los stocks, valor y costos del inventario.
+    </div>
+
     <div class="table-responsive">
       <table id="table" class="table table-sm table-striped table-hover table-bordered w-100">
         <thead> 
@@ -310,7 +314,7 @@
   <div class="modal-dialog modal-lg modal-width">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalFiltrosLabel">Filtros</h5>
+        <h5 class="modal-title" id="modalFiltrosLabel"><i class="fa-solid fa-filter"></i> Filtros</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -318,7 +322,14 @@
       <div class="modal-body">
         <form id="formFiltros">
           <div class="form-row">
-            <div class="col-12 col-md-6 form-group">
+            <div class="col-12 col-md-4 form-group">
+              <label class="mb-0" for="sumarPedidos">Sumar Pedidos</label>
+              <select class="custom-select" id="sumarPedidos">
+                <option value="0" selected>Inactivo</option>
+                <option value="1">Activo</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-4 form-group">
               <label class="mb-0" for="selectEstado">Estado</label>
               <select class="custom-select" id="selectEstado">
                 <option selected value="1">Activo</option>
@@ -326,7 +337,7 @@
                 <option value="-1">Todos</option>
               </select>
             </div>
-            <div class="col-12 col-md-6 form-group">
+            <div class="col-12 col-md-4 form-group">
               <label class="mb-0" for="cateFiltro">Categoria</label>
               <select id="cateFiltro" name="cateFiltro" class="custom-select select2" data-placeholder="Seleccione..." data-allow-clear="1">
                 <option></option>

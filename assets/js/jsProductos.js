@@ -4,7 +4,8 @@ let stream = null;
 let $video = null;
 let cameraActive = 'environment';
 let dataFiltros = {
-  estado: 1
+  estado: 1,
+  sumarPedidos: 0
 };
 let DTProductos = $("#table").DataTable({
   ajax: {
@@ -325,6 +326,25 @@ function reintentarFoto() {
   iniciarCamara();
 }
 
+function totalInventario(sumaPedidos){
+  $.ajax({
+    url: rutaBase + "TotalInventario/"+sumaPedidos,
+    dataType: "json",
+    type: "GET",
+    async: false,
+    success: (resp) => {
+      if (sumaPedidos === '1') {
+        $("#alertaSumaPedidos").removeClass("d-none");
+      } else {
+        $("#alertaSumaPedidos").addClass("d-none");
+      }
+
+      $("#valorInventarioActual").val(formatoPesos.format(resp.valorInventario));
+      $("#costoInventarioActual").val(formatoPesos.format(resp.costoInventario));
+    }
+  });
+}
+
 $(function () {
   //Enviamos el valor del inventario
   $("#valorInventarioActual").val(formatoPesos.format($valorInventarioActual));
@@ -579,7 +599,6 @@ $(function () {
 
   $("#btnFiltros").on('click', function () {
     $("#modalFiltros").modal('show');
-    dataFiltros
   });
 
   $("#formFiltros").submit(function (e) {
@@ -593,19 +612,25 @@ $(function () {
       return alertify.warning("El precio inicial es mayor al precio final");
     }
 
+    //Si el filtro de sumar pedidos es diferente calculamos nuevamente los totales
+    if (dataFiltros.sumarPedidos !=  $("#sumarPedidos").val()) {
+      totalInventario($("#sumarPedidos").val());
+    }
+
     dataFiltros.estado = $("#selectEstado").val();
     dataFiltros.categoria = $("#cateFiltro").val();
     dataFiltros.cantIni = $("#cantIni").val() == "" ? -1 : +$("#cantIni").val();
     dataFiltros.cantFin = $("#cantFin").val() == "" ? -1 : +$("#cantFin").val();
     dataFiltros.preciFin = $("#preciFin").val() == "" ? -1 : +$("#preciFin").val();
     dataFiltros.preciIni = $("#preciIni").val() == "" ? -1 : +$("#preciIni").val();
+    dataFiltros.sumarPedidos = $("#sumarPedidos").val();
 
     $("#modalFiltros").modal('hide');
     DTProductos.ajax.reload();
   });
 
   $("#reiniciarFiltros").on('click', function () {
-    dataFiltros = { estado: 1 };
+    dataFiltros = { estado: 1,  sumarPedidos: 0};
     $("#selectEstado").val(1);
     $("#cantIni, #cantFin, #preciFin, #preciIni").val('');
     $("#cateFiltro").val('').change();

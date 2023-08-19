@@ -101,6 +101,7 @@ $routes->group('Productos', ['filter' => 'authGuard:5'], function ($routes) {
 	$routes->get('Sincronizar', 'cProductos::sincronizar', ['filter' => ['authGuard:56']]);
 	$routes->get('ExportarExcel', 'cProductos::downloadExcelProducts');
 	$routes->post('EditarUbicacion', 'cProductos::editarUbicacion', ['filter' => ['authGuard:59', 'ajax']]);
+	$routes->get('TotalInventario/(:num)', 'cProductos::totalInventario/$1', ['filter' => ['authGuard:54,57', 'ajax']]);
 });
 
 //Ventas
