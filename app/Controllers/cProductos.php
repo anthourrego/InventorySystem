@@ -113,7 +113,7 @@ class cProductos extends BaseController {
 		$arrayFiltro['estado'] = $postData->estado;
 		$stringStock = "P.stock";
 
-		if ($postData->sumarPedidos == 1) {
+		if (isset($postData->categoria) && $postData->sumarPedidos == 1) {
 			//Creamos la consulta del subquery para validar el stock que actualmente se encuentra en pedidos
 			$subQuery = $this->db->table("pedidos AS P")
 				->select("PP.id_producto, SUM(PP.cantidad) AS cantidad")
@@ -166,7 +166,7 @@ class cProductos extends BaseController {
 				")->join('categorias AS C', 'P.id_categoria = C.id', 'left')
 				->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left');
 
-		if ($postData->sumarPedidos == 1) {
+		if (isset($postData->categoria) && $postData->sumarPedidos == 1) {
 			$query->join("({$subQuery}) PP", "P.id = PP.id_producto", "left");
 		}
 
