@@ -6,3 +6,25 @@
 .lista-detalle-caja {
   border-radius: 5px;
 }
+
+.manifiestos-caja:before {
+  content: "";
+  width: 15px;
+  position: absolute;
+  height: 13px;
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  background-color: #ffffff;
+  border: 1px solid #000000;
+  padding-bottom: 15px;
+}
+
+.manifiestos-caja:checked:before {
+  background-color: #28a745;
+  font-size: 11px;
+  content: "\f00c";
+  font-family: FontAwesome;
+  color: #ffffff;
+  border: none;
+}

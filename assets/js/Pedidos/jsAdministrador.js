@@ -428,13 +428,15 @@ function buscarManifiestos(info) {
         datos.forEach((it, x) => {
 
           let ids = it.manifiestos.map((op, p) => op.id);
+          let cajaManiestos = 'C' + it.numeroCaja + '=' + ids.join('_')
 
           estructura += `<div class="list-group-item list-group-item-action lgicaja p-2">
-              <div class="d-flex justify-content-between align-items-center">
-                <h6 class="mb-0 text-truncate h6-click w-75" style="cursor: pointer" data-pos="${x}">
+              <div class="d-flex justify-content-between align-items-center h6-click" data-pos="${x}">
+                <h6 class="mb-0 text-truncate w-75" style="cursor: pointer">
                   Caja ${it.numeroCaja}
                 </h6>
-                ${validPermissions(1081) ? `<a href="${base_url()}Reportes/Manifiestos/${ids.join('_')}" target="_blank" type="button" class="btn btn-info" title="Imprimir Manifiestos">
+                ${validPermissions(1082) ? `<input class="manifiestos-caja mr-3" id="verImg" type="checkbox" data-manifiestoscaja="${cajaManiestos}">` : ''}
+                ${validPermissions(1081) ? `<a href="${base_url()}Reportes/Manifiestos/${cajaManiestos}" target="_blank" type="button" class="btn btn-info" title="Imprimir Manifiestos">
                   <i class="fa-solid fa-print"></i>
                 </a>` : ''}
               </div>
@@ -456,10 +458,31 @@ function buscarManifiestos(info) {
               </div>
             `;
           });
+          $(".lgicaja").removeClass("active");
           $('#listamanifiestos').html(info);
+          $(this).parents(".lgicaja").addClass("active");
+        });
+
+        $("input.manifiestos-caja").on('change', function () {
+          if ($("input.manifiestos-caja:checked").length) {
+            $("#btn-imprimir-multiple-manifiesto").removeClass('d-none')
+          } else {
+            $("#btn-imprimir-multiple-manifiesto").addClass('d-none')
+          }
         });
 
         $(".lgicaja .h6-click").first().click();
+
+        $("#btn-imprimir-multiple-manifiesto").on('click', function () {
+          if ($("input.manifiestos-caja:checked").length) {
+            let cajasManifiestos = $.map($("input.manifiestos-caja:checked"), function (item) {
+              return $(item).data('manifiestoscaja')
+            });
+            window.open(`${base_url()}Reportes/Manifiestos/${cajasManifiestos.join("*")}`, "_blank");
+          } else {
+            alertify.warning("No se han seleccionado cajas");
+          }
+        });
 
         $("#modalManifiestos").modal('show');
       } else {

@@ -387,6 +387,10 @@ class mPermisos extends Model {
 								"id" => 1081,
 								"text" => "Imprimir Manifiesto"
 							],
+							[
+								"id" => 1082,
+								"text" => "Imprimir Múltiple Manifiesto"
+							],
 						]
 					],
 					[

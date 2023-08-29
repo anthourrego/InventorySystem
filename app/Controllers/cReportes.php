@@ -501,33 +501,52 @@ class cReportes extends BaseController {
 		return $pdf;
 	}
 
-	public function manifiestos($ids) {
+	public function manifiestos($boxesManifest) {
 
-		$mManifiesto = new mManifiesto();
+		$boxes = explode("*", $boxesManifest);
 
-		$ids = explode("_", $ids);
+		if (count($boxes) > 0) {
 
-		$manifiestos = $mManifiesto->select("ruta_archivo")->whereIn("id", $ids)->findAll();
+			$mManifiesto = new mManifiesto();
+			$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		$pdf->startPageGroup();
+			foreach ($boxes as $keyBox => $box) {
 
-		if (count($manifiestos) > 0) {
-			foreach ($manifiestos as $llave => $manif) {
-				$ext = explode('.', $manif['ruta_archivo'])[1];
-				$file = UPLOADS_MANIFEST_PATH . $manif['ruta_archivo'];
-				if ($ext == 'pdf') {
+				$informationBox = explode("=", $box);
 
-					$paginas = $pdf->setSourceFile($file);
-					for($i=0; $i < $paginas; $i++) {
-						$pdf->AddPage();
-						$tplIdx = $pdf->importPage($i+1);
-						$pdf->useTemplate($tplIdx, 10, 10, 200);
+				$idsManifest = explode("_", $informationBox[1]);
+				$numberBox = str_replace("C", "", $informationBox[0]);
+
+				$manifiestos = $mManifiesto->select("ruta_archivo")->whereIn("id", $idsManifest)->findAll();
+
+				$pdf->startPageGroup();
+
+				if (count($manifiestos) > 0) {
+					foreach ($manifiestos as $llave => $manif) {
+						$ext = explode('.', $manif['ruta_archivo'])[1];
+						$file = UPLOADS_MANIFEST_PATH . $manif['ruta_archivo'];
+						if ($ext == 'pdf') {
+
+							$pages = $pdf->setSourceFile($file);
+							for($page=1; $page <= $pages; $page++) {
+								$pdf->AddPage();
+
+								if ($page == 1) {
+									$pdf->writeHTML('<p style="font-size:22px">Caja #' . $numberBox . '</p>', false, false, false, false, '');
+									$tplIdx = $pdf->importPage($page);
+									$pdf->useTemplate($tplIdx, 10, 20, 190);
+								} else {
+									$tplIdx = $pdf->importPage($page);
+									$pdf->useTemplate($tplIdx, 10, 10, 190);
+								}
+							}
+
+						} else if ($ext == 'png' || $ext == 'jpg' || $ext == 'jpeg') {
+							$pdf->AddPage();
+							$pdf->writeHTML('<p style="font-size:22px">Caja #' . $numberBox . '</p>', false, false, false, false, '');
+							$pdf->Image($file, 10, 20, 190);
+						}
 					}
-
-				} else if ($ext == 'png' || $ext == 'jpg' || $ext == 'jpeg') {
-					$pdf->AddPage();
-					$pdf->Image($file);
 				}
 			}
 		}

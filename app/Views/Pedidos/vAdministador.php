@@ -88,6 +88,11 @@
 
       </div>
       <div class="modal-footer">
+        <?php if (validPermissions([1082], true)) { ?>
+          <button type="button" class="btn btn-secondary d-none" id="btn-imprimir-multiple-manifiesto">
+            <i class="fas fa-print"></i> Imprimir Manifiestos
+          </button>
+        <?php } ?>
         <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-success" id="btn-finalizar-empaque">
           <i class="fas fa-check"></i> Aceptar
         </button>
