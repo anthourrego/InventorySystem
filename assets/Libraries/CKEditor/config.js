@@ -42,4 +42,6 @@ CKEDITOR.editorConfig = function (config) {
   config.removeDialogTabs = 'image:advanced;link:advanced';
 
   config.extraPlugins = 'colorbutton,colordialog, justify, font, dialog, dialogadvtab';
+
+  config.height = 'calc(100vh - 340px)';
 };
