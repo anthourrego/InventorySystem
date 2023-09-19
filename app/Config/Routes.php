@@ -260,6 +260,7 @@ $routes->group('Pedidos', ['filter' => 'authGuard:10'], function ($routes) {
 	$routes->get('CajasManifiestos/(:num)', 'cPedidos::cajasManifiestos/$1', ['filter' => 'ajax']);
 	$routes->get('GenerarQR/(:num)', 'cPedidos::generarQR/$1');
 	$routes->get('DetallePedido/(:num)', 'cPedidos::detallePedido/$1');
+	$routes->get('DetallePedidoCaja/(:num)/(:num)', 'cPedidos::DetallePedidoCaja/$1/$2');
 });
 
 //Empaque

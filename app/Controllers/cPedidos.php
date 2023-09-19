@@ -1071,4 +1071,19 @@ class cPedidos extends BaseController {
 		return $this->response->setJSON($pedido);
 	}
 
+	public function detallePedidoCaja($idPedido, $idCaja) {
+		$mPedidosCajas = new mPedidosCajas();
+
+		$productos = $mPedidosCajas->select("
+			P.referencia,
+			P.item,
+			P.descripcion
+		")->join('pedidoscajasproductos AS PCP', 'pedidoscajas.id = PCP.id_caja', 'left')
+		->join('productos AS P', 'PCP.id_producto = P.id', 'left')
+		->where("pedidoscajas.id", $idCaja)
+		->where("pedidoscajas.id_pedido", $idPedido)->findAll();
+
+		return $this->response->setJSON($productos);
+	}
+
 }

@@ -1,6 +1,7 @@
 let rutaBase = base_url() + "Pedidos/";
 let limiteRotulo = 1000;
 let estadoFiltro = '-1';
+let btnActualDetallePedido = null;
 
 let DT = $("#table").DataTable({
   ajax: {
@@ -162,7 +163,7 @@ let DT = $("#table").DataTable({
         } */
 
         /* Se valida permiso para detalle del pedido */
-        if (validPermissions(111) && ['EM', 'FA', 'DE'].includes(data.estado)) {
+        if (validPermissions(111) && ['EM', 'FA', 'DE', 'EP'].includes(data.estado)) {
           botones += `<button type="button" class="btn btn-info btnDetallePedido" title="Detalle Pedido">
             <i class="fa-solid fa-file-invoice"></i>
           </button>`;
@@ -284,6 +285,13 @@ let DT = $("#table").DataTable({
     });
 
     $(row).find(".btnDetallePedido").click(function (e) {
+      btnActualDetallePedido = this;
+
+      $("#btnSincronizarDetallePedido").addClass('d-none');
+      if (data.estado == 'EP') {
+        $("#btnSincronizarDetallePedido").removeClass('d-none');
+      }
+
       $.ajax({
         type: "GET",
         url: `${rutaBase}DetallePedido/${data.id}`,
@@ -298,9 +306,14 @@ let DT = $("#table").DataTable({
               estrcutura += `<div class="col-8 col-lg-3">
                 <div class="card mb-2 item-caja" data-pos="${pos}" style="border-width: 3px !important;">
                   <div class="card-body" style="cursor: pointer;">
-                    <h5 class="card-title">
-                      <i class="fa-solid fa-box mr-1"></i> ${it.numero_caja}
-                    </h5>
+                    <div class="d-flex align-items-center justify-content-between">
+                      <h5 class="card-title">
+                        <i class="fa-solid fa-box mr-1"></i> ${it.numero_caja}
+                      </h5>
+                      <button class="btn btn-info btn-sm btn-info-caja" data-pos="${pos}">
+                        <i class="fas fa-info"></i>
+                      </button>
+                    </div>
                     <p class="card-text">${it.nombreEmpacador}</p>
                   </div>
                 </div>
@@ -309,22 +322,81 @@ let DT = $("#table").DataTable({
             $("#listacajasDetalle").html(estrcutura);
 
             $("#inicioEmpaque").html(moment(pedido.inicio_empaque).format('DD/MM/YYYY hh:mm:ss A'))
-            $("#finEmpaque").html(moment(pedido.fin_empaque).format('DD/MM/YYYY hh:mm:ss A'));
-            $("#tiempoEmpaque").html(pedido.TiempoEmpaque);
+            if (pedido.fin_empaque) {
+              $("#finEmpaque").html(moment(pedido.fin_empaque).format('DD/MM/YYYY hh:mm:ss A'));
+            } else {
+              $("#finEmpaque").html('No hay datos');
+            }
+            if (pedido.fin_empaque) {
+              $("#tiempoEmpaque").html(pedido.TiempoEmpaque);
+            } else {
+              $("#tiempoEmpaque").html('No hay datos');
+            }
 
-            $(".item-caja").on('click', function () {
+            $(".item-caja").on('click', function (e) {
               $(".item-caja").removeClass(['selected', 'border', 'border-info']);
               let caja = pedido.cajas[$(this).data('pos')];
               $(this).addClass('selected border border-info');
 
               $("#inicioEmpaqueCaja").html(moment(caja.inicio_empaque).format('DD/MM/YYYY hh:mm:ss A'));
-              $("#finEmpaqueCaja").html(moment(caja.fin_empaque).format('DD/MM/YYYY hh:mm:ss A'));
-              $("#tiempoEmpaqueCaja").html(caja.TiempoEmpaque);
-              $("#totalReferenciasCaja").html(caja.infoCaja.TotalRef);
-              $("#totalProductos").html(caja.infoCaja.Total);
+              if (caja.fin_empaque) {
+                $("#finEmpaqueCaja").html(moment(caja.fin_empaque).format('DD/MM/YYYY hh:mm:ss A'));
+              } else {
+                $("#finEmpaqueCaja").html('No hay datos');
+              }
+              if (caja.TiempoEmpaque) {
+                $("#tiempoEmpaqueCaja").html(caja.TiempoEmpaque);
+              } else {
+                $("#tiempoEmpaqueCaja").html('No hay datos');
+              }
+              if (caja.infoCaja) {
+                $("#totalReferenciasCaja").html(caja.infoCaja.TotalRef);
+                $("#totalProductos").html(caja.infoCaja.Total);
+              } else {
+                $("#totalReferenciasCaja, #totalProductos").html('No hay datos')
+              }
+            });
+
+            $(".btn-info-caja").on('click', function () {
+              let caja = pedido.cajas[$(this).data('pos')];
+
+              $.ajax({
+                type: "GET",
+                url: `${rutaBase}DetallePedidoCaja/${caja.id_pedido}/${caja.infoCaja.id_caja}`,
+                dataType: 'json',
+                success: function (productos) {
+                  if (productos.length) {
+                    let structureHtmlProds = '';
+                    productos.forEach(prod => {
+                      structureHtmlProds += `
+                        <li role="button" class="list-group-item item-list-search pb-0" data-title="${prod.descripcion} ${prod.item} ${prod.referencia}">
+                          <div class="d-flex justify-content-between">
+                            <h5 class="mb-1">${prod.descripcion}</h5>
+                            <small>${prod.item}</small>
+                          </div>
+                          <p class="mb-1">Ref: ${prod.referencia}</p>
+                        </li>
+                      `;
+                    });
+                    $("#boxProdsHtml").html(structureHtmlProds);
+                  } else {
+                    $("#boxProdsHtml").html(`<li id="no-hay-search" class="list-group-item text-center">No se encontraron productos</li>`);
+                  }
+                  $("#modalBoxProductsLabel").html(`<i class="fa fa-box mr-2"></i> ${caja.numero_caja}`);
+                  $("#modalDetallePedido").modal('hide');
+                  $("#modalBoxProducts").modal('show');
+
+                  $("#modalBoxProducts").on('hidden.bs.modal', function () {
+                    $("#modalDetallePedido").modal('show');
+                  })
+                }
+              });
+
             });
 
             $(".item-caja:first").click()
+          } else {
+            $("#inicioEmpaque, #inicioEmpaqueCaja, #finEmpaqueCaja, #tiempoEmpaqueCaja, #totalReferenciasCaja, #totalProductos, #finEmpaque, #tiempoEmpaque").html('No hay datos')
           }
           $("#modalDetallePedido").modal('show');
         }
@@ -356,6 +428,10 @@ $(function () {
   $("#modalDetallePedido").on('hidden.bs.modal', function () {
     $("#listacajasPadre").css("height", ``);
   })
+
+  $("#btnSincronizarDetallePedido").on('click', function () {
+    $(btnActualDetallePedido).click();
+  });
 });
 
 function alistarPedido(data) {

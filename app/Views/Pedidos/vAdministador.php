@@ -155,6 +155,14 @@
         </button>
       </div>
       <div class="modal-body">
+
+        <div class="row mb-3" id="btnSincronizarDetallePedido">
+          <div class="col-12 col-md-4 d-flex">
+            <button class="btn btn-info">
+              <i class="fas fa-sync"></i> Sincronizar Datos
+            </button>
+          </div>
+        </div>
   
         <div class="row">
           <div class="col-12 col-md-4 d-flex">
@@ -213,6 +221,27 @@
         </button>
         <button type="button" id="btnImprimirDetallePedido" class="btn btn-primary">
           <i class="fas fa-print"></i> Imprimir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalBoxProducts" data-backdrop="static" data-keyboard="false" aria-labelledby="modalBoxProductsLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalBoxProductsLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group list-group-flush" id="boxProdsHtml"></ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <i class="fas fa-times"></i> Cerrar
         </button>
       </div>
     </div>
