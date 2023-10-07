@@ -209,6 +209,16 @@ class mPermisos extends Model {
 						"id" => 59,
 						"text" => "Modificar ubicación (Bodeguero)"
 					],
+					[
+						"id" => 510,
+						"text" => "Productos reportados",
+						"children" => [
+							[
+								"id" => 51001,
+								"text" => "Confirmar Producto Reportado"
+							]
+						]
+					],
 				]
 			],
 			[
@@ -219,9 +229,19 @@ class mPermisos extends Model {
 				"color" => "bg-info",
 				"children" => [
 					[
-						"id" => 61, //Para mostrar en la lista de vendedores
+						"id" => 61, // Para mostrar en la lista de vendedores
 						"text" => "Es vendedor"
-					]
+					],
+					[
+						"id" => 62,
+						"text" => "Productos reportados",
+						"children" => [
+							[
+								"id" => 6201,
+								"text" => "Confirmar Producto Reportado"
+							]
+						]
+					],
 				]
 			],
 			[
@@ -404,7 +424,17 @@ class mPermisos extends Model {
 					[
 						"id" => 111,
 						"text" => "Detalle Pedido"
-					]
+					],
+					[
+						"id" => 112,
+						"text" => "Productos reportados",
+						"children" => [
+							[
+								"id" => 1121,
+								"text" => "Confirmar Producto Reportado"
+							]
+						]
+					],
 				]
 			],
 			[
@@ -464,6 +494,19 @@ class mPermisos extends Model {
 						"text" => "Activar/Inactivar"
 					]
 				]
+			],
+			[
+				"id" => 60,
+				"text" => "Productos Reportados",
+				"uri" => "ProductosReportados",
+				"icon" => "fa-solid fa-exclamation-triangle",
+				"color" => "bg-light",
+				"children" => [
+					[
+						"id" => 6001,
+						"text" => "Confirmar Producto Reportado"
+					]
+				]
 			]
 		];
 
@@ -475,7 +518,7 @@ class mPermisos extends Model {
 					"text" => "Empaque",
 					"uri" => "Empaque",
 					"icon" => "fa-solid fa-box-open",
-					"color" => "bg-light",
+					"color" => "bg-dark",
 					"children" => [
 						[
 							"id" => 301,

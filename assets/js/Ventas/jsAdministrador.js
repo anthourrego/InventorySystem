@@ -52,6 +52,10 @@ let DT = $("#table").DataTable({
           <button type="button" class="bt btn-inf btnImprimirQR d-none" title="Código QR">
             <i class="fa-solid fa-qrcode"></i>
           </button>
+
+          ${validPermissions(62) ? `<button type="button" class="btn btn-dark btnProductosReportados" title="Producto Reportado">
+            <i class="fa-solid fa-exclamation-triangle"></i>
+          </button>` : ''}
         </div>`;
       }
     },
@@ -81,6 +85,14 @@ let DT = $("#table").DataTable({
           }
         }
       });
+    });
+
+    $(row).find('.btnProductosReportados').on('click', function () {
+      let dataModulo = {
+        modulo: 'factura',
+        idRegistro: data.id
+      }
+      iniciarProductosReportados(dataModulo);
     });
   }
 });

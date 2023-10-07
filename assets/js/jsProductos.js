@@ -93,11 +93,14 @@ let DTProductos = $("#table").DataTable({
 
       btnUbicacionBodeguero = validPermissions(59) && $CAMPOSPRODUCTO.ubicacion == '1' ? '<button type="button" class="btn btn-warning btnUbicacionBodeguero" title="Modificar ubicación"><i class="fa-solid fa-pen"></i></button>' : '';
 
+      btnProductosReportados = validPermissions(510) ? '<button type="button" class="btn btn-dark btnProductosReportados" title="Producto Reportado"><i class="fa-solid fa-exclamation-triangle"></i></button>' : '';
+
       return `<div class="btn-group btn-group-sm" role="group">
                   ${btnEditar}
                   ${convertirFoto}
                   ${btnCambiarEstado}
                   ${btnUbicacionBodeguero}
+                  ${btnProductosReportados}
                 </div>`;
     }
   }],
@@ -165,6 +168,14 @@ let DTProductos = $("#table").DataTable({
       $("#modalEditarUbicacionLabel").html('<i class="fa fa-edit"></i> Ubicación ' + data.descripcion);
 
       $("#modalEditarUbicacion").modal('show');
+    });
+
+    $(row).find('.btnProductosReportados').on('click', function () {
+      let dataModulo = {
+        modulo: 'producto',
+        idRegistro: data.id
+      }
+      iniciarProductosReportados(dataModulo);
     });
   }
 });
@@ -326,9 +337,9 @@ function reintentarFoto() {
   iniciarCamara();
 }
 
-function totalInventario(sumaPedidos){
+function totalInventario(sumaPedidos) {
   $.ajax({
-    url: rutaBase + "TotalInventario/"+sumaPedidos,
+    url: rutaBase + "TotalInventario/" + sumaPedidos,
     dataType: "json",
     type: "GET",
     async: false,
@@ -533,9 +544,9 @@ $(function () {
     if (tipoFoto == 'original') {
       originales = 1;
     } else {
-      
+
       if (tipoFoto == 'precio2') precioVenta = 'dos';
-      
+
     }
 
     let cantidad = $(this).data("cant");
@@ -613,7 +624,7 @@ $(function () {
     }
 
     //Si el filtro de sumar pedidos es diferente calculamos nuevamente los totales
-    if (dataFiltros.sumarPedidos !=  $("#sumarPedidos").val()) {
+    if (dataFiltros.sumarPedidos != $("#sumarPedidos").val()) {
       totalInventario($("#sumarPedidos").val());
     }
 
@@ -630,7 +641,7 @@ $(function () {
   });
 
   $("#reiniciarFiltros").on('click', function () {
-    dataFiltros = { estado: 1,  sumarPedidos: 0};
+    dataFiltros = { estado: 1, sumarPedidos: 0 };
     $("#selectEstado").val(1);
     $("#cantIni, #cantFin, #preciFin, #preciIni").val('');
     $("#cateFiltro").val('').change();

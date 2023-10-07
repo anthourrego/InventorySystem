@@ -20,7 +20,8 @@ class cVentas extends BaseController {
 		$this->LMoment();
 
 		$this->content['js_add'][] = [
-			'Ventas/jsAdministrador.js'
+			'Ventas/jsAdministrador.js',
+			'ProductosReportados/jsProductosReportadosAcciones.js'
 		];
 
 		return view('UI/viewDefault', $this->content);

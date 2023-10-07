@@ -303,6 +303,13 @@ $routes->group('Proveedores', ['filter' => 'authGuard:50'], function ($routes) {
 	$routes->get('Validar/(:any)/(:num)', 'cProveedores::validaProveedor/$1/$2', ['filter' => ['authGuard:501,502', 'ajax']]);
 });
 
+// Proveedores
+$routes->group('ProductosReportados', ['filter' => 'authGuard:60', 'namespace' => 'App\Controllers\ProductosReportados'], function ($routes) {
+	$routes->get('/', 'cProductosReportadosMenu::index');
+	$routes->get('home/(:any)/(:num)', 'cProductosReportados::index/$1/$2');
+	$routes->post('DT', 'cProductosReportados::listaDT');
+});
+
 
 /*
  * --------------------------------------------------------------------

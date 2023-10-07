@@ -35,7 +35,8 @@ class cPedidos extends BaseController {
 		$this->content['usuario'] = (session()->has("id_user") ? session()->get("id_user") : null);
 
 		$this->content['js_add'][] = [
-			'Pedidos/jsAdministrador.js'
+			'Pedidos/jsAdministrador.js',
+			'ProductosReportados/jsProductosReportadosAcciones.js'
 		];
 
 		return view('UI/viewDefault', $this->content);

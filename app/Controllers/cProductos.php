@@ -97,7 +97,8 @@ class cProductos extends BaseController {
 		}
 		
 		$this->content['js_add'][] = [
-			'jsProductos.js'
+			'jsProductos.js',
+			'ProductosReportados/jsProductosReportadosAcciones.js'
 		];
 
 		if (validPermissions([58], true)) {

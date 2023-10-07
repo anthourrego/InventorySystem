@@ -169,6 +169,12 @@ let DT = $("#table").DataTable({
           </button>`;
         }
 
+        if (validPermissions(112) && ['EM', 'FA', 'DE'].includes(data.estado)) {
+          botones += `<button type="button" class="btn btn-dark btnProductosReportados" title="Producto Reportado">
+            <i class="fa-solid fa-exclamation-triangle"></i>
+          </button>`;
+        }
+
         return `<div class="btn-group btn-group-sm" role="group">${botones}</div>`;
       }
     },
@@ -405,6 +411,14 @@ let DT = $("#table").DataTable({
       $("#btnImprimirDetallePedido").off('click').on('click', function () {
         window.open(base_url() + "Reportes/Empaque/" + data.id + "/0");
       });
+    });
+
+    $(row).find('.btnProductosReportados').on('click', function () {
+      let dataModulo = {
+        modulo: 'pedido',
+        idRegistro: data.id
+      }
+      iniciarProductosReportados(dataModulo);
     });
   }
 });

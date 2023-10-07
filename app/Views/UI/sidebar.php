@@ -242,6 +242,14 @@
               </a>
             </li>
 						<?php } ?>
+						<?php if (validPermissions([60], true)) { ?> 
+						<li class="nav-item">
+              <a href="<?= base_url("ProductosReportados") ?>" class="nav-link <?= current_url(true)->getSegment((2 + DOMINIO)) == 'ProductosReportados' ? 'active' : '' ?>">
+								<i class="nav-icon fa-solid fa-exclamation-triangle"></i>
+                <p>Productos Reportados</p>
+              </a>
+            </li>
+						<?php } ?>
 					</ul>
 				</nav>
 				<!-- /.sidebar-menu -->
