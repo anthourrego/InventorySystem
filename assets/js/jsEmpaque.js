@@ -606,6 +606,11 @@ function agregarObservaciones(pedido, productos, direct = false) {
     }
   });
 
+  let motivosReported = '';
+  $DATAMOTIVOS.forEach((motive) => {
+    motivosReported += `<option value="${motive.valor}">${motive.titulo}</option>`;
+  });
+
   let estructura = '';
   productos.forEach((it, x) => {
     estructura += `<div class="list-group-item list-group-item-action item-prod-add p-2">
@@ -621,9 +626,7 @@ function agregarObservaciones(pedido, productos, direct = false) {
           <div class="mb-1 col-12 col-lg-3 form-group form-valid">
             <label for="motivo${it.id + 1}" class="mb-0">Motivo</label>
 						<select class="form-control" name="motivo${it.id + 1}" id="motivo${it.id + 1}" required>
-							<option value="1">Daño</option>
-							<option value="2">Devolución</option>
-							<option value="3">Perdida</option>
+              ${motivosReported}
 						</select>
 					</div>
           <div class="mb-1 col-12 col-lg-4 form-group form-valid">

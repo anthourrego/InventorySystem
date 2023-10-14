@@ -4,6 +4,7 @@ namespace App\Controllers\ProductosReportados;
 use App\Controllers\BaseController;
 use App\Models\mPedidos;
 use App\Models\mProductos;
+use App\Models\mObservacionProductos;
 use App\Models\mVentas;
 use \Hermawan\DataTables\DataTable;
 
@@ -68,11 +69,10 @@ class cProductosReportados extends BaseController {
     }
 
 		$query->select("
-        OP.id AS idPedidosProductos,
+        OP.id AS idObservacionProducto,
         OP.id_pedido_producto AS idPedidoProducto,
         OP.motivo,
         OP.observacion,
-        OP.cantidad_anterior AS cantidadProductoPedido,
         (OP.cantidad_anterior - OP.cantidad_actual) AS cantidadReportada,
         OP.valor_anterior AS valorAnterior,
         OP.valor_actual AS valorActual,
@@ -80,18 +80,67 @@ class cProductosReportados extends BaseController {
         OP.id_usuario AS idUsuario,
         OP.created_at AS createdAt,
         U.nombre AS nombreUsuario,
+        OP.motivo AS motivo,
         PP.valor AS valorProductoPedido,
         PP.id_producto AS idProducto,
-        P.referencia,
-        P.item,
+        CONCAT(P.referencia, ' | ', P.item) AS referenciaItem,
         P.descripcion,
         P.descripcion AS codigo,
         PP.id_pedido AS idPedido,
-        PE.pedido AS codigoPedido
+        PE.pedido AS codigoPedido,
+        OP.fecha_confirmacion AS fechaConfirmado,
+        OP.cantidad_confirmada AS cantidadConfirmada
       ")->join('productos AS P', 'PP.id_producto = P.id', 'left')
       ->join('usuarios AS U', 'OP.id_usuario = U.id', 'left')
-      ->where("OP.tipo", "E");
+      ->orderBy("OP.created_at", "DESC");
 
 		return DataTable::of($query)->toJson(true);
 	}
+
+  public function confirmar() {
+    $resp["success"] = false;
+		//Traemos los datos del post
+		$postData = $this->request->getPost();
+
+    $this->db->transBegin();
+
+		$mObservacionProductos = new mObservacionProductos();
+		$mProductos = new mProductos();
+
+    //Creamos los datos para guardar
+		$datosSave = array(
+      "id" => $postData["idObservacionProducto"],
+			"fecha_confirmacion" => date("Y-m-d H:i:s"),
+			"cantidad_confirmada" => trim($postData["cantidadReportada"])
+		);
+
+		if ($mObservacionProductos->save($datosSave)) {
+
+      $producto = $mProductos->asObject()->find($postData["idProducto"]);
+
+      $stock = intval($producto->stock) + intval(trim($postData["cantidadConfirmada"]));
+
+      $datosSaveProd = array(
+        "id" => $postData["idProducto"],
+        "stock" => $stock
+      );
+
+      if ($mProductos->save($datosSaveProd)) {
+        $resp["success"] = true;
+        $resp["msj"] = "Producto confrontado correctamente";
+      } else {
+        $resp["msj"] = "No fue posible modificar el invetario del producto." . listErrors($mObservacionProductos->errors());
+      }
+		} else {
+			$resp["msj"] = "No fue posible confrontar el productos." . listErrors($mObservacionProductos->errors());
+		}
+
+		if($resp["success"] == false || $this->db->transStatus() === false) {
+			$this->db->transRollback();
+		} else {
+			//$this->db->transRollback();
+			$this->db->transCommit();
+		}
+		return $this->response->setJSON($resp);
+  }
 }

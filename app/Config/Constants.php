@@ -115,3 +115,9 @@ define('EVENT_PRIORITY_NORMAL', 100);
  * @deprecated Use \CodeIgniter\Events\Events::PRIORITY_HIGH instead.
  */
 define('EVENT_PRIORITY_HIGH', 10);
+
+defined('MOTIVOSDEVOLUCION')      || define('MOTIVOSDEVOLUCION', array(
+  0 => array("valor" => "1", "titulo" => "Daño")
+  , 1 => array("valor" => "2", "titulo" => "Devolución")
+  , 2 => array("valor" => "3", "titulo" => "Perdida")
+));// Motivos por los cuales puede devolver un producto

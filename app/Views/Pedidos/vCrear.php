@@ -134,9 +134,10 @@
 					<div class="col-12 form-valid">
 						<label for="motivoModal" class="mb-0">Motivo</label>
 						<select class="form-control" id="motivoModal">
-							<option value="1">Daño</option>
-							<option value="2">Devolución</option>
-							<option value="3">Perdida</option>
+							<?php foreach (MOTIVOSDEVOLUCION as $key => $value) {
+                echo '<option value="' . $value['valor'] . '">' . $value['titulo'] . '</option>';
+              }
+              ?>
 						</select>
 					</div>
 					<div class="col-12 form-group form-valid">

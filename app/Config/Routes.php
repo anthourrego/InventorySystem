@@ -308,6 +308,7 @@ $routes->group('ProductosReportados', ['filter' => 'authGuard:60', 'namespace' =
 	$routes->get('/', 'cProductosReportadosMenu::index');
 	$routes->get('home/(:any)/(:num)', 'cProductosReportados::index/$1/$2');
 	$routes->post('DT', 'cProductosReportados::listaDT');
+	$routes->post('Confirmar', 'cProductosReportados::confirmar');
 });
 
 
