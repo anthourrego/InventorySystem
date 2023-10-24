@@ -7,9 +7,13 @@ let isOpenModalProducto = false;
 let DTCompras = $("#table").DataTable({
   ajax: {
     url: rutaBase + "DT",
-    type: "POST"
+    type: "POST",
+    data: function (d) {
+      return $.extend(d, { "estado": Math.random() })
+    }
   },
-  order: [[0, "asc"]],
+  order: [[0, "desc"]],
+  scrollX: true,
   columns: [
     {
       data: 'Codigo'
@@ -32,7 +36,6 @@ let DTCompras = $("#table").DataTable({
       className: 'text-center'
     }, {
       data: 'observacion',
-      width: "15%",
       render: function (meta, type, data, meta) {
         return `<span title="${data.observacion}" class="text-descripcion">${data.observacion}</span>`;
       }

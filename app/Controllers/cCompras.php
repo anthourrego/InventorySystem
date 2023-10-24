@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use \Config\Services;
+use App\Controllers\BaseController;
 use \Hermawan\DataTables\DataTable;
 use App\Models\mCategorias;
 use App\Models\mCompraProductos;
@@ -54,10 +54,7 @@ class cCompras extends BaseController {
 	}
 
 	public function listaDT() {
-		$postData = (object) $this->request->getPost();
-
-		$query = $this->db
-				->table('compras AS C')
+		$query = $this->db->table("compras AS C")
 				->select("
 						C.id,
 						C.codigo AS Codigo,
@@ -77,14 +74,14 @@ class cCompras extends BaseController {
 								THEN 'Confirmado'
 							ELSE 'Pendiente'
 						END AS Descripcion_Estado
-				")->join('usuarios AS U', 'C.id_usuario = U.id', 'left')
-				->join('proveedores AS P', 'C.id_proveedor = P.id', 'left')
-				->join('(
+				")->join("usuarios AS U", "C.id_usuario = U.id", "left")
+				->join("proveedores AS P", "C.id_proveedor = P.id", "left")
+				->join("(
 					SELECT
 						COUNT(id) AS Total_Productos, id_compra
 					FROM comprasproductos
 					GROUP BY id_compra
-				) AS CP', 'C.id = CP.id_compra', 'left');
+				) AS CP", "C.id = CP.id_compra", "left");
 
 		return DataTable::of($query)->toJson(true);
 	}
