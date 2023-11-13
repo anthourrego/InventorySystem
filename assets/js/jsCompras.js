@@ -254,6 +254,10 @@ let DTDataProdsAdd = $("#tblProducts").DataTable({
       return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
     }
   }, {
+    data: 'categoriaNombre'
+  }, {
+    data: 'ubicacion'
+  }, {
     data: 'pacaX'
   }, {
     data: 'stock'
@@ -282,9 +286,9 @@ let DTDataProdsAdd = $("#tblProducts").DataTable({
         <button type="button" class="btn btn-danger btnDelete" title="Eliminar">
           <i class="fa-solid fa-trash"></i>
         </button>
-        <button type="button" class="btn btn-secondary btnEditarProductoCompra" title="Editar producto">
+        ${$("#btn-confirm-buy").hasClass('d-none') ? `<button type="button" class="btn btn-secondary btnEditarProductoCompra" title="Editar producto">
           <i class="fa-solid fa-edit"></i>
-        </button>
+        </button>` : ''}
       `;
 
       if (+data.precioVenta != +data.valorOriginal) {
@@ -319,7 +323,7 @@ let DTDataProdsAdd = $("#tblProducts").DataTable({
       calculateDataProds();
     });
 
-    $(row).find('.btnEditarProductoCompra').click(function (e) {
+    /* $(row).find('.btnEditarProductoCompra').click(function (e) {
       e.preventDefault();
 
       $("#modalCrearEditarCompra").modal('hide');
@@ -345,7 +349,7 @@ let DTDataProdsAdd = $("#tblProducts").DataTable({
 
         $("[form=formCrearEditar]").html('<i class="fas fa-edit"></i> Modificar')
       }, 500);
-    });
+    }); */
 
     let porcentajeGanancia = calculateBenefit(+data.precioVenta, +data.costo);
     $(row).find('.ganancia').html(porcentajeGanancia + ' %');
@@ -457,6 +461,7 @@ $(function () {
         creadoCompra: +$("#idProducto").val() > 0 ? 0 : 1,
         idManifiesto: ($("#manifiesto").val() || null),
         idCategoria: ($("#cateFiltro").val() || null),
+        categoriaNombre: ($("#cateFiltro option:selected").text() || null),
         ubicacion: $("#ubicacion").val(),
         ganancia: 0
       }

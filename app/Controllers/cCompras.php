@@ -466,18 +466,30 @@ class cCompras extends BaseController {
 		foreach ($dataProdsBuy as $product) {
 
 			$productSaved = $mProductos->find($product->id_producto);
+
+			$isValidProd = $this->checkDataProduct($product, $productSaved);
+			if(is_string($isValidProd)) {
+				$response = $isValidProd;
+				break;
+			}
+
+			$currentStock = $productSaved["stock"];
 			
 			$productSaved["stock"] = $productSaved["stock"] + $product->cantidad;
 			$productSaved["precio_venta"] = $product->valor;
 			$productSaved["costo"] = (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? $product->costo : '0');
 			$productSaved["cantPaca"] = (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? $product->cantPaca : 1);
 
-			$ubicacionNew = '';
-			if (strlen(trim($product->ubicacion)) > 0 && !str_contains($productSaved["ubicacion"], $product->ubicacion)) {
-				$ubicacionNew = ' - ' . $product->ubicacion;
+			if ($currentStock <= 0) {
+				$productSaved["ubicacion"] = $product->ubicacion;
+			} else {
+				$ubicacionNew = '';
+				if (strlen(trim($product->ubicacion)) > 0 && !str_contains($productSaved["ubicacion"], $product->ubicacion)) {
+					$ubicacionNew = ' - ' . $product->ubicacion;
+				}
+				$productSaved["ubicacion"] = $productSaved["ubicacion"] . $ubicacionNew;
 			}
 
-			$productSaved["ubicacion"] = $productSaved["ubicacion"] . $ubicacionNew;
 			$productSaved["id_categoria"] = $product->id_categoria;
 			
 			if ($product->creado_compra == 1) {
@@ -630,6 +642,25 @@ class cCompras extends BaseController {
 			$resp['msj'] = "No se puede generar la compra si no hay productos cargados";
 		}
 		return $this->response->setJSON($resp);
+	}
+
+	public function checkDataProduct($product, $productSaved) {
+		$productConverted = (object) $product;
+		
+		if(!isset($productConverted->ubicacion) || strlen(trim($productConverted->ubicacion)) == 0){
+			return "El producto " . $productSaved["referencia"] . " no cuenta con ubicación registrada.";
+		}
+		if(!isset($productConverted->id_categoria) || $productConverted->id_categoria <= 0){
+			return "El producto " . $productSaved["referencia"] . " no cuenta con categoria registrada.";
+		}
+
+		$arrayTypeNumbers = array(0 => "valor", 1 => "costo");
+		foreach ($arrayTypeNumbers as $keyTwo) {
+			if(!isset($productConverted->{$keyTwo}) || $productConverted->{$keyTwo} == 0){
+				return "El producto " . $productSaved["referencia"] . " no cuenta con " . $keyTwo . " registrado.";
+			}
+		}
+		return true;
 	}
 
 }

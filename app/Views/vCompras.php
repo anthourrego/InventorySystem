@@ -42,7 +42,31 @@
       </div>
       <div class="modal-body">
         <div class="row">
-          <div class="col-12 d-flex justify-content-end">
+          <div class="col-6 col-md-3">
+            <div class="input-group" title="Valor nuevo es menor que el actual">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="selectEstado">Valor menor</label>
+              </div>
+              <input type="color" disabled readonly class="form-control form-control-color" value="#ff7c70" title="Sin Asignar">
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="selectEstado">Producto nuevo</label>
+              </div>
+              <input type="color" disabled readonly class="form-control form-control-color" value="#8ae287" title="Sin Asignar">
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="input-group" title="Valor nuevo es mayor que el actual">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="selectEstado">Valor mayor</label>
+              </div>
+              <input type="color" disabled readonly class="form-control form-control-color" value="#98c0f6" title="Sin Asignar">
+            </div>
+          </div>
+          <div class="col-6 col-md-3 d-flex justify-content-end">
             <button type="button" id="btnAgregarProductoCompra" class="btn btn-primary">
               <i class="fas fa-check"></i> Agregar Producto
             </button>
@@ -55,6 +79,8 @@
               <tr>
                 <th>Referencia | Item</th>
                 <th>Descripción</th>
+                <th>Categoria</th>
+                <th>Ubicación</th>
                 <th>Paca</th>
                 <th>Stock</th>
                 <th>Precio</th>
