@@ -323,7 +323,7 @@ let DTDataProdsAdd = $("#tblProducts").DataTable({
       calculateDataProds();
     });
 
-    /* $(row).find('.btnEditarProductoCompra').click(function (e) {
+    $(row).find('.btnEditarProductoCompra').click(function (e) {
       e.preventDefault();
 
       $("#modalCrearEditarCompra").modal('hide');
@@ -349,7 +349,7 @@ let DTDataProdsAdd = $("#tblProducts").DataTable({
 
         $("[form=formCrearEditar]").html('<i class="fas fa-edit"></i> Modificar')
       }, 500);
-    }); */
+    });
 
     let porcentajeGanancia = calculateBenefit(+data.precioVenta, +data.costo);
     $(row).find('.ganancia').html(porcentajeGanancia + ' %');

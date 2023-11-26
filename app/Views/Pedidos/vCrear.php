@@ -5,7 +5,7 @@
 </style>
 <div class="row">
 	<div class="col-<?= ($editarPedido == 'S' ? '7' : '12') ?>">
-		<div class="card">
+		<div class="card height-card-global">
 			<div class="card-body">
 				<form id="formPedido" class="formValid form-row">
 					<input type="hidden" name="idPedido" id="idPedido">
@@ -86,7 +86,7 @@
 	</div>
 	<?php if ($editarPedido == 'S') { ?>
 		<div class="col-5">
-			<div class="card">
+			<div class="card height-card-global">
 				<div class="card-header">
 					<div class="row">
 						<div class="col-12 col-md-5">

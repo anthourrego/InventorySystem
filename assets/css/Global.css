@@ -600,3 +600,8 @@ div.dt-button-collection .dt-button {
   pointer-events:none!important;
   opacity: 0.5;
 }
+
+.height-card-global {
+  height: calc(100vh - 90px) !important;
+  overflow: auto !important;
+}

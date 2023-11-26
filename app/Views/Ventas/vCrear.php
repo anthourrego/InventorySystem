@@ -5,7 +5,7 @@
 </style>
 <div class="row">
 	<div class="col-7">
-		<div class="card">
+		<div class="card height-card-global">
 			<div class="card-body">
 				<form id="formVenta" class="formValid form-row">
 					<input type="hidden" name="idVenta" id="idVenta">
@@ -85,7 +85,7 @@
 		</div>
 	</div>
 	<div class="col-5">
-		<div class="card">
+		<div class="card height-card-global">
 			<div class="card-header">
 				<div class="row">
 					<div class="col-12 col-md-5">
