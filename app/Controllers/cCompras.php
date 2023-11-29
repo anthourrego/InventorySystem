@@ -269,14 +269,39 @@ class cCompras extends BaseController {
 
 					if ($currentProd !== false) {
 
-						if($product->stock != $dataProdsCurrent[$currentProd]["cantidad"] || $product->precioVenta != $dataProdsCurrent[$currentProd]["valor"]) {
-							
-							$dataProductoCompra = [
-								"id" => $product->idCompraProd,
-								"cantidad" => $product->stock,
-								"valor" => $product->precioVenta,
-							];
+						$dataProductoCompra = [
+							"id" => $product->idCompraProd
+						];
 
+						if($product->stock != $dataProdsCurrent[$currentProd]["cantidad"]) {
+							$dataProductoCompra["cantidad"] = $product->stock;
+						}
+
+						if($product->precioVenta != $dataProdsCurrent[$currentProd]["valor"]) {
+							$dataProductoCompra["valor"] = $product->precioVenta;
+						}
+
+						if($product->pacaX != $dataProdsCurrent[$currentProd]["cantPaca"]) {
+							$dataProductoCompra["cantPaca"] = (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($product->pacaX) : 1);
+						}
+
+						if($product->costo != $dataProdsCurrent[$currentProd]["costo"]) {
+							$dataProductoCompra["costo"] = (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0');
+						}
+
+						if($product->ubicacion != $dataProdsCurrent[$currentProd]["ubicacion"]) {
+							$dataProductoCompra["ubicacion"] = $product->ubicacion;
+						}
+
+						if($product->idCategoria != $dataProdsCurrent[$currentProd]["id_categoria"]) {
+							$dataProductoCompra["id_categoria"] = $product->idCategoria;
+						}
+
+						if($product->idManifiesto != $dataProdsCurrent[$currentProd]["id_manifiesto"]) {
+							$dataProductoCompra["id_manifiesto"] = $product->idManifiesto;
+						}
+
+						if (count($dataProductoCompra) > 1) {
 							if (!$mCompraProductos->save($dataProductoCompra)) {
 								$resp["msj"] = "Ha ocurrido un error al actualizar los productos." . listErrors($mCompraProductos->errors());
 								break;
