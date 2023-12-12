@@ -138,6 +138,13 @@ class cVentas extends BaseController {
 
 		$dataPref = (session()->has("prefijoFact") ? session()->get("prefijoFact") : '');
 
+		$subQuery = $this->db->table("observacionproductos AS OP")
+					->select("V.id AS id_venta, COUNT(PP.id_producto) AS TotalProductosReportados")
+					->join("pedidosproductos PP", "OP.id_pedido_producto = PP.id", "left")
+					->join('Ventas AS V', 'PP.id_pedido = V.id_pedido', 'left')
+					->where("OP.fecha_confirmacion IS NULL")
+					->groupBy("V.id")->getCompiledSelect();
+
 		$query = $this->db->table('ventas AS V')
 			->select("
 				V.id,
@@ -158,11 +165,13 @@ class cVentas extends BaseController {
 				S.nombre AS NombreSucursal,
 				V.id_pedido,
 				CUI.nombre AS Ciudad,
-				CAST(SUBSTRING_INDEX(codigo, '$dataPref', -1) AS UNSIGNED) AS Delimitado
+				CAST(SUBSTRING_INDEX(codigo, '$dataPref', -1) AS UNSIGNED) AS Delimitado,
+				TPR.TotalProductosReportados
 			")->join('clientes AS C', 'V.id_cliente = C.id', 'left')
 			->join('sucursales AS S', 'V.id_sucursal = S.id', 'left')
 			->join('ciudades AS CUI', 'S.id_ciudad = CUI.id', 'left')
 			->join('usuarios AS U', 'V.id_vendedor = U.id', 'left')
+			->join("({$subQuery}) TPR", "V.id = TPR.id_venta", "left")
 			->orderBy("Delimitado", "DESC");
 
 		return DataTable::of($query)->toJson(true);

@@ -126,6 +126,12 @@ class cProductos extends BaseController {
 			$stringStock = "(P.stock + CASE WHEN PP.cantidad IS NULL THEN 0 ELSE PP.cantidad END)";
 		}
 
+		$subQuery = $this->db->table("observacionproductos AS OP")
+					->select("PP.id_producto, COUNT(PP.id_producto) AS TotalProductosReportados")
+					->join("pedidosproductos PP", "OP.id_pedido_producto = PP.id", "left")
+					->where("OP.fecha_confirmacion IS NULL")
+					->groupBy("PP.id_producto")->getCompiledSelect();
+
 		$query = $this->db
 				->table('productos AS P')
 				->select("
@@ -163,9 +169,11 @@ class cProductos extends BaseController {
 								WHEN 1 = {$this->manifiestoProducto}
 									THEN P.id_manifiesto
 								ELSE '0'
-						END AS manifiesto
+						END AS manifiesto,
+						TPR.TotalProductosReportados
 				")->join('categorias AS C', 'P.id_categoria = C.id', 'left')
-				->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left');
+				->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left')
+				->join("({$subQuery}) TPR", "P.id = TPR.id_producto", "left");
 
 		if (isset($postData->categoria) && $postData->sumarPedidos == 1) {
 			$query->join("({$subQuery}) PP", "P.id = PP.id_producto", "left");

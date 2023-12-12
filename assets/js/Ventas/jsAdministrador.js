@@ -53,7 +53,7 @@ let DT = $("#table").DataTable({
             <i class="fa-solid fa-qrcode"></i>
           </button>
 
-          ${validPermissions(62) ? `<button type="button" class="btn btn-dark btnProductosReportados" title="Producto Reportado">
+          ${validPermissions(62) && data.TotalProductosReportados > 0 ? `<button type="button" class="btn btn-dark btnProductosReportados" title="Producto Reportado">
             <i class="fa-solid fa-exclamation-triangle"></i>
           </button>` : ''}
         </div>`;

@@ -172,7 +172,7 @@ let DT = $("#table").DataTable({
           </button>`;
         }
 
-        if (validPermissions(112) && ['EM', 'FA', 'DE'].includes(data.estado)) {
+        if (validPermissions(112) && ['EM', 'FA', 'DE'].includes(data.estado) && data.TotalProductosReportados) {
           botones += `<button type="button" class="btn btn-dark btnProductosReportados" title="Producto Reportado">
             <i class="fa-solid fa-exclamation-triangle"></i>
           </button>`;

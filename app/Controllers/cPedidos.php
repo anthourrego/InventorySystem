@@ -174,6 +174,12 @@ class cPedidos extends BaseController {
 
 		$dataPref = (session()->has("prefijoPed") ? session()->get("prefijoPed") : '');
 
+		$subQuery = $this->db->table("observacionproductos AS OP")
+					->select("PP.id_pedido AS id_pedido, COUNT(PP.id_producto) AS TotalProductosReportados")
+					->join("pedidosproductos PP", "OP.id_pedido_producto = PP.id", "left")
+					->where("OP.fecha_confirmacion IS NULL")
+					->groupBy("PP.id_pedido")->getCompiledSelect();
+
 		$query = $this->db->table('pedidos AS P')
 			->select("
 				P.id,
@@ -209,7 +215,8 @@ class cPedidos extends BaseController {
 				TC.TotalCajas,
 				V.codigo AS factura,
 				V.leidoQR,
-				CAST(SUBSTRING_INDEX(codigo, '$dataPref', -1) AS UNSIGNED) AS Delimitado
+				CAST(SUBSTRING_INDEX(codigo, '$dataPref', -1) AS UNSIGNED) AS Delimitado,
+				TPR.TotalProductosReportados
 			")->join('clientes AS C', 'P.id_cliente = C.id', 'left')
 			->join('sucursales AS S', 'P.id_sucursal = S.id', 'left')
 			->join('ciudades AS CUI', 'S.id_ciudad = CUI.id', 'left')
@@ -221,7 +228,8 @@ class cPedidos extends BaseController {
 					, id_pedido
 				FROM pedidoscajas
 				GROUP BY id_pedido
-			) AS TC", "P.id = TC.id_pedido", "left");
+			) AS TC", "P.id = TC.id_pedido", "left")
+			->join("({$subQuery}) TPR", "P.id = TPR.id_pedido", "left");
 
 		if($estado != "-1") {
 			if($estado == "FA") {
