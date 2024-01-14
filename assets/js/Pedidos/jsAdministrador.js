@@ -577,6 +577,10 @@ function buscarManifiestos(info) {
           }
         });
 
+        $("#btn-imprimir-manifiesto-sin-repetir").off('click').on('click', function () {
+          window.open(`${base_url()}Reportes/ManifiestosSinRepetir/${info.id}`, "_blank");
+        });
+
         $("#modalManifiestos").modal('show');
       } else {
         alertify.error(resp.msj);

@@ -504,13 +504,13 @@ class cReportes extends BaseController {
 	public function manifiestos($boxesManifest) {
 
 		$boxes = explode("*", $boxesManifest);
+		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
 		if (count($boxes) > 0) {
 
 			$mManifiesto = new mManifiesto();
-			$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-			foreach ($boxes as $keyBox => $box) {
+			foreach ($boxes as $box) {
 
 				$informationBox = explode("=", $box);
 
@@ -522,31 +522,7 @@ class cReportes extends BaseController {
 				$pdf->startPageGroup();
 
 				if (count($manifiestos) > 0) {
-					foreach ($manifiestos as $llave => $manif) {
-						$ext = explode('.', $manif['ruta_archivo'])[1];
-						$file = UPLOADS_MANIFEST_PATH . $manif['ruta_archivo'];
-						if ($ext == 'pdf') {
-
-							$pages = $pdf->setSourceFile($file);
-							for($page=1; $page <= $pages; $page++) {
-								$pdf->AddPage();
-
-								if ($page == 1) {
-									$pdf->writeHTML('<p style="font-size:22px">Caja #' . $numberBox . '</p>', false, false, false, false, '');
-									$tplIdx = $pdf->importPage($page);
-									$pdf->useTemplate($tplIdx, 10, 20, 190);
-								} else {
-									$tplIdx = $pdf->importPage($page);
-									$pdf->useTemplate($tplIdx, 10, 10, 190);
-								}
-							}
-
-						} else if ($ext == 'png' || $ext == 'jpg' || $ext == 'jpeg') {
-							$pdf->AddPage();
-							$pdf->writeHTML('<p style="font-size:22px">Caja #' . $numberBox . '</p>', false, false, false, false, '');
-							$pdf->Image($file, 10, 20, 190);
-						}
-					}
+					$this->validarArchivoManifiesto($pdf, $manifiestos, $numberBox);
 				}
 			}
 		}
@@ -733,6 +709,58 @@ class cReportes extends BaseController {
 			}
 		}
 		return $filePdf;
+	}
+
+	public function manifiestoSinRepetir($idPedido) {
+		$mPedidosCajas = new mPedidosCajas();
+
+		$manifiestosCajas = $mPedidosCajas->select("
+				DISTINCT(M.id) AS idManifiesto,
+				M.ruta_archivo
+			")
+			->join("pedidoscajasproductos AS PCP", "pedidoscajas.id = PCP.id_caja", "left")
+			->join("productos AS P", "PCP.id_producto = P.id", "left")
+			->join("manifiestos AS M", "P.id_manifiesto = M.id", "left")
+			->where("id_pedido", $idPedido)
+			->orderBy("numero_caja", "ASC")
+			->orderBy("PCP.id", "DESC")
+			->findAll();
+
+		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$pdf->startPageGroup();
+
+		if (count($manifiestosCajas) > 0) {
+			$this->validarArchivoManifiesto($pdf, $manifiestosCajas, null);
+		}
+		$pdf->setTitle('Impresion Manifiestos | ' . session()->get("nombreEmpresa"));
+		$pdf->Output("Manifiestos_No_Repetidos.pdf", 'I');
+		exit;
+	}
+
+	private function validarArchivoManifiesto($pdf, $manifiestos, $numberBox) {
+		foreach ($manifiestos as $manif) {
+			$manif = (object) $manif;
+			$ext = explode('.', $manif->ruta_archivo)[1];
+			$file = UPLOADS_MANIFEST_PATH . $manif->ruta_archivo;
+			if ($ext == 'pdf') {
+				$pages = $pdf->setSourceFile($file);
+				for($page=1; $page <= $pages; $page++) {
+					$pdf->AddPage();
+
+					$tplIdx = $pdf->importPage($page);
+					if ($page == 1 && $numberBox) {
+						$pdf->writeHTML('<p style="font-size:22px">Caja #' . $numberBox . '</p>', false, false, false, false, '');
+					}
+					$pdf->useTemplate($tplIdx, 10, ($page == 1 && $numberBox ? 20 : 10), 190);
+				}
+			} elseif ($ext == 'png' || $ext == 'jpg' || $ext == 'jpeg') {
+				$pdf->AddPage();
+				if ($numberBox) {
+					$pdf->writeHTML('<p style="font-size:22px">Caja #' . $numberBox . '</p>', false, false, false, false, '');
+				}
+				$pdf->Image($file, 10, ($numberBox ? 20 : 10), 190);
+			}
+		}
 	}
 
 }
