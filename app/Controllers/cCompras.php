@@ -32,15 +32,9 @@ class cCompras extends BaseController {
 			// "manifiesto" => (session()->has("manifiestoProducto") ? session()->get("manifiestoProducto") : '0'),
 			"paca" => (session()->has("pacaProducto") ? session()->get("pacaProducto") : '0')
  		];
- 
+
 		$categorias = new mCategorias();
 		$this->content["categorias"] = $categorias->asObject()->where("estado", 1)->findAll();
-		 
-		/* $this->content["manifiestos"] = [];
-		if ($this->content["camposProducto"]["manifiesto"] == "1") {
-			$manifiestos = new mManifiesto();
-			$this->content["manifiestos"] = $manifiestos->asObject()->where("estado", 1)->findAll();
-		}	 */
 		
 		$this->content['js_add'][] = [
 			'jsCompras.js'
@@ -167,8 +161,14 @@ class cCompras extends BaseController {
 						"valor" => $product->precioVenta,
 						"valor_original" => $valorOriginal,
 						"creado_compra" => $product->creadoCompra,
-						"cantPaca" => (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($product->pacaX) : 1),
-						"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0'),
+						"cantPaca" => (
+							session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($product->pacaX) : 1
+						),
+						"costo" => (
+							session()->has("costoProducto") && session()->get("costoProducto") == '1'
+								? str_replace(",", "", trim(str_replace("$", "", $product->costo)))
+								: '0'
+						),
 						'ubicacion' => $product->ubicacion,
 						'id_categoria' => $product->idCategoria,
 						'id_manifiesto' => $product->idManifiesto
@@ -217,7 +217,9 @@ class cCompras extends BaseController {
 						$this->db->transCommit();
 					}
 				} else {
-					$builder = $this->db->table('configuracion')->set("valor", $codigo['numerVenta'])->where('campo', "consecutivoCompra");
+					$builder = $this->db->table('configuracion')
+						->set("valor", $codigo['numerVenta'])
+						->where('campo', "consecutivoCompra");
 					if($builder->update()) {
 						$this->db->transCommit();
 					} else {
@@ -258,7 +260,9 @@ class cCompras extends BaseController {
 			}
 
 			if($mCompras->save($dataBuy)) {
-				
+
+				$dataConf = $this->getParamsConfig();
+
 				$dataProdsCurrent = $mCompraProductos->asArray()->where("id_compra", $dataBuy["id"])->findAll();
 
 				foreach ($dataProdsBuy as $product) {
@@ -282,11 +286,12 @@ class cCompras extends BaseController {
 						}
 
 						if($product->pacaX != $dataProdsCurrent[$currentProd]["cantPaca"]) {
-							$dataProductoCompra["cantPaca"] = (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($product->pacaX) : 1);
+							$dataProductoCompra["cantPaca"] = ($dataConf["canPacaProd"] ? trim($product->pacaX) : 1);
 						}
 
 						if($product->costo != $dataProdsCurrent[$currentProd]["costo"]) {
-							$dataProductoCompra["costo"] = (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0');
+							$costo = ($dataConf["canCostoProd"] ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0');
+							$dataProductoCompra["costo"] = $costo;
 						}
 
 						if($product->ubicacion != $dataProdsCurrent[$currentProd]["ubicacion"]) {
@@ -329,14 +334,8 @@ class cCompras extends BaseController {
 							"valor" => $product->precioVenta,
 							"valor_original" => $valorOriginal,
 							"creado_compra" => $product->creadoCompra,
-							"cantPaca" => (
-								session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($product->pacaX) : 1
-							),
-							"costo" => (
-								session()->has("costoProducto") && session()->get("costoProducto") == '1'
-									? str_replace(",", "", trim(str_replace("$", "", $product->costo)))
-									: '0'
-							),
+							"cantPaca" => ($dataConf["canPacaProd"] ? trim($product->pacaX) : 1),
+							"costo" => ($dataConf["canCostoProd"] ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0'),
 							'ubicacion' => $product->ubicacion,
 							'id_categoria' => $product->idCategoria,
 							'id_manifiesto' => $product->idManifiesto
@@ -453,7 +452,7 @@ class cCompras extends BaseController {
 			->findAll();
 
 
-		foreach ($dataProdsBuy as $key => $value) {	
+		foreach ($dataProdsBuy as $key => $value) {
 			$dataProdsBuy[$key]->id = $dataProdsBuy[$key]->referencia . $key;
 		}
 
@@ -499,6 +498,7 @@ class cCompras extends BaseController {
 		$mProductos = new mProductos();
 
 		$response = true;
+		$dataConf = $this->getParamsConfig();
 
 		foreach ($dataProdsBuy as $product) {
 
@@ -514,8 +514,8 @@ class cCompras extends BaseController {
 			
 			$productSaved["stock"] = $productSaved["stock"] + $product->cantidad;
 			$productSaved["precio_venta"] = $product->valor;
-			$productSaved["costo"] = (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? $product->costo : '0');
-			$productSaved["cantPaca"] = (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? $product->cantPaca : 1);
+			$productSaved["costo"] = ($dataConf["canPacaProd"] ? $product->costo : '0');
+			$productSaved["cantPaca"] = ($dataConf["canPacaProd"] ? $product->cantPaca : 1);
 
 			if ($currentStock <= 0) {
 				$productSaved["ubicacion"] = $product->ubicacion;
@@ -550,20 +550,21 @@ class cCompras extends BaseController {
 
 		$amountSale = $mVentasProductos->where("id_producto", $idProducto)->countAllResults();
 
-		if ($amountSale > 0) return true;
+		if ($amountSale > 0) { return true; }
 
 		$mPedidosProductos = new mPedidosProductos();
 
 		$amountSale = $mPedidosProductos->where("id_producto", $idProducto)->countAllResults();
 
-		if ($amountSale > 0) return true;
+		if ($amountSale > 0) { return true; }
 
 		return false;
 	}
 
 	private function saveProdBuy($product, $mProductos, $mCompraProductos, $dataProductoCompra) {
 		if ((int) $product->idProducto <= 0) {
-			/* Se crean con valores iniciales para que al momento de confirmar la compra se pueda actualizar el inventario como debe ser */
+			/* Se crean con valores iniciales para que al momento de confirmar
+			la compra se pueda actualizar el inventario como debe ser */
 			$dataNewProducto = array(
 				"referencia" => trim($product->referencia)
 				, "item" => (session()->has("itemProducto") && session()->get("itemProducto") == '1' ? trim($product->item) : null)
@@ -654,6 +655,8 @@ class cCompras extends BaseController {
 				
 				$dataBuy["id"] = $mCompras->getInsertID();
 
+				$dataConf = $this->getParamsConfig();
+
 				foreach ($dataProdsBuy as $product) {
 
 					$product = (object) $product;
@@ -664,14 +667,8 @@ class cCompras extends BaseController {
 						"id_producto" => $product->idProducto,
 						"valor" => $product->precioVenta,
 						"valor_original" => $product->valorOriginal,
-						"cantPaca" => (
-							session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($product->pacaX) : 1
-						),
-						"costo" => (
-							session()->has("costoProducto") && session()->get("costoProducto") == '1'
-								? str_replace(",", "", trim(str_replace("$", "", $product->costo)))
-								: '0'
-						),
+						"cantPaca" => ($dataConf["canPacaProd"] ? trim($product->pacaX) : 1),
+						"costo" => ($dataConf["canCostoProd"] ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0'),
 						"creado_compra" => 0,
 						'ubicacion' => $product->ubicacion,
 						'id_categoria' => $product->idCategoria,
@@ -736,6 +733,13 @@ class cCompras extends BaseController {
 			}
 		}
 		return true;
+	}
+
+	private function getParamsConfig() {
+		return [
+			"canPacaProd" => (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? true : false)
+			, "canCostoProd" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? true : false)
+		];
 	}
 
 }
