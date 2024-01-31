@@ -415,7 +415,7 @@ class cCompras extends BaseController {
 		$dataBuy = $mCompras->cargarCompra($idBuy);
 
 		$dataProdsBuy = $mCompraProductos->select("
-				CONCAT(UPPER(P.referencia), ' | ', P.item) AS referenciaItem,
+				CONCAT(UPPER(P.referencia), ' | ', IF(P.item IS NULL, '', P.item)) AS referenciaItem,
 				P.descripcion,
 				comprasproductos.cantPaca AS pacaX,
 				comprasproductos.cantidad AS stock,
@@ -629,8 +629,14 @@ class cCompras extends BaseController {
 						"id_producto" => $product->idProducto,
 						"valor" => $product->precioVenta,
 						"valor_original" => $product->valorOriginal,
-						"cantPaca" => (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($product->pacaX) : 1),
-						"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0'),
+						"cantPaca" => (
+							session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($product->pacaX) : 1
+						),
+						"costo" => (
+							session()->has("costoProducto") && session()->get("costoProducto") == '1'
+								? str_replace(",", "", trim(str_replace("$", "", $product->costo)))
+								: '0'
+						),
 						"creado_compra" => 0,
 						'ubicacion' => $product->ubicacion,
 						'id_categoria' => $product->idCategoria,
@@ -655,7 +661,9 @@ class cCompras extends BaseController {
 			if($resp["success"] == false || $this->db->transStatus() === false) {
 				$this->db->transRollback();
 			} else {
-				$builder = $this->db->table('configuracion')->set("valor", $codigo['numerVenta'])->where('campo', "consecutivoCompra");
+				$builder = $this->db->table('configuracion')
+					->set("valor", $codigo['numerVenta'])
+					->where('campo', "consecutivoCompra");
 				if($builder->update()) {
 					$this->db->transCommit();
 				} else {
@@ -672,17 +680,24 @@ class cCompras extends BaseController {
 	public function checkDataProduct($product, $productSaved) {
 		$productConverted = (object) $product;
 		
-		if(!isset($productConverted->ubicacion) || strlen(trim($productConverted->ubicacion)) == 0){
-			return "El producto " . $productSaved["referencia"] . " no cuenta con ubicación registrada.";
+		$titleProd = "El producto ";
+		$manejaUbicacion = (session()->has("ubicacionProducto") ? session()->get("ubicacionProducto") : '0');
+		$isValidUbicacion = (!isset($productConverted->ubicacion) || strlen(trim($productConverted->ubicacion)) == 0);
+		if($manejaUbicacion == '1' && $isValidUbicacion) {
+			return $titleProd . $productSaved["referencia"] . " no cuenta con ubicación registrada.";
 		}
 		if(!isset($productConverted->id_categoria) || $productConverted->id_categoria <= 0){
-			return "El producto " . $productSaved["referencia"] . " no cuenta con categoria registrada.";
+			return $titleProd . $productSaved["referencia"] . " no cuenta con categoria registrada.";
 		}
 
+		$manejaCosto = (session()->has("costoProducto") ? session()->get("costoProducto") : '0');
 		$arrayTypeNumbers = array(0 => "valor", 1 => "costo");
-		foreach ($arrayTypeNumbers as $keyTwo) {
+		foreach ($arrayTypeNumbers as $pos => $keyTwo) {
+			if ($pos == 1 && $manejaCosto != '1') {
+				continue;
+			}
 			if(!isset($productConverted->{$keyTwo}) || $productConverted->{$keyTwo} == 0){
-				return "El producto " . $productSaved["referencia"] . " no cuenta con " . $keyTwo . " registrado.";
+				return $titleProd . $productSaved["referencia"] . " no cuenta con " . $keyTwo . " registrado.";
 			}
 		}
 		return true;

@@ -77,7 +77,8 @@
           <table id="tblProducts" class="table table-sm table-striped table-hover table-bordered w-100">
             <thead> 
               <tr>
-                <th>Referencia | Item</th>
+                <th>Referencia</th>
+                <th>Item</th>
                 <th>Descripción</th>
                 <th>Categoria</th>
                 <th>Ubicación</th>
@@ -289,3 +290,7 @@
     </div>
   </div>
 </div>
+
+<script>
+  let MANEJACOSTO = <?= $camposProducto["costo"]; ?>;
+</script>
