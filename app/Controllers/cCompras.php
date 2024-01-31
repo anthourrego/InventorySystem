@@ -308,6 +308,12 @@ class cCompras extends BaseController {
 							}
 						}
 
+						$isValidUpdate = $this->validateDataProd($product->idProducto, $product);
+						if (is_string($isValidUpdate)) {
+							$resp["msj"] = $isValidUpdate;
+							break;
+						}
+
 						unset($dataProdsCurrent[$currentProd]);
 						$dataProdsCurrent = array_values($dataProdsCurrent);
 					} else {
@@ -323,8 +329,14 @@ class cCompras extends BaseController {
 							"valor" => $product->precioVenta,
 							"valor_original" => $valorOriginal,
 							"creado_compra" => $product->creadoCompra,
-							"cantPaca" => (session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($product->pacaX) : 1),
-							"costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0'),
+							"cantPaca" => (
+								session()->has("pacaProducto") && session()->get("pacaProducto") == '1' ? trim($product->pacaX) : 1
+							),
+							"costo" => (
+								session()->has("costoProducto") && session()->get("costoProducto") == '1'
+									? str_replace(",", "", trim(str_replace("$", "", $product->costo)))
+									: '0'
+							),
 							'ubicacion' => $product->ubicacion,
 							'id_categoria' => $product->idCategoria,
 							'id_manifiesto' => $product->idManifiesto
@@ -579,10 +591,33 @@ class cCompras extends BaseController {
 
 		} else {
 			$dataProductoCompra['id_producto'] = $product->idProducto;
+
+			$isValidUpdate = $this->validateDataProd($product->idProducto, $product);
+			if (is_string($isValidUpdate)) {
+				return $isValidUpdate;
+			}
 		}
 
 		if (!$mCompraProductos->save($dataProductoCompra)) {
 			return "Ha ocurrido un error al guardar los productos. " . listErrors($mCompraProductos->errors());
+		}
+		return true;
+	}
+
+	private function validateDataProd($idProducto, $product) {
+		$mProductosFind = new mProductos();
+
+		$productoFind = $mProductosFind->asObject()->find($idProducto);
+
+		if ($productoFind->descripcion != $product->descripcion) {
+			$dataUpdateProducto = array(
+				"id" => $idProducto
+				, "descripcion" => trim($product->descripcion)
+			);
+
+			if(!$mProductosFind->save($dataUpdateProducto)) {
+				return "Ha ocurrido un error al actualizar el producto." . listErrors($mProductosFind->errors());
+			}
 		}
 		return true;
 	}
