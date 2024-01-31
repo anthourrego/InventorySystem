@@ -638,6 +638,11 @@ $(function () {
       // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
     }
   });
+
+  $('#modalSearchProd').on('hidden.bs.modal', function (event) {
+    $("#modalProdCuenta").modal('show');
+    $('.input-search').find('.input-group-append').addClass('d-none');
+  });
 });
 
 function calculateDataProds() {

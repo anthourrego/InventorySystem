@@ -363,7 +363,6 @@ $(function () {
 
   //Se genera alerta informando que no hay ninguna categoria creada o habilitada
   if ($CATEGORIAS <= 0) {
-    S
     alertify.alert("¡Advertencia!", "No hay ninguna categoria creada y/o habilitada. Por favor cree una.");
   }
 
