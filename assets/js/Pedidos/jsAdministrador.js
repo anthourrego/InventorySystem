@@ -12,8 +12,7 @@ let DT = $("#table").DataTable({
     }
   },
   order: [
-    [5, "desc"],
-    [0, "desc"]
+    [5, "asc"]
   ],
   scrollX: true,
   columns: [
@@ -27,6 +26,7 @@ let DT = $("#table").DataTable({
     { data: 'NombreSucursal' },
     { data: 'direccion' },
     { data: 'Ciudad' },
+    { data: 'Orden', visible: false },
     {
       data: 'NombreEstado',
       className: 'text-center align-middle',
