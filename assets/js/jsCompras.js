@@ -42,16 +42,19 @@ let DTCompras = $("#table").DataTable({
     }, {
       data: 'Proveedor'
     }, {
-      data: 'Neto',
-      render: function (meta, type, data, meta) {
-        return formatoPesos.format(data.Neto);
-      }
-    }, {
       data: 'Total',
       render: function (meta, type, data, meta) {
         return formatoPesos.format(data.Total);
       }
     }, {
+      data: 'Total_Costo',
+      render: function (meta, type, data, meta) {
+        return formatoPesos.format(data.Total_Costo);
+      }
+    }, {
+      data:'Ganancia',
+      className:'ganancia'
+    },{
       data: 'Fecha_Creacion',
       render: function (meta, type, data, meta) {
         return moment(data.Fecha_Creacion, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A");
@@ -86,6 +89,9 @@ let DTCompras = $("#table").DataTable({
     }
   ],
   createdRow: function (row, data, dataIndex) {
+    let porcentajeGanancia = calculateBenefit(+data.Total, +data.Total_Costo);
+    $(row).find('.ganancia').html(porcentajeGanancia + ' %');
+
     //Editar
     $(row).find(".btnEditar, .btnVer").click(function (e) {
       e.preventDefault();

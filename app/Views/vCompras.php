@@ -12,7 +12,8 @@
   <?php } ?>
   <div class="card-body">
     <div class="table-responsive">
-      <table id="table" class="table table-sm table-striped table-hover table-bordered w-100">
+      <table id="table" class="table table-sm table-striped table-hover table-bordered w-100"
+        aria-describedby="Tabla de Compras">
         <thead>
           <tr>
             <th>Código</th>
@@ -21,8 +22,9 @@
             <th>T. Productos</th>
             <th>Observación</th>
             <th>Proveedor</th>
-            <th>Neto</th>
-            <th>Total</th>
+            <th>Total Compra</th>
+            <th>Total Costo</th>
+            <th>Ganancia</th>
             <th>Fecha Creación</th>
             <th>Acciones</th>
           </tr>
@@ -80,7 +82,8 @@
         </div>
 
         <div class="table-responsive mt-3">
-          <table id="tblProducts" class="table table-sm table-striped table-hover table-bordered w-100">
+          <table id="tblProducts" class="table table-sm table-striped table-hover table-bordered w-100"
+          aria-describedby="Tabla de Productos">
             <thead>
               <tr>
                 <th>Referencia</th>

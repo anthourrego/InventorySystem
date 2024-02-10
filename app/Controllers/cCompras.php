@@ -15,6 +15,8 @@ use App\Models\mVentasProductos;
 
 class cCompras extends BaseController {
 
+	private $messageError = "Ha ocurrido un error al guardar la compra.";
+
 	public function index() {
 		$this->content['title'] = "Compras";
 		$this->content['view'] = "vCompras";
@@ -54,6 +56,8 @@ class cCompras extends BaseController {
 						C.codigo AS Codigo,
 						U.nombre AS Nombre_Usuario,
 						CP.Total_Productos,
+						CP.Total_Costo,
+						0 AS Ganancia,
 						C.observacion,
 						C.neto AS Neto,
 						C.total AS Total,
@@ -72,7 +76,7 @@ class cCompras extends BaseController {
 				->join("proveedores AS P", "C.id_proveedor = P.id", "left")
 				->join("(
 					SELECT
-						COUNT(id) AS Total_Productos, id_compra
+						COUNT(id) AS Total_Productos, SUM(costo) AS Total_Costo, id_compra
 					FROM comprasproductos
 					GROUP BY id_compra
 				) AS CP", "C.id = CP.id_compra", "left");
@@ -193,11 +197,11 @@ class cCompras extends BaseController {
 						$resp["success"] = true;
 						$resp["msj"] = $dataBuy;
 					} else {
-						$resp["msj"] = "Ha ocurrido un error al guardar la compra." . listErrors($mCompras->errors());
+						$resp["msj"] = $this->messageError . listErrors($mCompras->errors());
 					}
 				}
 			} else{
-				$resp["msj"] = "Ha ocurrido un error al guardar la compra." . listErrors($mCompras->errors());
+				$resp["msj"] = $this->messageError . listErrors($mCompras->errors());
 			}
 
 			if($resp["success"] == false || $this->db->transStatus() === false) {
@@ -372,7 +376,7 @@ class cCompras extends BaseController {
 							}
 						}
 					} else {
-						$resp["msj"] = "Error al eliminar el producto de la compra. " . listErrors($mVentasProductos->errors());
+						$resp["msj"] = "Error al eliminar el producto de la compra. " . listErrors($mCompraProductos->errors());
 						break;
 					}
 				}
@@ -388,7 +392,7 @@ class cCompras extends BaseController {
 
 						$resp["msj"] = $dataBuy;
 					} else {
-						$resp["msj"] = "Ha ocurrido un error al guardar la compra." . listErrors($mCompras->errors());
+						$resp["msj"] = $this->messageError . listErrors($mCompras->errors());
 					}
 				}
 			}
