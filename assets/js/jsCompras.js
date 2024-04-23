@@ -503,7 +503,7 @@ $(function () {
       DTDataProdsAdd.draw();
     }, 300);
 
-    $("#btnSearchReferecnia").off('click').on('click', function () {
+    $("#btnSearchReferencia").off('click').on('click', function () {
 
       let structureHtmlProds = '';
 

@@ -483,7 +483,7 @@ class cPedidos extends BaseController {
 			} 
 
 			if($mPedidos->save($dataSave)){
-				//Tramos los productos actuales para comparalos con los que ingresan
+				//mostramos los productos actuales para comparalos con los que ingresan
 				$productoActuales = $mPedidosProductos->asArray()->where("id_pedido", $dataPost->idPedido)->findAll();
 
 				foreach ($prod as $it) {

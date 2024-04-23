@@ -361,7 +361,7 @@ class cCompras extends BaseController {
 							}
 						}
 					} else {
-						$resp["msj"] = "Error al eliminar el producto de la compra. " . listErrors($mVentasProductos->errors());
+						$resp["msj"] = "Error al eliminar el producto de la compra. " . listErrors($mProductos->errors());
 						break;
 					}
 				}

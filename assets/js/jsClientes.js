@@ -3,7 +3,7 @@ let rutaBaseSucursal = base_url() + "Sucursales/";
 let rutaBaseUbicacion = base_url() + "Ubicacion/";
 let DTSucursales = null;
 let crearSucursal = false;
-let permiSucursales = validPermissions(44);
+let permisoSucursales = validPermissions(44);
 let dataSucursal = {};
 let datosFiltro = {
   estado: $("#selectEstado").val(),
@@ -153,7 +153,7 @@ $(function () {
           if (resp.success) {
             DTClientes.ajax.reload();
             $("#sucursales-tab").removeClass('disabled');
-            if (permiSucursales && (!id.length || crearSucursal)) {
+            if (permisoSucursales && (!id.length || crearSucursal)) {
               crearSucursal = false;
               $("#id").val(resp.id);
               $("#sucursales-tab").click();

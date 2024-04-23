@@ -41,7 +41,7 @@
           <button type="button" id="btnSincronizar" class="btn btn-info">
             <i class="fas fa-sync"></i> Sincronizar
           </button>
-          <!-- Boton finalizar caja abierta -->
+          <!-- Botón finalizar caja abierta -->
           <button type="button" id="btnFinalizarCaja" class="btn btn-primary">
             <i class="fas fa-check"></i> Finalizar Caja
           </button>

@@ -34,7 +34,7 @@ return [
     'cannotSetFilepath'      => 'Cuando se configura binario no se puede establecer ruta de archivo: {0}', // 'When setting binary can not set filepath: {0}',
     'notFoundDownloadSource' => 'No se encontró la fuente del cuerpo de descarga.', // 'Not found download body source.',
     'cannotSetCache'         => 'No es compatible con el almacenamiento en caché para la descarga.', // 'It does not supported caching for downloading.',
-    'cannotSetStatusCode'    => 'No admite el código de cambio de estado para descargar. código: {0}, razón: {1}', // 'It does not supported chnage status code for downloading. code: {0}, reason: {1}',
+    'cannotSetStatusCode'    => 'No admite el código de cambio de estado para descargar. código: {0}, razón: {1}', // 'It does not supported change status code for downloading. code: {0}, reason: {1}',
 
     // Response
     'missingResponseStatus' => 'Respuesta HTTP sin código de estado', // 'HTTP Response is missing a status code',

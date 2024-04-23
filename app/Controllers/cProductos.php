@@ -8,7 +8,6 @@ use App\Models\mProductos;
 use App\Models\mManifiesto;
 use \Config\Services;
 use \PhpZip\ZipFile;
-use \Shuchkin\SimpleXLSXGen;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -200,7 +199,7 @@ class cProductos extends BaseController {
 			$query->where("P.precio_venta <= $postData->preciFin");
 		}
 
-		//validamos si aplica para ventas para realziar algunas validaciones
+		//validamos si aplica para ventas para realizar algunas validaciones
 		if (isset($postData->ventas) && $postData->ventas == 1) {
 			$arrayFiltro['ventas'] = $postData->ventas;
 			if ($this->inventarioNegativo == "0") {
@@ -354,7 +353,7 @@ class cProductos extends BaseController {
 				$resp["msj"] = "No puede " . (empty($postData->id) ? 'crear' : 'actualizar') . " el producto." . listErrors($product->errors());
 			}
 					
-			//Validamos para elminar la foto
+			//Validamos para eliminar la foto
 			if ($filenameDelete != '' && file_exists($filenameDelete)) {
 				if(!@unlink($filenameDelete)) {
 					$resp["success"] = false;
@@ -452,7 +451,7 @@ class cProductos extends BaseController {
 		}
 
 		if (!file_exists(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/{$nombreArchivo}.png")) {
-			//Elimanos el directorio si existe lo eliminamos para crear el nuevo
+			//Eliminanos el directorio si existe lo eliminamos para crear el nuevo
 			if ($precioVenta == '') {
 				if(is_dir(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/")){
 					$this->borrar_directorio(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/");
@@ -592,7 +591,7 @@ class cProductos extends BaseController {
 			$mProducto1->where("P.precio_venta <= $filtros->preciFin");
 		}
 
-		//validamos si aplica para ventas para realziar algunas validaciones
+		//validamos si aplica para ventas para realizar algunas validaciones
 		if (isset($filtros->ventas) && $filtros->ventas == 1) {
 			$arrayFiltro['ventas'] = $filtros->ventas;
 			if ($this->inventarioNegativo == "0") {

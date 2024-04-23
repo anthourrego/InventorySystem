@@ -308,7 +308,7 @@ function obtenerInfoPedido(pedido, sync = false) {
   $("#btnAgregarCaja").show();
   $("#btnFinalizarCaja").hide();
   if (pedido.cajas.length) {
-    let estrcutura = '';
+    let estructura = '';
     pedido.cajas.forEach((it, pos) => {
 
       if (!it.finEmpaque && $USUARIOID == it.empacador) {
@@ -336,9 +336,9 @@ function obtenerInfoPedido(pedido, sync = false) {
           </div>
         </div>
       </div>`;
-      estrcutura += estructu;
+      estructura += estructu;
     });
-    $("#listacajas").html(estrcutura);
+    $("#listacajas").html(estructura);
 
     if (pedido.cajas.length > 3 || ($(window).width() < 993 && pedido.cajas.length > 1)) {
       $("#listacajas").css("overflow-x", "scroll");

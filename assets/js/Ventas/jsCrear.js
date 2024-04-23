@@ -189,7 +189,7 @@ let DTProductosVenta = $("#tblProductos").DataTable({
 $(function () {
   if ($CANTIDADVENDEDORES == 0 || $CANTIDADCLIENTES == 0 || $PREFIJOVALIDO == 'N') {
     if ($CANTIDADVENDEDORES == 0 && $CANTIDADCLIENTES == 0) {
-      $msj = "vendedore y clientes";
+      $msj = "vendedores y clientes";
     } else if ($PREFIJOVALIDO == 'N') {
       $msj = "prefijo de pedido disponible";
     } else {
@@ -260,7 +260,7 @@ $(function () {
           }
         });
       } else {
-        alertify.alert("Advertencia", "Debe de elegiar minimo un producto para guardar la venta.");
+        alertify.alert("Advertencia", "Debe de elegir minimo un producto para guardar la venta.");
       }
     }
   });

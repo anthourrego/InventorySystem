@@ -28,7 +28,7 @@
             <th>Código</th>  
             <th>Nombre</th>
             <th>Estado</th>
-            <th>Pais</th>
+            <th>País</th>
             <th>Fecha Creación</th>
             <th>Acciones</th>
           </tr>

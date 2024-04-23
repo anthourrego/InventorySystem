@@ -105,7 +105,7 @@ $(function () {
   });
 
   $(".infobtn").on('click', function () {
-    $(".alert.alert-info").html(`El color rojo ira hasta el ${$("#inventarioBajo").val()}, el color amarillo desde el ${+$("#inventarioBajo").val() + 1} hasta el  ${$("#inventarioMedio").val()} y el color verde apartir de una cantidad mayor a ${$("#inventarioAlto").val()}`);
+    $(".alert.alert-info").html(`El color rojo ira hasta el ${$("#inventarioBajo").val()}, el color amarillo desde el ${+$("#inventarioBajo").val() + 1} hasta el  ${$("#inventarioMedio").val()} y el color verde a partir de una cantidad mayor a ${$("#inventarioAlto").val()}`);
     $(".alert-info-data").toggle();
   });
 });

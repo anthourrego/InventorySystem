@@ -360,7 +360,7 @@ class cVentas extends BaseController {
 			);
 
 			if($mVentas->save($dataSave)){
-				//Tramos los productos actuales para comparalos con los que ingresan
+				//mostramos los productos actuales para comparalos con los que ingresan
 				$productoActuales = $mVentasProductos->asArray()->where("id_venta", $dataPost->idVenta)->findAll();
 
 				foreach ($prod as $it) {

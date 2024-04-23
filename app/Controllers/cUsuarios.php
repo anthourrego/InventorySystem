@@ -205,7 +205,7 @@ class cUsuarios extends BaseController {
 			$resp["msj"] = "No puede " . (empty($this->request->getPost("id")) ? 'crear' : 'actualizar') . " el usuario." . listErrors($user->errors());
 		}
         
-		//Validamos para elminar la foto
+		//Validamos para eliminar la foto
 		if ($filenameDelete != '' && file_exists($filenameDelete)) {
 			if(!@unlink($filenameDelete)) {
 				$resp["success"] = false;

@@ -264,7 +264,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
 
           if (+data.valorUnitarioOriginal != +data.valorUnitario) {
             observacion = true;
-            mensaje += '<li> ¿Por que el valor es ' + (+data.valorUnitarioOriginal > +data.valorUnitario ? 'menor' : 'mayor') + ' al orignal del pedido?</li>';
+            mensaje += '<li> ¿Por que el valor es ' + (+data.valorUnitarioOriginal > +data.valorUnitario ? 'menor' : 'mayor') + ' al original del pedido?</li>';
           }
 
           /* Se agrega la segunda validacion para que solo salga con la cantidad cuando se disminuye */
@@ -308,7 +308,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
 $(function () {
   if ($CANTIDADVENDEDORES == 0 || $CANTIDADCLIENTES == 0 || $PREFIJOVALIDO == 'N') {
     if ($CANTIDADVENDEDORES == 0 && $CANTIDADCLIENTES == 0) {
-      $msj = "vendedore y clientes";
+      $msj = "vendedores y clientes";
     } else if ($PREFIJOVALIDO == 'N') {
       $msj = "prefijo de pedido disponible";
     } else {
@@ -405,7 +405,7 @@ $(function () {
           }
         });
       } else {
-        alertify.alert("Advertencia", "Debe de elegir minimo un producto para guardar el pedido.");
+        alertify.alert("Advertencia", "Debe de elegir mínimo un producto para guardar el pedido.");
       }
     }
   });

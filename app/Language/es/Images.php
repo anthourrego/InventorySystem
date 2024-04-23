@@ -14,7 +14,7 @@ return [
     'sourceImageRequired'    => 'Debe especificar el origen de la imagen en las preferencias.',
     'gdRequired'             => 'Se requiere la librería de imágenes GD para esta funcionalidad.',
     'gdRequiredForProps'     => 'Su servidor debe soportar la librería de imágenes GD para determinar las propiedades de la imagen.',
-    'gifNotSupported'        => 'Las imágnes GIF no suelen ser soportadas por restricciones de licencia. Puede utilizar imágenes JPG o PNG en su lugar.',
+    'gifNotSupported'        => 'Las imágenes GIF no suelen ser soportadas por restricciones de licencia. Puede utilizar imágenes JPG o PNG en su lugar.',
     'jpgNotSupported'        => 'No se soportan imágenes JPG.',
     'pngNotSupported'        => 'No se soportan imágenes PNG.',
     'webpNotSupported'       => 'No se soportan imágenes WEBP.',

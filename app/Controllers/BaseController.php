@@ -249,7 +249,7 @@ abstract class BaseController extends Controller {
         ];
     }
 
-    public function LSweetAlet2(){
+    public function LSweetAlert2(){
         $this->content['css'][] = [
             'assets/Libraries/sweetAlert2/css/sweetalert2.min.css'
         ];

@@ -436,7 +436,7 @@ class cReportes extends BaseController {
 					$tableHead = explode("<thead>", $contentReplace);
 					$tableHead = explode("</thead>", $tableHead[1])[0];
 
-					/* Sacamos los th de tr del thead para agregar la columan de imagen */
+					/* Sacamos los th de tr del thead para agregar la columna de imagen */
 					$tableHeadtr = explode("<tr>", $tableHead);
 					$tableHeadtr = explode("</tr>", $tableHeadtr[1])[0];
 	

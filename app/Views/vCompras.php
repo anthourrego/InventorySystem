@@ -192,7 +192,7 @@
                 <div class="input-search">
                   <input placeholder="Ingrese la referencia" data-campo="referencia" class="form-control soloLetras validarenie validaCampo inputVer volverMayuscula" id="referencia" name="referencia" type="text" minlength="1" maxlength="255" required autocomplete="off">
                   <div class="input-group-append d-none">
-                    <button type="button" class="btn btn-secondary" id="btnSearchReferecnia">
+                    <button type="button" class="btn btn-secondary" id="btnSearchReferencia">
                       <i class="fas fa-filter"></i>
                     </button>
                   </div>

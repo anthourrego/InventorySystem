@@ -5,6 +5,9 @@ use App\Models\mManifiesto;
 use App\Models\mProductos;
 use \Hermawan\DataTables\DataTable;
 
+//Clases
+use \App\Entities\Manifiesto;
+
 class cManifiesto extends BaseController {
 
 	public function index() {
@@ -205,28 +208,27 @@ class cManifiesto extends BaseController {
 
 	public function crearEditar(){
 		$resp["success"] = false;
+		$dataPost = (object) $this->request->getPost();
 		$filenameDelete = "";
 		$manifiesto = new mManifiesto();
-		
+		$classManifiesto = new Manifiesto();
+
     // Creamos el manifiesto y llenamos los datos
-		$dataManifiesto = array(
-			"id" => $this->request->getPost("id")
-			,"nombre" => trim($this->request->getPost("nombre"))
-		);
+		$classManifiesto->id = $dataPost->id;
+		$classManifiesto->nombre = trim($dataPost->nombre);
 
 		//Validamos si eliminar la foto de perfil y buscamos el manifiesto
-		if($this->request->getPost("editFile") != 0 && !empty($this->request->getPost("id"))) {
-			$foto = $manifiesto->find($this->request->getPost("id"))["ruta_archivo"];
-			$dataManifiesto["ruta_archivo"] = null;
+		if($dataPost->editFile != 0 && !empty($classManifiesto->id)) {
+			$foto = $manifiesto->find($classManifiesto->id)["ruta_archivo"];
+			$classManifiesto->ruta_archivo = null;
 			$filenameDelete = UPLOADS_MANIFEST_PATH . $foto; //<-- specify the image  file
 		}
 
 		$this->db->transBegin();
-			
 		//Validamos si el manifiesto que ingresaron ya existe
-		if ($manifiesto->save($dataManifiesto)) {
+		if ($manifiesto->save($classManifiesto)) {
 			//Traemos el id insertado
-			$manifiesto->id = empty($this->request->getPost("id")) ? $manifiesto->getInsertID() : $this->request->getPost("id"); 
+			$classManifiesto->id = empty($classManifiesto->id) ? $manifiesto->getInsertID() : $classManifiesto->id; 
 
 			$file = $this->request->getFile("fileUpload"); 
 
@@ -248,13 +250,13 @@ class cManifiesto extends BaseController {
 						$name = str_replace(' ', '_', $name[0]) . "." . $file->getClientExtension();
 						if ($file->move(UPLOADS_MANIFEST_PATH, $name, true)) {
 							$updateFile = array(
-								"id" => $manifiesto->id,
+								"id" => $classManifiesto->id,
 								"ruta_archivo" => $name
 							);
 
 							if ($manifiesto->save($updateFile)) { 
 								$resp["success"] = true;
-								$resp["msj"] = "El manifiesto <b>{$manifiesto->nombre}</b> se " . (empty($this->request->getPost("id")) ? 'creo' : 'actualizo') . " correctamente.";
+								$resp["msj"] = "El manifiesto <b>{$classManifiesto->nombre}</b> se " . (empty($classManifiesto->id) ? 'creo' : 'actualizo') . " correctamente.";
 							} else {
 								$resp["msj"] = "Ha ocurrido un error al actualizar los datos de el archivo.";
 							}
@@ -269,13 +271,13 @@ class cManifiesto extends BaseController {
 				}
 			} else {
 				$resp["success"] = true;
-				$resp["msj"] = "El manifiesto <b>{$manifiesto->nombre}</b> se " . (empty($this->request->getPost("id")) ? 'creo' : 'actualizo') . " correctamente.";
+				$resp["msj"] = "El manifiesto <b>{$classManifiesto->nombre}</b> se " . (empty($classManifiesto->id) ? 'creo' : 'actualizo') . " correctamente.";
 			}
 		} else {
-			$resp["msj"] = "No puede " . (empty($this->request->getPost("id")) ? 'crear' : 'actualizar') . " el manifiesto." . listErrors($manifiesto->errors());
+			$resp["msj"] = "No puede " . (empty($classManifiesto->id) ? 'crear' : 'actualizar') . " el manifiesto." . listErrors($manifiesto->errors());
 		}
         
-		//Validamos para elminar la foto
+		//Validamos para eliminar la foto
 		if ($filenameDelete != '' && file_exists($filenameDelete)) {
 			if(!@unlink($filenameDelete)) {
 				$resp["success"] = false;

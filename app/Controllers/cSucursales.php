@@ -149,8 +149,6 @@ class cSucursales extends BaseController {
 				->where("c.estado", 1)
 				->where("sucursales.estado", 1);
 
-		// 1144038430 | Carlos Arias | Buga | El gangazo paisa Buga
-
 		if (isset($data->search) && strlen(trim($data->search))) {
 
 			$where = "

@@ -459,7 +459,7 @@ class cEmpaque extends BaseController {
 					}
 
 				} else {
-					$resp['msj'] = "No se econtro caja en proceso de empaque";
+					$resp['msj'] = "No se encontro caja en proceso de empaque";
 				}
 
 			} else {
