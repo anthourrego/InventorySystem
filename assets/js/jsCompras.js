@@ -246,7 +246,9 @@ let DTDataProdsAdd = $("#tblProducts").DataTable({
     return: false,
   },
   columns: [{
-    data: 'referenciaItem'
+    data: 'referencia'
+  },{
+    data: 'item'
   }, {
     data: 'descripcion',
     width: "30%",
@@ -638,6 +640,11 @@ $(function () {
       // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
     }
   });
+
+  $('#modalSearchProd').on('hidden.bs.modal', function (event) {
+    $("#modalProdCuenta").modal('show');
+    $('.input-search').find('.input-group-append').addClass('d-none');
+  });
 });
 
 function calculateDataProds() {
@@ -725,7 +732,7 @@ function validateColorRow(data) {
 
 function verifyProductWithoutPrice() {
   let prodsWithoutPrice = dataProdsAdd.filter(
-    product => (!product.costo || product.costo == 0) || (!product.precioVenta || product.precioVenta == 0)
+    product => (MANEJACOSTO && (!product.costo || product.costo == 0)) || (!product.precioVenta || product.precioVenta == 0)
   ).map(
     (productFilter) => `<li class='mt-2'>
       <b>${productFilter.referenciaItem}:</b>

@@ -10,7 +10,7 @@ class mUsuarios extends Model {
   protected $useAutoIncrement = true;
   
   protected $allowedFields = [
-    'usuario', 
+    'usuario',
     'password',
     'nombre',
     'perfil',
@@ -53,11 +53,12 @@ class mUsuarios extends Model {
   }
 
   public function validarUsuario(){
-    $valid = $this->asObject()
-              ->where([
-                'usuario' => $this->usuario
-                ,"estado" => 1
-              ])->first();
+    $valid = $this->db->table('usuarios')
+      ->select('*')
+      ->where("usuario like binary '{$this->usuario}'", null, false)
+      ->get()
+      ->getRow();
+
     if (!is_null($valid)) {
       if(password_verify($this->password, $valid->password)){
         $this->id = $valid->id;
@@ -67,10 +68,10 @@ class mUsuarios extends Model {
         $this->created_at = $valid->created_at;
         return true;
       } else {
-        return false; 
+        return false;
       }
     } else {
-      return false; 
+      return false;
     }
   }
 }

@@ -1,5 +1,4 @@
 <div class="card">
-
   <div class="card-header">
     <div class="row justify-content-between">
       <div class="col-8 col-md-3 d-sm-block d-md-none">
@@ -19,7 +18,8 @@
         </div>
       </div>
       <div class="col-8 col-md-9 d-none d-md-block">
-        <button type="button" class="btn-filtro-pedido btn btn-outline-primary btn-lg active" data-valor="-1">Todos</button>
+        <button type="button" class="btn-filtro-pedido btn btn-outline-primary btn-lg active"
+          data-valor="-1">Todos</button>
         <button type="button" class="btn-filtro-pedido btn btn-outline-warning" data-valor="PE">Pendiente</button>
         <button type="button" class="btn-filtro-pedido btn btn-outline-secondary" data-valor="EP">En Proceso</button>
         <button type="button" class="btn-filtro-pedido btn btn-outline-info" data-valor="EM">Empacado</button>
@@ -37,7 +37,7 @@
   <div class="card-body">
     <div class="table-responsive">
       <table id="table" class="table table-sm table-striped table-hover table-bordered w-100">
-        <thead> 
+        <thead>
           <tr>
             <th>Nro Pedido</th>
             <th>Cliente</th>
@@ -57,7 +57,8 @@
   </div>
 </div>
 
-<div class="modal fade" id="modalManifiestos" data-backdrop="static" data-keyboard="false" aria-labelledby="modalManifiestosLabel" aria-hidden="true">
+<div class="modal fade" id="modalManifiestos" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="modalManifiestosLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
@@ -88,12 +89,18 @@
 
       </div>
       <div class="modal-footer">
-        <?php if (validPermissions([1082], true)) { ?>
-          <button type="button" class="btn btn-secondary d-none" id="btn-imprimir-multiple-manifiesto">
-            <i class="fas fa-print"></i> Imprimir Manifiestos
+        <?php if (validPermissions([1083], true)) { ?>
+          <button type="button" class="btn btn-warning" id="btn-imprimir-manifiesto-sin-repetir">
+            <i class="fas fa-print"></i> Manifiestos Sin Repetir
           </button>
         <?php } ?>
-        <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-success" id="btn-finalizar-empaque">
+        <?php if (validPermissions([1082], true)) { ?>
+          <button type="button" class="btn btn-secondary d-none" id="btn-imprimir-multiple-manifiesto">
+            <i class="fas fa-print"></i> Múltiple Manifiestos
+          </button>
+        <?php } ?>
+        <button type="button" data-dismiss="modal" aria-label="Close"
+          class="btn btn-success" id="btn-finalizar-empaque">
           <i class="fas fa-check"></i> Aceptar
         </button>
       </div>
@@ -115,7 +122,8 @@
   </form>
 </div>
 
-<div class="modal fade" id="modalGQR" data-backdrop="static" data-keyboard="false" aria-labelledby="modalGQRLabel" aria-hidden="true">
+<div class="modal fade" id="modalGQR" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="modalGQRLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
@@ -145,7 +153,8 @@
   </div>
 </div>
 
-<div class="modal fade" id="modalDetallePedido" data-backdrop="static" data-keyboard="false" aria-labelledby="modalDetallePedidoLabel" aria-hidden="true">
+<div class="modal fade" id="modalDetallePedido" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="modalDetallePedidoLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content" style="min-height: 92vh;">
       <div class="modal-header">
@@ -227,7 +236,8 @@
   </div>
 </div>
 
-<div class="modal fade" id="modalBoxProducts" data-backdrop="static" data-keyboard="false" aria-labelledby="modalBoxProductsLabel" aria-hidden="true">
+<div class="modal fade" id="modalBoxProducts" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="modalBoxProductsLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
