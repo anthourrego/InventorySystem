@@ -24,9 +24,9 @@
         "select2/select2": "^4.0",
         "ttskch/select2-bootstrap4-theme": "^1.5",
         "robinherbots/jquery.inputmask": "^5.0",
-        "tecnickcom/tcpdf": "^6.4",
+        "tecnickcom/tcpdf": "^6.7",
         "nelexa/zip": "^4.0",
-        "ckeditor/ckeditor": "4.*",
+        "ckeditor/ckeditor": "^4.24",
         "setasign/fpdi": "^2.3",
         "chillerlan/php-qrcode": "^4.3",
         "phpmailer/phpmailer": "^6.7",
@@ -36,7 +36,7 @@
         "fakerphp/faker": "^1.9",
         "mikey179/vfsstream": "^1.6",
         "phpunit/phpunit": "^9.1",
-        "tatter/patches": "^2.0"
+        "tatter/patches": "^2.1"
     },
     "suggest": {
         "ext-fileinfo": "Improves mime type detection for files"
