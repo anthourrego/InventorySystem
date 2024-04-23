@@ -30,7 +30,9 @@ class cPedidos extends BaseController {
 		$this->LDataTables();
 		$this->LMoment();
 
-		$this->content['manejaEmpaque'] = (!session()->has("manejaEmpaque") || session()->get("manejaEmpaque") == "1" ? "1" : "0");
+		$this->content['manejaEmpaque'] = (
+			!session()->has("manejaEmpaque") || session()->get("manejaEmpaque") == "1" ? "1" : "0"
+		);
 
 		$this->content['usuario'] = (session()->has("id_user") ? session()->get("id_user") : null);
 
@@ -51,25 +53,28 @@ class cPedidos extends BaseController {
 		$this->LSelect2();
 		$this->LInputMask();
 		$this->LJQueryValidation();
-    $this->LFancybox();
+    	$this->LFancybox();
 
 		$mClientes = new mClientes();
 		$this->content["cantidadClientes"] = $mClientes->where("estado", 1)->countAllResults();
 
-    $mConfiguracion = new mConfiguracion();
+    	$mConfiguracion = new mConfiguracion();
 
 		$dataPref = (session()->has("prefijoPed") ? session()->get("prefijoPed") : '');
 		$cantDigitos = (session()->has("digitosPed") ? session()->get("digitosPed") : 0);
 
-    $dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoPed")->first();
+    	$dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoPed")->first();
 
-		$this->content["nroPedido"] = $dataPref . str_pad((is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1)), $cantDigitos, "0", STR_PAD_LEFT);
+		$value = (is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1));
+		$this->content["nroPedido"] = $dataPref . str_pad($value, $cantDigitos, "0", STR_PAD_LEFT);
 
 		$this->content["prefijoValido"] = ($dataPref != '' ? 'S' : 'N');
 
 		$this->content["pedido"] = null;
 
-		$this->content["inventario_negativo"] = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
+		$this->content["inventario_negativo"] = (
+			session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0'
+		);
 
 		$this->content["cantidad_despachar"] = (session()->has("cantDespachar") ? session()->get("cantDespachar") : '6');
 
@@ -105,8 +110,8 @@ class cPedidos extends BaseController {
 		$productos = $mPedidosProductos->select("
 				p.id,
 				pedidosproductos.id AS idProductoPedido,
-				p.referencia, 
-				p.item, 
+				p.referencia,
+				p.item,
 				p.descripcion,
 				(p.stock + pedidosproductos.cantidad) AS stock,
 				pedidosproductos.cantidad,
@@ -152,7 +157,9 @@ class cPedidos extends BaseController {
 		$mClientes = new mClientes();
 		$this->content["cantidadClientes"] = $mClientes->where("estado", 1)->countAllResults();
 		$this->content["cantidadVendedores"] = $this->cantidadVendedores();
-		$this->content["inventario_negativo"] = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
+		$this->content["inventario_negativo"] = (
+			session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0'
+		);
 		$this->content["cantidad_despachar"] = (session()->has("cantDespachar") ? session()->get("cantDespachar") : '6');
 		$this->content["camposProducto"] = [
 			"item" => (session()->has("itemProducto") ? session()->get("itemProducto") : '0'),
@@ -192,7 +199,7 @@ class cPedidos extends BaseController {
 				P.created_at,
 				P.updated_at,
 				P.estado,
-				CASE 
+				CASE
 					WHEN V.id IS NOT NULL
 						THEN CASE
 							WHEN V.leidoQR = 1
@@ -202,11 +209,22 @@ class cPedidos extends BaseController {
 					WHEN P.Estado = 'DE'
 						THEN 'Despachado'
 					WHEN P.Estado = 'PE'
-						THEN 'Pendiente' 
+						THEN 'Pendiente'
 					WHEN P.Estado = 'EP'
 						THEN 'En Proceso'
 					ELSE 'Empacado'
 				END AS NombreEstado,
+				CASE
+					WHEN P.Estado = 'DE'
+						THEN 1
+					WHEN P.Estado = 'PE'
+						THEN 2
+					WHEN P.Estado = 'EP'
+						THEN 3
+					WHEN V.id IS NOT NULL
+						THEN 5
+					ELSE 4
+				END AS Orden,
 				P.total,
 				S.direccion,
 				S.nombre AS NombreSucursal,
@@ -223,7 +241,7 @@ class cPedidos extends BaseController {
 			->join('usuarios AS U', 'P.id_vendedor = U.id', 'left')
 			->join('ventas AS V', 'P.id = V.id_pedido', 'left')
 			->join("(
-				SELECT 
+				SELECT
 					COUNT(id_pedido) AS TotalCajas
 					, id_pedido
 				FROM pedidoscajas
@@ -238,25 +256,22 @@ class cPedidos extends BaseController {
 							->where("V.leidoQR IS NULL")
 							->orWhere('V.leidoQR', '0')
 					->groupEnd();
-			} else if ($estado == "FQ") {
+			} elseif ($estado == "FQ") {
 				$query->where("V.id IS NOT NULL")
 					->groupStart()
 							->where("V.leidoQR IS NOT NULL")
 							->Where('V.leidoQR', 1)
 					->groupEnd();
-			} else if($estado == "EM") {
+			} elseif($estado == "EM") {
 				$query->where("(P.Estado IN('EM', 'FA') AND V.id IS NULL)");
 			} else {
 				$query->where("P.Estado", $estado);
 			}
 		}
-
-		$query->orderBy("Delimitado", "DESC");
-
 		return DataTable::of($query)->toJson(true);
 	}
 
-	public function eliminar(){
+	public function eliminar() {
 		$resp["success"] = false;
 		//Traemos los datos del post
 		$data = (object) $this->request->getPost();
@@ -271,13 +286,13 @@ class cPedidos extends BaseController {
 		foreach ($cajas as $it) {
 			
 			/* Eliminamos los productos de la caja actual */
-			if (!$mPedidosCajasProductos->where('id_caja', $it->id)->delete()) { 
+			if (!$mPedidosCajasProductos->where('id_caja', $it->id)->delete()) {
 				$contActProd = false;
 				break;
 			}
 
 			/* Eliminamos la caja */
-			if (!$mPedidosCajas->delete($it->id)) { 
+			if (!$mPedidosCajas->delete($it->id)) {
 				$contActProd = false;
 				break;
 			}
@@ -312,7 +327,7 @@ class cPedidos extends BaseController {
 		if ($contActProd == true) {
 			if($mPedidosProductos->where("id_pedido", $data->id)->delete()){
 				$pedidos = new mPedidos();
-				if ($pedidos->delete($data->id)) { 
+				if ($pedidos->delete($data->id)) {
 					$resp["success"] = true;
 					$resp['msj'] = "Pedido eliminado correctamente";
 				} else {
@@ -344,14 +359,12 @@ class cPedidos extends BaseController {
 		$productoModel = new mProductos();
 		$pedidoModel = new mPedidos();
 		$mPedidosProductos = new mPedidosProductos();
-    $mConfiguracion = new mConfiguracion();
-
-    $dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoPed")->first();
+    	$mConfiguracion = new mConfiguracion();
 
 		$dataPref = (session()->has("prefijoPed") ? session()->get("prefijoPed") : '');
 		$cantDigitos = (session()->has("digitosPed") ? session()->get("digitosPed") : 0);
 
-    $dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoPed")->first();
+    	$dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoPed")->first();
 
 		$numerPedido = str_pad((is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1)), $cantDigitos, "0", STR_PAD_LEFT);
 		$pedido = $dataPref . $numerPedido;
@@ -370,7 +383,7 @@ class cPedidos extends BaseController {
 				"pedido" => $pedido,
 				"id_cliente" => $dataPost->idCliente,
 				"id_vendedor" => $dataPost->idUsuario,
-        "id_sucursal" => $dataPost->idSucursal,
+        		"id_sucursal" => $dataPost->idSucursal,
 				"impuesto" => 0,
 				"neto" => 0,
 				"total" => 0,
@@ -384,7 +397,7 @@ class cPedidos extends BaseController {
 				foreach ($prod as $it) {
 					$dataProductoPedido = [
 						"id_pedido" => $dataSave["id"],
-            "id_producto" => $it->id,
+            			"id_producto" => $it->id,
 						"cantidad" => $it->cantidad,
 						"valor" => $it->valorUnitario,
 						"valor_original" => $it->precio_venta
@@ -468,8 +481,6 @@ class cPedidos extends BaseController {
 		$mPedidos = new mPedidos();
 		$mPedidosProductos = new mPedidosProductos();
 		$mObservacionProductos = new mObservacionProductos();
-
-		$pediOrigi = $mPedidos->asObject()->where("id", $dataPost->idPedido)->first();
 		
 		if (count($prod) > 0) {
 			$this->db->transBegin();
@@ -488,7 +499,7 @@ class cPedidos extends BaseController {
 			if ($dataPost->estado == 'EM' && $dataPost->regresarEmpaque == 1) {
 				$dataSave['estado'] = 'EP';
 				$dataSave['fin_empaque'] = null;
-			} 
+			}
 
 			if($mPedidos->save($dataSave)){
 				//mostramos los productos actuales para comparalos con los que ingresan
@@ -505,7 +516,10 @@ class cPedidos extends BaseController {
 						}
 
 						//Validamos si los valores y las cantidades cambian
-						if($it->cantidad != $productoActuales[$productoAct]["cantidad"] || $it->valorUnitario != $productoActuales[$productoAct]["valor"]) {
+						if(
+							$it->cantidad != $productoActuales[$productoAct]["cantidad"]
+							|| $it->valorUnitario != $productoActuales[$productoAct]["valor"]
+						) {
 							$cantidadNueva = $productoActuales[$productoAct]["cantidad"] - $it->cantidad;
 							
 							$dataProductoPedido = [
@@ -657,21 +671,18 @@ class cPedidos extends BaseController {
 
 	public function cantidadVendedores(){
 		$mUsuarios = new mUsuarios();
-
-		$vendedores = $mUsuarios->join("(
-											SELECT 
-												usuarioId,
-												perfilId, 
-												COUNT(*) AS Vendedor 
-											FROM permisosusuarioperfil 
-											WHERE permiso = '61' 
-											GROUP BY usuarioId, perfilId) AS pup", 
-											"(CASE WHEN usuarios.perfil IS NULL THEN usuarios.id = pup.usuarioId ELSE usuarios.perfil = pup.perfilId END)", "inner", 
-											false)
-											->where("usuarios.estado", 1)
-											->countAllResults();
-		
-		return $vendedores;
+		return $mUsuarios->join("(
+			SELECT
+				usuarioId,
+				perfilId,
+				COUNT(*) AS Vendedor
+			FROM permisosusuarioperfil
+			WHERE permiso = '61'
+			GROUP BY usuarioId, perfilId) AS pup",
+			"(CASE WHEN usuarios.perfil IS NULL THEN usuarios.id = pup.usuarioId ELSE usuarios.perfil = pup.perfilId END
+		)", "inner", false)
+		->where("usuarios.estado", 1)
+		->countAllResults();
 	}
 
 	public function estadoPedido(){
@@ -770,7 +781,7 @@ class cPedidos extends BaseController {
 				->findAll();
 	
 				$manifiestos = [];
-				foreach ($productos as $key => $value) {
+				foreach ($productos as $value) {
 					if (!is_null($value->idManifiesto)) {
 						$enc = array_search($value->idManifiesto, array_column($manifiestos, "id"));
 						if ($enc === false) {
@@ -808,7 +819,6 @@ class cPedidos extends BaseController {
 		$mPedidos = new mPedidos();
 		$mVentasProductos = new mVentasProductos();
 		$mPedidosCajas = new mPedidosCajas();
-		$mPedidosCajasProductos = new mPedidosCajasProductos();
 		$mConfiguracion = new mConfiguracion();
 
 		$this->content['cajas'] = [];
@@ -912,19 +922,24 @@ class cPedidos extends BaseController {
 			$emailEmpresa = $mConfiguracion->select("valor, campo")->where('campo', "emailEmpresa")->get()->getRow('valor');
 
 			if (
-				!is_null($emailEmpresa) 
-				&& $emailEmpresa != '' 
-				&& strpos($emailEmpresa, '@') !== false 
+				!is_null($emailEmpresa)
+				&& $emailEmpresa != ''
+				&& strpos($emailEmpresa, '@') !== false
 				&& strpos($emailEmpresa, '.') !== false
 			) {
 				$body = "<div>
 					<h3>Descarga Factura QR</h3>
 					<p>
-						Se ha descargado la factura " . $this->content['factura']->codigo . " por un total de " . $this->content['factura']->total . " desde la opción del QR
+						Se ha descargado la factura " . $this->content['factura']->codigo .
+						" por un total de " . $this->content['factura']->total . " desde la opción del QR
 					</p>
 				</div>";
 
-				$this->content['respuestaCorreo'] = sendEmail($mConfiguracion, [$emailEmpresa], "Descarga Factura " . $this->content['factura']->codigo, $body);
+				$this->content['respuestaCorreo'] = sendEmail(
+					$mConfiguracion
+					, [$emailEmpresa]
+					, "Descarga Factura " . $this->content['factura']->codigo, $body
+				);
 			}
 
 			$mClientes = new mClientes();
@@ -974,13 +989,13 @@ class cPedidos extends BaseController {
 		$mPedidosProductos = new mPedidosProductos();
 		$ventaModel = new mVentas();
 		$mVentasProductos = new mVentasProductos();
-		$mPedidosCajas = new mPedidosCajas();
 
 		$dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoFact")->first();
 		$cantDigitos = (session()->has("digitosFact") ? session()->get("digitosFact") : 0);
 
 		$numerVenta = str_pad((is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1)), $cantDigitos, "0", STR_PAD_LEFT);
-		$codigo = (session()->has("prefijoFact") ? session()->get("prefijoFact") : (isset($data->prefijo) ? $data->prefijo : '')) . $numerVenta;
+		$prefijoVal = (isset($data->prefijo) ? $data->prefijo : '');
+		$codigo = (session()->has("prefijoFact") ? session()->get("prefijoFact") : $prefijoVal) . $numerVenta;
 
 		$pedido = $pedidoModel->find($data->id);
 		$pedidoProductos = $mPedidosProductos->where("id_pedido", $data->id)->findAll();
@@ -1068,7 +1083,7 @@ class cPedidos extends BaseController {
 		")->join('usuarios AS U', 'pedidoscajas.id_empacador = U.id', 'left')
 		->where("id_pedido", $idPedido)->findAll();
 
-		foreach ($pedido->cajas as $key => $value) {
+		foreach ($pedido->cajas as $value) {
 			$value->{'infoCaja'} = $mPedidosCajasProductos->select("
 				COUNT(*) AS Total, COUNT(DISTINCT(P.referencia)) AS TotalRef, pedidoscajasproductos.id_caja
 			")->join('productos P', 'pedidoscajasproductos.id_producto = P.id', 'left')

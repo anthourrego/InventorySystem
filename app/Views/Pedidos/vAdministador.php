@@ -36,7 +36,8 @@
   </div>
   <div class="card-body">
     <div class="table-responsive">
-      <table id="table" class="table table-sm table-striped table-hover table-bordered w-100">
+      <table id="table" class="table table-sm table-striped table-hover table-bordered w-100"
+        aria-describedby="Tabla de Pedidos">
         <thead>
           <tr>
             <th>Nro Pedido</th>
@@ -44,6 +45,7 @@
             <th>Sucursal</th>
             <th>Dirección</th>
             <th>Ciudad</th>
+            <th>Orden</th>
             <th>Estado</th>
             <th>Total</th>
             <th>Fecha Creación</th>

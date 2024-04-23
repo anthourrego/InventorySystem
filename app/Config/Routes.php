@@ -311,6 +311,11 @@ $routes->group('ProductosReportados', ['filter' => 'authGuard:60', 'namespace' =
 	$routes->post('Confirmar', 'cProductosReportados::confirmar');
 });
 
+// Mobile app
+$routes->group('Mobile', function ($routes) {
+	$routes->post('Login', 'cClientes::inicioAppCliente');
+});
+
 
 /*
  * --------------------------------------------------------------------
