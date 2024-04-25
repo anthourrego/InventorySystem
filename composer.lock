@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "668b8cae41f47bf0d1de3b3e2191e90a",
+    "content-hash": "ee98f281d2066f59c3265fda94df0a49",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -286,16 +286,16 @@
         },
         {
             "name": "codeigniter4/framework",
-            "version": "v4.3.7",
+            "version": "v4.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeigniter4/framework.git",
-                "reference": "7c663e1b51d36a49fcdfc151cf2991821d6aa4d6"
+                "reference": "10c23e96db99171bc7632184d0e986e6eecc242d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeigniter4/framework/zipball/7c663e1b51d36a49fcdfc151cf2991821d6aa4d6",
-                "reference": "7c663e1b51d36a49fcdfc151cf2991821d6aa4d6",
+                "url": "https://api.github.com/repos/codeigniter4/framework/zipball/10c23e96db99171bc7632184d0e986e6eecc242d",
+                "reference": "10c23e96db99171bc7632184d0e986e6eecc242d",
                 "shasum": ""
             },
             "require": {
@@ -356,7 +356,7 @@
                 "slack": "https://codeigniterchat.slack.com",
                 "source": "https://github.com/codeigniter4/CodeIgniter4"
             },
-            "time": "2023-07-30T08:45:46+00:00"
+            "time": "2023-08-25T01:47:10+00:00"
         },
         {
             "name": "codeigniter4/translations",
@@ -3948,7 +3948,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.3 || ^8.0"
+        "php": "^7.4 || ^8.0"
     },
     "platform-dev": [],
     "plugin-api-version": "2.6.0"
