@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0640cedd9377efb8f82e77da1208f0ce",
+    "content-hash": "668b8cae41f47bf0d1de3b3e2191e90a",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -286,16 +286,16 @@
         },
         {
             "name": "codeigniter4/framework",
-            "version": "v4.4.8",
+            "version": "v4.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeigniter4/framework.git",
-                "reference": "84ff35989270d17bcdb463626eec50b4c25b3766"
+                "reference": "7c663e1b51d36a49fcdfc151cf2991821d6aa4d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeigniter4/framework/zipball/84ff35989270d17bcdb463626eec50b4c25b3766",
-                "reference": "84ff35989270d17bcdb463626eec50b4c25b3766",
+                "url": "https://api.github.com/repos/codeigniter4/framework/zipball/7c663e1b51d36a49fcdfc151cf2991821d6aa4d6",
+                "reference": "7c663e1b51d36a49fcdfc151cf2991821d6aa4d6",
                 "shasum": ""
             },
             "require": {
@@ -307,9 +307,9 @@
                 "psr/log": "^1.1"
             },
             "require-dev": {
-                "codeigniter/coding-standard": "^1.7",
+                "codeigniter/coding-standard": "^1.5",
                 "fakerphp/faker": "^1.9",
-                "friendsofphp/php-cs-fixer": "^3.47.1",
+                "friendsofphp/php-cs-fixer": "3.13.0",
                 "kint-php/kint": "^5.0.4",
                 "mikey179/vfsstream": "^1.6",
                 "nexusphp/cs-config": "^3.6",
@@ -332,7 +332,6 @@
                 "ext-readline": "Improves CLI::input() usability",
                 "ext-redis": "If you use Cache class RedisHandler",
                 "ext-simplexml": "If you format XML",
-                "ext-sodium": "If you use Encryption SodiumHandler",
                 "ext-sqlite3": "If you use SQLite3",
                 "ext-sqlsrv": "If you use SQL Server",
                 "ext-xdebug": "If you use CIUnitTestCase::assertHeaderEmitted()"
@@ -357,7 +356,7 @@
                 "slack": "https://codeigniterchat.slack.com",
                 "source": "https://github.com/codeigniter4/CodeIgniter4"
             },
-            "time": "2024-04-07T02:46:05+00:00"
+            "time": "2023-07-30T08:45:46+00:00"
         },
         {
             "name": "codeigniter4/translations",
@@ -610,12 +609,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/DataTables/Dist-DataTables.git",
-                "reference": "2fd4c05918d8504f0c555bc5539db66184e8a19b"
+                "reference": "89f38699102d28e4d7da2b62cc82ca3fb985dcca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DataTables/Dist-DataTables/zipball/2fd4c05918d8504f0c555bc5539db66184e8a19b",
-                "reference": "2fd4c05918d8504f0c555bc5539db66184e8a19b",
+                "url": "https://api.github.com/repos/DataTables/Dist-DataTables/zipball/89f38699102d28e4d7da2b62cc82ca3fb985dcca",
+                "reference": "89f38699102d28e4d7da2b62cc82ca3fb985dcca",
                 "shasum": ""
             },
             "require": {
@@ -644,7 +643,7 @@
                 "forum": "https://datatables.net/forums",
                 "source": "https://github.com/DataTables/Dist-DataTables"
             },
-            "time": "2024-04-19T11:15:22+00:00"
+            "time": "2024-04-23T15:55:23+00:00"
         },
         {
             "name": "datatables.net/datatables.net-bs4",
@@ -652,12 +651,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/DataTables/Dist-DataTables-Bootstrap4.git",
-                "reference": "c8dd77e9e65bc5d86493e1ef117ee49d79e2ebf2"
+                "reference": "5ebfa986894e3dbdbe606e07f40926b3c02a0ae4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DataTables/Dist-DataTables-Bootstrap4/zipball/c8dd77e9e65bc5d86493e1ef117ee49d79e2ebf2",
-                "reference": "c8dd77e9e65bc5d86493e1ef117ee49d79e2ebf2",
+                "url": "https://api.github.com/repos/DataTables/Dist-DataTables-Bootstrap4/zipball/5ebfa986894e3dbdbe606e07f40926b3c02a0ae4",
+                "reference": "5ebfa986894e3dbdbe606e07f40926b3c02a0ae4",
                 "shasum": ""
             },
             "require": {
@@ -689,7 +688,7 @@
                 "forum": "https://datatables.net/forums",
                 "source": "https://github.com/DataTables/Dist-DataTables-Bootstrap4"
             },
-            "time": "2024-04-19T11:15:43+00:00"
+            "time": "2024-04-23T15:55:43+00:00"
         },
         {
             "name": "datatables.net/datatables.net-buttons",
