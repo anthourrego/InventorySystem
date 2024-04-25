@@ -5,7 +5,7 @@
     "homepage": "https://codeigniter.com",
     "license": "MIT",
     "require": {
-        "php": "^7.3 || ^8.0",
+        "php": "^7.4 || ^8.0",
         "codeigniter4/framework": "4.3.7",
         "almasaeed2010/adminlte": "^3.2",
         "twbs/bootstrap": "4.6.1",
@@ -38,6 +38,15 @@
         "phpunit/phpunit": "^9.1",
         "tatter/patches": "^2.1"
     },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/installers": true,
+            "oomphinc/composer-installers-extender": true
+        }
+    },
     "suggest": {
         "ext-fileinfo": "Improves mime type detection for files"
     },
@@ -59,15 +68,9 @@
         "test": "phpunit"
     },
     "support": {
-        "forum": "http://forum.codeigniter.com/",
+        "forum": "https://forum.codeigniter.com/",
         "source": "https://github.com/codeigniter4/CodeIgniter4",
         "slack": "https://codeigniterchat.slack.com"
-    },
-    "config": {
-        "allow-plugins": {
-            "composer/installers": true,
-            "oomphinc/composer-installers-extender": true
-        }
     },
     "prefer-stable": true
 }

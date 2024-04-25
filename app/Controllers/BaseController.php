@@ -21,7 +21,8 @@ use Config\Database;
  *
  * For security be sure to declare any new methods as protected or private.
  */
-abstract class BaseController extends Controller {
+abstract class BaseController extends Controller
+{
 
     public $content;
     /**
@@ -50,9 +51,10 @@ abstract class BaseController extends Controller {
     // protected $session;
 
     /**
-     * Constructor.
+     * @return void
      */
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
+    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
+    {
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
 
