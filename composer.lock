@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ee98f281d2066f59c3265fda94df0a49",
+    "content-hash": "8416ee7e93eee46db58e90a93b54fe30",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -286,16 +286,16 @@
         },
         {
             "name": "codeigniter4/framework",
-            "version": "v4.3.8",
+            "version": "v4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeigniter4/framework.git",
-                "reference": "10c23e96db99171bc7632184d0e986e6eecc242d"
+                "reference": "30008a0e3c342f2b6e5083927bec49feec95ed53"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeigniter4/framework/zipball/10c23e96db99171bc7632184d0e986e6eecc242d",
-                "reference": "10c23e96db99171bc7632184d0e986e6eecc242d",
+                "url": "https://api.github.com/repos/codeigniter4/framework/zipball/30008a0e3c342f2b6e5083927bec49feec95ed53",
+                "reference": "30008a0e3c342f2b6e5083927bec49feec95ed53",
                 "shasum": ""
             },
             "require": {
@@ -356,7 +356,7 @@
                 "slack": "https://codeigniterchat.slack.com",
                 "source": "https://github.com/codeigniter4/CodeIgniter4"
             },
-            "time": "2023-08-25T01:47:10+00:00"
+            "time": "2023-08-25T07:02:01+00:00"
         },
         {
             "name": "codeigniter4/translations",
@@ -609,12 +609,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/DataTables/Dist-DataTables.git",
-                "reference": "89f38699102d28e4d7da2b62cc82ca3fb985dcca"
+                "reference": "c839627d77a170fc9096e7b57bdb7d1d1064481d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DataTables/Dist-DataTables/zipball/89f38699102d28e4d7da2b62cc82ca3fb985dcca",
-                "reference": "89f38699102d28e4d7da2b62cc82ca3fb985dcca",
+                "url": "https://api.github.com/repos/DataTables/Dist-DataTables/zipball/c839627d77a170fc9096e7b57bdb7d1d1064481d",
+                "reference": "c839627d77a170fc9096e7b57bdb7d1d1064481d",
                 "shasum": ""
             },
             "require": {
@@ -643,7 +643,7 @@
                 "forum": "https://datatables.net/forums",
                 "source": "https://github.com/DataTables/Dist-DataTables"
             },
-            "time": "2024-04-23T15:55:23+00:00"
+            "time": "2024-04-29T09:40:22+00:00"
         },
         {
             "name": "datatables.net/datatables.net-bs4",
@@ -651,12 +651,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/DataTables/Dist-DataTables-Bootstrap4.git",
-                "reference": "5ebfa986894e3dbdbe606e07f40926b3c02a0ae4"
+                "reference": "b3fbe22500141f8d2f230b4f3b3a031a5ff182e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DataTables/Dist-DataTables-Bootstrap4/zipball/5ebfa986894e3dbdbe606e07f40926b3c02a0ae4",
-                "reference": "5ebfa986894e3dbdbe606e07f40926b3c02a0ae4",
+                "url": "https://api.github.com/repos/DataTables/Dist-DataTables-Bootstrap4/zipball/b3fbe22500141f8d2f230b4f3b3a031a5ff182e6",
+                "reference": "b3fbe22500141f8d2f230b4f3b3a031a5ff182e6",
                 "shasum": ""
             },
             "require": {
@@ -688,7 +688,7 @@
                 "forum": "https://datatables.net/forums",
                 "source": "https://github.com/DataTables/Dist-DataTables-Bootstrap4"
             },
-            "time": "2024-04-23T15:55:43+00:00"
+            "time": "2024-04-29T09:40:43+00:00"
         },
         {
             "name": "datatables.net/datatables.net-buttons",

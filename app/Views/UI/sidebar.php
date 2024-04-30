@@ -62,14 +62,14 @@
 							</ul>
 						</li>
 						<li class="nav-item">
-              <a href="<?= base_url() ?>" class="nav-link <?= current_url(true)->getSegment((2 + DOMINIO)) == '' ? 'active' : '' ?>">
+              <a href="<?= base_url() ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == '' ? 'active' : '' ?>">
                 <i class="nav-icon fa-solid fa-house"></i>
                 <p>Inicio</p>
               </a>
             </li>
 						<?php if (validPermissions([1], true)) { ?> 
             <li class="nav-item">
-              <a href="<?= base_url("Usuarios") ?>" class="nav-link <?= current_url(true)->getSegment((2 + DOMINIO)) == 'Usuarios' ? 'active' : '' ?>">
+              <a href="<?= base_url("Usuarios") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'Usuarios' ? 'active' : '' ?>">
                 <i class="nav-icon fas fa-users"></i>
                 <p>Usuarios</p>
               </a>
@@ -77,7 +77,7 @@
 						<?php } ?>
 						<?php if (validPermissions([2], true)) { ?> 
 						<li class="nav-item">
-              <a href="<?= base_url("Perfiles") ?>" class="nav-link <?= current_url(true)->getSegment((2 + DOMINIO)) == 'Perfiles' ? 'active' : '' ?>">
+              <a href="<?= base_url("Perfiles") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'Perfiles' ? 'active' : '' ?>">
                 <i class="nav-icon fa-solid fa-address-book"></i>
                 <p>Perfiles</p>
               </a>
@@ -85,7 +85,7 @@
 						<?php } ?>
 						<?php if (validPermissions([3], true)) { ?> 
 						<li class="nav-item">
-              <a href="<?= base_url("Categorias") ?>" class="nav-link <?= current_url(true)->getSegment((2 + DOMINIO)) == 'Categorias' ? 'active' : '' ?>">
+              <a href="<?= base_url("Categorias") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'Categorias' ? 'active' : '' ?>">
 								<i class="nav-icon fa-brands fa-buffer"></i>
                 <p>Categorias</p>
               </a>
@@ -93,7 +93,7 @@
 						<?php } ?>
 						<?php if (validPermissions([50], true)) { ?> 
 						<li class="nav-item">
-              <a href="<?= base_url("Proveedores") ?>" class="nav-link <?= current_url(true)->getSegment((2 + DOMINIO)) == 'Proveedores' ? 'active' : '' ?>">
+              <a href="<?= base_url("Proveedores") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'Proveedores' ? 'active' : '' ?>">
 								<i class="nav-icon fa-solid fa-boxes-packing"></i>
                 <p>Proveedores</p>
               </a>
@@ -101,7 +101,7 @@
 						<?php } ?>
 						<?php if (validPermissions([4], true)) { ?> 
 						<li class="nav-item">
-              <a href="<?= base_url("Clientes") ?>" class="nav-link <?= current_url(true)->getSegment((2 + DOMINIO)) == 'Clientes' ? 'active' : '' ?>">
+              <a href="<?= base_url("Clientes") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'Clientes' ? 'active' : '' ?>">
 								<i class="nav-icon fa-solid fa-user-tie"></i>
                 <p>Clientes</p>
               </a>
@@ -109,7 +109,7 @@
 						<?php } ?>
 						<?php if (validPermissions([40], true)) { ?> 
 						<li class="nav-item">
-              <a href="<?= base_url("Compras") ?>" class="nav-link <?= current_url(true)->getSegment((2 + DOMINIO)) == 'Compras' ? 'active' : '' ?>">
+              <a href="<?= base_url("Compras") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'Compras' ? 'active' : '' ?>">
 								<i class="nav-icon fa-solid fa-cart-shopping"></i>
                 <p>Compras</p>
               </a>
@@ -117,15 +117,15 @@
 						<?php } ?>
 						<?php if (validPermissions([5], true)) { ?> 
 						<li class="nav-item">
-              <a href="<?= base_url("Productos") ?>" class="nav-link <?= current_url(true)->getSegment((2 + DOMINIO)) == 'Productos' ? 'active' : '' ?>">
+              <a href="<?= base_url("Productos") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'Productos' ? 'active' : '' ?>">
 								<i class="nav-icon fa-brands fa-product-hunt"></i>
                 <p>Productos</p>
               </a>
             </li>
 						<?php } ?>
 						<?php if (validPermissions([6], true)) { ?> 
-						<li class="nav-item <?= (current_url(true)->getSegment((2 + DOMINIO)) == 'Ventas' && (current_url(true)->getSegment((3 + DOMINIO)) == 'Crear' || current_url(true)->getSegment((3 + DOMINIO)) == 'Administrar')) ? 'menu-is-opening menu-open' : '' ?>">
-              <a href="#" class="nav-link <?= current_url(true)->getSegment(2 + DOMINIO) == 'Ventas' ? 'active' : '' ?>">
+						<li class="nav-item <?= (current_url(true)->getSegment((1 + DOMINIO)) == 'Ventas' && (current_url(true)->getSegment((2 + DOMINIO)) == 'Crear' || current_url(true)->getSegment((2 + DOMINIO)) == 'Administrar')) ? 'menu-is-opening menu-open' : '' ?>">
+              <a href="#" class="nav-link <?= current_url(true)->getSegment(1 + DOMINIO) == 'Ventas' ? 'active' : '' ?>">
 								<i class="nav-icon fa-solid fa-store"></i>
                 <p>
 									Ventas
@@ -134,13 +134,13 @@
               </a>
 							<ul class="nav nav-treeview">
 								<li	li class="nav-item">
-									<a href="<?= base_url("Ventas/Crear") ?>" class="nav-link <?= (current_url(true)->getSegment((2 + DOMINIO)) == 'Ventas' && current_url(true)->getSegment((3 + DOMINIO)) == 'Crear') ? 'active' : '' ?>">
+									<a href="<?= base_url("Ventas/Crear") ?>" class="nav-link <?= (current_url(true)->getSegment((1 + DOMINIO)) == 'Ventas' && current_url(true)->getSegment((2 + DOMINIO)) == 'Crear') ? 'active' : '' ?>">
 										<i class="far fa-circle nav-icon"></i>
 										<p>Crear venta</p>
 									</a>
 								</li>
 								<li class="nav-item">
-									<a href="<?= base_url("Ventas/Administrar") ?>" class="nav-link <?= (current_url(true)->getSegment((2 + DOMINIO)) == 'Ventas' && current_url(true)->getSegment((2 + DOMINIO)) == 'Administrar') ? 'active' : '' ?>">
+									<a href="<?= base_url("Ventas/Administrar") ?>" class="nav-link <?= (current_url(true)->getSegment((1 + DOMINIO)) == 'Ventas' && current_url(true)->getSegment((1 + DOMINIO)) == 'Administrar') ? 'active' : '' ?>">
 										<i class="far fa-circle nav-icon"></i>
 										<p>Administrar ventas</p>
 									</a>
@@ -150,7 +150,7 @@
 						<?php } ?>
 						<?php if (validPermissions([8], true)) { ?> 
 						<li class="nav-item">
-              <a href="<?= base_url("Manifiesto") ?>" class="nav-link <?= current_url(true)->getSegment((2 + DOMINIO)) == 'Manifiesto' ? 'active' : '' ?>">
+              <a href="<?= base_url("Manifiesto") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'Manifiesto' ? 'active' : '' ?>">
 								<i class="nav-icon fa-solid fa-file"></i>
                 <p>Manifiesto</p>
               </a>
@@ -158,15 +158,15 @@
 						<?php } ?>
 						<?php if ((ENVIRONMENT !== 'production')) { ?> 
 						<li class="nav-item">
-              <a href="<?= base_url("Almacen") ?>" class="nav-link <?= current_url(true)->getSegment((2 - DOMINIO)) == 'Almacen' ? 'active' : '' ?>">
+              <a href="<?= base_url("Almacen") ?>" class="nav-link <?= current_url(true)->getSegment((1 - DOMINIO)) == 'Almacen' ? 'active' : '' ?>">
 								<i class="nav-icon fa-solid fa-swatchbook"></i>
                 <p>Almacenes</p>
               </a>
             </li>
 						<?php } ?>
 						<?php if (validPermissions([9], true)) { ?> 
-						<li class="nav-item <?= (current_url(true)->getSegment((2 + DOMINIO)) == 'Ubicacion' && (current_url(true)->getSegment((3 + DOMINIO)) == 'Paises' || current_url(true)->getSegment((3 + DOMINIO)) == 'Departamentos' || current_url(true)->getSegment((3 + DOMINIO)) == 'Ciudades')) ? 'menu-is-opening menu-open' : '' ?>">
-              <a href="#" class="nav-link <?= current_url(true)->getSegment((2 + DOMINIO)) == 'Ubicacion' ? 'active' : '' ?>">
+						<li class="nav-item <?= (current_url(true)->getSegment((1 + DOMINIO)) == 'Ubicacion' && (current_url(true)->getSegment((2 + DOMINIO)) == 'Paises' || current_url(true)->getSegment((2 + DOMINIO)) == 'Departamentos' || current_url(true)->getSegment((2 + DOMINIO)) == 'Ciudades')) ? 'menu-is-opening menu-open' : '' ?>">
+              <a href="#" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'Ubicacion' ? 'active' : '' ?>">
 								<i class="nav-icon fa-solid fa-map"></i>
                 <p>
 									Ubicación
@@ -176,7 +176,7 @@
 							<ul class="nav nav-treeview">
 								<?php if (validPermissions([91], true)) { ?> 
 								<li	li class="nav-item">
-									<a href="<?= base_url("Ubicacion/Paises") ?>" class="nav-link <?= (current_url(true)->getSegment((2 + DOMINIO)) == 'Ubicacion' && current_url(true)->getSegment((3 + DOMINIO)) == 'Paises') ? 'active' : '' ?>">
+									<a href="<?= base_url("Ubicacion/Paises") ?>" class="nav-link <?= (current_url(true)->getSegment((1 + DOMINIO)) == 'Ubicacion' && current_url(true)->getSegment((2 + DOMINIO)) == 'Paises') ? 'active' : '' ?>">
 										<i class="fa-solid fa-flag nav-icon"></i>
 										<p>Paises</p>
 									</a>
@@ -184,7 +184,7 @@
 								<?php } ?>
 								<?php if (validPermissions([92], true)) { ?> 
 								<li	li class="nav-item">
-									<a href="<?= base_url("Ubicacion/Departamentos") ?>" class="nav-link <?= (current_url(true)->getSegment((2 + DOMINIO)) == 'Ubicacion' && current_url(true)->getSegment((3 + DOMINIO)) == 'Departamentos') ? 'active' : '' ?>">
+									<a href="<?= base_url("Ubicacion/Departamentos") ?>" class="nav-link <?= (current_url(true)->getSegment((1 + DOMINIO)) == 'Ubicacion' && current_url(true)->getSegment((2 + DOMINIO)) == 'Departamentos') ? 'active' : '' ?>">
 									<i class="fa-solid fa-earth-africa nav-icon"></i>
 										<p>Departamentos</p>
 									</a>
@@ -192,7 +192,7 @@
 								<?php } ?>
 								<?php if (validPermissions([93], true)) { ?> 
 								<li	li class="nav-item">
-									<a href="<?= base_url("Ubicacion/Ciudades") ?>" class="nav-link <?= (current_url(true)->getSegment((2 + DOMINIO)) == 'Ubicacion' && current_url(true)->getSegment((3 + DOMINIO)) == 'Ciudades') ? 'active' : '' ?>">
+									<a href="<?= base_url("Ubicacion/Ciudades") ?>" class="nav-link <?= (current_url(true)->getSegment((1 + DOMINIO)) == 'Ubicacion' && current_url(true)->getSegment((2 + DOMINIO)) == 'Ciudades') ? 'active' : '' ?>">
 									<i class="fa-solid fa-city nav-icon"></i>
 										<p>Ciudades</p>
 									</a>
@@ -202,8 +202,8 @@
             </li>
 						<?php } ?>
 						<?php if (validPermissions([10], true)) { ?> 
-						<li class="nav-item <?= (current_url(true)->getSegment((2 + DOMINIO)) == 'Pedidos' && (current_url(true)->getSegment((3 + DOMINIO)) == 'Crear' || current_url(true)->getSegment((3 + DOMINIO)) == 'Administrar')) ? 'menu-is-opening menu-open' : '' ?>">
-              <a href="#" class="nav-link <?= current_url(true)->getSegment((2 + DOMINIO)) == 'Pedidos' ? 'active' : '' ?>">
+						<li class="nav-item <?= (current_url(true)->getSegment((1 + DOMINIO)) == 'Pedidos' && (current_url(true)->getSegment((2 + DOMINIO)) == 'Crear' || current_url(true)->getSegment((2 + DOMINIO)) == 'Administrar')) ? 'menu-is-opening menu-open' : '' ?>">
+              <a href="#" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'Pedidos' ? 'active' : '' ?>">
 								<i class="nav-icon fa-solid fa-boxes-stacked"></i>
                 <p>
 									Pedidos
@@ -212,13 +212,13 @@
               </a>
 							<ul class="nav nav-treeview">
 								<li	li class="nav-item">
-									<a href="<?= base_url("Pedidos/Crear") ?>" class="nav-link <?= (current_url(true)->getSegment((2 + DOMINIO)) == 'Pedidos' && current_url(true)->getSegment((3 + DOMINIO)) == 'Crear') ? 'active' : '' ?>">
+									<a href="<?= base_url("Pedidos/Crear") ?>" class="nav-link <?= (current_url(true)->getSegment((1 + DOMINIO)) == 'Pedidos' && current_url(true)->getSegment((2 + DOMINIO)) == 'Crear') ? 'active' : '' ?>">
 										<i class="far fa-circle nav-icon"></i>
 										<p>Crear Pedido</p>
 									</a>
 								</li>
 								<li class="nav-item">
-									<a href="<?= base_url("Pedidos/Administrar") ?>" class="nav-link <?= (current_url(true)->getSegment((2 + DOMINIO)) == 'Pedidos' && current_url(true)->getSegment((3 + DOMINIO)) == 'Administrar') ? 'active' : '' ?>">
+									<a href="<?= base_url("Pedidos/Administrar") ?>" class="nav-link <?= (current_url(true)->getSegment((1 + DOMINIO)) == 'Pedidos' && current_url(true)->getSegment((2 + DOMINIO)) == 'Administrar') ? 'active' : '' ?>">
 										<i class="far fa-circle nav-icon"></i>
 										<p>Administrar Pedidos</p>
 									</a>
@@ -228,7 +228,7 @@
 						<?php } ?>
 						<?php if (validPermissions([7], true)) { ?> 
 						<li class="nav-item">
-              <a href="<?= base_url("Configuracion") ?>" class="nav-link <?= current_url(true)->getSegment((2 + DOMINIO)) == 'Configuracion' ? 'active' : '' ?>">
+              <a href="<?= base_url("Configuracion") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'Configuracion' ? 'active' : '' ?>">
 								<i class="nav-icon fa-solid fa-gear"></i>
                 <p>Configuración</p>
               </a>
@@ -236,7 +236,7 @@
 						<?php } ?>
 						<?php if ((!session()->has("manejaEmpaque") || session()->get("manejaEmpaque") == "1") && validPermissions([30], true)) { ?> 
 						<li class="nav-item">
-              <a href="<?= base_url("Empaque") ?>" class="nav-link <?= current_url(true)->getSegment((2 + DOMINIO)) == 'Empaque' ? 'active' : '' ?>">
+              <a href="<?= base_url("Empaque") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'Empaque' ? 'active' : '' ?>">
 								<i class="nav-icon fa-solid fa-box-open"></i>
                 <p>Empaque</p>
               </a>
@@ -244,7 +244,7 @@
 						<?php } ?>
 						<?php if (validPermissions([60], true)) { ?> 
 						<li class="nav-item">
-              <a href="<?= base_url("ProductosReportados") ?>" class="nav-link <?= current_url(true)->getSegment((2 + DOMINIO)) == 'ProductosReportados' ? 'active' : '' ?>">
+              <a href="<?= base_url("ProductosReportados") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'ProductosReportados' ? 'active' : '' ?>">
 								<i class="nav-icon fa-solid fa-exclamation-triangle"></i>
                 <p>Productos Reportados</p>
               </a>
