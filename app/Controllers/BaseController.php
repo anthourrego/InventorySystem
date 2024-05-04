@@ -169,7 +169,7 @@ abstract class BaseController extends Controller
         ];
 
         $this->content['js'][] = [
-            'vendor/datatables.net/datatables.net/js/jquery.dataTables.min.js'
+            'vendor/datatables.net/datatables.net/js/dataTables.min.js'
             ,'vendor/datatables.net/datatables.net-bs4/js/dataTables.bootstrap4.min.js'
             ,'vendor/datatables.net/datatables.net-buttons/js/dataTables.buttons.min.js'
             ,'vendor/datatables.net/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js'

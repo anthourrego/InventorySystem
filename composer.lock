@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7a6b672fa3e879c1c500a1bc5447765e",
+    "content-hash": "2b3e1cfe153f36201aa2e5aba075e76e",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -604,7 +604,7 @@
         },
         {
             "name": "datatables.net/datatables.net",
-            "version": "dev-master",
+            "version": "2.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DataTables/Dist-DataTables.git",
@@ -619,7 +619,6 @@
             "require": {
                 "components/jquery": ">=1.7"
             },
-            "default-branch": true,
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -646,7 +645,7 @@
         },
         {
             "name": "datatables.net/datatables.net-bs4",
-            "version": "dev-master",
+            "version": "2.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DataTables/Dist-DataTables-Bootstrap4.git",
@@ -662,7 +661,6 @@
                 "datatables.net/datatables.net": ">=1.12.1",
                 "twbs/bootstrap": "4.*"
             },
-            "default-branch": true,
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -691,22 +689,21 @@
         },
         {
             "name": "datatables.net/datatables.net-buttons",
-            "version": "dev-master",
+            "version": "3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DataTables/Dist-DataTables-Buttons.git",
-                "reference": "4dfc20f3c1a3306738fa479e05b69f71ed649b2d"
+                "reference": "d2ba899f25470d4ab0d12a99162cdf02611c7bb3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DataTables/Dist-DataTables-Buttons/zipball/4dfc20f3c1a3306738fa479e05b69f71ed649b2d",
-                "reference": "4dfc20f3c1a3306738fa479e05b69f71ed649b2d",
+                "url": "https://api.github.com/repos/DataTables/Dist-DataTables-Buttons/zipball/d2ba899f25470d4ab0d12a99162cdf02611c7bb3",
+                "reference": "d2ba899f25470d4ab0d12a99162cdf02611c7bb3",
                 "shasum": ""
             },
             "require": {
                 "datatables.net/datatables.net": ">=1.12.1"
             },
-            "default-branch": true,
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -735,27 +732,26 @@
                 "forum": "https://datatables.net/forums",
                 "source": "https://github.com/DataTables/Dist-DataTables-Buttons"
             },
-            "time": "2024-05-02T14:20:18+00:00"
+            "time": "2024-04-16T12:05:36+00:00"
         },
         {
             "name": "datatables.net/datatables.net-buttons-bs4",
-            "version": "dev-master",
+            "version": "3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DataTables/Dist-DataTables-Buttons-Bootstrap4.git",
-                "reference": "6f10ef32f7cb373fb005e899f5836323c9522a6a"
+                "reference": "cea1e886a20f4fb5b30db503b5f629a6f0376a40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DataTables/Dist-DataTables-Buttons-Bootstrap4/zipball/6f10ef32f7cb373fb005e899f5836323c9522a6a",
-                "reference": "6f10ef32f7cb373fb005e899f5836323c9522a6a",
+                "url": "https://api.github.com/repos/DataTables/Dist-DataTables-Buttons-Bootstrap4/zipball/cea1e886a20f4fb5b30db503b5f629a6f0376a40",
+                "reference": "cea1e886a20f4fb5b30db503b5f629a6f0376a40",
                 "shasum": ""
             },
             "require": {
                 "datatables.net/datatables.net-bs4": ">=1.12.1",
                 "datatables.net/datatables.net-buttons": ">=2.2.3"
             },
-            "default-branch": true,
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -786,11 +782,11 @@
                 "forum": "https://datatables.net/forums",
                 "source": "https://github.com/DataTables/Dist-DataTables-Buttons-Bootstrap4"
             },
-            "time": "2024-05-02T14:20:56+00:00"
+            "time": "2024-04-16T12:07:06+00:00"
         },
         {
             "name": "datatables.net/datatables.net-scroller",
-            "version": "dev-master",
+            "version": "2.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DataTables/Dist-DataTables-Scroller.git",
@@ -805,7 +801,6 @@
             "require": {
                 "datatables.net/datatables.net": ">=1.12.1"
             },
-            "default-branch": true,
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -834,22 +829,21 @@
         },
         {
             "name": "datatables.net/datatables.net-select",
-            "version": "dev-master",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DataTables/Dist-DataTables-Select.git",
-                "reference": "eb5368a00ebc66d91bd53f851319dd669f9095e8"
+                "reference": "8aa7f4d52758f0458f671976dcfd864bd8017b7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DataTables/Dist-DataTables-Select/zipball/eb5368a00ebc66d91bd53f851319dd669f9095e8",
-                "reference": "eb5368a00ebc66d91bd53f851319dd669f9095e8",
+                "url": "https://api.github.com/repos/DataTables/Dist-DataTables-Select/zipball/8aa7f4d52758f0458f671976dcfd864bd8017b7d",
+                "reference": "8aa7f4d52758f0458f671976dcfd864bd8017b7d",
                 "shasum": ""
             },
             "require": {
                 "datatables.net/datatables.net": ">=1.12.1"
             },
-            "default-branch": true,
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -874,7 +868,7 @@
                 "forum": "https://datatables.net/forums",
                 "source": "https://github.com/DataTables/Dist-DataTables-Select"
             },
-            "time": "2024-05-03T10:00:29+00:00"
+            "time": "2024-05-02T15:35:14+00:00"
         },
         {
             "name": "fortawesome/font-awesome",
@@ -3939,14 +3933,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "datatables.net/datatables.net": 20,
-        "datatables.net/datatables.net-bs4": 20,
-        "datatables.net/datatables.net-buttons": 20,
-        "datatables.net/datatables.net-buttons-bs4": 20,
-        "datatables.net/datatables.net-scroller": 20,
-        "datatables.net/datatables.net-select": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
