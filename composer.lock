@@ -359,29 +359,29 @@
         },
         {
             "name": "codeigniter4/translations",
-            "version": "v4.4.4",
+            "version": "v4.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeigniter4/translations.git",
-                "reference": "f29b66e75d589881a4957d93c385cc5a5149012e"
+                "reference": "30c7e86cf9a83a5d9f1a97a6a6d08a303a8fddf5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeigniter4/translations/zipball/f29b66e75d589881a4957d93c385cc5a5149012e",
-                "reference": "f29b66e75d589881a4957d93c385cc5a5149012e",
+                "url": "https://api.github.com/repos/codeigniter4/translations/zipball/30c7e86cf9a83a5d9f1a97a6a6d08a303a8fddf5",
+                "reference": "30c7e86cf9a83a5d9f1a97a6a6d08a303a8fddf5",
                 "shasum": ""
             },
             "require": {
                 "ext-intl": "*",
-                "php": "^7.4 || ^8.0"
+                "php": "^8.1"
             },
             "require-dev": {
-                "codeigniter/coding-standard": "^1.1",
+                "codeigniter/coding-standard": "^1.7",
                 "codeigniter4/codeigniter4": "4.x-dev",
                 "ext-tokenizer": "*",
-                "friendsofphp/php-cs-fixer": "^3.1",
-                "nexusphp/cs-config": "^3.3",
-                "phpunit/phpunit": "^9.5"
+                "friendsofphp/php-cs-fixer": "^3.53",
+                "nexusphp/cs-config": "^3.22",
+                "phpunit/phpunit": "^10.5 || ^11.0"
             },
             "type": "project",
             "extra": {
@@ -406,7 +406,7 @@
                 "slack": "https://codeigniterchat.slack.com",
                 "source": "https://github.com/codeigniter4/translations"
             },
-            "time": "2024-01-26T15:17:09+00:00"
+            "time": "2024-05-05T15:36:31+00:00"
         },
         {
             "name": "components/jquery",
@@ -604,16 +604,16 @@
         },
         {
             "name": "datatables.net/datatables.net",
-            "version": "2.0.6",
+            "version": "2.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DataTables/Dist-DataTables.git",
-                "reference": "25115e014461d798c50bcbe4ad36478e34be6123"
+                "reference": "3b005a0d4921631f6561d24ecd468e22e56b78ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DataTables/Dist-DataTables/zipball/25115e014461d798c50bcbe4ad36478e34be6123",
-                "reference": "25115e014461d798c50bcbe4ad36478e34be6123",
+                "url": "https://api.github.com/repos/DataTables/Dist-DataTables/zipball/3b005a0d4921631f6561d24ecd468e22e56b78ae",
+                "reference": "3b005a0d4921631f6561d24ecd468e22e56b78ae",
                 "shasum": ""
             },
             "require": {
@@ -641,20 +641,20 @@
                 "forum": "https://datatables.net/forums",
                 "source": "https://github.com/DataTables/Dist-DataTables"
             },
-            "time": "2024-05-03T10:10:47+00:00"
+            "time": "2024-05-07T10:55:46+00:00"
         },
         {
             "name": "datatables.net/datatables.net-bs4",
-            "version": "2.0.6",
+            "version": "2.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DataTables/Dist-DataTables-Bootstrap4.git",
-                "reference": "54c071e4d4f1b0ec869a9ac1eb183500a6a2697e"
+                "reference": "b413205abece9f5ba936e51520f98e16cf218364"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DataTables/Dist-DataTables-Bootstrap4/zipball/54c071e4d4f1b0ec869a9ac1eb183500a6a2697e",
-                "reference": "54c071e4d4f1b0ec869a9ac1eb183500a6a2697e",
+                "url": "https://api.github.com/repos/DataTables/Dist-DataTables-Bootstrap4/zipball/b413205abece9f5ba936e51520f98e16cf218364",
+                "reference": "b413205abece9f5ba936e51520f98e16cf218364",
                 "shasum": ""
             },
             "require": {
@@ -685,7 +685,7 @@
                 "forum": "https://datatables.net/forums",
                 "source": "https://github.com/DataTables/Dist-DataTables-Bootstrap4"
             },
-            "time": "2024-05-03T10:12:07+00:00"
+            "time": "2024-05-07T10:56:57+00:00"
         },
         {
             "name": "datatables.net/datatables.net-buttons",
