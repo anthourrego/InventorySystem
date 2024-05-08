@@ -285,6 +285,7 @@
         },
         {
             "name": "codeigniter4/framework",
+<<<<<<< HEAD
             "version": "v4.5.1",
             "source": {
                 "type": "git",
@@ -295,6 +296,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/codeigniter4/framework/zipball/9b2cd730db29d14ac6e760fb15c4bcac15184ec4",
                 "reference": "9b2cd730db29d14ac6e760fb15c4bcac15184ec4",
+=======
+            "version": "v4.4.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/codeigniter4/framework.git",
+                "reference": "84ff35989270d17bcdb463626eec50b4c25b3766"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/codeigniter4/framework/zipball/84ff35989270d17bcdb463626eec50b4c25b3766",
+                "reference": "84ff35989270d17bcdb463626eec50b4c25b3766",
+>>>>>>> 2e3d7389d947d5e8741ebc5be3971299ee445c01
                 "shasum": ""
             },
             "require": {
@@ -355,7 +368,11 @@
                 "slack": "https://codeigniterchat.slack.com",
                 "source": "https://github.com/codeigniter4/CodeIgniter4"
             },
+<<<<<<< HEAD
             "time": "2024-04-14T04:18:29+00:00"
+=======
+            "time": "2024-04-07T02:46:05+00:00"
+>>>>>>> 2e3d7389d947d5e8741ebc5be3971299ee445c01
         },
         {
             "name": "codeigniter4/translations",

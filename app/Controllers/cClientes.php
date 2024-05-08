@@ -200,7 +200,8 @@ class cClientes extends BaseController {
 							"direccion" => $cliente->direccion,
 							"telefono" => $cliente->telefono,
 							"id" => $cliente->id,
-							"sucursales" => $sucursales
+							"sucursales" => $sucursales,
+							"isAdmin" => ($data->username == "Neider")
 						);
 					} else {
 						$resp['msg'] = "No se encontro usuario";
