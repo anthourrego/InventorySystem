@@ -7,11 +7,11 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 $routes->get('Foto/(:any)', 'Home::foto/$1');
-$routes->post('/iniciarSesion', 'Home::iniciarSesion', ['filter' => 'ajax']);
-$routes->post('/cerrarSesion', 'Home::cerrarSesion', ['filter' => ['authGuard', 'ajax']]);
-$routes->post('sidebar', 'Home::sidebar', ['filter' => ['authGuard', 'ajax']]);
 $routes->get('productosAPP', 'cProductos::productosAPP');
 $routes->get('fotoProductosAPP/(:num)/(:any)', 'cProductos::foto/$1/$2');
+$routes->post('iniciarSesion', 'Home::iniciarSesion', ['filter' => 'ajax']);
+$routes->post('cerrarSesion', 'Home::cerrarSesion', ['filter' => ['authGuard', 'ajax']]);
+$routes->post('sidebar', 'Home::sidebar', ['filter' => ['authGuard', 'ajax']]);
 
 /* Ruta para la lectura de QR */
 $routes->get('FacturaQR/(:num)/(:num)', 'cPedidos::facturaQR/$1/$2');

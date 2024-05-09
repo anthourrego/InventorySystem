@@ -79,14 +79,14 @@ defined('EXIT__AUTO_MIN')      || define('EXIT__AUTO_MIN', 9);      // lowest au
 defined('EXIT__AUTO_MAX')      || define('EXIT__AUTO_MAX', 125);    // highest automatically-assigned error code
 
 //Routes
-defined('ASSETS_PATH')      || define('ASSETS_PATH', ROOTPATH . "assets/");
-defined('UPLOADS_PATH')      || define('UPLOADS_PATH', WRITEPATH  . "uploads/");
+defined('ASSETS_PATH')            || define('ASSETS_PATH', ROOTPATH . "assets/");
+defined('UPLOADS_PATH')           || define('UPLOADS_PATH', WRITEPATH  . "uploads/");
 defined('UPLOADS_USER_PATH')      || define('UPLOADS_USER_PATH', WRITEPATH  . "uploads/usuarios/");
-defined('UPLOADS_PRODUCT_PATH')      || define('UPLOADS_PRODUCT_PATH', WRITEPATH  . "uploads/productos/");
-defined('UPLOADS_MANIFEST_PATH')      || define('UPLOADS_MANIFEST_PATH', WRITEPATH  . "uploads/manifiestos/");
+defined('UPLOADS_PRODUCT_PATH')   || define('UPLOADS_PRODUCT_PATH', WRITEPATH  . "uploads/productos/");
+defined('UPLOADS_MANIFEST_PATH')  || define('UPLOADS_MANIFEST_PATH', WRITEPATH  . "uploads/manifiestos/");
 defined('UPLOADS_CONF_PATH')      || define('UPLOADS_CONF_PATH', WRITEPATH  . "uploads/configuracion/");
-defined('UPLOADS_REPOR_PATH')      || define('UPLOADS_REPOR_PATH', WRITEPATH  . "uploads/reportes/");
-defined('REPOR_BASE_PATH')      || define('REPOR_BASE_PATH', ROOTPATH  . "Plantilla_Reporte/");
+defined('UPLOADS_REPOR_PATH')     || define('UPLOADS_REPOR_PATH', WRITEPATH  . "uploads/reportes/");
+defined('REPOR_BASE_PATH')        || define('REPOR_BASE_PATH', ROOTPATH  . "Plantilla_Reporte/");
 
 defined('TIPODOCS')      || define('TIPODOCS', array(
   0 => array("valor" => "NIT", "titulo" => "Nit")
