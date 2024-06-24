@@ -10,10 +10,10 @@ var language = {
 	loadingRecords: "Cargando...",
 	processing: "Procesando...",
 	paginate: {
-		first: "Primero",
-		last: "Último",
-		next: "Siguiente",
-		previous: "Anterior"
+		first: "«",
+		last: "»",
+		next: "›",
+		previous: "‹"
 	},
 	buttons: {
 		pageLength: {
@@ -30,13 +30,13 @@ var language = {
 	infoFiltered: "(_MAX_ Registros filtrados en total)"
 };
 
-var domBftrip = "<'row no-gutters pt-1 px-1'<'col-sm-12 col-md-8 mb-2 mb-md-0'B><'col-sm-12 col-md-4'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>";
-var domBftri50 = "<'row no-gutters pt-1 px-1'<'col-12 col-xl-8 mb-2 mb-md-0'B><'col-12 col-xl-4'f>><'row'<'col-12'tr>><'row'<'col-12'i>>";
-var domBftri = "<'row no-gutters pt-1 px-1'<'col-sm-12 col-md-8 mb-2 mb-md-0'B><'col-sm-12 col-md-4'f>><'row'<'col-sm-12'tr>><'row'<'col-12'i>>";
-var domlftrip = "<'row no-gutters pt-1 px-1'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>";
-var domftrip = "<'row no-gutters pt-1 px-1'<'col-sm-12'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>";
+var domBftrip = "<'row no-gutters pt-1 px-1'<'col-sm-12 col-md-8 mb-2 mb-md-0'B><'col-sm-12 col-md-4 d-flex justify-content-end'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 d-flex justify-content-end'p>>";
+var domBftri50 = "<'row no-gutters pt-1 px-1'<'col-12 col-xl-8 mb-2 mb-md-0'B><'col-12 col-xl-4 d-flex justify-content-end'f>><'row'<'col-12'tr>><'row'<'col-12'i>>";
+var domBftri = "<'row no-gutters pt-1 px-1'<'col-sm-12 col-md-8 mb-2 mb-md-0'B><'col-sm-12 col-md-4 d-flex justify-content-end'f>><'row'<'col-sm-12'tr>><'row'<'col-12 d-flex justify-content-end'i>>";
+var domlftrip = "<'row no-gutters pt-1 px-1'<'col-sm-6'l><'col-sm-6 d-flex justify-content-end'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 d-flex justify-content-end'p>>";
+var domftrip = "<'row no-gutters pt-1 px-1'<'col-sm-12 d-flex justify-content-end'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 d-flex justify-content-end'p>>";
 var domftr = "<'row no-gutters pt-1 px-1'<'col-12'f>><'row'<'col-md-12't>><'row'<'col-md-6'><'col-md-6'>>r";
-var domlftri = "<'row no-gutters pt-1 px-1'<'col-sm-12'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i>>";
+var domlftri = "<'row no-gutters pt-1 px-1'<'col-sm-12 d-flex justify-content-end'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5 d-flex justify-content-end'i>>";
 var domSearch = "<'row no-gutters pt-3 px-1'<'col-12'f>><'row'<'col-sm-12'tr>><'row'<'col-12'i>>";
 var domSearch1 = "<'row no-gutters pt-0 px-1'<'col-12'f>><'row'<'col-sm-12'tr>><'row'<'col-12'i>>";
 

@@ -605,3 +605,8 @@ div.dt-button-collection .dt-button {
   height: calc(100vh - 90px) !important;
   overflow: auto !important;
 }
+
+/*Espacios de la datatables */
+div.table-responsive>div.dt-container>div.row {
+  margin-bottom: .5rem;
+}

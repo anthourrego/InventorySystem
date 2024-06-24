@@ -6,10 +6,10 @@ use CodeIgniter\Database\Migration;
 
 class UsuarioTablaObservacionProducto extends Migration
 {
-    public function up()
-    {
-        //
-        $addFields = [
+	public function up()
+	{
+		//
+		$addFields = [
 			'id_usuario' => [
 				'type'           => 'INT',
 				'constraint'     => 11,
@@ -19,12 +19,12 @@ class UsuarioTablaObservacionProducto extends Migration
 			'CONSTRAINT usuarios_observaciones_foreign FOREIGN KEY(`id_usuario`) REFERENCES `usuarios`(`id`)'
 		];
 		$this->forge->addColumn('observacionproductos', $addFields);
-    }
+	}
 
-    public function down()
-    {
-        //
-        $this->forge->dropForeignKey('observacionproductos', 'usuarios_observaciones_foreign');
+	public function down()
+	{
+		//
+		$this->forge->dropForeignKey('observacionproductos', 'usuarios_observaciones_foreign');
 		$this->forge->dropColumn("observacionproductos", "id_usuario");
-    }
+	}
 }

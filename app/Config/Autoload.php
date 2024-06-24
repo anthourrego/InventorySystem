@@ -40,9 +40,9 @@ class Autoload extends AutoloadConfig
      * @var array<string, list<string>|string>
      */
     public $psr4 = [
-        APP_NAMESPACE => APPPATH // For custom app namespace
+        APP_NAMESPACE => APPPATH, // For custom app namespace
+        "firebaseRDB" => APPPATH . "ThirdParty/firebaseRDB.php"
         //'Config'      => APPPATH . 'Config',
-        //'PHPSQLParser'          => APPPATH .'ThirdParty/php-sql-parser/src/PHPSQLParser',
         //'Hermawan\DataTables'   => APPPATH .'ThirdParty/CodeIgniter4-DataTables/src',
         //"TCPDF" => APPPATH . "ThirdParty/tcpdf"
     ];
@@ -65,7 +65,7 @@ class Autoload extends AutoloadConfig
      * @var array<string, string>
      */
     public $classmap = [
-        //"TCPDF" => APPPATH . "ThirdParty/tcpdf/tcpdf.php"
+        "firebaseRDB" => APPPATH . "ThirdParty/firebaseRDB.php"
     ];
 
     /**

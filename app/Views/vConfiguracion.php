@@ -25,6 +25,9 @@
       <li class="nav-item" role="presentation">
         <a class="nav-link" id="smtpcorreos-tab" data-toggle="tab" href="#smtpcorreosTab" role="tab" aria-controls="smtpcorreosTab" aria-selected="false">SMTP Correo</a>
       </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="showroom-tab" data-toggle="tab" href="#showroomTab" role="tab" aria-controls="showroomTab" aria-selected="false">Showroom</a>
+      </li>
     </ul>
   </div>
   <div class="card-body">
@@ -321,6 +324,14 @@
           <div class="col-12 col-md-6 col-lg-4">
             <label for="puertoEnvioEmpresa">Puerto:</label>
             <input type="text" id="puertoEnvioEmpresa" data-nombre="Puerto" name="puertoEnvioEmpresa" <?= !$editar ? 'disabled' : '' ?> class="form-control configAct" required autocomplete="off"placeholder="Ingrese Puerto">
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="showroomTab" role="tabpanel" aria-labelledby="showroom-tab">
+        <div class="form-row">
+          <div class="col-12 col-md-6 col-lg-3">
+            <label for="prefijoFact">URL Firebase:</label>
+            <input type="text" id="urlFirebase" data-nombre="URL Firebase" name="urlFirebase" <?= !$editar ? 'disabled' : '' ?> class="soloLetras form-control configAct" required autocomplete="off"placeholder="Ingrese la url de firebase">
           </div>
         </div>
       </div>

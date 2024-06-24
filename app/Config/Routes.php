@@ -291,3 +291,8 @@ $routes->group('ProductosReportados', ['filter' => 'authGuard:60', 'namespace' =
 $routes->group('Mobile', function ($routes) {
 	$routes->post('Login', 'cClientes::inicioAppCliente');
 });
+
+//Showroom
+$routes->group('Showroom', function ($routes) {
+	$routes->get('/', 'Showroom::index');
+});
