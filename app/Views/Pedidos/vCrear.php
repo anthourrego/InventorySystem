@@ -45,6 +45,9 @@
 						<hr class="my-2">
 					</div>
 					<div class="col-12">
+						<form class="d-none" enctype="multipart/form-data" accept-charset="utf-8" name="frmExcel" id="frm-Excel">
+							<input type="file" id="excelFile" name="excelFile" accept=".csv, application/vnd.ms-excel,xls,csv,application/xml,application/zip,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/msword,application/vn.openxmlformats-officedocument.spreadsheetml.sheet">
+						</form>
 						<div class="table-responsive">
 							<table id="tblProductos" class="table table-sm table-striped table-hover table-bordered w-100">
 								<thead> 

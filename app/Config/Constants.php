@@ -87,6 +87,8 @@ defined('UPLOADS_MANIFEST_PATH')      || define('UPLOADS_MANIFEST_PATH', WRITEPA
 defined('UPLOADS_CONF_PATH')      || define('UPLOADS_CONF_PATH', WRITEPATH  . "uploads/configuracion/");
 defined('UPLOADS_REPOR_PATH')      || define('UPLOADS_REPOR_PATH', WRITEPATH  . "uploads/reportes/");
 defined('REPOR_BASE_PATH')      || define('REPOR_BASE_PATH', ROOTPATH  . "Plantilla_Reporte/");
+defined('UPLOADS_PEDIDOS_PATH')      || define('UPLOADS_PEDIDOS_PATH', WRITEPATH  . "uploads/pedidos/");
+
 
 defined('TIPODOCS')      || define('TIPODOCS', array(
   0 => array("valor" => "NIT", "titulo" => "Nit")

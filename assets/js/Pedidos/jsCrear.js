@@ -97,7 +97,7 @@ let DTProductos = {
 
 let DTProductosPedido = $("#tblProductos").DataTable({
   data: productosPedido,
-  dom: domSearch1,
+  dom: domBSearch,
   processing: false,
   serverSide: false,
   order: [],
@@ -165,6 +165,18 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       }
     },
   ],
+  buttons: [
+		{ 
+			className: 'btn-uploadExcel btn-success', 
+			text: '<i class="fa-solid fa-upload"></i>', 
+			attr: { 
+				title: "Cargar excel", "data-toggle":"tooltip" 
+			},
+			exportOptions: {
+				columns: ':visible:not(.noExport)'
+			},
+		}
+	],
   createdRow: function (row, data, dataIndex) {
     $(row).find(".cantidadProduct, .valorUnitario").on("change", function () {
       let cant = Number($(row).find(".cantidadProduct").val().trim());
@@ -306,6 +318,8 @@ let DTProductosPedido = $("#tblProductos").DataTable({
 });
 
 $(function () {
+  $("#frm-Excel").trigger("reset");
+
   if ($CANTIDADVENDEDORES == 0 || $CANTIDADCLIENTES == 0 || $PREFIJOVALIDO == 'N') {
     if ($CANTIDADVENDEDORES == 0 && $CANTIDADCLIENTES == 0) {
       $msj = "vendedore y clientes";
@@ -518,6 +532,45 @@ $(function () {
       }, function () { });
     });
   }
+
+  $(document).on("click", ".btn-uploadExcel", function() {
+    $("#excelFile").click();
+  });
+
+  $("#excelFile").change(function (e) {
+    $(document).find(".btnAdd").removeClass("disabled").prop("disabled", false);
+    productosPedido = [];
+    DTProductosPedido.clear().draw();
+    form = new FormData($("#frm-Excel")[0]);
+    console.log(form);
+    $.ajax({
+      url: rutaBase + "ImportarExcel",
+      type: 'POST',
+      dataType: 'json',
+      async: false,
+      processData: false,
+      contentType: false,
+      cache: false,
+      data: form,
+      success: function (resp) {
+        if (resp.success) {
+          resp.data.forEach(data => {
+            $("#p" + data.id).addClass("disabled").prop("disabled", true);
+            data.valorTotal = data.precio_venta * data.cantidad;
+            data.nuevo = true;
+            productosPedido.push(data);
+          });
+          DTProductosPedido.clear().rows.add(productosPedido).draw();
+          calcularTotal();
+        } else {
+          alertify.alert("Error", resp.msj);
+        }
+      },
+      complete: () => {
+        $("#frm-Excel").trigger("reset");
+      }
+    });
+  });
 });
 
 function calcularTotal() {
