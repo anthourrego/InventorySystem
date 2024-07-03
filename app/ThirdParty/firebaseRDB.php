@@ -1,11 +1,15 @@
 <?php
+
+namespace ThirdParty;
+
+use Exception;
 /*
  * class name: firebaseRDB
  * version: 1.0
  * author: Devisty
  */
 
-class firebaseRDB{
+class firebaseRDB extends Exception {
 	
 	public $url = null;
 

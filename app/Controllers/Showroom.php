@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use firebaseRDB;
+use ThirdParty\firebaseRDB;
 
 class Showroom extends BaseController
 {
@@ -12,6 +12,7 @@ class Showroom extends BaseController
 		$this->content['title'] = "Showroom";
 		$this->content['view'] = "vShowroom";
 
+		//$firebaseRDB = new firebaseRDB();
 		/* $this->LDataTables();
 		$this->LMoment();
 
