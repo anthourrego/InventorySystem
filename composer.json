@@ -10,8 +10,8 @@
         "bpampuch/pdfmake": "^0.2.10",
         "chillerlan/php-qrcode": "^5.0",
         "ckeditor/ckeditor": "^4.24",
-        "codeigniter4/framework": "^4.5.2",
-        "codeigniter4/translations": "^4.5",
+        "codeigniter4/framework": "^4.5.3",
+        "codeigniter4/translations": "^4.5.2",
         "components/jquery": "^3.7",
         "datatables.net/datatables.net": "^2.0",
         "datatables.net/datatables.net-bs4": "^2.0",
@@ -24,14 +24,14 @@
         "moment/moment": "^2.30",
         "nelexa/zip": "^4.0",
         "phpmailer/phpmailer": "^6.9",
+        "phpoffice/phpspreadsheet": "^2.1",
         "robinherbots/jquery.inputmask": "^5.0",
         "select2/select2": "^4.0",
         "setasign/fpdi": "^2.6",
         "stuk/jszip": "^3.0",
         "tecnickcom/tcpdf": "^6.7",
         "ttskch/select2-bootstrap4-theme": "^1.5",
-        "twbs/bootstrap": "4.6.1",
-        "phpoffice/phpspreadsheet": "^2.1"
+        "twbs/bootstrap": "4.6.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9",
