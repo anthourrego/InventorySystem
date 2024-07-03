@@ -30,7 +30,8 @@
         "stuk/jszip": "^3.0",
         "tecnickcom/tcpdf": "^6.7",
         "ttskch/select2-bootstrap4-theme": "^1.5",
-        "twbs/bootstrap": "4.6.1"
+        "twbs/bootstrap": "4.6.1",
+        "phpoffice/phpspreadsheet": "^2.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9",

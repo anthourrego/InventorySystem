@@ -17,6 +17,8 @@ use App\Models\mPedidosCajas;
 use App\Models\mPedidosCajasProductos;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
+use \PhpOffice\PhpSpreadsheet\IOFactory;
+use stdClass;
 
 class cPedidos extends BaseController {
 	public function index() {
@@ -1108,6 +1110,97 @@ class cPedidos extends BaseController {
 		->where("pedidoscajas.id_pedido", $idPedido)->findAll();
 
 		return $this->response->setJSON($productos);
+	}
+
+	public function ImportarExcel(){
+		$resp["success"] = false;
+		$resp["msj"] = "Ha ocurrido un error al leer el archivo de excel.";
+		$resp["data"] = [];
+		$archivoExcel = $this->request->getFile("excelFile");
+		if (!empty($archivoExcel->getBasename())) {
+			//Validamos la foto
+			$validated = $this->validate([
+				'rules' => [
+					'uploaded[excelFile]',
+					'mime_in[excelFile,application/vnd.ms-excel,xls,csv,application/xml,application/zip,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/msword,application/vn.openxmlformats-officedocument.spreadsheetml.sheet]',
+					'max_size[excelFile,50480]',
+				],
+			]);
+
+			if ($validated) { 
+				if ($archivoExcel->isValid() && !$archivoExcel->hasMoved()) {
+					$ruta = UPLOADS_PEDIDOS_PATH ."/";
+					if (!file_exists($ruta)) {
+						mkdir($ruta, 0777, true);
+					}
+
+					$name = explode('.', $archivoExcel->getClientName());
+					$name = str_replace(' ', '_', $name[0]) . "." . $archivoExcel->getClientExtension();
+
+					if ($archivoExcel->move(UPLOADS_PEDIDOS_PATH, $name, true)) {
+						$rutaExcel = UPLOADS_PEDIDOS_PATH . "/". $name;
+
+						/**  Identify the type of $inputFileName  **/
+						$inputFileType = IOFactory::identify($rutaExcel);
+						/**  Create a new Reader of the type that has been identified  **/
+						$reader = IOFactory::createReader($inputFileType);
+						/**  Load $inputFileName to a Spreadsheet Object  **/
+						$reader->setReadDataOnly(true);
+						$spreadsheet = $reader->load($rutaExcel);
+
+						$totalrows = $spreadsheet->setActiveSheetIndex(0)->getHighestRow();
+						$hojadeExcel = $spreadsheet->setActiveSheetIndex(0);
+
+						$productosImportar = [];
+
+						$errores = "";
+						if ($totalrows > 0) {
+							$producto = new mProductos();
+
+							for ($i=2; $i <= $totalrows; $i++) { 
+								$fila = new stdClass();
+
+								$cantidad = trim($hojadeExcel->getCell("B".$i)->getValue());
+								$referencia = trim($hojadeExcel->getCell("A".$i)->getValue());
+
+								if (strlen($referencia) > 0 && strlen($cantidad) > 0 && $cantidad > 0) {
+									$fila = $producto->detalleProducto($referencia); 
+									if (!is_null($fila)) {
+										if ($cantidad <= $fila->stock) {
+											$fila->cantidad = $cantidad;
+											$productosImportar[] = $fila;
+										} else {
+											$errores .= "<li><b>{$referencia}</b> el inventario solicitado es {$cantidad} de {$fila->stock} disponible.</li>";
+										}
+									} else {
+										$errores .= "<li><b>{$referencia}</b> no se encontro en la base de datos.</li>";
+									}
+								}
+							}
+						}
+
+						if ($errores == "") {
+							if (count($productosImportar) > 0) {
+								$resp["success"] = true;
+								$resp["data"] = $productosImportar;
+							} else {
+								$resp["msj"] = "No se han encontrado productos para ser cargados";	
+							}
+						} else {
+							$resp["msj"] = "<ul>{$errores}</ul>";
+						}
+
+					} else {
+						$resp["msj"] = "Ha ocurrido un error al subir el pedido de excel.";
+					}
+				} else {
+					$resp["msj"] = "Error al subir el excel, {$archivoExcel->getErrorString()}";
+				}
+			} else {
+				$resp["msj"] = "Error al subir el excel, " . trim(str_replace("rules", "", $this->validator->getErrors()["rules"])); 
+			}
+		}
+		return $this->response->setJSON($resp);
 	}
 
 }

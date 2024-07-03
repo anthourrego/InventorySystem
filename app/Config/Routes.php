@@ -14,7 +14,7 @@ $routes->post('cerrarSesion', 'Home::cerrarSesion', ['filter' => ['authGuard', '
 $routes->post('sidebar', 'Home::sidebar', ['filter' => ['authGuard', 'ajax']]);
 
 /* Ruta para la lectura de QR */
-$routes->get('FacturaQR/(:num)/(:num)', 'cPedidos::facturaQR/$1/$2');
+//$routes->get('FacturaQR/(:num)/(:num)', 'cPedidos::facturaQR/$1/$2');
 $routes->get('FotoEmpresa', 'Home::fotoEmpresa');
 
 
@@ -165,12 +165,12 @@ $routes->group('Reportes', ['filter' => 'authGuard'], function ($routes) {
 });
 
 //ReportesQR
-$routes->group('ReportesQR', ['filter' => 'qrFactura'], function ($routes) {
+/*$routes->group('ReportesQR', ['filter' => 'qrFactura'], function ($routes) {
 	$routes->get('Pedido/(:num)/(:num)', 'cReportes::pedido/$1/$2');
 	$routes->get('Factura/(:num)/(:num)/(:num)', 'cReportes::factura/$1/$2/$3');
 	$routes->get('FacturaFoto/(:num)/(:num)/(:num)/(:num)', 'cReportes::factura/$1/$2/$3/$4');
 	$routes->get('PedidoFoto/(:num)/(:num)/(:num)', 'cReportes::pedido/$1/$2/$3');
-});
+});*/
 
 //Almacenes
 $routes->group('Almacen', ['filter' => 'authGuard'], function ($routes) {
@@ -237,6 +237,7 @@ $routes->group('Pedidos', ['filter' => 'authGuard:10'], function ($routes) {
 	$routes->get('GenerarQR/(:num)', 'cPedidos::generarQR/$1');
 	$routes->get('DetallePedido/(:num)', 'cPedidos::detallePedido/$1');
 	$routes->get('DetallePedidoCaja/(:num)/(:num)', 'cPedidos::DetallePedidoCaja/$1/$2');
+	$routes->post('ImportarExcel', 'cPedidos::ImportarExcel');
 });
 
 //Empaque

@@ -99,4 +99,60 @@ class mProductos extends Model {
 		$this->where("{$this->table}.estado", "1");
 		return $this->asObject()->first();
 	}
+
+	public function detalleProducto($referencia) {
+
+		$inventarioBajo = (int) (session()->has("inventarioBajo") ? session()->get("inventarioBajo") : '0');
+		$inventarioMedio = (int) (session()->has("inventarioMedio") ? session()->get("inventarioMedio") : '24');
+		$manifiestoProducto = (int) (session()->has("manifiestoProducto") ? session()->get("manifiestoProducto") : '0');
+		$inventarioNegativo = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
+
+		$this->select("
+					{$this->table}.id,
+					{$this->table}.id_categoria,
+					{$this->table}.referencia,
+					{$this->table}.item,
+					{$this->table}.descripcion,
+					{$this->table}.imagen,
+					CASE 
+						WHEN {$this->table}.stock < 0 THEN 'dark'
+						WHEN {$this->table}.stock <= {$inventarioBajo}
+							THEN 'danger'
+						WHEN {$this->table}.stock > {$inventarioBajo} AND {$this->table}.stock <= {$inventarioMedio}
+							THEN 'warning'
+						ELSE 'success' 
+					END AS ColorStock,
+					{$this->table}.stock As stock,
+					{$this->table}.precio_venta,
+					{$this->table}.precio_venta_dos,
+					{$this->table}.costo,
+					{$this->table}.ubicacion,
+					M.nombre AS nombreManifiesto,
+					{$this->table}.ventas, 
+					{$this->table}.estado, 
+					{$this->table}.created_at,
+					{$this->table}.updated_at,
+					C.nombre AS nombreCategoria,
+					CASE 
+							WHEN {$this->table}.estado = 1 THEN 'Activo' 
+							ELSE 'Inactivo' 
+					END AS Estadito,
+					{$this->table}.cantPaca,
+					CASE 
+							WHEN 1 = {$manifiestoProducto}
+								THEN {$this->table}.id_manifiesto
+							ELSE '0'
+					END AS manifiesto,
+					{$this->table}.precio_venta As valorUnitario,
+			")->join('categorias AS C', "{$this->table}.id_categoria = C.id", 'left')
+			->join('manifiestos AS M', "{$this->table}.id_manifiesto = M.id", 'left')
+			->where("{$this->table}.estado", 1)
+			->where("{$this->table}.referencia", trim($referencia));
+				
+		if ($inventarioNegativo == "0") {
+			$this->where("{$this->table}.stock >=", 0);
+		}
+
+		return $this->asObject()->first();
+	}
 }
