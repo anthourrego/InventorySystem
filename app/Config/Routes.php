@@ -24,10 +24,10 @@ $routes->group('Usuarios', ['filter' => 'authGuard:1'], function ($routes) {
 	$routes->post('DT', 'cUsuarios::listaDT');
 	$routes->get('Foto', 'cUsuarios::foto');
 	$routes->get('Foto/(:any)', 'cUsuarios::foto/$1');
-	$routes->post('Eliminar', 'cUsuarios::eliminar', ['filter' => ['authGuard:14', 'ajax']]);
 	$routes->post('Crear', 'cUsuarios::crearEditar', ['filter' => ['authGuard:11', 'ajax']]);
 	$routes->post('Editar', 'cUsuarios::crearEditar', ['filter' => ['authGuard:12', 'ajax']]);
 	$routes->post('CambiarPass', 'cUsuarios::cambiarPass', ['filter' => ['authGuard:13', 'ajax']]);
+	$routes->post('Eliminar', 'cUsuarios::eliminar', ['filter' => ['authGuard:14', 'ajax']]);
 	$routes->get('ValidaUsuario/(:any)/(:num)', 'cUsuarios::validaUsuario/$1/$2', ['filter' => ['authGuard:11,12', 'ajax']]);
 });
 
@@ -294,6 +294,6 @@ $routes->group('Mobile', function ($routes) {
 });
 
 //Showroom
-$routes->group('Showroom', function ($routes) {
+$routes->group('Showroom', ['filter' => 'authGuard:30'], function ($routes) {
 	$routes->get('/', 'Showroom::index');
 });

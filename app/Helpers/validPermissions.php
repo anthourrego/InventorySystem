@@ -4,9 +4,11 @@ use CodeIgniter\HTTP\CLIRequest;
 if (! function_exists('validPermissions')) {
   function validPermissions($permisos = [], $return = false, $ajax = false) {
     $cont = 0; 
-    foreach ($permisos as $it) {
-      if (!in_array($it, session()->get("permisos"))) {
-        $cont++;
+    if (session()->has("permisos") === true) {
+      foreach ($permisos as $it) {
+        if (!in_array($it, session()->get("permisos"))) {
+          $cont++;
+        }
       }
     }
 

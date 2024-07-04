@@ -184,7 +184,7 @@ class cUsuarios extends BaseController {
 
 							if ($user->save($updateFoto)) { 
 								$resp["success"] = true;
-								$resp["msj"] = "El usuario <b>{$user->usuario}</b> se creo correctamente.";
+								$resp["msj"] = "El usuario <b>{$user->usuario}</b> se " . (empty($this->request->getPost("id")) ? 'creo' : 'actualizo') . " correctamente.";
 							} else {
 								$resp["msj"] = "Ha ocurrido un error al actualizar los datos de la foto.";
 							}
@@ -199,7 +199,7 @@ class cUsuarios extends BaseController {
 				}
 			} else {
 				$resp["success"] = true;
-				$resp["msj"] = "El usuario <b>{$user->usuario}</b> se creo correctamente.";
+				$resp["msj"] = "El usuario <b>{$user->usuario}</b> se " . (empty($this->request->getPost("id")) ? 'creo' : 'actualizo') . " correctamente.";
 			}
 		} else {
 			$resp["msj"] = "No puede " . (empty($this->request->getPost("id")) ? 'crear' : 'actualizar') . " el usuario." . listErrors($user->errors());
