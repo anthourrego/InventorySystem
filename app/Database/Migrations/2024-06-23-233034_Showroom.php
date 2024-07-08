@@ -20,11 +20,6 @@ class Showroom extends Migration
 				'constraint'     => 255,
 				'null'           => false,
 			],
-			'nombre' => [
-				'type'           => 'VARCHAR',
-				'constraint'     => 255,
-				'null'           => false,
-			],
 			'fechaInicio' => [
 				'type'           => 'datetime',
 				'null'           => true,
