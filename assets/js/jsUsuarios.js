@@ -27,8 +27,8 @@ let DTUsuarios = $("#table").DataTable({
       defaultContent: '',
       className: "text-center",
       render: function (meta, type, data, meta) {
-        return `<a href="${base_url()}Usuarios/Foto/${data.foto}" data-fancybox="images${data.id}" data-caption="${data.nombre}">
-                  <img class="img-thumbnail" src="${base_url()}Usuarios/Foto/${data.foto}" alt="" />
+        return `<a href="${rutaBase}Foto/${data.foto}" data-fancybox="images${data.id}" data-caption="${data.nombre}">
+                  <img class="img-thumbnail" src="${rutaBase}Foto/${data.foto}" alt="" />
                 </a>`;
       }
     },
@@ -102,7 +102,7 @@ let DTUsuarios = $("#table").DataTable({
       $("#editFoto").val(0);
       $("#foto").val('');
       if (data.foto != null) {
-        $('#imgFoto').attr('src', base_url() + "Usuarios/Foto/" + data.foto);
+        $('#imgFoto').attr('src', rutaBase + "Foto/" + data.foto);
         $("#content-preview").removeClass("d-none");
         $("#content-upload").addClass("d-none");
       } else {
@@ -171,7 +171,7 @@ $(function () {
       reader.readAsDataURL(file);
     } else {
       $("#foto").val('');
-      $('#imgFoto').attr('src', base_url() + "Usuarios/Foto");
+      $('#imgFoto').attr('src', rutaBase + "Foto");
       $("#content-preview").addClass("d-none");
       $("#content-upload").removeClass("d-none");
     }
@@ -180,7 +180,7 @@ $(function () {
   $(".btn-eliminar-foto").on("click", function (e) {
     e.preventDefault();
     $("#foto").val('');
-    $('#imgFoto').attr('src', base_url() + "Usuarios/Foto");
+    $('#imgFoto').attr('src', rutaBase + "Foto");
     $("#content-preview").addClass("d-none");
     $("#content-upload").removeClass("d-none");
 
@@ -193,7 +193,7 @@ $(function () {
     $(".inputVer").val("").removeClass("disabled").prop("disabled", false).trigger('change');
     $("#editFoto").val(0);
     $("#foto").val('').removeClass("disabled").prop("disabled", false);
-    $('#imgFoto').attr('src', base_url() + "Usuarios/Foto");
+    $('#imgFoto').attr('src', rutaBase + "Foto");
     $("#content-preview").addClass("d-none");
     $("#content-upload, .btn-eliminar-foto, button[form='formUsuario']").removeClass("d-none");
     $("#modalUsuarioLabel").html(`<i class="fa-solid fa-user-plus"></i> Crear usuario`);
@@ -257,7 +257,7 @@ $(function () {
             if (resp.success) {
               DTUsuarios.ajax.reload();
               $("#modalUsuario").modal("hide");
-              $('#imgFoto').attr('src', base_url() + "Usuarios/Foto");
+              $('#imgFoto').attr('src', rutaBase + "Foto");
               $("#content-preview").addClass("d-none");
               $("#content-upload").removeClass("d-none");
               alertify.success(resp.msj);

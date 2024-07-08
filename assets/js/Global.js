@@ -66,8 +66,15 @@ document.addEventListener('DOMContentLoaded', function (e) {
 		ajaxStart: function () {
 			$("#cargandoAjax").removeClass('d-none');
 		},
-		ajaxStop: function () {
+		ajaxStop: function (funcion, request, settings) {
 			$("#cargandoAjax").addClass('d-none');
+		},
+		ajaxComplete: function (funcion, request, settings) {
+			if (request.responseJSON.logged_out) {
+				alertify.globalAlert('Advertencia de Cierre de Sesión', request.responseJSON.logged_msj, function () {
+					this.destroy();
+				});
+			}
 		},
 		ajaxError: function (funcion, request, settings) {
 			$("#cargandoAjax").removeClass('d-none');
