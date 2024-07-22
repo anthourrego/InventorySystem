@@ -511,6 +511,23 @@ class mPermisos extends Model {
 						"text" => "Confirmar Producto Reportado"
 					]
 				]
+			],
+			[
+				"id" => 70,
+				"text" => "Showroom",
+				"uri" => "Showroom",
+				"icon" => "fa-solid fa-basket-shopping",
+				"color" => "bg-success",
+				"children" => [
+					[
+						"id" => 7001,
+						"text" => "Crear"
+					],
+					[
+						"id" => 7002,
+						"text" => "Editar"
+					]
+				]
 			]
 		];
 

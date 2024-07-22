@@ -20,6 +20,10 @@ class Showroom extends Migration
 				'constraint'     => 255,
 				'null'           => false,
 			],
+			'descripcion' => [
+				'type'     => 'TEXT',
+				'null'     => true,
+			],
 			'fechaInicio' => [
 				'type'           => 'datetime',
 				'null'           => true,
@@ -50,12 +54,12 @@ class Showroom extends Migration
 		]);
 
 		$this->forge->addKey('id', true);
-		$this->forge->createTable('showroom');
+		$this->forge->createTable('showrooms');
 		
 	}
 
 	public function down()
 	{
-		$this->forge->dropTable('showroom');
+		$this->forge->dropTable('showrooms');
 	}
 }

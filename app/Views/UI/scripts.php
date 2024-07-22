@@ -4,7 +4,7 @@
 
 <script>
   function base_url(){
-    return "<?= base_url(); ?>/";
+    return "<?= base_url(); ?>";
   }
 
   function validPermissions($permiso = 0){

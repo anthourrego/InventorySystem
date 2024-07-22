@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 			$("#cargandoAjax").addClass('d-none');
 		},
 		ajaxComplete: function (funcion, request, settings) {
-			if (request.responseJSON.logged_out) {
+			if (request.responseJSON && request.responseJSON.logged_out) {
 				alertify.globalAlert('Advertencia de Cierre de Sesión', request.responseJSON.logged_msj, function () {
 					this.destroy();
 				});

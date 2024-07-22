@@ -11,11 +11,13 @@ use Exception;
 
 class firebaseRDB extends Exception {
 	
-	public $url = null;
+	public $url = "https://pruebas-php-1b41d-default-rtdb.firebaseio.com";
 
 	function __construct($url=null) {
-		if(isset($url)){
-			$this->url = $url;
+		if(isset($url) || !is_null($this->url)){
+			if (isset($url)){
+				$this->url = $url;
+			}
 		}else{
 			throw new Exception("Database URL must be specified");
 		}
@@ -37,7 +39,6 @@ class firebaseRDB extends Exception {
 		return $html;
 		curl_close($ch);
 	}
-
 
 	public function insert($table, $data){
 		$path = $this->url."/$table.json";
@@ -69,6 +70,11 @@ class firebaseRDB extends Exception {
 		$pars = isset($pars) ? "?$pars" : "";
 		$path = $this->url."/$dbPath.json$pars";
 		$grab = $this->grab($path, "GET");
+		$grab = json_decode($grab);
+		if (isset($grab->error)) {
+			if ($grab->error == "Permission denied")
+				$grab->error = "No tiene permisos para acceder a firebase";
+		}
 		return $grab;
 	}
 
