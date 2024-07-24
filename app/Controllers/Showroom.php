@@ -130,7 +130,7 @@ class Showroom extends BaseController
 
 		switch ($postData->type) {
 			case 'init':
-				$this->iniciarShowroom($postData->showroom);
+				return $this->iniciarShowroom($postData->showroom);
 				break;
 			
 			default:
@@ -140,19 +140,16 @@ class Showroom extends BaseController
 	}
 
 	function iniciarShowroom($showroom) {
+		$resp["success"] = false;
+		$resp["msj"] = "";
 		$firebaseRDB = new firebaseRDB();
 		$showroom = is_null($showroom) ? null : (object) $showroom;
 
-		$dataShowroom = $firebaseRDB->retrieve("showroom");
+		$firebaseRDB->delete("showroom");
+		$firebaseRDB->delete("productos");
+		$firebaseRDB->delete("alertas");
+		$firebaseRDB->delete("sucursales");
 
-		if (!is_null($dataShowroom)) {
-			//Eliminamos todos los datos de la tabla showroom
-			foreach ($dataShowroom as $key => $data) {
-				$firebaseRDB->delete("showroom", $key);
-			}
-		}
-
-		//Insertamos los datos
 		$dataSave = [
 			"id" => $showroom->id,
 			"nombre" => $showroom->nombre,
@@ -164,16 +161,42 @@ class Showroom extends BaseController
 			"fechaRegistro" => $showroom->created_at
 		];
 
-		$firebaseRDB->insert("showroom/show1", null);
+		$firebaseRDB->insert("showroom/show1");
 		$firebaseRDB->update("showroom", "show1", $dataSave);
 
 		$mProductos = new mProductos();
 
-		$dataProductos = $mProductos->where("stock >", 50)->findAll();
+		$dataProductos = $mProductos->asObject()->where("stock >", 50)->findAll();
 
+		$cont = 1;
+		$productoSave = [];
 		foreach ($dataProductos as $producto) {
-			var_dump($producto);
+			$productoSave["prod{$producto->id}"] = (object) [
+				"id" => $producto->id,
+				"orden" => $cont,
+				"cantidad" => $producto->stock,
+				"estado" => "PE",
+				"imagen" => "",
+				"item" => $producto->item,
+				"nombre" => $producto->descripcion,
+				"precioVenta" => $producto->precio_venta,
+				"referencia" => $producto->referencia
+			];
+			$cont++;
 		}
-		exit;
+		$firebaseRDB->insert("productos");
+		$firebaseRDB->update("productos", null, $productoSave);
+
+		$showroomModel = new mShoowroom();
+		$showroom->estado = "AC";
+
+		if ($showroomModel->save($showroom)) {
+			$resp["success"] = true;
+			$resp["msj"] = "El showroom {$showroom->nombre} se inicio correctamente.";
+		} else {
+			$resp["msj"] = "No puede iniciar el showroom." . listErrors($showroomModel->errors());
+		}
+
+		return $this->response->setJSON($resp);
 	}
 }

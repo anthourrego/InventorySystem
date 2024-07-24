@@ -40,20 +40,23 @@ class firebaseRDB extends Exception {
 		curl_close($ch);
 	}
 
-	public function insert($table, $data){
+	public function insert($table, $data = null){
 		$path = $this->url."/$table.json";
-		$grab = $this->grab($path, "POST", json_encode($data));
+		$data = is_null($data) ? null : json_encode($data);
+		$grab = $this->grab($path, "POST", $data);
 		return $grab;
 	}
 
 	public function update($table, $uniqueID, $data){
-		$path = $this->url."/$table/$uniqueID.json";
+		$path = $this->url."/$table";
+		$path .= (!is_null($uniqueID) ? "/{$uniqueID}" : "") . ".json";
 		$grab = $this->grab($path, "PATCH", json_encode($data));
 		return $grab;
 	}
 
-	public function delete($table, $uniqueID){
-		$path = $this->url."/$table/$uniqueID.json";
+	public function delete($table, $uniqueID = null){
+		$path = $this->url."/$table";
+		$path .= (!is_null($uniqueID) ? "/{$uniqueID}" : "") . ".json";
 		$grab = $this->grab($path, "DELETE");
 		return $grab;
 	}

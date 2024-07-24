@@ -112,7 +112,7 @@ function changeStatusShowroom(data){
 
   if (showroom) {
     if (data.id == showroom.id) {
-      console.log("Enviamos la peticion para inciar el show room");
+      console.log("Enviamos la petición para iniciar el showroom");
     } else {
       alertify.alert("Advertencia", `El ${tituloModulo} a iniciar no coincide con el showroom ${showroom.nombre} que actualmente se encuentra iniciado.`);
     }
