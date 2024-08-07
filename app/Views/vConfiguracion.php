@@ -25,9 +25,9 @@
       <li class="nav-item" role="presentation">
         <a class="nav-link" id="smtpcorreos-tab" data-toggle="tab" href="#smtpcorreosTab" role="tab" aria-controls="smtpcorreosTab" aria-selected="false">SMTP Correo</a>
       </li>
-      <li class="nav-item" role="presentation">
+      <!-- <li class="nav-item" role="presentation">
         <a class="nav-link" id="showroom-tab" data-toggle="tab" href="#showroomTab" role="tab" aria-controls="showroomTab" aria-selected="false">Showroom</a>
-      </li>
+      </li> -->
     </ul>
   </div>
   <div class="card-body">

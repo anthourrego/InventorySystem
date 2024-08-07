@@ -294,10 +294,10 @@ $routes->group('Mobile', function ($routes) {
 });
 
 //Showroom
-$routes->group('Showroom', ['filter' => 'authGuard:70'], function ($routes) {
+/* $routes->group('Showroom', ['filter' => 'authGuard:70'], function ($routes) {
 	$routes->get('/', 'Showroom::index');
 	$routes->post('DT', 'Showroom::listaDT');
 	$routes->post('Crear', 'Showroom::crear', ['filter' => ['authGuard:7001', 'ajax']]);
 	$routes->post('validShowroom', 'Showroom::validCurrentShowroom', ['filter' => ['authGuard:7001', 'ajax']]);
 	$routes->post('changeStatusShowroom', 'Showroom::changeStatusShowroom', ['filter' => ['authGuard:7001', 'ajax']]);
-});
+}); */

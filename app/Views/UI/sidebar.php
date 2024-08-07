@@ -126,12 +126,12 @@
             </li>
 						<?php } ?>
 						<?php if (validPermissions([70], true)) { ?> 
-						<li class="nav-item">
+						<!-- <li class="nav-item">
               <a href="<?= base_url("Showroom") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'Showroom' ? 'active' : '' ?>">
 								<i class="nav-icon fa-solid fa-basket-shopping"></i>
                 <p>Showroom</p>
               </a>
-            </li>
+            </li> -->
 						<?php } ?>
 						<?php if (validPermissions([5], true)) { ?> 
 						<li class="nav-item">

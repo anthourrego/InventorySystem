@@ -41,7 +41,7 @@ class cReportes extends BaseController {
 					P.item AS itemProductoDP,
 					P.descripcion AS descripcionProductoDP,
 					P.cantPaca AS cantPacaProductoDP,
-					CAST((P.cantPaca / ventasproductos.cantidad) AS DECIMAL(12,2)) AS paqueteProductoDP,
+					CAST((ventasproductos.cantidad / P.cantPaca) AS DECIMAL(12,2)) AS paqueteProductoDP,
 					ventasproductos.cantidad AS cantidadProductoDP,
 					ventasproductos.valor AS valorProductoDP,
 					(ventasproductos.cantidad * ventasproductos.valor) AS totalProductoDP,
@@ -229,7 +229,7 @@ class cReportes extends BaseController {
 				P.descripcion AS descripcionProductoDP,
 				comprasproductos.cantPaca AS cantPacaProductoDP,
 				CAST(
-					(comprasproductos.cantPaca / comprasproductos.cantidad) AS DECIMAL(12,2)
+					(comprasproductos.cantidad / comprasproductos.cantPaca) AS DECIMAL(12,2)
 				) AS paqueteProductoDP,
 				comprasproductos.cantidad AS cantidadProductoDP,
 				comprasproductos.valor AS valorProductoDP,
