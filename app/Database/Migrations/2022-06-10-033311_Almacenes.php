@@ -3,9 +3,12 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use CodeIgniter\Database\RawSql;
 
-class Almacenes extends Migration {
-	public function up() {
+class Almacenes extends Migration
+{
+	public function up()
+	{
 		$this->forge->addField([
 			'id' => [
 				'type'           => 'INT',
@@ -23,15 +26,22 @@ class Almacenes extends Migration {
 				'constraint'     => 1,
 				'default'        => 1
 			],
-			'created_at datetime default current_timestamp',
-			'updated_at datetime default current_timestamp on update current_timestamp'
+			'created_at' => [
+				'type'    => 'datetime',
+				'default' => new RawSql('CURRENT_TIMESTAMP'),
+			],
+			'updated_at' => [
+				'type'    => 'datetime',
+				'default' => new RawSql('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+			]
 		]);
 
 		$this->forge->addKey('id', true);
-		$this->forge->createTable('almacenes');
+		$this->forge->createTable('almacenes', false, ATRIBUTOSDB);
 	}
 
-	public function down() {
-			$this->forge->dropTable('almacenes');
+	public function down()
+	{
+		$this->forge->dropTable('almacenes');
 	}
 }

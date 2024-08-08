@@ -27,7 +27,7 @@ class ExampleMigration extends Migration
         $this->forge->addKey(['deleted_at', 'id']);
         $this->forge->addKey('created_at');
 
-        $this->forge->createTable('factories');
+        $this->forge->createTable('factories', false, ATRIBUTOSDB);
     }
 
     public function down(): void

@@ -3,6 +3,7 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use CodeIgniter\Database\RawSql;
 
 class PedidosCajasProductos extends Migration
 {
@@ -30,14 +31,20 @@ class PedidosCajasProductos extends Migration
 				'constraint'     => 11,
 				'default'        => 0
 			],
-			'created_at datetime default current_timestamp',
-			'updated_at datetime default current_timestamp on update current_timestamp'
+			'created_at' => [
+        'type'    => 'datetime',
+        'default' => new RawSql('CURRENT_TIMESTAMP'),
+    	],
+			'updated_at' => [
+        'type'    => 'datetime',
+        'default' => new RawSql('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+    	]
 		]);
 
 		$this->forge->addKey('id', true);
 		$this->forge->addForeignKey('id_caja', 'pedidoscajas', 'id');
 		$this->forge->addForeignKey('id_producto', 'productos', 'id');
-		$this->forge->createTable('pedidoscajasproductos');
+		$this->forge->createTable('pedidoscajasproductos', false, ATRIBUTOSDB);
 	}
 
 	public function down()

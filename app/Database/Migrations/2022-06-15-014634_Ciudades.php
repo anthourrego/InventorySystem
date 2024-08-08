@@ -3,6 +3,7 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use CodeIgniter\Database\RawSql;
 
 class Ciudades extends Migration {
 	public function up() {
@@ -27,13 +28,19 @@ class Ciudades extends Migration {
 				'constraint'     => 11,
 				'unsigned'       => true
 			],
-			'created_at datetime default current_timestamp',
-			'updated_at datetime default current_timestamp on update current_timestamp'
+			'created_at' => [
+        'type'    => 'datetime',
+        'default' => new RawSql('CURRENT_TIMESTAMP'),
+    	],
+			'updated_at' => [
+        'type'    => 'datetime',
+        'default' => new RawSql('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+    	]
 		]);
 
 		$this->forge->addKey('id', true);
 		$this->forge->addForeignKey('id_depto', 'departamentos', 'codigo');
-		$this->forge->createTable('ciudades');
+		$this->forge->createTable('ciudades', false, ATRIBUTOSDB);
 	}
 
 	public function down(){

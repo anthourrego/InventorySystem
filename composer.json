@@ -30,6 +30,7 @@
         "setasign/fpdi": "^2.6",
         "stuk/jszip": "^3.0",
         "tecnickcom/tcpdf": "^6.7",
+        "tinymce/tinymce": "^7.3",
         "ttskch/select2-bootstrap4-theme": "^1.5",
         "twbs/bootstrap": "4.6.1"
     },

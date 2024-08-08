@@ -3,6 +3,7 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use CodeIgniter\Database\RawSql;
 
 class Pedidoscajas extends Migration
 {
@@ -38,14 +39,20 @@ class Pedidoscajas extends Migration
 					'type'           => 'datetime',
 					'null'           => true,
 				],
-				'created_at datetime default current_timestamp',
-				'updated_at datetime default current_timestamp on update current_timestamp'
+				'created_at' => [
+					'type'    => 'datetime',
+					'default' => new RawSql('CURRENT_TIMESTAMP'),
+				],
+				'updated_at' => [
+					'type'    => 'datetime',
+					'default' => new RawSql('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+				]
 			]);
 
 			$this->forge->addKey('id', true);
 			$this->forge->addForeignKey('id_pedido', 'pedidos', 'id');
 			$this->forge->addForeignKey('id_empacador', 'usuarios', 'id');
-			$this->forge->createTable('pedidoscajas');
+			$this->forge->createTable('pedidoscajas', false, ATRIBUTOSDB);
     }
 
     public function down()

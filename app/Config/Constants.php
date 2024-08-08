@@ -101,6 +101,10 @@ defined('TIPOCORREO')      || define('TIPOCORREO', array(
   , 2 => array("valor" => "O", "titulo" => "Otro", "smtp" => "N/A")
 ));// Tipos de documentos
 
+defined('ATRIBUTOSDB')      || define('ATRIBUTOSDB', array(
+  'ENGINE' => 'InnoDB'
+));// Atributos para crear la tablas de la base de datos
+
 defined('DOMINIO') || define('DOMINIO', 0);
 
 /**

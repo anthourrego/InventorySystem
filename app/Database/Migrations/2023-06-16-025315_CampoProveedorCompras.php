@@ -15,14 +15,15 @@ class CampoProveedorCompras extends Migration
 				'constraint'     => 11,
 				'unsigned'       => true
 			],
-			'CONSTRAINT compra_proveedor_foreign FOREIGN KEY(`id_proveedor`) REFERENCES `proveedores`(`id`)'
 		];
 		$this->forge->addColumn('compras', $addFields);
+
+		$this->forge->addForeignKey("id_proveedor", "proveedores", "id", "", "", "compra_proveedor_foreign");
+		$this->forge->processIndexes('compras');
 	}
 
 	public function down()
 	{
-		//
 		$this->forge->dropForeignKey('compras', 'compra_proveedor_foreign');
 		$this->forge->dropColumn("compras", "id_proveedor");
 	}

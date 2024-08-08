@@ -3,9 +3,12 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use CodeIgniter\Database\RawSql;
 
-class Ventas extends Migration {
-	public function up() {
+class Ventas extends Migration
+{
+	public function up()
+	{
 		$this->forge->addField([
 			'id'   => [
 				'type'           => 'INT',
@@ -51,17 +54,24 @@ class Ventas extends Migration {
 				'type'         => 'INT',
 				'constraint'   => 11
 			],
-			'created_at datetime default current_timestamp',
-			'updated_at datetime default current_timestamp on update current_timestamp'
+			'created_at' => [
+				'type'    => 'datetime',
+				'default' => new RawSql('CURRENT_TIMESTAMP'),
+			],
+			'updated_at' => [
+				'type'    => 'datetime',
+				'default' => new RawSql('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+			]
 		]);
 
 		$this->forge->addKey('id', true);
 		$this->forge->addForeignKey('id_cliente', 'clientes', 'id');
 		$this->forge->addForeignKey('id_vendedor', 'usuarios', 'id');
-		$this->forge->createTable('ventas');
+		$this->forge->createTable('ventas', false, ATRIBUTOSDB);
 	}
 
-	public function down() {
+	public function down()
+	{
 		$this->forge->dropTable('ventas');
 	}
 }

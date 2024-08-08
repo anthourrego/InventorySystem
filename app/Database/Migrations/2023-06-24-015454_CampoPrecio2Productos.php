@@ -21,7 +21,6 @@ class CampoPrecio2Productos extends Migration
 
 	public function down()
 	{
-		//
 		$this->forge->dropColumn("productos", "precio_venta_dos");
 	}
 }

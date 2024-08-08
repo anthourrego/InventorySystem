@@ -8,7 +8,6 @@ class EliminarCampoPedidosProductos extends Migration
 {
 	public function up()
 	{
-		//
 		$this->forge->dropColumn("pedidosproductos", "pedido");
 	}
 
