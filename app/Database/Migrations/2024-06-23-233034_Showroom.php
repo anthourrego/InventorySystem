@@ -51,18 +51,17 @@ class Showroom extends Migration
 				'null'        => false,
 			],
 			'created_at' => [
-        'type'    => 'datetime',
-        'default' => new RawSql('CURRENT_TIMESTAMP'),
-    	],
+				'type'    => 'datetime',
+				'default' => new RawSql('CURRENT_TIMESTAMP'),
+			],
 			'updated_at' => [
-        'type'    => 'datetime',
-        'default' => new RawSql('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
-    	]
+				'type'    => 'datetime',
+				'default' => new RawSql('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+			]
 		]);
 
 		$this->forge->addKey('id', true);
 		$this->forge->createTable('showrooms', false, ATRIBUTOSDB);
-		
 	}
 
 	public function down()

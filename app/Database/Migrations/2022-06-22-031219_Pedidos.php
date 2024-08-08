@@ -5,8 +5,10 @@ namespace App\Database\Migrations;
 use CodeIgniter\Database\Migration;
 use CodeIgniter\Database\RawSql;
 
-class Pedidos extends Migration {
-	public function up() {
+class Pedidos extends Migration
+{
+	public function up()
+	{
 		$this->forge->addField([
 			'id'   => [
 				'type'           => 'INT',
@@ -63,13 +65,13 @@ class Pedidos extends Migration {
 				'constraint'   => 11
 			],
 			'created_at' => [
-        'type'    => 'datetime',
-        'default' => new RawSql('CURRENT_TIMESTAMP'),
-    	],
+				'type'    => 'datetime',
+				'default' => new RawSql('CURRENT_TIMESTAMP'),
+			],
 			'updated_at' => [
-        'type'    => 'datetime',
-        'default' => new RawSql('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
-    	]
+				'type'    => 'datetime',
+				'default' => new RawSql('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+			]
 		]);
 
 		$this->forge->addKey('id', true);
@@ -79,7 +81,8 @@ class Pedidos extends Migration {
 		$this->forge->createTable('pedidos', false, ATRIBUTOSDB);
 	}
 
-	public function down() {
+	public function down()
+	{
 		$this->forge->dropTable('pedidos');
 	}
 }

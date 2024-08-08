@@ -56,13 +56,13 @@ class MovimientoInventario extends Migration
 				'null'        	 => true
 			],
 			'created_at' => [
-        'type'    => 'datetime',
-        'default' => new RawSql('CURRENT_TIMESTAMP'),
-    	],
+				'type'    => 'datetime',
+				'default' => new RawSql('CURRENT_TIMESTAMP'),
+			],
 			'updated_at' => [
-        'type'    => 'datetime',
-        'default' => new RawSql('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
-    	]
+				'type'    => 'datetime',
+				'default' => new RawSql('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+			]
 		]);
 
 		$this->forge->addKey('id', true);

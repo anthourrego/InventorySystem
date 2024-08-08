@@ -5,8 +5,10 @@ namespace App\Database\Migrations;
 use CodeIgniter\Database\Migration;
 use CodeIgniter\Database\RawSql;
 
-class Ciudades extends Migration {
-	public function up() {
+class Ciudades extends Migration
+{
+	public function up()
+	{
 		$this->forge->addField([
 			'id' => [
 				'type'           => 'INT',
@@ -29,13 +31,13 @@ class Ciudades extends Migration {
 				'unsigned'       => true
 			],
 			'created_at' => [
-        'type'    => 'datetime',
-        'default' => new RawSql('CURRENT_TIMESTAMP'),
-    	],
+				'type'    => 'datetime',
+				'default' => new RawSql('CURRENT_TIMESTAMP'),
+			],
 			'updated_at' => [
-        'type'    => 'datetime',
-        'default' => new RawSql('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
-    	]
+				'type'    => 'datetime',
+				'default' => new RawSql('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+			]
 		]);
 
 		$this->forge->addKey('id', true);
@@ -43,7 +45,8 @@ class Ciudades extends Migration {
 		$this->forge->createTable('ciudades', false, ATRIBUTOSDB);
 	}
 
-	public function down(){
+	public function down()
+	{
 		$this->forge->dropTable('ciudades');
 	}
 }

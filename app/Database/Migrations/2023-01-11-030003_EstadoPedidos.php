@@ -4,8 +4,10 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class EstadoPedidos extends Migration {
-	public function up() {
+class EstadoPedidos extends Migration
+{
+	public function up()
+	{
 		$fields = [
 			'estado' => [
 				'name'        => 'estado',
@@ -17,7 +19,8 @@ class EstadoPedidos extends Migration {
 		$this->forge->modifyColumn('pedidos', $fields);
 	}
 
-	public function down() {
+	public function down()
+	{
 		//
 	}
 }

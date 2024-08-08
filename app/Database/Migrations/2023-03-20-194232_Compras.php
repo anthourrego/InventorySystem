@@ -7,7 +7,8 @@ use CodeIgniter\Database\RawSql;
 
 class Compras extends Migration
 {
-    public function up() {
+	public function up()
+	{
 		$this->forge->addField([
 			'id'   => [
 				'type'           => 'INT',
@@ -44,19 +45,19 @@ class Compras extends Migration
 				'constraint'  => '20,2',
 				'default'     => 0
 			],
-      'estado' => [
+			'estado' => [
 				'type'        => 'CHAR',
 				'constraint'  => 2,
 				'null'        => false,
 			],
 			'created_at' => [
-        'type'    => 'datetime',
-        'default' => new RawSql('CURRENT_TIMESTAMP'),
-    	],
+				'type'    => 'datetime',
+				'default' => new RawSql('CURRENT_TIMESTAMP'),
+			],
 			'updated_at' => [
-        'type'    => 'datetime',
-        'default' => new RawSql('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
-    	]
+				'type'    => 'datetime',
+				'default' => new RawSql('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+			]
 		]);
 
 		$this->forge->addKey('id', true);
@@ -64,7 +65,8 @@ class Compras extends Migration
 		$this->forge->createTable('compras', false, ATRIBUTOSDB);
 	}
 
-	public function down() {
+	public function down()
+	{
 		$this->forge->dropTable('compras');
 	}
 }

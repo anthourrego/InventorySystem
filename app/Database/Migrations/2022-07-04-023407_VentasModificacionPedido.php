@@ -4,8 +4,10 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class VentasModificacionPedido extends Migration {
-	public function up() {
+class VentasModificacionPedido extends Migration
+{
+	public function up()
+	{
 		$fields = [
 			'codigo' => [
 				'name'        => 'codigo',
@@ -36,7 +38,8 @@ class VentasModificacionPedido extends Migration {
 		$this->forge->processIndexes('ventas');
 	}
 
-	public function down() {
+	public function down()
+	{
 		$this->forge->dropForeignKey('ventas', 'ventas_sucursales_foreign');
 		$this->forge->dropForeignKey('ventas', 'ventas_pedidos_foreign');
 		$this->forge->dropColumn("ventas", "id_sucursal");
