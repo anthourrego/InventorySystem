@@ -89,6 +89,21 @@ defined('UPLOADS_REPOR_PATH')     || define('UPLOADS_REPOR_PATH', WRITEPATH  . "
 defined('REPOR_BASE_PATH')        || define('REPOR_BASE_PATH', ROOTPATH  . "Plantilla_Reporte/");
 defined('UPLOADS_PEDIDOS_PATH')   || define('UPLOADS_PEDIDOS_PATH', WRITEPATH  . "uploads/pedidos/");
 
+/**
+ * @deprecated Use \CodeIgniter\Events\Events::PRIORITY_LOW instead.
+ */
+define('EVENT_PRIORITY_LOW', 200);
+
+/**
+ * @deprecated Use \CodeIgniter\Events\Events::PRIORITY_NORMAL instead.
+ */
+define('EVENT_PRIORITY_NORMAL', 100);
+
+/**
+ * @deprecated Use \CodeIgniter\Events\Events::PRIORITY_HIGH instead.
+ */
+define('EVENT_PRIORITY_HIGH', 10);
+
 
 defined('TIPODOCS')      || define('TIPODOCS', array(
   0 => array("valor" => "NIT", "titulo" => "Nit")
@@ -107,20 +122,6 @@ defined('ATRIBUTOSDB')      || define('ATRIBUTOSDB', array(
 
 defined('DOMINIO') || define('DOMINIO', 0);
 
-/**
- * @deprecated Use \CodeIgniter\Events\Events::PRIORITY_LOW instead.
- */
-define('EVENT_PRIORITY_LOW', 200);
-
-/**
- * @deprecated Use \CodeIgniter\Events\Events::PRIORITY_NORMAL instead.
- */
-define('EVENT_PRIORITY_NORMAL', 100);
-
-/**
- * @deprecated Use \CodeIgniter\Events\Events::PRIORITY_HIGH instead.
- */
-define('EVENT_PRIORITY_HIGH', 10);
 
 defined('MOTIVOSDEVOLUCION')      || define('MOTIVOSDEVOLUCION', array(
   0 => array("valor" => "1", "titulo" => "Daño")
