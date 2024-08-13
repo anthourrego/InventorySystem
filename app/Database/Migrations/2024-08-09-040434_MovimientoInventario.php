@@ -27,9 +27,13 @@ class MovimientoInventario extends Migration
 				'default'        => 0
 			],
 			'tipo' => [
-				'type'        => 'CHAR',
-				'constraint'  => 1,
-				'null'        => true,
+				'type'        	 => 'CHAR',
+				'constraint'		 => 1,
+				'null'           => true,
+			],
+			'observacion' => [
+				'type'           => 'TEXT',
+				'null'           => true,
 			],
 			'id_venta' => [
 				'type'           => 'INT',
