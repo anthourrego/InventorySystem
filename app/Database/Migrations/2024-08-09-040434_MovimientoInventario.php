@@ -47,6 +47,12 @@ class MovimientoInventario extends Migration
 				'unsigned'       => true,
 				'null'        	 => true
 			],
+			'id_pedido_observacion' => [
+				'type'           => 'INT',
+				'constraint'     => 11,
+				'unsigned'       => true,
+				'null'        	 => true
+			],
 			'id_compra' => [
 				'type'           => 'INT',
 				'constraint'     => 11,
@@ -73,6 +79,7 @@ class MovimientoInventario extends Migration
 		$this->forge->addForeignKey('id_producto', 'productos', 'id');
 		$this->forge->addForeignKey('id_venta', 'ventas', 'id');
 		$this->forge->addForeignKey('id_pedido', 'pedidos', 'id');
+		$this->forge->addForeignKey('id_pedido_observacion', 'observacionproductos', 'id');
 		$this->forge->addForeignKey('id_compra', 'compras', 'id');
 		$this->forge->addForeignKey('id_ingresomercancia', 'ingresomercancia', 'id');
 		$this->forge->createTable('movimientosinventario', false, ATRIBUTOSDB);
