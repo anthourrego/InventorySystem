@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Entities\MovimientoInventarioEntity;
+use App\Models\MovimientoInventarioModel;
 use \Hermawan\DataTables\DataTable;
 use App\Models\mVentas;
 use App\Models\mProductos;
@@ -353,6 +355,8 @@ class cVentas extends BaseController {
 		$mProductos = new mProductos();
 		$mVentas = new mVentas();
 		$mVentasProductos = new mVentasProductos();
+		$mMovimientoInventario = new MovimientoInventarioModel();
+		$movimiento = new MovimientoInventarioEntity();
 		
 		if (count($prod) > 0) {
 			$this->db->transBegin();
@@ -415,16 +419,21 @@ class cVentas extends BaseController {
 	
 						$valorTotal = $valorTotal + ($it->cantidad * $it->valorUnitario);
 	
-						$product = $mProductos->find($it->id);
-						$product["stock"] = $product["stock"] - $it->cantidad;
+						/* $product = $mProductos->find($it->id);
+						$product["stock"] = $product["stock"] - $it->cantidad; */
+						
 	
 						if (!$mVentasProductos->save($dataProductoVenta)) {
 							$resp["msj"] = "Ha ocurrido un error al guardar los productos." . listErrors($mVentasProductos->errors());
 							break;
 						}
-	
-						if(!$mProductos->save($product)){
-							$resp["msj"] = "Error al guardar al actualizar el producto. " . listErrors($mProductos->errors());
+
+						$movimiento->id_producto = $it->id;
+						$movimiento->tipo = "S";
+						$movimiento->cantidad = $it->cantidad;
+						
+						if(!$mMovimientoInventario->save($movimiento)){
+							$resp["msj"] = "Error al guardar al registrar el movimiento. " . listErrors($mMovimientoInventario->errors());
 							break;
 						}
 					}
