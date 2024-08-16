@@ -7,6 +7,9 @@ use CodeIgniter\Model;
 
 class MovimientoInventarioModel extends Model
 {
+	protected $errorAfterInsert = false;
+	protected $errorAfterInsertMsg = '';
+
 	protected $table            = 'movimientosinventario';
 	protected $primaryKey       = 'id';
 	protected $useAutoIncrement = true;
@@ -57,7 +60,7 @@ class MovimientoInventarioModel extends Model
 
 	// Callbacks
 	protected $allowCallbacks = true;
-	protected $beforeInsert   = [];
+	protected $beforeInsert   = ["setUpdateInventory"];
 	protected $afterInsert    = ["updateInventory"];
 	protected $beforeUpdate   = [];
 	protected $afterUpdate    = [];
@@ -65,6 +68,11 @@ class MovimientoInventarioModel extends Model
 	protected $afterFind      = [];
 	protected $beforeDelete   = [];
 	protected $afterDelete    = [];
+
+	protected	function setUpdateInventory(){
+		$this->errorAfterInsert = false;
+		$this->errorAfterInsertMsg = "";
+	}
 
 	protected	function updateInventory(array $data){
 		$dataMovimiento = (object) $data["data"];
@@ -82,9 +90,8 @@ class MovimientoInventarioModel extends Model
 		//$product["stock"] = null;
 
 		if(!$productoModel->save($product)){
-			$data["data"]["observacion"] = "Error al guardar al actualizar el producto. " . listErrors($productoModel->errors());
+			$this->errorAfterInsert = true;
+			$this->errorAfterInsertMsg = "Error al guardar al actualizar el producto. " . listErrors($productoModel->errors());
 		}
-
-		return $data;
 	}
 }

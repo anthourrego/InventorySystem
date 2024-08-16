@@ -436,6 +436,11 @@ class cVentas extends BaseController {
 							$resp["msj"] = "Error al guardar al registrar el movimiento. " . listErrors($mMovimientoInventario->errors());
 							break;
 						}
+
+						if($mMovimientoInventario->errorAfterInsert){
+							$resp["msj"] = $mMovimientoInventario->errorAfterInsertMsg;
+							break;
+						}
 					}
 				}
 
