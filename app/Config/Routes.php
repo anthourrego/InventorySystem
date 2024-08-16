@@ -160,6 +160,7 @@ $routes->group('Reportes', ['filter' => 'authGuard'], function ($routes) {
 	$routes->get('Envio/(:num)/(:any)', 'cReportes::envio/$1/$2');
 	$routes->get('Empaque/(:num)/(:num)', 'cReportes::empaque/$1/$2');
 	$routes->get('Compra/(:num)/(:num)', 'cReportes::compra/$1/$2');
+	$routes->get('IngresoMercancia/(:num)/(:num)', 'cReportes::ingresoMercancia/$1/$2');
 	$routes->get('StickerCompra/(:num)/(:num)', 'cReportes::stickerCompra/$1/$2');
 	$routes->get('ManifiestosSinRepetir/(:num)', 'cReportes::manifiestoSinRepetir/$1');
 });
@@ -291,6 +292,18 @@ $routes->group('ProductosReportados', ['filter' => 'authGuard:60', 'namespace' =
 // Mobile app
 $routes->group('Mobile', function ($routes) {
 	$routes->post('Login', 'cClientes::inicioAppCliente');
+});
+
+//Ingreso Mercancia
+$routes->group('IngresoMercancia', ['filter' => 'authGuard:80'], function ($routes) {
+	$routes->get('/', 'cIngresoMercancia::index');
+	$routes->get('Obtener/(:any)', 'cIngresoMercancia::getEntry/$1');
+	$routes->get('ValidaProducto/(:any)/(:any)', 'cIngresoMercancia::validarProducto/$1/$2', ['filter' => ['authGuard:801,802', 'ajax']]);
+	$routes->get('CurrentEntry', 'cIngresoMercancia::getCurrentEntry');
+	$routes->post('DT', 'cIngresoMercancia::listaDT');
+	$routes->post('Crear', 'cIngresoMercancia::crear', ['filter' => ['authGuard:801', 'ajax']]);
+	$routes->post('Editar', 'cIngresoMercancia::guardarEditar', ['filter' => ['authGuard:802', 'ajax']]);
+	$routes->post('Anular', 'cIngresoMercancia::anular', ['filter' => ['authGuard:804', 'ajax']]);
 });
 
 //Showroom

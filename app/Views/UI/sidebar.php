@@ -125,6 +125,14 @@
               </a>
             </li>
 						<?php } ?>
+						<?php if (validPermissions([80], true)) { ?> 
+						<li class="nav-item">
+              <a href="<?= base_url("IngresoMercancia") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'IngresoMercancia' ? 'active' : '' ?>">
+			  					<i class="nav-icon fa-solid fa-arrow-up-right-dots"></i>
+                <p>Ingreso Mercancía</p>
+              </a>
+            </li>
+						<?php } ?>
 						<?php if (validPermissions([70], true)) { ?> 
 						<!-- <li class="nav-item">
               <a href="<?= base_url("Showroom") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'Showroom' ? 'active' : '' ?>">

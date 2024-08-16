@@ -182,6 +182,12 @@
             <input type="number" id="digitosCompra"  data-nombre="Consecutivo Compra" name="digitosCompra" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad de digitos">
           </div>
           <hr class="col-12 my-2">
+          <h5 class="mb-1 col-12">Ingreso mercancia:</h5>
+          <div class="col-12 col-md-6 col-lg-3">
+            <label for="consecutivoIngresoMercancia">Consecutivo:</label>
+            <input type="number" id="consecutivoIngresoMercancia"  data-nombre="Consecutivo Ingreso Mercancia" name="consecutivoIngresoMercancia" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
+          </div>
+          <hr class="col-12 my-2">
         </div>
       </div>
       <div class="tab-pane fade" id="ventasTab" role="tabpanel" aria-labelledby="ventas-tab">
@@ -211,7 +217,7 @@
               </div>
             </div>
             <div id="content-preview-logoEmpresa" class="d-none text-center">
-              <img id="imgFotoLogoEmpresa" src="#" class="img-thumbnail h-100">
+              <img id="imgFotologoEmpresa" src="#" class="img-thumbnail h-100">
               <button type="button" onclick="eliminarImagen('logoEmpresa', 'Logo Empresa')" class="btn btn-danger btn-sm btn-eliminar-foto"><i class="fas fa-times"></i></button>
             </div>
           </div>

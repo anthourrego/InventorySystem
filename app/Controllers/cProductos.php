@@ -11,6 +11,8 @@ use \PhpZip\ZipFile;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use App\Models\MovimientoInventarioModel;
+use App\Entities\MovimientoInventarioEntity;
 
 class cProductos extends BaseController {
 
@@ -253,7 +255,7 @@ class cProductos extends BaseController {
 				,"referencia" => trim($postData->referencia)
 				,"item" => ($this->itemProducto == '1' ? trim($postData->item) : null)
 				,"descripcion" => trim($postData->descripcion)
-				,"stock" => $postData->stock
+				// ,"stock" => $postData->stock
 				,"precio_venta" => str_replace(",", "", trim(str_replace("$", "", $postData->precioVent)))
 				,"precio_venta_dos" => str_replace(",", "", trim(str_replace("$", "", $postData->precioVentDos)))
 				,"ubicacion" => ($this->ubicacionProducto == '1' ? trim($postData->ubicacion) : null)
@@ -262,6 +264,13 @@ class cProductos extends BaseController {
 				,"cantPaca" => ($this->pacaProducto == '1' ? trim($postData->paca) : 1)
 				,"updated_at" => date("Y-m-d H:i:s")
 			);
+
+			$currentStock = null;
+			if ($postData->id > 0) {
+				$currentStock = $product->asObject()->find($postData->id)->stock;
+			} else {
+				$producto["stock"] = 0;
+			}
 	
 			//Validamos si eliminar la foto de perfil y buscamos el usuario
 			if($postData->editFoto != 0 && !empty($postData->id)) {
@@ -275,8 +284,17 @@ class cProductos extends BaseController {
 			//Validamos si el usuario que ingresaron ya existe
 			if ($product->save($producto)) {
 				//Traemos el id insertado
-				$product->id = empty($postData->id) ? $product->getInsertID() : $postData->id; 
-				$imgFoto = $this->request->getFile("imagen"); 
+				$product->id = empty($postData->id) ? $product->getInsertID() : $postData->id;
+
+				//Agregamos movimiento de inventario
+				$responseConfirm = $this->updateInventoryProduct($currentStock, $postData->stock, $product->id);
+				if (is_string($responseConfirm)) {
+					$resp["msj"] = $responseConfirm;
+					$this->db->transRollback();
+					return;
+				}
+				
+				$imgFoto = $this->request->getFile("imagen");
 				if (!empty($imgFoto->getBasename())) {
 					//Validamos la foto
 					$validated = $this->validate([
@@ -930,5 +948,35 @@ class cProductos extends BaseController {
 	public function totalInventario($sumaPedidos) {
 		$mProductos = new mProductos();
 		return $this->response->setJSON($mProductos->totalInventario($sumaPedidos));
+	}
+
+	private function updateInventoryProduct($currentStock, $newStock, $idProduct) {
+		$movimientoInventarioModel = new MovimientoInventarioModel();
+		$movimiento = new MovimientoInventarioEntity();
+		$response = true;
+
+		$movimiento->id_producto = $idProduct;
+		if (is_null($currentStock) || $newStock > $currentStock) {
+			// Ingreso
+			$movimiento->tipo = "I";
+			$movimiento->observacion = "Aumenta cantidad en módulo de producto";
+			if (is_null($currentStock)) {
+				$movimiento->cantidad = $newStock;
+			} else {
+				$movimiento->cantidad = (((int) $newStock) - ((int) $currentStock));
+			}
+		} elseif ($currentStock > $newStock) {
+			// Salida
+			$movimiento->tipo = "S";
+			$movimiento->cantidad = (((int) $currentStock) - ((int) $newStock));
+			$movimiento->observacion = "Disminuye cantidad en módulo de producto";
+		}
+		if(!$movimientoInventarioModel->save($movimiento)) {
+			return "Error al registrar el movimiento. " . listErrors($movimientoInventarioModel->errors());
+		}
+		if($movimientoInventarioModel->errorAfterInsert){
+			return $movimientoInventarioModel->errorAfterInsertMsg;
+		}
+		return $response;
 	}
 }

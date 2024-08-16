@@ -14,37 +14,50 @@ class cModificarReporte extends BaseController {
   public $reportes = [
     "Factura" => [
       "icono" => "fa-solid fa-store",
-      "color" => "primary",
+      "color" => "#007bff",
+      "color-text" => "#ffffff",
       "url" => ""
     ],
     "Pedido" => [
       "icono" => "fa-solid fa-boxes-stacked",
-      "color" => "secondary",
+      "color" => "#6c757d",
+      "color-text" => "#ffffff",
       "url" => ""
     ],
     "Rotulo" => [
       "icono" => "fa-solid fa-tags",
-      "color" => "info",
+      "color" => "#17a2b8",
+      "color-text" => "#ffffff",
       "url" => ""
     ],
     "Envio" => [
       "icono" => "fa-solid fa-paper-plane",
-      "color" => "success",
+      "color" => "#28a745",
+      "color-text" => "#ffffff",
       "url" => ""
     ],
     "Empaque" => [
       "icono" => "fa-solid fa-file-invoice",
-      "color" => "warning",
+      "color" => "#ffc107",
+      "color-text" => "#ffffff",
       "url" => ""
     ],
     "Compra" => [
       "icono" => "fa-solid fa-dollar",
-      "color" => "dark",
+      "color" => "#343a40",
+      "color-text" => "#ffffff",
       "url" => ""
     ],
     "Sticker" => [
       "icono" => "fa-solid fa-note-sticky",
-      "color" => "danger",
+      "color" => "#dc3545",
+      "color-text" => "#ffffff",
+      "url" => ""
+    ],
+    "Ing_Mercancia" => [
+      "icono" => "fa-solid fa-arrow-up-right-dots",
+      "color" => "#4ba7a7",
+      "color-text" => "#ffffff",
       "url" => ""
     ]
   ];

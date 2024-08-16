@@ -8,6 +8,7 @@ use App\Models\mPedidosCajasProductos;
 use App\Models\mPedidosProductos;
 use App\Models\mVentasProductos;
 use App\Models\mCompraProductos;
+use App\Models\mIngresoMercanciaProductos;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
 use setasign\Fpdi\TcpdfFpdi;
@@ -16,7 +17,7 @@ class cReportes extends BaseController {
 
 	private $mConfiguracion;
 
-	function __construct() {
+	public function __construct() {
 		$this->mConfiguracion = new mConfiguracion();
 	}
 
@@ -99,37 +100,9 @@ class cReportes extends BaseController {
 			}
 		}
 
-		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		$pdf->startPageGroup();
-		$pdf->AddPage();
+		$pdf = $this->initPdf();
 		$pdf->writeHTML($estrucPdf, false, false, false, false, '');
-
-		/* if (count($manifiestos) > 0) {
-			foreach ($manifiestos as $llave => $manif) {
-				$ext = explode('.', $manif['archivo'])[1];
-				$file = UPLOADS_MANIFEST_PATH . $manif['archivo'];
-				if ($ext == 'pdf') {
-
-					$paginas = $pdf->setSourceFile($file);
-					for($i=0; $i < $paginas; $i++) {
-						$pdf->AddPage();
-						$tplIdx = $pdf->importPage($i+1);
-						$pdf->useTemplate($tplIdx, 10, 10, 200);
-					}
-
-				} else if ($ext == 'png' || $ext == 'jpg' || $ext == 'jpeg') {
-					$pdf->AddPage();
-					$pdf->Image($file);
-				}
-			}
-		} */
-
-		if ($download == 1) {
-			$nit = $this->getValConfig("documentoEmpresa");
-			if ($nit != '') {
-				$pdf->SetProtection(array('print','copy'), $nit, null, 0);
-			}
-		}
+		$pdf = $this->downloadFile($download, $pdf);
 
 		$pdf->setTitle('Factura ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
 		$pdf->Output($dataVenta['codigo'] . ".pdf", ($download == "1" ? 'D' : 'I'));
@@ -167,17 +140,11 @@ class cReportes extends BaseController {
 		
 		$estrucPdf = $this->estructuraProductos($estrucPdf, $productosFactura, $fotoProd);
 
-		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		$pdf->startPageGroup();
-		$pdf->AddPage();
+		$pdf = $this->initPdf();
 		$pdf->writeHTML($estrucPdf, false, false, false, false, '');
 
-		if ($download == 1) {
-			$nit = $this->getValConfig("documentoEmpresa");
-			if ($nit != '') {
-				$pdf->SetProtection(array('print','copy'), $nit, null, 0);
-			}
-		}
+		$pdf = $this->downloadFile($download, $pdf);
+
 		$pdf->setTitle('Pedido ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
 		$pdf->Output($dataVenta['codigo'] . ".pdf", ($download == "1" ? 'D' : 'I'));
 		exit;
@@ -198,8 +165,7 @@ class cReportes extends BaseController {
 
 		$estrucPdf = $this->generarQR($id, $estrucPdf);
 
-		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		$pdf->startPageGroup();
+		$pdf = $this->initPdf(true, false);
 
 		for ($i=0; $i < $cantidad; $i++) { 
 			$pdf->AddPage();
@@ -240,19 +206,42 @@ class cReportes extends BaseController {
 
 		$estrucPdf = $this->estructuraProductos($estrucPdf, $productosFactura);
 
-		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		$pdf->startPageGroup();
-		$pdf->AddPage();
+		$pdf = $this->initPdf();
 		$pdf->writeHTML($estrucPdf, false, false, false, false, '');
 
-		if ($download == 1) {
-			$nit = $this->getValConfig("documentoEmpresa");
-			if ($nit != '') {
-				$pdf->SetProtection(array('print','copy'), $nit, null, 0);
-			}
-		}
+		$pdf = $this->downloadFile($download, $pdf);
 
 		$pdf->setTitle('Compra ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
+		$pdf->Output($dataVenta['codigo'] . ".pdf", ($download == "1" ? 'D' : 'I'));
+		exit;
+	}
+
+	public function ingresoMercancia($id, $download = 0) {
+		
+		$estrucPdf = $this->estructuraReporte("Ing_Mercancia");
+
+		$estrucPdf = $this->setValuesCompany($estrucPdf);
+
+		$dataVenta = $this->cargarDataVenta($estrucPdf, $id, "ingresomercancia");
+		$estrucPdf = $dataVenta['pdf'];
+
+		$mIngresoMercanciaProductos = new mIngresoMercanciaProductos();
+
+		$productosFactura = $mIngresoMercanciaProductos->select("
+				P.item AS itemProductoDP,
+				UPPER(P.referencia) AS referenciaProductoDP,
+				P.descripcion AS descripcionProductoDP,
+				ingresomercanciaproductos.cantidad AS cantidadProductoDP
+			")->join("productos AS P", "ingresomercanciaproductos.id_producto = P.id", "left")
+			->where("id_ingresomercancia", $id)
+			->findAll();
+
+		$estrucPdf = $this->estructuraProductos($estrucPdf, $productosFactura);
+
+		$pdf = $this->initPdf();
+		$pdf->writeHTML($estrucPdf, false, false, false, false, '');
+		$pdf = $this->downloadFile($download, $pdf);
+		$pdf->setTitle('Ingreso Mercancia ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
 		$pdf->Output($dataVenta['codigo'] . ".pdf", ($download == "1" ? 'D' : 'I'));
 		exit;
 	}
@@ -261,14 +250,9 @@ class cReportes extends BaseController {
 		
 		$estrucPdf = $this->estructuraReporte("Sticker");
 
-		// $estrucPdf = $this->setValuesCompany($estrucPdf);
-
 		$dataVenta = $this->cargarDataVenta($estrucPdf, $id, "compras");
- 		// $estrucPdf = $dataVenta['pdf'];/
 
-		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		$pdf->startPageGroup();
-		$pdf->AddPage();
+		$pdf = $this->initPdf();
 
 		$mCompraProductos = new mCompraProductos();
 
@@ -282,13 +266,7 @@ class cReportes extends BaseController {
 			->findAll();
 
 		$pdf = $this->estructuraProductosSticker($estrucPdf, $productosCompra, $pdf);
-
-		if ($download == 1) {
-			$nit = $this->getValConfig("documentoEmpresa");
-			if ($nit != '') {
-				$pdf->SetProtection(array('print','copy'), $nit, null, 0);
-			}
-		}
+		$pdf = $this->downloadFile($download, $pdf);
 
 		$pdf->setTitle('Sticker Compra ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
 		$pdf->Output($dataVenta['codigo'] . ".pdf", ($download == "1" ? 'D' : 'I'));
@@ -342,66 +320,84 @@ class cReportes extends BaseController {
 
 	private function cargarDataVenta($pdf, $id, $tabla) {
 		$venta = null;
-		if ($tabla == 'compras') {
-
-			$venta = $this->db->table("{$tabla} AS C")
-				->select("
-					C.codigo AS numeracion,
-					U.nombre AS nombreVendedor,
-					C.total AS totalGeneral,
-					DATE_FORMAT(C.created_at, '%d-%m-%Y') AS fechaCreacion,
-					DATE_FORMAT(C.created_at, '%H:%i:%s') AS horaCreacion,
-					C.observacion,
-					CASE
-						WHEN C.estado = 'AN'
-							THEN 'Anulado'
-						WHEN C.estado = 'CO'
-							THEN 'Confirmado'
-						ELSE 'Pendiente'
-					END AS estadoRegistro,
-					P.nombre AS proveedor
-				")->join("usuarios AS U", "C.id_usuario = U.id", "left")
-				->join("proveedores AS P", "C.id_proveedor = P.id", "left")
-				->where("C.id", $id);
-
-		} else {
-
+		switch ($tabla) {
+			case 'ingresomercancia':
+				$venta = $this->db->table("{$tabla} AS IM")
+					->select("
+						IM.codigo AS numeracion,
+						U.nombre AS nombreVendedor,
+						DATE_FORMAT(IM.created_at, '%d-%m-%Y') AS fechaCreacion,
+						DATE_FORMAT(IM.created_at, '%H:%i:%s') AS horaCreacion,
+						IM.observacion,
+						CASE
+							WHEN IM.estado = 'AN'
+								THEN 'Anulado'
+							WHEN IM.estado = 'CO'
+								THEN 'Confirmado'
+							ELSE 'Pendiente'
+						END AS estadoRegistro
+					")->join("usuarios AS U", "IM.id_usuario = U.id", "left")
+					->where("IM.id", $id);
+				break;
+			case 'compras':
+				$venta = $this->db->table("{$tabla} AS C")
+					->select("
+						C.codigo AS numeracion,
+						U.nombre AS nombreVendedor,
+						C.total AS totalGeneral,
+						DATE_FORMAT(C.created_at, '%d-%m-%Y') AS fechaCreacion,
+						DATE_FORMAT(C.created_at, '%H:%i:%s') AS horaCreacion,
+						C.observacion,
+						CASE
+							WHEN C.estado = 'AN'
+								THEN 'Anulado'
+							WHEN C.estado = 'CO'
+								THEN 'Confirmado'
+							ELSE 'Pendiente'
+						END AS estadoRegistro,
+						P.nombre AS proveedor
+					")->join("usuarios AS U", "C.id_usuario = U.id", "left")
+					->join("proveedores AS P", "C.id_proveedor = P.id", "left")
+					->where("C.id", $id);
+				break;
+			default:
 			$venta = $this->db->table("{$tabla} AS V")
-				->select("
-					V." . ($tabla == 'pedidos' ? 'pedido' : 'codigo') . " AS numeracion,
-					C.nombre AS nombreCliente,
-					U.nombre AS nombreVendedor,
-					V.total AS totalGeneral,
-					DATE_FORMAT(V.created_at, '%d-%m-%Y') AS fechaCreacion,
-					DATE_FORMAT(V.created_at, '%H:%i:%s') AS horaCreacion,
-					S.direccion AS direccionSucursal,
-					S.nombre AS nombreSucursal,
-					S.telefono AS telefonoSucursal,
-					S.barrio AS barrioSucursal,
-					S.administrador AS adminSucursal,
-					S.cartera AS carteraSucursal,
-					S.telefonoCart AS telCartSucursal,
-					CI.nombre AS ciudadSucursal,
-					DEP.nombre AS deptoSucursal,
-					V.observacion
-				")->join("clientes AS C", "V.id_cliente = C.id", "left")
-				->join("usuarios AS U", "V.id_vendedor = U.id", "left")
-				->join("sucursales AS S", "V.id_sucursal = S.id", "left")
-				->join("ciudades AS CI", "S.id_ciudad = CI.id", "left")
-				->join("departamentos AS DEP", "CI.id_depto = DEP.codigo", "left")
-				->where("V.id", $id);
-			
-			if ($tabla == 'ventas') {
-				$venta = $venta->select("id_pedido");
-			} else {
-				$venta = $venta->select("
-					DATE_FORMAT(V.inicio_empaque, '%d-%m-%Y') AS fechaIniEmpa,
-					DATE_FORMAT(V.inicio_empaque, '%h:%i:%s %p') AS horaIniEmpa,
-					DATE_FORMAT(V.fin_empaque, '%d-%m-%Y') AS fechaFinEmpa,
-					DATE_FORMAT(V.fin_empaque, '%h:%i:%s %p') AS horaFinEmpa,
-					TIMEDIFF(V.fin_empaque, V.inicio_empaque) AS tiempoEmpa
-				");
-			}
+					->select("
+						V." . ($tabla == 'pedidos' ? 'pedido' : 'codigo') . " AS numeracion,
+						C.nombre AS nombreCliente,
+						U.nombre AS nombreVendedor,
+						V.total AS totalGeneral,
+						DATE_FORMAT(V.created_at, '%d-%m-%Y') AS fechaCreacion,
+						DATE_FORMAT(V.created_at, '%H:%i:%s') AS horaCreacion,
+						S.direccion AS direccionSucursal,
+						S.nombre AS nombreSucursal,
+						S.telefono AS telefonoSucursal,
+						S.barrio AS barrioSucursal,
+						S.administrador AS adminSucursal,
+						S.cartera AS carteraSucursal,
+						S.telefonoCart AS telCartSucursal,
+						CI.nombre AS ciudadSucursal,
+						DEP.nombre AS deptoSucursal,
+						V.observacion
+					")->join("clientes AS C", "V.id_cliente = C.id", "left")
+					->join("usuarios AS U", "V.id_vendedor = U.id", "left")
+					->join("sucursales AS S", "V.id_sucursal = S.id", "left")
+					->join("ciudades AS CI", "S.id_ciudad = CI.id", "left")
+					->join("departamentos AS DEP", "CI.id_depto = DEP.codigo", "left")
+					->where("V.id", $id);
+				
+				if ($tabla == 'ventas') {
+					$venta = $venta->select("id_pedido");
+				} else {
+					$venta = $venta->select("
+						DATE_FORMAT(V.inicio_empaque, '%d-%m-%Y') AS fechaIniEmpa,
+						DATE_FORMAT(V.inicio_empaque, '%h:%i:%s %p') AS horaIniEmpa,
+						DATE_FORMAT(V.fin_empaque, '%d-%m-%Y') AS fechaFinEmpa,
+						DATE_FORMAT(V.fin_empaque, '%h:%i:%s %p') AS horaFinEmpa,
+						TIMEDIFF(V.fin_empaque, V.inicio_empaque) AS tiempoEmpa
+					");
+				}
+				break;
 		}
 
 		$venta = $venta->get()->getResultObject()[0];
@@ -504,7 +500,7 @@ class cReportes extends BaseController {
 	public function manifiestos($boxesManifest) {
 
 		$boxes = explode("*", $boxesManifest);
-		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$pdf = $this->initPdf(false, false);
 
 		if (count($boxes) > 0) {
 
@@ -547,13 +543,7 @@ class cReportes extends BaseController {
 		$estrucPdf = str_replace("{totalCajas}", $totCajas, $estrucPdf);
 		$estrucPdf = str_replace("{costoEnvio}", '$ ' . number_format($valor, 0, ',', '.'), $estrucPdf);
 
-		// $pageLayout = array(150, 150); // PDF_PAGE_FORMAT
-
-		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-
-		// $pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, $pageLayout, true, 'UTF-8', false);
-		$pdf->startPageGroup();
-		$pdf->AddPage();
+		$pdf = $this->initPdf();
 		$pdf->writeHTML($estrucPdf, false, false, false, false, '');
 		$pdf->setTitle('Envio Pedido ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
 		$pdf->Output($dataVenta['codigo'] . ".pdf", 'I');
@@ -619,17 +609,9 @@ class cReportes extends BaseController {
 		$totCajas = $mPedidosCajas->where("id_pedido", $id)->countAllResults();
 		$estrucPdf = str_replace("{totalCajas}", $totCajas, $estrucPdf);
 
-		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		$pdf->startPageGroup();
-		$pdf->AddPage();
+		$pdf = $this->initPdf();
 		$pdf->writeHTML($estrucPdf, false, false, false, false, '');
-
-		if ($download == 1) {
-			$nit = $this->getValConfig("documentoEmpresa");
-			if ($nit != '') {
-				$pdf->SetProtection(array('print','copy'), $nit, null, 0);
-			}
-		}
+		$pdf = $this->downloadFile($download, $pdf);
 		$pdf->setTitle('Pedido ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
 		$pdf->Output($dataVenta['codigo'] . ".pdf", ($download == "1" ? 'D' : 'I'));
 		exit;
@@ -726,8 +708,7 @@ class cReportes extends BaseController {
 			->orderBy("PCP.id", "DESC")
 			->findAll();
 
-		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		$pdf->startPageGroup();
+		$pdf = $this->initPdf(true, false);
 
 		if (count($manifiestosCajas) > 0) {
 			$this->validarArchivoManifiesto($pdf, $manifiestosCajas, null);
@@ -761,6 +742,27 @@ class cReportes extends BaseController {
 				$pdf->Image($file, 10, ($numberBox ? 20 : 10), 190);
 			}
 		}
+	}
+
+	private function initPdf($setStartPage = true, $setAddPage = true) {
+		$pdf = new TcpdfFpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		if ($setStartPage) {
+			$pdf->startPageGroup();
+		}
+		if ($setAddPage) {
+			$pdf->AddPage();
+		}
+		return $pdf;
+	}
+
+	private function downloadFile($download, $pdf) {
+		if ($download == 1) {
+			$nit = $this->getValConfig("documentoEmpresa");
+			if ($nit != '') {
+				$pdf->SetProtection(array('print','copy'), $nit, null, 0);
+			}
+		}
+		return $pdf;
 	}
 
 }

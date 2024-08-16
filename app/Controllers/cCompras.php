@@ -2,13 +2,15 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
 use \Hermawan\DataTables\DataTable;
+use App\Controllers\BaseController;
+use App\Entities\MovimientoInventarioEntity;
 use App\Models\mCategorias;
 use App\Models\mCompraProductos;
 use App\Models\mCompras;
 use App\Models\mConfiguracion;
 use App\Models\mManifiesto;
+use App\Models\MovimientoInventarioModel;
 use App\Models\mPedidosProductos;
 use App\Models\mProductos;
 use App\Models\mVentasProductos;
@@ -473,7 +475,7 @@ class cCompras extends BaseController {
 	}
 
 	public function anular(){
-		$resp["success"] = false;
+		$resp["success"] = true;
 		//Traemos los datos del post
 		$data = (object) $this->request->getPost();
 
@@ -483,12 +485,34 @@ class cCompras extends BaseController {
 			"id" => $data->idCompra,
 			"estado" => "AN"
 		);
+		$this->db->transBegin();
 
 		if($mCompras->save($dataBuy)) {
-			$resp["success"] = true;
+			$movimientoInventarioModel = new MovimientoInventarioModel();
+			$movimiento = new MovimientoInventarioEntity();
+			$mCompraProductos = new mCompraProductos();
+
+			$dataProdsBuy = $mCompraProductos->asObject()->where('id_compra', $data->idCompra)->findAll();
+			$codigoCompra = $mCompras->asObject()->find($data->idCompra)->codigo;
+
+			foreach ($dataProdsBuy as $product) {
+				$responseConfirm = $this->updateInventoryProduct($movimientoInventarioModel, $movimiento, $product->cantidad, $product->id_producto, $codigoCompra, "S");
+				if (is_string($responseConfirm)) {
+					$resp['msj'] = $responseConfirm;
+					$resp["success"] = false;
+					break;
+				}
+			}
+		} else {
+			$resp["success"] = false;
+			$resp['msj'] = "Error al anular la compra";
+		}
+
+		if ($resp["success"]) {
+			$this->db->transCommit();
 			$resp['msj'] = "Compra anulada correctamente";
 		} else {
-			$resp['msj'] = "Error al anular la compra";
+			$this->db->transRollback();
 		}
 
 		return $this->response->setJSON($resp);
@@ -496,10 +520,13 @@ class cCompras extends BaseController {
 
 	private function confirmBuy($idBuy) {
 		$mCompraProductos = new mCompraProductos();
+		$movimientoInventarioModel = new MovimientoInventarioModel();
+		$movimiento = new MovimientoInventarioEntity();
+		$mCompras = new mCompras();
+		$mProductos = new mProductos();
 
 		$dataProdsBuy = $mCompraProductos->asObject()->where('id_compra', $idBuy)->findAll();
-        
-		$mProductos = new mProductos();
+        $codigoCompra = $mCompras->asObject()->find($idBuy)->codigo;
 
 		$response = true;
 		$dataConf = $this->getParamsConfig();
@@ -516,7 +543,7 @@ class cCompras extends BaseController {
 
 			$currentStock = $productSaved["stock"];
 			
-			$productSaved["stock"] = $productSaved["stock"] + $product->cantidad;
+			// $productSaved["stock"] = $productSaved["stock"] + $product->cantidad;
 			$productSaved["precio_venta"] = $product->valor;
 			$productSaved["costo"] = ($dataConf["canPacaProd"] ? $product->costo : '0');
 			$productSaved["cantPaca"] = ($dataConf["canPacaProd"] ? $product->cantPaca : 1);
@@ -544,8 +571,28 @@ class cCompras extends BaseController {
 				$response = "Error al inventario del producto. " . listErrors($mProductos->errors());
 				break;
 			}
-		}
 
+			$responseConfirm = $this->updateInventoryProduct($movimientoInventarioModel, $movimiento, $product->cantidad, $product->id_producto, $codigoCompra);
+			if (is_string($responseConfirm)) {
+				$response = $responseConfirm;
+				break;
+			}
+		}
+		return $response;
+	}
+
+	private function updateInventoryProduct($movimientoInventarioModel, $movimiento, $newStock, $idProduct, $codigo, $tipo = "I") {
+		$response = true;
+		$movimiento->id_producto = $idProduct;
+		$movimiento->tipo = $tipo;
+		$movimiento->cantidad = $newStock;
+		$movimiento->observacion = ($tipo === "I" ? "Confirma" : "Anula") . " compra con código " . $codigo;
+		if(!$movimientoInventarioModel->save($movimiento)) {
+			return "Error al registrar el movimiento. " . listErrors($movimientoInventarioModel->errors());
+		}
+		if($movimientoInventarioModel->errorAfterInsert){
+			return $movimientoInventarioModel->errorAfterInsertMsg;
+		}
 		return $response;
 	}
 

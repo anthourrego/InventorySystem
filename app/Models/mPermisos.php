@@ -528,7 +528,36 @@ class mPermisos extends Model {
 						"text" => "Editar"
 					]
 				]
-			] */
+			] */,
+			[
+				"id" => 80,
+				"text" => "Ingreso Mercancía",
+				"uri" => "IngresoMercancia",
+				"icon" => "fa-solid fa-arrow-up-right-dots",
+				"color" => "bg-dark",
+				"children" => [
+					[
+						"id" => 801,
+						"text" => "Crear"
+					],
+					[
+						"id" => 802,
+						"text" => "Editar"
+					],
+					[
+						"id" => 803,
+						"text" => "Confirmar compra"
+					],
+					[
+						"id" => 804,
+						"text" => "Anular compra"
+					],
+					[
+						"id" => 805,
+						"text" => "Imprimir compra"
+					]
+				]
+			],
 		];
 
 		if (!session()->has("manejaEmpaque") || session()->get("manejaEmpaque") == "1") {
@@ -539,7 +568,7 @@ class mPermisos extends Model {
 					"text" => "Empaque",
 					"uri" => "Empaque",
 					"icon" => "fa-solid fa-box-open",
-					"color" => "bg-dark",
+					"color" => "bg-primary",
 					"children" => [
 						[
 							"id" => 301,
