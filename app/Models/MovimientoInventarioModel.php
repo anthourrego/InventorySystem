@@ -69,9 +69,10 @@ class MovimientoInventarioModel extends Model
 	protected $beforeDelete   = [];
 	protected $afterDelete    = [];
 
-	protected	function setUpdateInventory(){
+	protected	function setUpdateInventory(array $data){
 		$this->errorAfterInsert = false;
 		$this->errorAfterInsertMsg = "";
+		return $data;
 	}
 
 	protected	function updateInventory(array $data){
