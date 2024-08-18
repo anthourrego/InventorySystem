@@ -23,7 +23,7 @@ let DTProductos = {
       visible: $IMAGENPROD,
       defaultContent: '',
       className: "text-center imgProdTb",
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         let extension = data.imagen == null ? null : "01-small." + data.imagen.split(".").pop();
         return $IMAGENPROD ? `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
           <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${extension}" alt="" />
@@ -33,12 +33,12 @@ let DTProductos = {
     { data: 'referencia' },
     {
       data: 'item',
-      visible: ($CAMPOSPRODUCTO.item == '1' ? true : false)
+      visible: ($CAMPOSPRODUCTO.item == '1')
     },
     {
       data: 'descripcion',
       width: "30%",
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
       }
     },
@@ -48,7 +48,7 @@ let DTProductos = {
     {
       data: 'stock',
       className: 'text-center align-middle',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return `<button class="btn btn-${data.ColorStock}">${data.stock}</button>`;
       }
     },
@@ -57,7 +57,7 @@ let DTProductos = {
       searchable: false,
       defaultContent: '',
       className: 'text-center align-middle noExport',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         let btn = true;
         let resultado = productosPedido.find((it) => it.id == data.id);
 
@@ -112,7 +112,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       defaultContent: '',
       visible: ($DATOSPEDIDO != '' && $DATOSPEDIDO.estado == 'FA' ? false : true),
       className: 'text-center noExport',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "PE";
         return `
           ${(estadoPedido != 'PE' ? '<button type="button" class="btn btn-secondary btn-sm btnEditar" title="Editar Producto"><i class="fa-solid fa-pen-to-square"></i></button>' : '')}
@@ -126,14 +126,14 @@ let DTProductosPedido = $("#tblProductos").DataTable({
     {
       data: 'referencia',
       width: "25%",
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return `<span title="${data.referencia}" class="text-descripcion">${data.referencia}</span>`;
       }
     },
     {
       data: 'descripcion',
       width: "30%",
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
       }
     },
@@ -141,7 +141,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       orderable: false,
       searchable: false,
       data: 'cantidad',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "PE";
         return `<input type="number" ${(estadoPedido != 'PE' || $EDITARPEDIDO == 'N' ? 'disabled' : '')} class="form-control form-control-sm cantidadProduct inputFocusSelect soloNumeros" min="1" value="${data.cantidad}">`;
       }
@@ -150,7 +150,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       orderable: false,
       searchable: false,
       data: 'valorUnitario',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "PE";
         return `<input type="tel" ${(estadoPedido != "PE" || $EDITARPEDIDO == 'N' ? 'disabled' : '')} class="form-control form-control-sm inputPesos text-right inputFocusSelect soloNumeros valorUnitario" min="0" value="${data.valorUnitario}">`;
       }
@@ -160,23 +160,23 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       searchable: false,
       data: 'valorTotal',
       className: 'text-right valorTotal',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return formatoPesos.format(data.valorTotal);
       }
     },
   ],
   buttons: [
-		{ 
-			className: 'btn-uploadExcel btn-success', 
-			text: '<i class="fa-solid fa-upload"></i>', 
-			attr: { 
-				title: "Cargar excel", "data-toggle":"tooltip" 
-			},
-			exportOptions: {
-				columns: ':visible:not(.noExport)'
-			},
-		}
-	],
+    {
+      className: 'btn-uploadExcel btn-success',
+      text: '<i class="fa-solid fa-upload"></i>',
+      attr: {
+        title: "Cargar excel", "data-toggle": "tooltip"
+      },
+      exportOptions: {
+        columns: ':visible:not(.noExport)'
+      },
+    }
+  ],
   createdRow: function (row, data, dataIndex) {
     $(row).find(".cantidadProduct, .valorUnitario").on("change", function () {
       let cant = Number($(row).find(".cantidadProduct").val().trim());
@@ -226,8 +226,18 @@ let DTProductosPedido = $("#tblProductos").DataTable({
 
     $(row).find(".btnBorrar").click(function (e) {
       e.preventDefault();
+
+      let itemProducto = (data.item ? data.item + ' - ' : '');
+
+      if (data.cantidadEnCaja > 0 && data.productoEnCajas) {
+        let descriptionMain = `El producto <b>${itemProducto}${data.descripcion}</b> se encuentra empacado en las caja(s) <b>${data.productoEnCajas}</b> distribuidos en ${data.cantidadEnCaja} unidades.`;
+        let description = `<b>Nota:</b> si desea eliminar el producto del pedido, edite la cantidad del producto y asi el pedido volverá a empaque donde podrá eliminar los productos de las cajas mencionadas.`;
+        alertify.alert('¡Advertencia!', `${descriptionMain}</br></br>${description}`);
+        return;
+      }
+
       if ($DATOSPEDIDO.estado == "EP") {
-        let mensaje = `<li> ¿Por que esta eliminando el producto (${data.item} - ${data.descripcion})?</li>`;
+        let mensaje = `<li> ¿Por que esta eliminando el producto (${itemProducto}${data.descripcion})?</li>`;
 
         $(row).find('input').attr('disabled', true);
         $(row).find('.btnAceptarEdicion, .btnBorrar').addClass("d-none");
@@ -533,7 +543,7 @@ $(function () {
     });
   }
 
-  $(document).on("click", ".btn-uploadExcel", function() {
+  $(document).on("click", ".btn-uploadExcel", function () {
     $("#excelFile").click();
   });
 

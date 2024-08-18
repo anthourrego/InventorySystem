@@ -122,8 +122,20 @@ class cPedidos extends BaseController {
 				pedidosproductos.valor AS valorUnitarioOriginal,
 				pedidosproductos.valor_original,
 				p.precio_venta,
-				(pedidosproductos.valor * pedidosproductos.cantidad) AS valorTotal
+				(pedidosproductos.valor * pedidosproductos.cantidad) AS valorTotal,
+				SUB_PC.cantidadEnCaja,
+				SUB_PC.productoEnCajas
 			")->join("productos AS p", "pedidosproductos.id_producto = p.id")
+			->join("(
+				SELECT
+					PCP.id_producto,
+					SUM(PCP.cantidad) AS cantidadEnCaja,
+					GROUP_CONCAT(DISTINCT(PC.numero_caja) ORDER BY PC.numero_caja ASC SEPARATOR ', ') AS productoEnCajas
+				FROM pedidoscajas PC
+					LEFT JOIN pedidoscajasproductos PCP ON PC.ID = PCP.id_caja
+				WHERE PC.id_pedido = {$pedido->id}
+				GROUP BY PCP.id_producto
+			) AS SUB_PC", "pedidosproductos.id_producto = SUB_PC.id_producto", "LEFT")
 			->where("pedidosproductos.id_pedido", $pedido->id)
 			->where("pedidosproductos.cantidad > 0")
 			->findAll();
@@ -562,17 +574,6 @@ class cPedidos extends BaseController {
 							if(!$mObservacionProductos->save($dataObserSave)){
 								$resp["msj"] = "Error al guardar la observación del producto. " . listErrors($mObservacionProductos->errors());
 								break;
-							}
-
-							if ($it->motivoDiferencia == "2") {
-								$cantidadNueva = $productoActuales[$productoAct]["cantidad"] - $it->cantidad;
-								$product = $mProductos->find($it->id);
-								$product["stock"] = $product["stock"] + $cantidadNueva;
-
-								if(!$mProductos->save($product)){
-									$resp["msj"] = "Error al guardar el producto. " . listErrors($mProductos->errors());
-									break;
-								}
 							}
 						}
 
