@@ -69,14 +69,9 @@ class cEmpaque extends BaseController {
 		//Traemos los datos del post
 		$data = (object) $this->request->getPost();
 
-		$pedidoModel = new mPedidos();
-		$pedido = $pedidoModel->cargarPedido($data->idPedido);
-
-		if (!isset($pedido[0])) {
-			$res['success'] = false;
-			$res['msj'] = "El Pedido fue eliminado";
-			$res['recargar'] = true;
-			return $this->response->setJSON($res);
+		$responseDelete = $this->isDeleteOrder($data->idPedido);
+		if (isset($responseDelete['recargar'])) {
+			return $this->response->setJSON($responseDelete);
 		}
         
 		$pedidoActual = $this->db->table('pedidos')
@@ -155,7 +150,7 @@ class cEmpaque extends BaseController {
 		$mPedidosProductos = new mPedidosProductos();
 		return $mPedidosProductos->select("
 				p.id,
-				p.referencia, 
+				p.referencia,
 				p.item,
 				p.descripcion,
 				p.imagen,
@@ -166,10 +161,10 @@ class cEmpaque extends BaseController {
 				prodCaja.CantTotalCajas,
 				pedidosproductos.id AS idPedidoProducto,
 				p.ubicacion AS ubicacionProd,
-				CASE 
-					WHEN p.imagen IS NULL THEN '' 
-					ELSE CONCAT('" . base_url() . "/fotoProductosAPP/', p.id, '/', SUBSTRING(p.imagen,1,LOCATE('.', p.imagen)+-1), '-small', SUBSTRING(p.imagen,LOCATE('.', p.imagen),LENGTH(p.imagen)-LOCATE('.', p.imagen)+1)) 
-				END As FotoURLSmall		
+				CASE
+					WHEN p.imagen IS NULL THEN ''
+					ELSE CONCAT('" . base_url() . "/fotoProductosAPP/', p.id, '/', SUBSTRING(p.imagen,1,LOCATE('.', p.imagen)+-1), '-small', SUBSTRING(p.imagen,LOCATE('.', p.imagen),LENGTH(p.imagen)-LOCATE('.', p.imagen)+1))
+				END As FotoURLSmall
 			")->join("productos AS p", "pedidosproductos.id_producto = p.id")
 			->join("(
 				SELECT
@@ -218,16 +213,11 @@ class cEmpaque extends BaseController {
 		$res['success'] = true;
 		$res['msj'] = 'Caja creada correctamente';
 		$mPedidosCajas = new mPedidosCajas();
-		$pedidoModel = new mPedidos();
 		$data = (object) $this->request->getPost();
 
-		$pedido = $pedidoModel->cargarPedido($data->idPedido);
-
-		if (!isset($pedido[0])) {
-			$res['success'] = false;
-			$res['msj'] = "El Pedido fue eliminado";
-			$res['recargar'] = true;
-			return $this->response->setJSON($res);
+		$responseDelete = $this->isDeleteOrder($data->idPedido);
+		if (isset($responseDelete['recargar'])) {
+			return $this->response->setJSON($responseDelete);
 		}
 
 		$dataCaja = array(
@@ -240,7 +230,7 @@ class cEmpaque extends BaseController {
 		$ultimaCaja = $mPedidosCajas->selectMax('numero_caja')->where('id_pedido', $data->idPedido)->get()->getResultObject()[0];
 
 		if (is_null($ultimaCaja->numero_caja)) {
-			$dataCaja['numero_caja'] = 1;	
+			$dataCaja['numero_caja'] = 1;
 		} else {
 			$dataCaja['numero_caja'] = ($ultimaCaja->numero_caja + 1);
 		}
@@ -263,16 +253,11 @@ class cEmpaque extends BaseController {
 		$res['msj'] = 'Caja eliminada correctamente';
 		$mPedidosCajas = new mPedidosCajas();
 		$mPedidosCajasProductos = new mPedidosCajasProductos();
-		$pedidoModel = new mPedidos();
 		$data = (object) $this->request->getPost();
 
-		$pedido = $pedidoModel->cargarPedido($data->idPedido);
-
-		if (!isset($pedido[0])) {
-			$res['success'] = false;
-			$res['msj'] = "El Pedido fue eliminado";
-			$res['recargar'] = true;
-			return $this->response->setJSON($res);
+		$responseDelete = $this->isDeleteOrder($data->idPedido);
+		if (isset($responseDelete['recargar'])) {
+			return $this->response->setJSON($responseDelete);
 		}
 
 		$caja = $mPedidosCajas->where('id', $data->idCaja)->first();
@@ -295,9 +280,9 @@ class cEmpaque extends BaseController {
 
 			$builder = $this->db->table('pedidoscajasproductos')->where('id_caja', $data->idCaja);
 
-			if ($builder->delete()) { 
+			if ($builder->delete()) {
 				
-				if ($mPedidosCajas->delete($data->idCaja)) { 
+				if ($mPedidosCajas->delete($data->idCaja)) {
 					
 					$builder = $this->db->table('pedidoscajas')
 						->set("numero_caja", "(numero_caja - 1)", FALSE)
@@ -331,15 +316,11 @@ class cEmpaque extends BaseController {
 		$res['success'] = false;
 		$res['msj'] = 'Producto agregado correctamente';
 		$mPedidos = new mPedidos();
-		$pedidoModel = new mPedidos();
 		$data = (object) $this->request->getPost();
 
-		$pedido = $pedidoModel->cargarPedido($data->idPedido);
-
-		if (!isset($pedido[0])) {
-			$res['msj'] = "El Pedido fue eliminado";
-			$res['recargar'] = true;
-			return $this->response->setJSON($res);
+		$responseDelete = $this->isDeleteOrder($data->idPedido);
+		if (isset($responseDelete['recargar'])) {
+			return $this->response->setJSON($responseDelete);
 		}
 
 		$this->db->transBegin();
@@ -407,14 +388,10 @@ class cEmpaque extends BaseController {
 		$resp["success"] = false;
 		// Traemos los datos del post
 		$data = (object) $this->request->getPost();
-		$pedidoModel = new mPedidos();
-		$pedido = $pedidoModel->cargarPedido($data->idPedido);
 
-		if (!isset($pedido[0])) {
-			$res['success'] = false;
-			$res['msj'] = "El Pedido fue eliminado";
-			$res['recargar'] = true;
-			return $this->response->setJSON($res);
+		$responseDelete = $this->isDeleteOrder($data->idPedido);
+		if (isset($responseDelete['recargar'])) {
+			return $this->response->setJSON($responseDelete);
 		}
 
 		$this->db->transBegin();
@@ -521,14 +498,9 @@ class cEmpaque extends BaseController {
 
 		if (session()->has("id_user")) {
 
-			$pedidoModel = new mPedidos();
-			$pedido = $pedidoModel->cargarPedido($data->idPedido);
-
-			if (!isset($pedido[0])) {
-				$res['success'] = false;
-				$res['msj'] = "El Pedido fue eliminado";
-				$res['recargar'] = true;
-				return $this->response->setJSON($res);
+			$responseDelete = $this->isDeleteOrder($data->idPedido);
+			if (isset($responseDelete['recargar'])) {
+				return $this->response->setJSON($responseDelete);
 			}
 
 			$mPedidosCajas = new mPedidosCajas();
@@ -571,19 +543,12 @@ class cEmpaque extends BaseController {
 		// Traemos los datos del post
 		$data = (object) $this->request->getPost();
 
-		$pedidoModel = new mPedidos();
-		$pedido = $pedidoModel->cargarPedido($data->idPedido);
-
-		if (!isset($pedido[0])) {
-			$res['success'] = false;
-			$res['msj'] = "El Pedido fue eliminado";
-			$res['recargar'] = true;
-			return $this->response->setJSON($res);
+		$responseDelete = $this->isDeleteOrder($data->idPedido);
+		if (isset($responseDelete['recargar'])) {
+			return $this->response->setJSON($responseDelete);
 		}
 
 		$this->db->transBegin();
-
-		$mPedidos = new mPedidos();
 
 		$builder = $this->db->table('pedidos')->set("fin_empaque", NULL)->where('id', $data->idPedido);
 
@@ -603,15 +568,11 @@ class cEmpaque extends BaseController {
 		// Traemos los datos del post
 		$data = (object) $this->request->getPost();
 		$mObservacionProductos = new mObservacionProductos();
-		$pedidoModel = new mPedidos();
 		$mPedidosProductos = new mPedidosProductos();
 
-		$pedido = $pedidoModel->cargarPedido($data->idPedido);
-		if (!isset($pedido[0])) {
-			$res['success'] = false;
-			$res['msj'] = "El Pedido fue eliminado";
-			$res['recargar'] = true;
-			return $this->response->setJSON($res);
+		$responseDelete = $this->isDeleteOrder($data->idPedido);
+		if (isset($responseDelete['recargar'])) {
+			return $this->response->setJSON($responseDelete);
 		}
 
 		$productos = $this->pedidosPendientes($data->idPedido);
@@ -697,5 +658,51 @@ class cEmpaque extends BaseController {
 			$this->db->transRollback();
 		}
 		return $this->response->setJSON($resp);
+	}
+
+	public function reordenarCajas() {
+		$res['success'] = true;
+		$res['msj'] = 'Cajas reordenadas correctamente';
+		$mPedidosCajas = new mPedidosCajas();
+		$data = (object) $this->request->getPost();
+
+		$responseDelete = $this->isDeleteOrder($data->idPedido);
+		if (isset($responseDelete['recargar'])) {
+			return $this->response->setJSON($responseDelete);
+		}
+
+		$this->db->transBegin();
+		$orderBoxes = $mPedidosCajas->where('id_pedido', $data->idPedido)->orderBy('id', 'ASC')->get()->getResultObject();
+
+		$numberBox = 1;
+		foreach ($orderBoxes as $value) {
+			$dataCaja = [
+				'id' => $value->id,
+				'numero_caja' => $numberBox
+			];
+			if (!$mPedidosCajas->save($dataCaja)) {
+				$res['success'] = false;
+				$res['msj'] = 'No fue posible reordenar las cajas';
+			}
+			$numberBox++;
+		}
+		if ($res['success']) {
+			$this->db->transCommit();
+			$res['pedido'] = $this->obtenerProductosPedido($data->idPedido, false);
+		} else {
+			$this->db->transRollback();
+		}
+		return $this->response->setJSON($res);
+	}
+
+	private function isDeleteOrder($idPedido) {
+		$pedido = (new mPedidos())->cargarPedido($idPedido);
+		$res['success'] = true;
+		if (!isset($pedido[0])) {
+			$res['success'] = false;
+			$res['msj'] = "El Pedido fue eliminado";
+			$res['recargar'] = true;
+		}
+		return $res;
 	}
 }

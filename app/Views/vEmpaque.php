@@ -96,17 +96,23 @@
 
           </div>
         </div>
-
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">
-          <i class="fas fa-times"></i> Cancelar
-        </button>
-        <?php if (validPermissions([301], true)) { ?>
-          <button type="button" class="btn btn-success" id="btn-finalizar-empaque">
-            <i class="fas fa-check"></i> Finalizar
+      <div class="modal-footer d-flex justify-content-between">
+        <div>
+          <button type="button" title="Organizar número de cajas repetidas" class="btn btn-secondary" id="reorder-numbers-boxes">
+            <i class="fa-solid fa-arrow-down-1-9"></i>
           </button>
-        <?php } ?>
+        </div>
+        <div class="btn-content">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            <i class="fas fa-times"></i> Cancelar
+          </button>
+          <?php if (validPermissions([301], true)) { ?>
+            <button type="button" class="btn btn-success" id="btn-finalizar-empaque">
+              <i class="fas fa-check"></i> Finalizar
+            </button>
+          <?php } ?>
+        </div>
       </div>
     </div>
   </div>

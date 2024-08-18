@@ -546,15 +546,15 @@ class mPermisos extends Model {
 					],
 					[
 						"id" => 803,
-						"text" => "Confirmar compra"
+						"text" => "Confirmar Ingreso Mercancía"
 					],
 					[
 						"id" => 804,
-						"text" => "Anular compra"
+						"text" => "Anular Ingreso Mercancía"
 					],
 					[
 						"id" => 805,
-						"text" => "Imprimir compra"
+						"text" => "Imprimir Ingreso Mercancía"
 					]
 				]
 			],

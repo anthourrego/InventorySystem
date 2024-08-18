@@ -532,6 +532,28 @@ function obtenerInfoPedido(pedido, sync = false) {
     });
   });
 
+  $("#reorder-numbers-boxes").off('click').on('click', function () {
+    $.ajax({
+      url: rutaBase + 'Reordenarcajas',
+      type: 'POST',
+      dataType: 'json',
+      data: {
+        idPedido: pedido.id
+      },
+      success: function (resp) {
+        if (resp.success) {
+          alertify.success(resp.msj);
+          obtenerInfoPedido(resp.pedido);
+        } else if (resp.recargar) {
+          $("#modalEmpaque").modal('hide');
+          DT.ajax.reload();
+        } else {
+          alertify.error(resp.msj);
+        }
+      }
+    });
+  });
+
   setTimeout(() => {
     document.getElementById("listacajas").scrollLeft = document.getElementById("listacajas").scrollWidth
   }, 500);
