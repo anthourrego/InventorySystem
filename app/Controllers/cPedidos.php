@@ -1088,7 +1088,10 @@ class cPedidos extends BaseController {
 
 		foreach ($pedido->cajas as $value) {
 			$value->{'infoCaja'} = $mPedidosCajasProductos->select("
-				COUNT(*) AS Total, COUNT(DISTINCT(P.referencia)) AS TotalRef, pedidoscajasproductos.id_caja
+				COUNT(*) AS Total,
+				COUNT(DISTINCT(P.referencia)) AS TotalRef,
+				pedidoscajasproductos.id_caja,
+				GROUP_CONCAT(DISTINCT(P.referencia) SEPARATOR ' | ') AS referenciasEnCajas
 			")->join('productos P', 'pedidoscajasproductos.id_producto = P.id', 'left')
 			->where("pedidoscajasproductos.id_caja", $value->id)
 			->groupBy("pedidoscajasproductos.id_caja")

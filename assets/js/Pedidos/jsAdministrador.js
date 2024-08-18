@@ -312,7 +312,7 @@ let DT = $("#table").DataTable({
           if (pedido.cajas.length) {
             let estructura = '';
             pedido.cajas.forEach((it, pos) => {
-              estructura += `<div class="col-8 col-lg-3">
+              estructura += `<div class="col-8 col-lg-3" id="cajaId${it.id}">
                 <div class="card mb-2 item-caja" data-pos="${pos}" style="border-width: 3px !important;">
                   <div class="card-body" style="cursor: pointer;">
                     <div class="d-flex align-items-center justify-content-between">
@@ -408,6 +408,18 @@ let DT = $("#table").DataTable({
             $("#inicioEmpaque, #inicioEmpaqueCaja, #finEmpaqueCaja, #tiempoEmpaqueCaja, #totalReferenciasCaja, #totalProductos, #finEmpaque, #tiempoEmpaque").html('No hay datos')
           }
           $("#modalDetallePedido").modal('show');
+
+          $("#btnBuscarEnCaja").off('click').on('click', function () {
+            let valueSearch = $("#inputBuscarProd").val();
+            pedido.cajas.forEach(caja => {
+              let showBox = caja.infoCaja.referenciasEnCajas.includes(valueSearch);
+              if (showBox) {
+                $(`#cajaId${caja.id}`).show();
+              } else {
+                $(`#cajaId${caja.id}`).hide();
+              }
+            })
+          })
         }
       });
 
