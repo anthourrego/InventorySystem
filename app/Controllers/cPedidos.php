@@ -67,7 +67,7 @@ class cPedidos extends BaseController {
 		$dataPref = (session()->has("prefijoPed") ? session()->get("prefijoPed") : '');
 		$cantDigitos = (session()->has("digitosPed") ? session()->get("digitosPed") : 0);
 
-    	$dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoPed")->first();
+		$dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoPed")->first();
 
 		$value = (is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1));
 		$this->content["nroPedido"] = $dataPref . str_pad($value, $cantDigitos, "0", STR_PAD_LEFT);
@@ -84,7 +84,8 @@ class cPedidos extends BaseController {
 
 		$this->content["camposProducto"] = [
 			"item" => (session()->has("itemProducto") ? session()->get("itemProducto") : '0'),
-			"paca" => (session()->has("pacaProducto") ? session()->get("pacaProducto") : '0')
+			"paca" => (session()->has("pacaProducto") ? session()->get("pacaProducto") : '0'),
+			"ventaPaca" => (session()->has("ventaXPaca") ? session()->get("ventaXPaca") : '0')
  		];
 
 		 $this->content["editarPedido"] = 'S';

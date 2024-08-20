@@ -90,6 +90,14 @@
             <label for="pacDescarga">Sugerir Cantidad Despachar:</label>
             <input type="number" id="cantDespachar" data-nombre="Sugerir Cantidad Despachar" name="cantDespachar" min="1" max="100" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad">
           </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <label for="pacaProducto">Venta X Paca:</label>
+            <select id="ventaXPaca" data-nombre="Venta X Paca" <?= !$editar ? 'disabled' : '' ?> name="ventaXPaca" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
+              <option value=""></option>
+              <option value="1">Si</option>
+              <option value="0" selected>No</option>
+            </select>
+          </div>
         </div>
       </div>
       <div class="tab-pane fade" id="inventarioTab" role="tabpanel" aria-labelledby="inventario-tab">

@@ -59,7 +59,8 @@ class cVentas extends BaseController {
 
 		$this->content["camposProducto"] = [
 			"item" => (session()->has("itemProducto") ? session()->get("itemProducto") : '0'),
-			"paca" => (session()->has("pacaProducto") ? session()->get("pacaProducto") : '0')
+			"paca" => (session()->has("pacaProducto") ? session()->get("pacaProducto") : '0'),
+			"ventaPaca" => (session()->has("ventaXPaca") ? session()->get("ventaXPaca") : '0')
  		];
 
 		$this->content["cantidadVendedores"] = $this->cantidadVendedores();
@@ -95,7 +96,10 @@ class cVentas extends BaseController {
 				ventasproductos.valor AS valorUnitario,
 				ventasproductos.valor_original,
 				p.precio_venta,
-				(ventasproductos.valor * ventasproductos.cantidad) AS valorTotal
+				p.cantPaca,
+				(ventasproductos.valor * ventasproductos.cantidad) AS valorTotal,
+				CAST((ventasproductos.cantidad / p.cantPaca) AS DECIMAL(12,2)) AS cantidadPaca,
+				CAST(((p.stock + ventasproductos.cantidad) / p.cantPaca) AS DECIMAL(12,2)) AS cantidadXPaca
 			")->join("productos AS p", "ventasproductos.id_producto = p.id")
 			->where("ventasproductos.id_venta", $venta->id)
 			->findAll();
@@ -123,7 +127,8 @@ class cVentas extends BaseController {
 		$this->content["inventario_negativo"] = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
 		$this->content["camposProducto"] = [
 			"item" => (session()->has("itemProducto") ? session()->get("itemProducto") : '0'),
-			"paca" => (session()->has("pacaProducto") ? session()->get("pacaProducto") : '0')
+			"paca" => (session()->has("pacaProducto") ? session()->get("pacaProducto") : '0'),
+			"ventaPaca" => (session()->has("ventaXPaca") ? session()->get("ventaXPaca") : '0')
  		];
 
 		$this->content['imagenProd'] = (session()->has("imageProd") ? session()->get("imageProd") : 0);

@@ -171,7 +171,8 @@ class cProductos extends BaseController {
 									THEN P.id_manifiesto
 								ELSE '0'
 						END AS manifiesto,
-						TPR.TotalProductosReportados
+						TPR.TotalProductosReportados,
+						CAST(({$stringStock} / P.cantPaca) AS DECIMAL(12,2)) AS cantidadXPaca,
 				")->join('categorias AS C', 'P.id_categoria = C.id', 'left')
 				->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left')
 				->join("({$subQuery}) TPR", "P.id = TPR.id_producto", "left");
