@@ -14,7 +14,10 @@ let DTProductos = {
     loadingIndicator: true
   },
   dom: domBftri50,
-  order: [[2, "asc"]],
+  order: {
+    name: 'stock',
+    dir: 'desc'
+  },
   columns: [{
     orderable: false,
     searchable: false,
@@ -29,7 +32,10 @@ let DTProductos = {
     }
   },
   { data: 'referencia' },
-  { data: 'item', visible: ($CAMPOSPRODUCTO.item == '1' ? true : false) },
+  { 
+    data: 'item', 
+    visible: ($CAMPOSPRODUCTO.item == '1' ? true : false) 
+  },
   {
     data: 'descripcion',
     width: "30%",
@@ -38,9 +44,11 @@ let DTProductos = {
     }
   },
   {
-    data: 'cantPaca'
+    data: 'cantPaca',
+    visible: ($CAMPOSPRODUCTO.paca == '1') ? true : false
   },
   {
+    name: 'stock',
     data: 'stock',
     className: 'text-center align-middle',
     render: function (meta, type, data, meta) {
@@ -219,6 +227,7 @@ $(function () {
         form.append("idCliente", idCliente);
         form.append("idUsuario", $("#vendedor").val());
         form.append("observacion", $("#observacion").val());
+        form.append("codigoVenta", $("#nroVenta").val());
         form.append("productos", JSON.stringify(productosVentas));
 
         $('.deshabilitarboton').prop('disabled', true);

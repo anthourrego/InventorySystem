@@ -138,7 +138,6 @@ class cProductosReportados extends BaseController {
 		if($resp["success"] == false || $this->db->transStatus() === false) {
 			$this->db->transRollback();
 		} else {
-			//$this->db->transRollback();
 			$this->db->transCommit();
 		}
 		return $this->response->setJSON($resp);

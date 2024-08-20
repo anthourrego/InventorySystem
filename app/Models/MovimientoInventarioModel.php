@@ -88,8 +88,6 @@ class MovimientoInventarioModel extends Model
 			$product["stock"] -= $dataMovimiento->cantidad;
 		}
 
-		//$product["stock"] = null;
-
 		if(!$productoModel->save($product)){
 			$this->errorAfterInsert = true;
 			$this->errorAfterInsertMsg = "Error al guardar al actualizar el producto. " . listErrors($productoModel->errors());

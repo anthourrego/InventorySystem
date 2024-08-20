@@ -6,6 +6,10 @@ use CodeIgniter\Entity\Entity;
 
 class MovimientoInventarioEntity extends Entity
 {
+	public function __construct(?array $data = null) {
+		parent::__construct($data);
+	}
+	
 	protected $attributes = [
 		'id'       							=> null,
 		'id_producto'  					=> null, // In the $attributes, the key is the db column name

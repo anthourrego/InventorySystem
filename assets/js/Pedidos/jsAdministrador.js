@@ -501,6 +501,7 @@ function eliminar(data) {
         dataType: 'json',
         data: {
           id: data.id,
+          codigo: data.pedido
         },
         success: function (resp) {
           if (resp.success) {

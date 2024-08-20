@@ -15,7 +15,10 @@ let DTProductos = {
     loadingIndicator: true
   },
   dom: domBftri50,
-  order: [[2, "asc"]],
+  order: {
+    name: 'stock',
+    dir: 'desc'
+  },
   columns: [
     {
       orderable: false,
@@ -43,9 +46,11 @@ let DTProductos = {
       }
     },
     {
-      data: 'cantPaca'
+      data: 'cantPaca',
+      visible: ($CAMPOSPRODUCTO.paca == '1') ? true : false
     },
     {
+      name: 'stock',
       data: 'stock',
       className: 'text-center align-middle',
       render: function (meta, type, data, meta2) {
@@ -377,6 +382,7 @@ $(function () {
         form.append("idSucursal", $("#sucursal").val());
         form.append("idUsuario", $("#vendedor").val());
         form.append("observacion", $("#observacion").val());
+        form.append("codigoPedido", $("#nroPedido").val());
         form.append("productos", JSON.stringify(productosPedido));
 
         /* Valor por si esta en empacado y modifican cantidad se regrese a empaque */

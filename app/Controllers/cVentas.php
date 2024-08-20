@@ -188,37 +188,48 @@ class cVentas extends BaseController {
 		$this->db->transBegin();
 
 		$mVentasProductos = new mVentasProductos();
-		$mProductos = new mProductos();
+		$moveEntity = new MovimientoInventarioEntity(["tipo" => "I", "observacion" => "Elimia venta {$data->codigo} con id {$data->id}"]);
+		$moveInventoryModel = new MovimientoInventarioModel();
 
 		$productosVentas = $mVentasProductos->where("id_venta", $data->id)->findAll();
 
 		//Actualizamos el inventario de los productos
 		foreach ($productosVentas as $it) {
-			$producto = $mProductos->asObject()->find($it->id_producto);
-			
-			$dataSave = [
-				"id" => $it->id_producto,
-				"stock" => ($producto->stock + $it->cantidad)
-			];
 
-			if (!$mProductos->save($dataSave)) {
+			//Actualizamos los datos a cambiar
+			$moveEntity->id_producto = $it->id_producto;
+			$moveEntity->cantidad = $it->cantidad;
+			
+			if (!$moveInventoryModel->save($moveEntity)) {
+				$contActProd = false;
+				break;
+			}
+
+			if ($moveInventoryModel->errorAfterInsert) {
 				$contActProd = false;
 				break;
 			}
 		}
-		
+
 		//Eliminamos todos los datos
 		if($contActProd) {
-			if($mVentasProductos->where("id_venta", $data->id)->delete()){
-				$ventas = new mVentas();
-				if ($ventas->delete($data->id)) { 
-					$resp["success"] = true;
-					$resp['msj'] = "Venta eliminada correctamente";
+			//Actualizamos todos los movmientos de inventairo quitandole la relación con la venta
+			$moveInventoryModel->set("id_venta", null)->where("id_venta", $data->id);
+
+			if ($moveInventoryModel->update()) {
+				if($mVentasProductos->where("id_venta", $data->id)->delete()){
+					$salesModel = new mVentas();
+					if ($salesModel->delete($data->id)) {
+						$resp["success"] = true;
+						$resp['msj'] = "Venta eliminada correctamente";
+					} else {
+						$resp['msj'] = "Error al eliminar la venta";
+					}
 				} else {
-					$resp['msj'] = "Error al eliminar la venta";
+					$resp['msj'] = "Error al eliminar los productos de la venta.";
 				}
 			} else {
-				$resp['msj'] = "Error al eliminar los productos de la venta.";
+				$resp['msj'] = "Error al actualizar los movmientos de inventario.";
 			}
 		} else {
 			$resp['msj'] = "Error al actualizar el inventario.";
@@ -227,7 +238,6 @@ class cVentas extends BaseController {
 		if($resp["success"] == false || $this->db->transStatus() === false) {
 			$this->db->transRollback();
 		} else {
-			//$this->db->transRollback();
 			$this->db->transCommit();
 		}
 
@@ -241,10 +251,10 @@ class cVentas extends BaseController {
 		$valorTotal = 0;
 		$prod = json_decode($dataPost->productos);
         
-		$productoModel = new mProductos();
 		$ventaModel = new mVentas();
 		$mVentasProductos = new mVentasProductos();
 		$mConfiguracion = new mConfiguracion();
+		$mMovimientoInventario = new MovimientoInventarioModel();
 
 		$cantDigitos = (session()->has("digitosFact") ? session()->get("digitosFact") : 0);
 		$dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoFact")->first();
@@ -270,6 +280,8 @@ class cVentas extends BaseController {
 
 			if($ventaModel->save($dataSave)){
 				$dataSave["id"] = $ventaModel->getInsertID();
+				$movimiento = new MovimientoInventarioEntity(["tipo" => "S", "id_venta" => $dataSave["id"]]);
+
 				foreach ($prod as $it) {
 					$dataProductoVenta = [
 						"id_venta" => $dataSave["id"],
@@ -281,16 +293,21 @@ class cVentas extends BaseController {
 
 					$valorTotal = $valorTotal + ($it->cantidad * $it->valorUnitario);
 
-					$product = $productoModel->find($it->id);
-					$product["stock"] = $product["stock"] - $it->cantidad;
-
 					if (!$mVentasProductos->save($dataProductoVenta)) {
 						$resp["msj"] = "Ha ocurrido un error al guardar los productos." . listErrors($mVentasProductos->errors());
 						break;
 					}
 
-					if(!$productoModel->save($product)){
-						$resp["msj"] = "Error al guardar al actualizar el producto. " . listErrors($productoModel->errors());
+					$movimiento->id_producto = $it->id;
+					$movimiento->cantidad = $it->cantidad;
+					
+					if(!$mMovimientoInventario->save($movimiento)){
+						$resp["msj"] = "Error al guardar al registrar el movimiento. " . listErrors($mMovimientoInventario->errors());
+						break;
+					}
+
+					if($mMovimientoInventario->errorAfterInsert){
+						$resp["msj"] = $mMovimientoInventario->errorAfterInsertMsg;
 						break;
 					}
 				}
@@ -352,11 +369,10 @@ class cVentas extends BaseController {
 		$prod = json_decode($dataPost->productos);
 		$valorTotal = 0;
 
-		$mProductos = new mProductos();
 		$mVentas = new mVentas();
 		$mVentasProductos = new mVentasProductos();
 		$mMovimientoInventario = new MovimientoInventarioModel();
-		$movimiento = new MovimientoInventarioEntity();
+		$movimiento = new MovimientoInventarioEntity(["id_venta" => $dataPost->idVenta]);
 		
 		if (count($prod) > 0) {
 			$this->db->transBegin();
@@ -382,7 +398,10 @@ class cVentas extends BaseController {
 					//Si el producto no existe se debe de agregar
 					if($productoAct !== false){
 						//Validamos si los valores y las cantidades cambian
-						if($it->cantidad != $productoActuales[$productoAct]["cantidad"] || $it->valorUnitario != $productoActuales[$productoAct]["valor"]) {
+						if(
+							$it->cantidad != $productoActuales[$productoAct]["cantidad"] || 
+							$it->valorUnitario != $productoActuales[$productoAct]["valor"]
+						) {
 							$cantidadNueva = $productoActuales[$productoAct]["cantidad"] - $it->cantidad;
 							
 							$dataProductoVenta = [
@@ -396,11 +415,18 @@ class cVentas extends BaseController {
 								break;
 							}
 
-							$product = $mProductos->find($it->id);
-							$product["stock"] = $product["stock"] + $cantidadNueva;
+							$movimiento->id_producto = $it->id;
+							$movimiento->tipo = ($cantidadNueva > 0 ? "I" : "S");
+							$movimiento->cantidad = abs($cantidadNueva);
+							$movimiento->observacion = ($cantidadNueva > 0 ? "Disminuye" : "Aumenta") . " el producto por edición de la venta {$dataPost->codigoVenta}";
+							
+							if(!$mMovimientoInventario->save($movimiento)){
+								$resp["msj"] = "Error al guardar al registrar el movimiento. " . listErrors($mMovimientoInventario->errors());
+								break;
+							}
 
-							if(!$mProductos->save($product)){
-								$resp["msj"] = "Error al guardar al actualizar el producto. " . listErrors($mProductos->errors());
+							if($mMovimientoInventario->errorAfterInsert){
+								$resp["msj"] = $mMovimientoInventario->errorAfterInsertMsg;
 								break;
 							}
 						}
@@ -417,11 +443,7 @@ class cVentas extends BaseController {
 							"valor_original" => $it->precio_venta
 						];
 	
-						$valorTotal = $valorTotal + ($it->cantidad * $it->valorUnitario);
-	
-						/* $product = $mProductos->find($it->id);
-						$product["stock"] = $product["stock"] - $it->cantidad; */
-						
+						$valorTotal = $valorTotal + ($it->cantidad * $it->valorUnitario);			
 	
 						if (!$mVentasProductos->save($dataProductoVenta)) {
 							$resp["msj"] = "Ha ocurrido un error al guardar los productos." . listErrors($mVentasProductos->errors());
@@ -431,6 +453,7 @@ class cVentas extends BaseController {
 						$movimiento->id_producto = $it->id;
 						$movimiento->tipo = "S";
 						$movimiento->cantidad = $it->cantidad;
+						$movimiento->observacion = "Agrega el producto nuevo por edición de la venta {$dataPost->codigoVenta}";
 						
 						if(!$mMovimientoInventario->save($movimiento)){
 							$resp["msj"] = "Error al guardar al registrar el movimiento. " . listErrors($mMovimientoInventario->errors());
@@ -446,18 +469,27 @@ class cVentas extends BaseController {
 
 				//Eliminamos los productos restantes de la venta
 				foreach ($productoActuales as $it) {
-					if($mVentasProductos->delete($it["id"])) {
+					$it = is_object($it) ? $it : (object) $it;
 
-						$product = $mProductos->find($it["id_producto"]);
-						$product["stock"] = $product["stock"] + $it["cantidad"];
-	
-						if(!$mProductos->save($product)){
-							$resp["msj"] = "Error al guardar al actualizar el inventario del producto eliminado. " . listErrors($mProductos->errors());
+					if($mVentasProductos->delete($it->id)) {
+
+						$movimiento->id_producto = $it->id_producto;
+						$movimiento->tipo = "I";
+						$movimiento->cantidad = $it->cantidad;
+						$movimiento->observacion = "Elimina el producto nuevo por edición de la venta {$dataPost->codigoVenta}";
+						
+						if(!$mMovimientoInventario->save($movimiento)){
+							$resp["msj"] = "Error al guardar al registrar el movimiento. " . listErrors($mMovimientoInventario->errors());
+							break;
+						}
+
+						if($mMovimientoInventario->errorAfterInsert){
+							$resp["msj"] = $mMovimientoInventario->errorAfterInsertMsg;
 							break;
 						}
 					} else {
 						$resp["msj"] = "Error al guardar al eliminar el producto de la factura. " . listErrors($mVentasProductos->errors());
-							break;
+						break;
 					}
 				}
 
