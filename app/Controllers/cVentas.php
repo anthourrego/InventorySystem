@@ -148,7 +148,7 @@ class cVentas extends BaseController {
 		$subQuery = $this->db->table("observacionproductos AS OP")
 					->select("V.id AS id_venta, COUNT(PP.id_producto) AS TotalProductosReportados")
 					->join("pedidosproductos PP", "OP.id_pedido_producto = PP.id", "left")
-					->join('Ventas AS V', 'PP.id_pedido = V.id_pedido', 'left')
+					->join('ventas AS V', 'PP.id_pedido = V.id_pedido', 'left')
 					->where("OP.fecha_confirmacion IS NULL")
 					->groupBy("V.id")->getCompiledSelect();
 
