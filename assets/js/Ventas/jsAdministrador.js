@@ -5,7 +5,7 @@ let DT = $("#table").DataTable({
     url: rutaBase + "DT",
     type: "POST",
   },
-  order: [[0, "desc"]],
+  order: [[8, "desc"]],
   scrollX: true,
   columns: [
     { data: 'codigo' },

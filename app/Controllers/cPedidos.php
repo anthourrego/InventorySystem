@@ -245,8 +245,6 @@ class cPedidos extends BaseController {
 			}
 		}
 
-		$query->orderBy("Delimitado", "DESC");
-
 		return DataTable::of($query)->toJson(true);
 	}
 
