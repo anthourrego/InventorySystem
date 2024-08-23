@@ -307,6 +307,11 @@ $routes->group('IngresoMercancia', ['filter' => 'authGuard:80'], function ($rout
 	$routes->post('Anular', 'cIngresoMercancia::anular', ['filter' => ['authGuard:804', 'ajax']]);
 });
 
+$routes->group('ReporteInventario', ['filter' => 'authGuard:90'], function ($routes) {
+	$routes->get('/', 'cReporteInventario::index');
+	$routes->post('DT', 'cReporteInventario::listaDT');
+});
+
 //Showroom
 /* $routes->group('Showroom', ['filter' => 'authGuard:70'], function ($routes) {
 	$routes->get('/', 'Showroom::index');
