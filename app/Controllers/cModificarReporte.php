@@ -273,7 +273,7 @@ class cModificarReporte extends BaseController {
     ],
   ];
 
-	function index() {
+	public function index() {
     $this->content['title'] = "Modificar Reporte";
 		$this->content['view'] = "vModificarReporte";
 
@@ -296,7 +296,7 @@ class cModificarReporte extends BaseController {
 		return view('UI/viewDefault', $this->content);
   }
 
-  function reporte($reporte) {
+  public function reporte($reporte) {
     $reporte = str_replace("_", " ", $reporte);
     $datReporte = [];
     if (isset($this->reportes[$reporte])) {
@@ -312,7 +312,7 @@ class cModificarReporte extends BaseController {
 			'jsModificarEstructuraReporte.js'
 		];
 
-    $this->LCKEditor();
+    $this->LTinymceEditor();
 
     $this->content['variables'] = [];
     $this->content['contenidoEditor'] = '';
@@ -330,7 +330,7 @@ class cModificarReporte extends BaseController {
               "verify_peer"=>false,
               "verify_peer_name"=>false,
             ),
-          );  
+          );
           $this->content['contenidoEditor'] = file_get_contents($path, false, stream_context_create($arrContextOptions));
         } else {
           $this->content['contenidoEditor'] = '';
@@ -345,7 +345,7 @@ class cModificarReporte extends BaseController {
 		return view('UI/viewDefault', $this->content);
   }
 
-  function guardar() {
+  public function guardar() {
     $resp["success"] = true;
     $resp["msj"] = "Reporte guardado correctamente";
     $postData = (object) $this->request->getPost();
@@ -362,7 +362,7 @@ class cModificarReporte extends BaseController {
     return $this->response->setJSON($resp);
   }
 
-  function plantilla() {
+  public function plantilla() {
     $resp["success"] = true;
     $resp["msj"] = "Reporte reemplazado con éxito";
     $postData = (object) $this->request->getPost();

@@ -270,9 +270,9 @@ abstract class BaseController extends Controller
         ];
     }
 
-    public function LCKEditor() {
+    public function LTinymceEditor() {
         $this->content['js'][] = [
-            'vendor/ckeditor/ckeditor/ckeditor.js'
+            'vendor/tinymce/tinymce/tinymce.min.js'
         ];
     }
 }
