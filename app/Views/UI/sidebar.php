@@ -177,7 +177,15 @@
 						<li class="nav-item">
               <a href="<?= base_url("ProductosReportados") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'ProductosReportados' ? 'active' : '' ?>">
 								<i class="nav-icon fa-solid fa-exclamation-triangle"></i>
-                <p>Productos Reportados</p>
+                <p>Reporte de Empaque</p>
+              </a>
+            </li>
+						<?php } ?>
+						<?php if (validPermissions([90], true)) { ?> 
+						<li class="nav-item">
+              <a href="<?= base_url("ReporteInventario") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'ReporteInventario' ? 'active' : '' ?>">
+								<i class="nav-icon fa-solid fa-cart-flatbed"></i>
+                <p>Reporte de Inventario</p>
               </a>
             </li>
 						<?php } ?>

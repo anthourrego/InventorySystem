@@ -496,7 +496,7 @@ class cCompras extends BaseController {
 			$codigoCompra = $mCompras->asObject()->find($data->idCompra)->codigo;
 
 			foreach ($dataProdsBuy as $product) {
-				$responseConfirm = $this->updateInventoryProduct($movimientoInventarioModel, $movimiento, $product->cantidad, $product->id_producto, $codigoCompra, "S");
+				$responseConfirm = $this->updateInventoryProduct($movimientoInventarioModel, $movimiento, $product->cantidad, $product->id_producto, $codigoCompra, $data->idCompra, "S");
 				if (is_string($responseConfirm)) {
 					$resp['msj'] = $responseConfirm;
 					$resp["success"] = false;
@@ -572,7 +572,7 @@ class cCompras extends BaseController {
 				break;
 			}
 
-			$responseConfirm = $this->updateInventoryProduct($movimientoInventarioModel, $movimiento, $product->cantidad, $product->id_producto, $codigoCompra);
+			$responseConfirm = $this->updateInventoryProduct($movimientoInventarioModel, $movimiento, $product->cantidad, $product->id_producto, $codigoCompra, $idBuy);
 			if (is_string($responseConfirm)) {
 				$response = $responseConfirm;
 				break;
@@ -581,10 +581,11 @@ class cCompras extends BaseController {
 		return $response;
 	}
 
-	private function updateInventoryProduct($movimientoInventarioModel, $movimiento, $newStock, $idProduct, $codigo, $tipo = "I") {
+	private function updateInventoryProduct($movimientoInventarioModel, $movimiento, $newStock, $idProduct, $codigo, $idCompra, $tipo = "I") {
 		$response = true;
 		$movimiento->id_producto = $idProduct;
 		$movimiento->tipo = $tipo;
+		$movimiento->id_compra = $idCompra;
 		$movimiento->cantidad = $newStock;
 		$movimiento->observacion = ($tipo === "I" ? "Confirma" : "Anula") . " compra con código " . $codigo;
 		if(!$movimientoInventarioModel->save($movimiento)) {

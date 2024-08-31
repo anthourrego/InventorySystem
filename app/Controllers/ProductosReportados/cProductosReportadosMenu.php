@@ -5,8 +5,8 @@ use App\Controllers\BaseController;
 
 class cProductosReportadosMenu extends BaseController {
 	public function index() {
-		$this->content['title'] = "Productos Reportados";
-    $this->content['view'] = "ProductosReportados/vProductosReportadosMenu";
+		$this->content['title'] = "Reporte de Empaque";
+    	$this->content['view'] = "ProductosReportados/vProductosReportadosMenu";
 
 		$this->LDataTables();
 

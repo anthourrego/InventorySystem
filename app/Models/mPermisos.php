@@ -211,7 +211,7 @@ class mPermisos extends Model {
 					],
 					[
 						"id" => 510,
-						"text" => "Productos reportados",
+						"text" => "Reporte de Empaque",
 						"children" => [
 							[
 								"id" => 51001,
@@ -234,7 +234,7 @@ class mPermisos extends Model {
 					],
 					[
 						"id" => 62,
-						"text" => "Productos reportados",
+						"text" => "Reporte de Empaque",
 						"children" => [
 							[
 								"id" => 6201,
@@ -431,7 +431,7 @@ class mPermisos extends Model {
 					],
 					[
 						"id" => 112,
-						"text" => "Productos reportados",
+						"text" => "Reporte de Empaque",
 						"children" => [
 							[
 								"id" => 1121,
@@ -501,7 +501,7 @@ class mPermisos extends Model {
 			],
 			[
 				"id" => 60,
-				"text" => "Productos Reportados",
+				"text" => "Reporte de Empaque",
 				"uri" => "ProductosReportados",
 				"icon" => "fa-solid fa-exclamation-triangle",
 				"color" => "bg-light",
@@ -558,6 +558,31 @@ class mPermisos extends Model {
 					]
 				]
 			],
+			[
+				"id" => 90,
+				"text" => "Reporte de inventario",
+				"uri" => "ReporteInventario",
+				"icon" => "fa-solid fa-cart-flatbed",
+				"color" => "bg-primary",
+				"children" => [
+					[
+						"id" => 901,
+						"text" => "Imprimir Factura"
+					],
+					[
+						"id" => 902,
+						"text" => "Imprimir Pedido"
+					],
+					[
+						"id" => 903,
+						"text" => "Imprimir Compra"
+					],
+					[
+						"id" => 904,
+						"text" => "Imprimir Ingreso Mercancia"
+					]
+				]
+			],
 		];
 
 		if (!session()->has("manejaEmpaque") || session()->get("manejaEmpaque") == "1") {
@@ -568,7 +593,7 @@ class mPermisos extends Model {
 					"text" => "Empaque",
 					"uri" => "Empaque",
 					"icon" => "fa-solid fa-box-open",
-					"color" => "bg-primary",
+					"color" => "bg-secondary",
 					"children" => [
 						[
 							"id" => 301,

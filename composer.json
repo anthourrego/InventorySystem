@@ -14,7 +14,6 @@
         "almasaeed2010/adminlte": "^3.2",
         "bpampuch/pdfmake": "^0.2.10",
         "chillerlan/php-qrcode": "^5.0.2",
-        "ckeditor/ckeditor": "^4.24.0",
         "codeigniter4/framework": "^4.5.4",
         "codeigniter4/translations": "^4.5.3",
         "components/jquery": "^3.7.1",
