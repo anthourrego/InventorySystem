@@ -63,14 +63,21 @@ let DTProductos = {
       defaultContent: '',
       className: 'text-center align-middle noExport',
       render: function (meta, type, data, meta2) {
+        data.cantidadXPaca = Math.trunc(data.cantidadXPaca);
         let btn = true;
         let resultado = productosPedido.find((it) => it.id == data.id);
 
         if (resultado) {
           btn = false;
         }
-
-        if (data.stock <= 0 && $INVENTARIONEGATIVO == "0") return '';
+  
+        if (btn && ($INVENTARIONEGATIVO == "0" && Number(data.stock) <= 0)) {
+          btn = false;
+        }
+  
+        if (btn && ($INVENTARIONEGATIVO == "0" && $CAMPOSPRODUCTO.paca == "1" && $CAMPOSPRODUCTO.ventaPaca == "1" && Number(data.cantidadXPaca) < 1)) {
+          btn = false;  
+        }
 
         return `<div class="btn-group btn-group-sm" role="group">
                   <button id="p${data.id}" type="button" class="btn btn-primary btnAdd ${(btn ? '' : 'disabled')}" ${(btn ? '' : 'disabled')} title="Agregar"><i class="fa-solid fa-plus"></i></button>
@@ -82,15 +89,30 @@ let DTProductos = {
     'pageLength'
   ],
   createdRow: function (row, data, dataIndex) {
-    $(row).find(".btnAdd").on("click", function () {
+    $(row).find(".btnAdd:not([disabled])").on("click", function () {
       let result = productosPedido.find((it) => it.id == data.id);
       if (result) {
         alertify.error("Este producto ya se encuentra agregado");
       } else {
-        $("#p" + data.id).addClass("disabled").prop("disabled", true);
+        if (data.stock < 1) {
+          alertify.error("La cantidad de no es sufienciente.");
+          return;
+        }
         data.cantidad = 1;
+        data.cantidadPaca = 0;
+        if ($CAMPOSPRODUCTO.paca == "1" && $CAMPOSPRODUCTO.ventaPaca == '1') {
+          if (Number(data.cantidadXPaca) >= 1) {
+            data.cantidadPaca = 1;
+            data.cantidad = Number(data.cantPaca);
+          } else {
+            alertify.error("La cantidad de no es sufienciente para completar una paca");
+            return;
+          }
+        }
+
+        $("#p" + data.id).addClass("disabled").prop("disabled", true);
         data.valorUnitario = data.precio_venta;
-        data.valorTotal = data.precio_venta;
+        data.valorTotal = data.precio_venta * data.cantidad;
         data.nuevo = true;
         productosPedido.unshift(data);
         DTProductosPedido.clear().rows.add(productosPedido).draw();
@@ -145,10 +167,21 @@ let DTProductosPedido = $("#tblProductos").DataTable({
     {
       orderable: false,
       searchable: false,
+      visible: ($CAMPOSPRODUCTO.paca == '1' && $CAMPOSPRODUCTO.ventaPaca == '1') ? true : false,
+      data: 'cantidadPaca',
+      render: function (meta, type, data, meta) {
+        let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "PE";
+        data.cantidadPaca = Math.trunc(data.cantidadPaca);
+        return `<input type="number" ${(estadoPedido != 'PE' || $EDITARPEDIDO == 'N' ? 'disabled' : '')} class="form-control form-control-sm cantidadPacaProduct inputFocusSelect soloNumeros" min="1" value="${data.cantidadPaca}">`;
+      }
+    },
+    {
+      orderable: false,
+      searchable: false,
       data: 'cantidad',
       render: function (meta, type, data, meta2) {
         let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "PE";
-        return `<input type="number" ${(estadoPedido != 'PE' || $EDITARPEDIDO == 'N' ? 'disabled' : '')} class="form-control form-control-sm cantidadProduct inputFocusSelect soloNumeros" min="1" value="${data.cantidad}">`;
+        return `<input type="number" ${(estadoPedido != 'PE' || $EDITARPEDIDO == 'N' ? 'disabled' : '')} class="form-control form-control-sm cantidadProduct inputFocusSelect soloNumeros" ${($CAMPOSPRODUCTO.paca == "1" && $CAMPOSPRODUCTO.ventaPaca == '1' ? 'readonly' : '')} min="1" value="${data.cantidad}">`;
       }
     },
     {
@@ -183,6 +216,22 @@ let DTProductosPedido = $("#tblProductos").DataTable({
     }
   ],
   createdRow: function (row, data, dataIndex) {
+    data.cantidadXPaca = Math.trunc(data.cantidadXPaca);
+
+    if ($CAMPOSPRODUCTO.paca == "1" && $CAMPOSPRODUCTO.ventaPaca == "1") {
+      $(row).find(".cantidadPacaProduct").on("change", function () {
+        let cantPaca = Number($(this).val());
+
+        if (cantPaca > data.cantidadXPaca){
+          alertify.alert("Advertencia", `Ha superado la cantidad maxima de pacas, solo hay <b>${data.cantidadXPaca}</b> disponibles pacas`);
+          cantPaca = data.cantidadXPaca;
+        }
+        let cant = cantPaca * Number(data.cantPaca);
+        $(this).val(cantPaca);
+        $(row).find(".cantidadProduct").val(cant).change();
+      });
+    }
+
     $(row).find(".cantidadProduct, .valorUnitario").on("change", function () {
       let cant = Number($(row).find(".cantidadProduct").val().trim());
       let valorUnitario = $(row).find(".valorUnitario").val().trim().replaceAll(",", "").replaceAll("$ ", "");
@@ -468,36 +517,6 @@ $(function () {
       cache: true
     }
   });
-
-  /* $("#cliente").select2({
-    ajax: {
-      url: base_url() + "Busqueda/Clientes",
-      type: "POST",
-      dataType: 'json',
-      delay: 250,
-      data: function (params) {
-        var query = {
-          search: params.term,
-          page: params.page || 1,
-          _type: "query_append",
-        }
-        return query;
-      },
-      processResults: function (data, params) {
-        params.page = params.page || 1;
-        return {
-          results: data.data,
-          pagination: {
-            more: (params.page * 10) < data.total_count
-          }
-        };
-      },
-      async: false,
-      cache: true
-    }
-  }).on("change", function () {
-    $("#sucursal").val('').trigger('change.select2');
-  }); */
 
   $("#sucursal").select2({
     ajax: {
