@@ -113,8 +113,8 @@ class cProductos extends BaseController {
 		session()->remove(['filtrosProductos']);
 		$arrayFiltro['estado'] = $postData->estado;
 		$stringStock = "P.stock";
-
-		if (isset($postData->categoria) && $postData->sumarPedidos == 1) {
+		
+		if (isset($postData->sumarPedidos) && $postData->sumarPedidos == 1) {
 			//Creamos la consulta del subquery para validar el stock que actualmente se encuentra en pedidos
 			$subQuery = $this->db->table("pedidos AS P")
 				->select("PP.id_producto, SUM(PP.cantidad) AS cantidad")
@@ -163,11 +163,12 @@ class cProductos extends BaseController {
 								WHEN 1 = {$this->manifiestoProducto}
 									THEN P.id_manifiesto
 								ELSE '0'
-						END AS manifiesto
+						END AS manifiesto,
+						CAST(({$stringStock} / P.cantPaca) AS DECIMAL(12,2)) AS cantidadXPaca,
 				")->join('categorias AS C', 'P.id_categoria = C.id', 'left')
 				->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left');
 
-		if (isset($postData->categoria) && $postData->sumarPedidos == 1) {
+		if (isset($postData->sumarPedidos) && $postData->sumarPedidos == 1) {
 			$query->join("({$subQuery}) PP", "P.id = PP.id_producto", "left");
 		}
 
@@ -180,14 +181,26 @@ class cProductos extends BaseController {
 			$query->where("P.id_categoria", $postData->categoria);
 		}
 
+		if(isset($postData->cantidadXPaca)) {
+			$arrayFiltro['cantidadXPaca'] = $postData->cantidadXPaca;
+		}
+
 		if(isset($postData->cantIni) && $postData->cantIni >= 0) {
 			$arrayFiltro['cantIni'] = $postData->cantIni;
-			$query->where("P.stock >= $postData->cantIni");
+			$dataCantidad = $stringStock;
+			if(isset($postData->cantidadXPaca) && $postData->cantidadXPaca == '1') {
+				$dataCantidad = "CAST(({$stringStock} / P.cantPaca) AS DECIMAL(12,2))"; 
+			}
+			$query->where("{$dataCantidad} >= $postData->cantIni");
 		}
 
 		if(isset($postData->cantFin) && $postData->cantFin >= 0){
 			$arrayFiltro['cantFin'] = $postData->cantFin;
-			$query->where("P.stock <= $postData->cantFin");
+			$dataCantidad = $stringStock;
+			if(isset($postData->cantidadXPaca) && $postData->cantidadXPaca == '1') {
+				$dataCantidad = "CAST(({$stringStock} / P.cantPaca) AS DECIMAL(12,2))"; 
+			}
+			$query->where("{$dataCantidad} >= $postData->cantFin");
 		}
 
 		if(isset($postData->preciIni) && $postData->preciIni >= 0) {
@@ -210,6 +223,10 @@ class cProductos extends BaseController {
 
 		if (isset($postData->search) && $postData->search["value"] != "") {
 			$arrayFiltro['search'] = $postData->search["value"];
+		}
+
+		if (isset($postData->order) && count($postData->order) > 0) {
+			$arrayFiltro['order'] = $postData->order[0];
 		}
 
 		session()->set('filtrosProductos', $arrayFiltro);
@@ -524,20 +541,35 @@ class cProductos extends BaseController {
 
 	public function descargarFoto($limit = null, $offset = null, $tipo = 0, $precioVenta = ''){
 		$filtros = (object) session()->get("filtrosProductos");
+
+		$stringStock = "P.stock";
+
+		if(isset($filtros->sumarPedidos) && $filtros->sumarPedidos == 1){
+			//Creamos la consulta del subquery para validar el stock que actualmente se encuentra en pedidos
+			$subQuery = $this->db->table("pedidos AS P")
+				->select("PP.id_producto, SUM(PP.cantidad) AS cantidad")
+				->join("ventas AS V", "P.id = V.id_pedido", "left")
+				->join("pedidosproductos AS PP", "P.id = PP.id_pedido", "inner")
+				->where("V.id_pedido IS NULL", null, false)
+				->groupBy("PP.id_producto")->getCompiledSelect();
+	
+			$stringStock = "(P.stock + CASE WHEN PP.cantidad IS NULL THEN 0 ELSE PP.cantidad END)";
+		}
+
 		$search = [
 			"P.id",
 			"P.referencia",
 			"P.item",
 			"P.descripcion",
-			"P.stock",
+			"C.nombre",
+			"{$stringStock} As stock",
 			"P.cantPaca",
 			"P.costo",
 			"P.precio_venta",
-			"P.precio_venta_dos",
 			"P.ubicacion",
+			"M.nombre",
 			"P.created_at",
-			"C.nombre",
-			"M.nombre"
+			"P.precio_venta_dos"
 		];
 
 		$mProducto = new mProductos();
@@ -547,15 +579,25 @@ class cProductos extends BaseController {
 			->select("P.imagen, P.updated_at")
 			->from("productos AS P", true)
 			->join('categorias AS C', 'P.id_categoria = C.id', 'left')
-			->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left')
-			->where('P.imagen IS NOT NULL', NULL, FALSE);
+			->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left');
+
+		if (isset($filtros->sumarPedidos) && $filtros->sumarPedidos == 1) {
+			$mProducto->join("({$subQuery}) PP", "P.id = PP.id_producto", "left");
+		}
+
+		$mProducto->where('P.imagen IS NOT NULL', NULL, FALSE);
 
 		$mProducto1->select($search)
 			->select("P.imagen, P.updated_at")
 			->from("productos AS P", true)
 			->join('categorias AS C', 'P.id_categoria = C.id', 'left')
-			->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left')
-			->where('P.imagen IS NOT NULL', NULL, FALSE);
+			->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left');
+
+		if (isset($filtros->sumarPedidos) && $filtros->sumarPedidos == 1) {
+			$mProducto1->join("({$subQuery}) PP", "P.id = PP.id_producto", "left");
+		}
+
+		$mProducto1->where('P.imagen IS NOT NULL', NULL, FALSE);
 
 		if($filtros->estado != "-1"){
 			$mProducto->where("P.estado", $filtros->estado);
@@ -563,38 +605,40 @@ class cProductos extends BaseController {
 		}
 
 		if(isset($filtros->categoria) && $filtros->categoria > 0){
-			$arrayFiltro['categoria'] = $filtros->categoria;
 			$mProducto->where("P.id_categoria", $filtros->categoria);
 			$mProducto1->where("P.id_categoria", $filtros->categoria);
 		}
 
 		if(isset($filtros->cantIni) && $filtros->cantIni >= 0) {
-			$arrayFiltro['cantIni'] = $filtros->cantIni;
-			$mProducto->where("P.stock >= $filtros->cantIni");
-			$mProducto1->where("P.stock >= $filtros->cantIni");
+			$dataCantidad = $stringStock;
+			if(isset($filtros->cantidadXPaca) && $filtros->cantidadXPaca == '1') {
+				$dataCantidad = "CAST(({$stringStock} / P.cantPaca) AS DECIMAL(12,2))"; 
+			}
+			$mProducto->where("{$dataCantidad} >= $filtros->cantIni");
+			$mProducto1->where("{$dataCantidad} >= $filtros->cantIni");
 		}
 
 		if(isset($filtros->cantFin) && $filtros->cantFin >= 0){
-			$arrayFiltro['cantFin'] = $filtros->cantFin;
-			$mProducto->where("P.stock <= $filtros->cantFin");
-			$mProducto1->where("P.stock <= $filtros->cantFin");
+			$dataCantidad = $stringStock;
+			if(isset($filtros->cantidadXPaca) && $filtros->cantidadXPaca == '1') {
+				$dataCantidad = "CAST(({$stringStock} / P.cantPaca) AS DECIMAL(12,2))"; 
+			}
+			$mProducto->where("{$dataCantidad} <= $filtros->cantFin");
+			$mProducto1->where("{$dataCantidad} <= $filtros->cantFin");
 		}
 
 		if(isset($filtros->preciIni) && $filtros->preciIni >= 0) {
-			$arrayFiltro['preciIni'] = $filtros->preciIni;
 			$mProducto->where("P.precio_venta >= $filtros->preciIni");
 			$mProducto1->where("P.precio_venta >= $filtros->preciIni");
 		}
 
 		if(isset($filtros->preciFin) && $filtros->preciFin >= 0){
-			$arrayFiltro['preciFin'] = $filtros->preciFin;
 			$mProducto->where("P.precio_venta <= $filtros->preciFin");
 			$mProducto1->where("P.precio_venta <= $filtros->preciFin");
 		}
 
 		//validamos si aplica para ventas para realziar algunas validaciones
 		if (isset($filtros->ventas) && $filtros->ventas == 1) {
-			$arrayFiltro['ventas'] = $filtros->ventas;
 			if ($this->inventarioNegativo == "0") {
 				$mProducto->where("P.stock >=", 0);
 				$mProducto1->where("P.stock >=", 0);
@@ -613,6 +657,15 @@ class cProductos extends BaseController {
 				$mProducto1->orLike(trim($it), $filtros->search);
 			}
 			$mProducto1->groupEnd();
+		}
+
+		if (isset($filtros->order)) {
+			$column = $search[$filtros->order['column']];
+			if ($filtros->order['column'] == "5") {
+				$column = $stringStock;
+			}
+			$mProducto->orderBy($column, $filtros->order['dir']);
+			$mProducto1->orderBy($column, $filtros->order['dir']);
 		}
 
 		if (!is_null($offset)) {

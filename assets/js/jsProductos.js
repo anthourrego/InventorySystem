@@ -634,6 +634,7 @@ $(function () {
     dataFiltros.cantFin = $("#cantFin").val() == "" ? -1 : +$("#cantFin").val();
     dataFiltros.preciFin = $("#preciFin").val() == "" ? -1 : +$("#preciFin").val();
     dataFiltros.preciIni = $("#preciIni").val() == "" ? -1 : +$("#preciIni").val();
+    dataFiltros.cantidadXPaca = $("#selectCantidadXPaca").val() == "" ? 0 : +$("#selectCantidadXPaca").val();
     dataFiltros.sumarPedidos = $("#sumarPedidos").val();
 
     $("#modalFiltros").modal('hide');
@@ -643,6 +644,7 @@ $(function () {
   $("#reiniciarFiltros").on('click', function () {
     dataFiltros = { estado: 1, sumarPedidos: 0 };
     $("#selectEstado").val(1);
+    $("#selectCantidadXPaca").val(0);
     $("#cantIni, #cantFin, #preciFin, #preciIni").val('');
     $("#cateFiltro").val('').change();
     $("#modalFiltros").modal('hide');
