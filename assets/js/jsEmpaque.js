@@ -316,39 +316,40 @@ function obtenerInfoPedido(pedido, sync = false) {
         $("#btnFinalizarCaja").show();
       }
 
-      let estructu = `<div class="col-8 col-lg-4">
-        <div class="card mb-2 ${(!it.finEmpaque && $USUARIOID == it.empacador ? 'border border-info caja-actual' : '')}" ${(!it.finEmpaque && $USUARIOID == it.empacador ? `data-caja="${it.idCajaPedido}"` : '')} style="border-width: 3px !important;">
+      let estructu = `
+        <div class="card item-caja rounded border ${(!it.finEmpaque && $USUARIOID == it.empacador ? 'border-primary caja-actual' : 'border-ligth')}" ${(!it.finEmpaque && $USUARIOID == it.empacador ? `data-caja="${it.idCajaPedido}"` : '')} style="cursor: pointer;" data-pos="${pos}">
           <div class="card-body">
-            <div class="row">
-              <div class="col-9 item-caja" data-pos="${pos}" style="cursor: pointer;">
+            <div class="d-flex justify-content-between">
+              <div class="w-75 mr-2">
                 <h5 class="card-title">
                   <i class="fa-solid fa-box mr-1"></i> ${it.numeroCaja}
                 </h5>
-                <p class="card-text">${it.nombreEmpacador}</p>
+                <p class="card-text h6 text-muted text-truncate">${it.nombreEmpacador}</p>
               </div>
               ${$USUARIOID == it.empacador ? `
-                <div class="col-3">
+                <div class="d-flex align-items-center justify-content-center">
                   <button class="btn btn-sm btn-danger eliminar-caja" data-pos="${pos}" title="eliminar">
                     <i class="fas fa-trash"></i>
                   </button>
                 </div>` : ''}
             </div>
+            <div id="listaproductoscaja${it.idCajaPedido}"></div>
           </div>
         </div>
-      </div>`;
+      `;
       estructura += estructu;
     });
     $("#listacajas").html(estructura);
 
-    if (pedido.cajas.length > 3 || ($(window).width() < 993 && pedido.cajas.length > 1)) {
-      $("#listacajas").css("overflow-x", "scroll");
-    } else {
-      $("#listacajas").css("overflow-x", "unset");
-    }
-
     $(".item-caja").on('click', function () {
       let infoCaja = pedido.cajas[$(this).data('pos')];
-      $("#btnReabrirCaja").hide();
+
+      if ($("#listaproductoscaja" + infoCaja.idCajaPedido).hasClass('is-open-list')) {
+        $("#listaproductoscaja" + infoCaja.idCajaPedido).removeClass('is-open-list');
+        $("#listaproductoscaja" + infoCaja.idCajaPedido).html('');
+        return
+      }
+
       $.ajax({
         url: rutaBase + 'ObtenerProductosaCaja/' + infoCaja.idCajaPedido,
         type: 'GET',
@@ -358,36 +359,41 @@ function obtenerInfoPedido(pedido, sync = false) {
           if (productosCaja.length) {
             estructura = '';
             productosCaja.forEach((it, x) => {
-              estructura += `<div class="list-group-item list-group-item-action p-2">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 text-truncate w-75">
-                      ${it.referencia} - ${it.cantidad} uni
-                    </h6>
-                    <button type="button" class="btn btn-sm btn-danger btn-eliminar-prod" data-pos=${x}>
-                      <i class="fas fa-trash"></i>
-                    </button>
-                  </div>
+              estructura += `
+                <div class="d-flex justify-content-between align-items-center border-bottom border-dark p-2 mb-2">
+                  <h6 class="mb-0 text-truncate w-75">
+                    ${it.referencia} - ${it.cantidad} unidades
+                  </h6>
+                  <button type="button" class="btn btn-sm btn-danger btn-eliminar-prod" data-pos=${x}>
+                    <i class="fas fa-trash"></i>
+                  </button>
                 </div>
               `;
             });
-            $("#listaproductoscaja").html(estructura);
+            $("#listaproductoscaja" + infoCaja.idCajaPedido).html(`
+              ${infoCaja.finEmpaque && $USUARIOID == infoCaja.empacador ? `
+                <div class="d-flex justify-content-end my-2">
+                  <button type="button" id="btnReabrirCaja${infoCaja.idCajaPedido}" class="btn btn-warning mb-2">
+                    <i class="fas fa-box-open"></i> Abrir Caja
+                  </button>
+                </div>
+              ` : ''}
+              ${estructura}
+            `);
 
             $(".btn-eliminar-prod").on('click', function () {
               let producto = productosCaja[$(this).data('pos')];
-
               alertify.confirm('Advertencia', `¿Esta seguro de retirar el producto con referencia ${producto.referencia} de la caja? `, function () {
                 eliminarCaja(infoCaja.idCajaPedido, pedido.id, producto.idProductoCaja);
               }, function () { });
-
             });
           } else {
-            $("#listaproductoscaja").html(estructura);
+            $("#listaproductoscaja" + infoCaja.idCajaPedido).html(estructura);
           }
+          $("#listaproductoscaja" + infoCaja.idCajaPedido).addClass('is-open-list');
 
           if (infoCaja.finEmpaque && $USUARIOID == infoCaja.empacador) {
-            $("#btnReabrirCaja").show();
-
-            $("#btnReabrirCaja").off('click').click(function () {
+            $(`#btnReabrirCaja${infoCaja.idCajaPedido}`).off('click').click(function () {
               $.ajax({
                 url: rutaBase + 'ReabrirCaja',
                 type: 'POST',
@@ -435,8 +441,6 @@ function obtenerInfoPedido(pedido, sync = false) {
     });
 
     if (!sync) $(".card.caja-actual").find('.item-caja').click();
-  } else {
-    $("#listaproductoscaja").html('');
   }
 
   $("#btnSincronizar").off('click').on('click', function () {
@@ -568,9 +572,6 @@ function eliminarCaja(idCaja, idPedido, idProdCaja = 0) {
     success: function (resp) {
       if (resp.success) {
         alertify.success(resp.msj);
-        if (idProdCaja == 0) {
-          $("#listaproductoscaja").html('');
-        }
         obtenerInfoPedido(resp.pedido);
       } else {
         alertify.error(resp.msj);
