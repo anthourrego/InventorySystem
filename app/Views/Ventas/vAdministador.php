@@ -9,7 +9,7 @@
   <div class="card-body">
     <div class="table-responsive">
       <table id="table" class="table table-sm table-striped table-hover table-bordered w-100">
-        <thead> 
+        <thead>
           <tr>
             <th>Código factura</th>
             <th>Cliente</th>
@@ -20,6 +20,7 @@
             <th>Total</th>
             <th>Vendedor</th>
             <th>Fecha Creación</th>
+            <th>Fecha Vence</th>
             <th>Acciones</th>
           </tr>
         </thead>

@@ -210,6 +210,12 @@
             </select>
           </div>
           <hr class="col-12 my-2">
+          <h5 class="mb-1 col-12">Ventas:</h5>
+          <div class="col-12 col-md-6 col-lg-3">
+            <label for="diasVencimientoVenta">Días de vencimiento:</label>
+            <input type="number" id="diasVencimientoVenta"  data-nombre="Días de vencimiento" name="diasVencimientoVenta" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad de días">
+          </div>
+          <hr class="col-12 my-2">
         </div>
       </div>
       <div class="tab-pane fade" id="empresaTab" role="tabpanel" aria-labelledby="empresa-tab">

@@ -10,7 +10,7 @@
 				<form id="formVenta" class="formValid form-row">
 					<input type="hidden" name="idVenta" id="idVenta">
 					<div class="col-4 form-group mb-1">
-						<label class="mb-0">Nro venta<span class="text-danger">*</span></label>
+						<label class="mb-0" for="nroVenta">Nro venta<span class="text-danger">*</span></label>
 						<input type="text" id="nroVenta" name="nroVenta" class="form-control form-control-sm" disabled value="<?= $nroVenta ?>">
 					</div>
 					<div class="col-4 form-group mb-1 form-valid">
@@ -27,19 +27,17 @@
 							<option></option>
 						</select>
 					</div>
-					<!-- <div class="col-6 form-group mb-1 form-valid">
-						<label class="mb-0" for="cliente">Cliente<span class="text-danger">*</span></label>
-						<select <?= $prefijoValido == 'N' ? 'disabled' : '' ?> id="cliente" required name="cliente" class="custom-select custom-select-sm select2" data-placeholder="Seleccione un cliente..." data-allow-clear="1">
-							<option></option>
-						</select>
-					</div> -->
-					<div class="col-12 form-group mb-1 form-valid">
+					<div class="col-8 form-group mb-1 form-valid">
 						<label class="mb-0" for="sucursal">Sucursales<span class="text-danger">*</span></label>
 						<select <?= $prefijoValido == 'N' ? 'disabled' : '' ?> id="sucursal" required name="sucursal" class="custom-select custom-select-sm select2" data-placeholder="Seleccione un sucursal..." data-allow-clear="1">
 							<option></option>
 						</select>
 					</div>
-				</form>     
+					<div class="col-4 form-group mb-1">
+						<label class="mb-0" for="fechaVencimiento">Fecha de vencimiento<span class="text-danger">*</span></label>
+						<input type="text" id="fechaVencimiento" name="fechaVencimiento" class="form-control form-control-sm" disabled>
+					</div>
+				</form>
 				<div class="form-row">
 					<div class="col-12">
 						<hr class="my-2">
@@ -47,7 +45,7 @@
 					<div class="col-12">
 						<div class="table-responsive">
 							<table id="tblProductos" class="table table-sm table-striped table-hover table-bordered w-100">
-								<thead> 
+								<thead>
 									<tr>
 										<th>Acción</th>
 										<th>Referencia</th>
@@ -132,4 +130,5 @@
 	$IMAGENPROD = <?= $imagenProd ?>;
 	$CAMPOSPRODUCTO = <?= json_encode($camposProducto) ?>;
 	$NOMBREEMPRESA = "<?= session()->get("nombreEmpresa") ?>";
+	$DIASVENCIMIENTOFACTURAGENERAL = <?= $diasVencimientoFacturaGeneral ?>;
 </script>

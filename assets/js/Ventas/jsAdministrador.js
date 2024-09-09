@@ -16,30 +16,33 @@ let DT = $("#table").DataTable({
     {
       data: 'neto',
       className: 'text-right',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return formatoPesos.format(data.neto);
       }
     },
     {
       data: 'total',
       className: 'text-right',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return formatoPesos.format(data.total);
       }
     },
     { data: 'NombreVendedor' },
     {
       data: 'created_at',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A");
       }
+    },
+    {
+      data: 'FechaVencimiento'
     },
     {
       orderable: false,
       searchable: false,
       defaultContent: '',
       className: 'text-center noExport',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return `<div class="btn-group btn-group-sm" role="group">
           <a href="${base_url()}Reportes/Factura/${data.id}/1" target="_blank" type="button" class="btn btn-info" title="Imprimir factura"><i class="fa-solid fa-print"></i></a>
           ${data.id_pedido != null ?

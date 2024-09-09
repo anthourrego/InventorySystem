@@ -166,6 +166,10 @@
                             <label class="mb-0" for="telefonoCartSucursal">Teléfono cartera <span class="text-danger">*</span></label>
                             <input placeholder="Ingresar teléfono cartera" required class="form-control soloNumeros inputTel inputVer" id="telefonoCartSucursal" name="telefonoCartSucursal" type="tel" minlength="10" maxlength="50" autocomplete="off">
                           </div>
+                          <div class="col-12 col-md-4 form-group form-valid mb-1">
+                            <label class="mb-0" for="diasVencimientoVenta">Días de vencimiento Factura:</label>
+                            <input type="number" id="diasVencimientoVenta"  name="diasVencimientoVenta" class="soloNumeros form-control inputVer" autocomplete="off" placeholder="Ingresar días de vencimiento factura" autocomplete="off">
+                          </div>
                           <?php if (validPermissions([441], true)) { ?>
                             <div class="col-12 text-right">
                               <button type="button" style="display: none;" class="btn btn-secondary" id="btnLimpiar"><i class="fas fa-broom"></i> Limpiar</button>
@@ -190,6 +194,7 @@
                       <th>Cartera</th>
                       <th>Telefono Cartera</th>
                       <th>Barrio</th>
+                      <th>Días Vence Factura</th>
                       <th>Acciones</th>
                     </tr>
                   </thead>

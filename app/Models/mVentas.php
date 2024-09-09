@@ -23,7 +23,8 @@ class mVentas extends Model {
 		"neto",
 		"total",
 		"metodo_pago",
-		"id_pedido"
+		"id_pedido",
+		"fecha_vencimiento"
 	];
 
 	// Dates
@@ -35,17 +36,18 @@ class mVentas extends Model {
 
 	// Validation
 	protected $validationRules      = [
-		'id'            => "permit_empty|is_natural_no_zero",
-		'codigo'        => 'required|string|min_length[1]|max_length[20]|is_unique[ventas.codigo, id, {id}]',
-		'id_cliente'    => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[clientes.id]',
-		'id_vendedor'   => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[usuarios.id]',
-		'id_sucursal'   => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[sucursales.id]',
-		'impuesto'      => 'required|decimal|min_length[1]|max_length[20]',
-		'neto'          => 'required|decimal|min_length[1]|max_length[20]',
-		'total'         => 'required|decimal|min_length[1]|max_length[20]',
-		'metodo_pago'   => 'required|string|min_length[1]|max_length[50]',
-		'observacion'   => 'permit_empty|string|min_length[1]|max_length[500]',
-		'id_pedido'     => 'permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[pedidos.id]',
+		'id'            		=> "permit_empty|is_natural_no_zero",
+		'codigo'        		=> 'required|string|min_length[1]|max_length[20]|is_unique[ventas.codigo, id, {id}]',
+		'id_cliente'    		=> 'required|numeric|min_length[1]|max_length[11]|is_not_unique[clientes.id]',
+		'id_vendedor'   		=> 'required|numeric|min_length[1]|max_length[11]|is_not_unique[usuarios.id]',
+		'id_sucursal'   		=> 'required|numeric|min_length[1]|max_length[11]|is_not_unique[sucursales.id]',
+		'impuesto'      		=> 'required|decimal|min_length[1]|max_length[20]',
+		'neto'          		=> 'required|decimal|min_length[1]|max_length[20]',
+		'total'         		=> 'required|decimal|min_length[1]|max_length[20]',
+		'metodo_pago'   		=> 'required|string|min_length[1]|max_length[50]',
+		'observacion'   		=> 'permit_empty|string|min_length[1]|max_length[500]',
+		'id_pedido'     		=> 'permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[pedidos.id]',
+		'fecha_vencimiento'     => 'required|string|min_length[1]|max_length[10]|',
 	];
 	protected $validationMessages   = [
 		"codigo" => [
@@ -87,7 +89,8 @@ class mVentas extends Model {
 				S.administrador AS AdministradorSucursal,
 				S.telefono,
 				CI.nombre AS Ciudad,
-				DEP.nombre AS Departamento  
+				DEP.nombre AS Departamento,
+				DATE_FORMAT(V.fecha_vencimiento, '%Y-%m-%d') AS FechaVencimiento
 			")->join("clientes AS C", "V.id_cliente = C.id", "left")
 			->join("usuarios AS U", "V.id_vendedor = U.id", "left")
 			->join("sucursales AS S", "V.id_sucursal = S.id", "left")

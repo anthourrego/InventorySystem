@@ -271,6 +271,10 @@ class cModificarReporte extends BaseController {
       "aplica" => ["Compra"],
       "descripcion" => "Proveedor de la compra"
     ],
+    "fechaVencimiento" => [
+      "aplica" => ["Factura"],
+      "descripcion" => "Fecha de vencimiento de la factura"
+    ],
   ];
 
 	public function index() {

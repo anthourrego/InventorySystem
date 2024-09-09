@@ -378,6 +378,7 @@ class cReportes extends BaseController {
 						S.telefonoCart AS telCartSucursal,
 						CI.nombre AS ciudadSucursal,
 						DEP.nombre AS deptoSucursal,
+						" . ($tabla == 'ventas' ? "DATE_FORMAT(V.fecha_vencimiento, '%Y-%m-%d') AS fechaVencimiento," : '') . "
 						V.observacion
 					")->join("clientes AS C", "V.id_cliente = C.id", "left")
 					->join("usuarios AS U", "V.id_vendedor = U.id", "left")

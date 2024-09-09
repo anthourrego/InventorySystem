@@ -24,7 +24,7 @@ let DTProductos = {
     visible: $IMAGENPROD,
     defaultContent: '',
     className: "text-center imgProdTb",
-    render: function (meta, type, data, meta) {
+    render: function (meta, type, data, meta2) {
       let extension = data.imagen == null ? null : "01-small." + data.imagen.split(".").pop();
       return $IMAGENPROD ? `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
                   <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${extension}" alt="" />
@@ -32,14 +32,14 @@ let DTProductos = {
     }
   },
   { data: 'referencia' },
-  { 
-    data: 'item', 
-    visible: ($CAMPOSPRODUCTO.item == '1' ? true : false) 
+  {
+    data: 'item',
+    visible: ($CAMPOSPRODUCTO.item == '1' ? true : false)
   },
   {
     data: 'descripcion',
     width: "30%",
-    render: function (meta, type, data, meta) {
+    render: function (meta, type, data, meta2) {
       return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
     }
   },
@@ -51,7 +51,7 @@ let DTProductos = {
     name: 'stock',
     data: 'stock',
     className: 'text-center align-middle',
-    render: function (meta, type, data, meta) {
+    render: function (meta, type, data, meta2) {
       return `<button class="btn btn-${data.ColorStock}">${data.stock}</button>`;
     }
   },
@@ -60,7 +60,7 @@ let DTProductos = {
     searchable: false,
     defaultContent: '',
     className: 'text-center align-middle noExport',
-    render: function (meta, type, data, meta) {
+    render: function (meta, type, data, meta2) {
       data.cantidadXPaca = Math.trunc(data.cantidadXPaca);
       let btn = true;
       let resultado = productosVentas.find((it) => it.id == data.id);
@@ -74,7 +74,7 @@ let DTProductos = {
       }
 
       if (btn && ($INVENTARIONEGATIVO == "0" && $CAMPOSPRODUCTO.paca == "1" && $CAMPOSPRODUCTO.ventaPaca == "1" && Number(data.cantidadXPaca) < 1)) {
-        btn = false;  
+        btn = false;
       }
 
       return `<div class="btn-group btn-group-sm" role="group">
@@ -134,7 +134,7 @@ let DTProductosVenta = $("#tblProductos").DataTable({
       searchable: false,
       defaultContent: '',
       className: 'text-center noExport',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return `<div class="btn-group btn-group-sm" role="group">
                   <button type="button" class="btn btn-danger btnBorrar" title="Borrar Producto"><i class="fa-solid fa-times"></i></button>
                 </div>`;
@@ -143,14 +143,14 @@ let DTProductosVenta = $("#tblProductos").DataTable({
     {
       data: 'referencia',
       width: "30%",
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return `<span title="${data.referencia}" class="text-descripcion">${data.referencia}</span>`;
       }
     },
     {
       data: 'descripcion',
       width: "30%",
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
       }
     },
@@ -159,7 +159,7 @@ let DTProductosVenta = $("#tblProductos").DataTable({
       searchable: false,
       visible: ($CAMPOSPRODUCTO.paca == '1' && $CAMPOSPRODUCTO.ventaPaca == '1') ? true : false,
       data: 'cantidadPaca',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         data.cantidadPaca = Math.trunc(data.cantidadPaca);
         return `<input type="number" class="form-control form-control-sm cantidadPacaProduct inputFocusSelect soloNumeros" min="1" value="${data.cantidadPaca}">`;
       }
@@ -168,7 +168,7 @@ let DTProductosVenta = $("#tblProductos").DataTable({
       orderable: false,
       searchable: false,
       data: 'cantidad',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return `<input type="number" class="form-control form-control-sm cantidadProduct inputFocusSelect soloNumeros" ${($CAMPOSPRODUCTO.paca == "1" && $CAMPOSPRODUCTO.ventaPaca == '1' ? 'readonly' : '')} min="1" value="${data.cantidad}">`;
       }
     },
@@ -176,7 +176,7 @@ let DTProductosVenta = $("#tblProductos").DataTable({
       orderable: false,
       searchable: false,
       data: 'valorUnitario',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return `<input type="tel" class="form-control form-control-sm inputPesos text-right inputFocusSelect soloNumeros valorUnitario" min="0" value="${data.valorUnitario}">`;
       }
     },
@@ -185,7 +185,7 @@ let DTProductosVenta = $("#tblProductos").DataTable({
       searchable: false,
       data: 'valorTotal',
       className: 'text-right valorTotal',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return formatoPesos.format(data.valorTotal);
       }
     },
@@ -197,7 +197,7 @@ let DTProductosVenta = $("#tblProductos").DataTable({
       $(row).find(".cantidadPacaProduct").on("change", function () {
         let cantPaca = Number($(this).val());
 
-        if (cantPaca > data.cantidadXPaca){
+        if (cantPaca > data.cantidadXPaca) {
           alertify.alert("Advertencia", `Ha superado la cantidad maxima de pacas, solo hay <b>${data.cantidadXPaca}</b> disponibles pacas`);
           cantPaca = data.cantidadXPaca;
         }
@@ -259,6 +259,9 @@ $(function () {
     DTProductos = $("#table").DataTable(DTProductos);
   }
 
+  /* Modificamos la fecha a vencer factura con la cantidad de dias general si se crea venta */
+  $("#fechaVencimiento").val(moment().add($DIASVENCIMIENTOFACTURAGENERAL, 'days').format('YYYY-MM-DD'));
+
   document.title = "Factura " + $("#nroVenta").val() + " | " + $NOMBREEMPRESA;
 
   $("#formVenta").submit(function (e) {
@@ -278,6 +281,7 @@ $(function () {
         form.append("idUsuario", $("#vendedor").val());
         form.append("observacion", $("#observacion").val());
         form.append("codigoVenta", $("#nroVenta").val());
+        form.append("fechaVencimiento", $("#fechaVencimiento").val());
         form.append("productos", JSON.stringify(productosVentas));
 
         $('.deshabilitarboton').prop('disabled', true);
@@ -383,6 +387,17 @@ $(function () {
       cache: true
     }
   });
+
+  $("#sucursal").on('change', function () {
+    let idCurrenteSucursal = $(this).val();
+    /* Modificamos la fecha a vencer factura con la cantidad de dias de la sucursal */
+    let currentSucursal = sucursales.find(sucursal => sucursal.id == idCurrenteSucursal);
+    if (currentSucursal && currentSucursal.diasVencimientoVenta > 0) {
+      $("#fechaVencimiento").val(moment().add(+currentSucursal.diasVencimientoVenta, 'days').format('YYYY-MM-DD'));
+    } else {
+      $("#fechaVencimiento").val(moment().add($DIASVENCIMIENTOFACTURAGENERAL, 'days').format('YYYY-MM-DD'));
+    }
+  })
 
   $("#verImg").change(function () {
     if ($(this).is(':checked')) {

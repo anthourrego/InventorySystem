@@ -38,6 +38,10 @@
 			<td>Ciudad: {ciudadSucursal}, {deptoSucursal}</td>
 			<td>Vendedor: {nombreVendedor}</td>
 		</tr>
+		<tr>
+			<td>Fecha Vencimiento: {fechaVencimiento}</td>
+			<td>&nbsp;</td>
+		</tr>
 	</tbody>
 </table>
 
