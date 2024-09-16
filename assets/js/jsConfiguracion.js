@@ -33,6 +33,19 @@ $(function () {
     }
   });
 
+  $("#pacaProducto").on("change", function(e) {
+    e.preventDefault();
+    const ventaXPaca = $("#ventaXPaca");
+    console.log($(this).val());
+
+    if ($(this).val() == 1) {
+      ventaXPaca.attr("disabled", false);
+    } else {
+      ventaXPaca.val(0).change();
+      ventaXPaca.attr("disabled", true);
+    }
+  });
+
   $(".configAct").on("change", function (e) {
     e.preventDefault();
     let input = $(this);
