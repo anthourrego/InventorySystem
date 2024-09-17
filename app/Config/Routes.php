@@ -131,16 +131,16 @@ $routes->group('ModificarReporte', ['filter' => 'authGuard:7'], function ($route
 
 //Manifiesto
 $routes->group('Manifiesto', ['filter' => 'authGuard:8'], function ($routes) {
-    $routes->get('/', 'cManifiesto::index');
-    $routes->post('DT', 'cManifiesto::listaDT');
-    $routes->get('Archivo/(:any)', 'cManifiesto::archivo/$1');
-    $routes->post('DTProductos', 'cManifiesto::listaDTProds');
-    $routes->post('AgregarProducto', 'cManifiesto::actualizarManifiesto');
-    $routes->get('Descargar/(:any)', 'cManifiesto::descargarVerArchivo/$1/0');
-    $routes->get('Ver/(:any)', 'cManifiesto::descargarVerArchivo/$1/1');
-    $routes->post('Crear', 'cManifiesto::crearEditar', ['filter' => ['authGuard:81', 'ajax']]);
-    $routes->post('Editar', 'cManifiesto::crearEditar', ['filter' => ['authGuard:82', 'ajax']]);
-    $routes->post('Eliminar', 'cManifiesto::eliminar', ['filter' => ['authGuard:83', 'ajax']]);
+	$routes->get('/', 'cManifiesto::index');
+	$routes->post('DT', 'cManifiesto::listaDT');
+	$routes->get('Archivo/(:any)', 'cManifiesto::archivo/$1');
+	$routes->post('DTProductos', 'cManifiesto::listaDTProds');
+	$routes->post('AgregarProducto', 'cManifiesto::actualizarManifiesto');
+	$routes->get('Descargar/(:any)', 'cManifiesto::descargarVerArchivo/$1/0');
+	$routes->get('Ver/(:any)', 'cManifiesto::descargarVerArchivo/$1/1');
+	$routes->post('Crear', 'cManifiesto::crearEditar', ['filter' => ['authGuard:81', 'ajax']]);
+	$routes->post('Editar', 'cManifiesto::crearEditar', ['filter' => ['authGuard:82', 'ajax']]);
+	$routes->post('Eliminar', 'cManifiesto::eliminar', ['filter' => ['authGuard:83', 'ajax']]);
 });
 
 $routes->group('Perfil', ['filter' => 'authGuard'], function ($routes) {
