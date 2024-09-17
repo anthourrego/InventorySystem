@@ -213,7 +213,7 @@
           <div class="col-12 col-md-6">
             <h5 class="mb-1 col-12">Pedidos/Ventas</h5>
             <div class="col-12 col-md-6">
-              <label for="pacaProducto">X Paca:</label>
+              <label for="pacaProducto">X Paca: <button class="btn btn-info btn-sm fas fa-info" data-toggle="tooltip" title="Este campo se mostrara habilitado siempre y cuando el parametro 'Productos -> Paca X' activo."></button></label>
               <select id="ventaXPaca" data-nombre="Venta y Pedido X Paca" <?= !$editar ? 'disabled' : '' ?> name="ventaXPaca" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
                 <option value=""></option>
                 <option value="1">Si</option>
