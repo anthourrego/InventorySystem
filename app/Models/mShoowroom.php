@@ -83,4 +83,20 @@ class mShoowroom extends Model
 		$case .= "ELSE 'N/A' END";
 		return $case;
 	}
+
+	/**
+	 * Summary of getStatusDescription
+	 * @return mixed
+	 */
+	public function getStatusDescription() {
+		return $this->statusDescription;
+	}
+
+	/**
+	 * Summary of getTable
+	 * @return mixed
+	 */
+	public function getTable() {
+		return $this->table;
+	}
 }

@@ -511,7 +511,7 @@ class mPermisos extends Model {
 						"text" => "Confirmar Producto Reportado"
 					]
 				]
-			]/* ,
+			],
 			[
 				"id" => 70,
 				"text" => "Showroom",
@@ -528,7 +528,7 @@ class mPermisos extends Model {
 						"text" => "Editar"
 					]
 				]
-			] */,
+			],
 			[
 				"id" => 80,
 				"text" => "Ingreso Mercancía",
