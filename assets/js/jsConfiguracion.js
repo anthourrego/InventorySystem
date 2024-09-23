@@ -29,7 +29,30 @@ $(function () {
             }
           }
         });
+
+        //Validamos si los productos por capas estan inactivo para deshabilitar el campo de venta o actualizarlo
+        if ($("#pacaProducto").val() == '0') {
+          if ($("#ventaXPaca").val() == '1') {
+            $("#ventaXPaca").val(0).change(); 
+          }
+          $("#ventaXPaca").attr("disabled", true);
+        }
       }
+    }
+  });
+
+  $("#pacaProducto").on("change", function(e) {
+    e.preventDefault();
+    const ventaXPaca = $("#ventaXPaca");
+
+    if ($(this).val() == 1) {
+      ventaXPaca.attr("disabled", false);
+    } else {
+      if (ventaXPaca.val() == '1') {
+        ventaXPaca.val(0).change();
+      }
+
+      ventaXPaca.attr("disabled", true);
     }
   });
 
@@ -108,6 +131,8 @@ $(function () {
     $(".alert.alert-info").html(`El color rojo ira hasta el ${$("#inventarioBajo").val()}, el color amarillo desde el ${+$("#inventarioBajo").val() + 1} hasta el  ${$("#inventarioMedio").val()} y el color verde a partir de una cantidad mayor a ${$("#inventarioAlto").val()}`);
     $(".alert-info-data").toggle();
   });
+
+  $('[data-toggle="tooltip"]').tooltip()
 });
 
 function eliminarImagen(file, nombre) {

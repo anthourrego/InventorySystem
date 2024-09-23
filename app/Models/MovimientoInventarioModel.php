@@ -7,8 +7,8 @@ use CodeIgniter\Model;
 
 class MovimientoInventarioModel extends Model
 {
-	protected $errorAfterInsert = false;
-	protected $errorAfterInsertMsg = '';
+	public $errorAfterInsert = false;
+	public $errorAfterInsertMsg = '';
 
 	protected $table            = 'movimientosinventario';
 	protected $primaryKey       = 'id';

@@ -1,6 +1,6 @@
 <?php
 
-namespace ThirdParty;
+namespace App\ThirdParty;
 
 use Exception;
 /*

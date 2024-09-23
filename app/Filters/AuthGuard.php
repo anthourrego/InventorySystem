@@ -18,7 +18,7 @@ class AuthGuard implements FilterInterface {
       }
     }
     
-    //Con los argumentos validamos los numero de permisos
+    // Con los argumentos validamos los número de permisos
     if ($arguments != null) {
       return validPermissions($arguments, false, $request->isAJAX());
     }

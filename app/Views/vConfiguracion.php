@@ -90,14 +90,6 @@
             <label for="pacDescarga">Sugerir Cantidad Despachar:</label>
             <input type="number" id="cantDespachar" data-nombre="Sugerir Cantidad Despachar" name="cantDespachar" min="1" max="100" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad">
           </div>
-          <div class="col-12 col-md-6 col-lg-3">
-            <label for="pacaProducto">Venta X Paca:</label>
-            <select id="ventaXPaca" data-nombre="Venta X Paca" <?= !$editar ? 'disabled' : '' ?> name="ventaXPaca" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
-              <option value=""></option>
-              <option value="1">Si</option>
-              <option value="0" selected>No</option>
-            </select>
-          </div>
         </div>
       </div>
       <div class="tab-pane fade" id="inventarioTab" role="tabpanel" aria-labelledby="inventario-tab">
@@ -200,31 +192,46 @@
       </div>
       <div class="tab-pane fade" id="ventasTab" role="tabpanel" aria-labelledby="ventas-tab">
         <div class="form-row">
-          <h5 class="mb-1 col-12">Pedidos:</h5>
-          <div class="col-12 col-md-6 col-lg-3">
-            <label for="manejaEmpaque">Maneja Empaque:</label>
-            <select id="manejaEmpaque" data-nombre="Maneja Empaque" <?= !$editar ? 'disabled' : '' ?> name="manejaEmpaque" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
-              <option value=""></option>
-              <option value="1" selected>Si</option>
-              <option value="0">No</option>
-            </select>
-          </div>
-          <hr class="col-12 my-2">
-          <h5 class="mb-1 col-12">Ventas:</h5>
-          <div class="col-12 col-md-6 col-lg-3">
-            <label for="diasVencimientoVenta">Días de vencimiento:</label>
-            <input type="number" id="diasVencimientoVenta" data-nombre="Días de vencimiento" name="diasVencimientoVenta" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad de días">
-          </div>
-          <div class="col-12 col-md-6 col-lg-3 mb-3">
-            <label for="porcentajeDescuento">Porcentaje de descuento:</label>
-            <div class="input-group mb-3">
-              <input type="text" class="soloNumeros configAct form-control" data-nombre="Porcentaje de descuento" maxlength="3" <?= !$editar ? 'disabled' : '' ?> name="porcentajeDescuento" id="porcentajeDescuento" required autocomplete="off" placeholder="Porcentaje" aria-describedby="descrip_porcenteaje">
-              <div class="input-group-append">
-                <span class="input-group-text" id="descrip_porcenteaje">%</span>
+          <div class="col-12 col-md-6">
+            <h5 class="mb-1 col-12">Pedidos:</h5>
+            <div class="col-12 col-md-6">
+              <label for="manejaEmpaque">Maneja Empaque:</label>
+              <select id="manejaEmpaque" data-nombre="Maneja Empaque" <?= !$editar ? 'disabled' : '' ?> name="manejaEmpaque" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
+                <option value=""></option>
+                <option value="1" selected>Si</option>
+                <option value="0">No</option>
+              </select>
+            </div>
+            <hr class="col-12 my-2">
+            <h5 class="mb-1 col-12">Ventas:</h5>
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <label for="diasVencimientoVenta">Días de vencimiento:</label>
+                <input type="number" id="diasVencimientoVenta"  data-nombre="Días de vencimiento" name="diasVencimientoVenta" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad de días">
+              </div>
+              <div class="col-12 col-md-6">
+                <label for="porcentajeDescuento">Porcentaje de descuento:</label>
+                <div class="input-group">
+                  <input type="text" class="soloNumeros configAct form-control" data-nombre="Porcentaje de descuento" maxlength="3" <?= !$editar ? 'disabled' : '' ?> name="porcentajeDescuento" id="porcentajeDescuento" required autocomplete="off" placeholder="Porcentaje" aria-describedby="descrip_porcenteaje">
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="descrip_porcenteaje">%</span>
+                  </div>
+                </div>
               </div>
             </div>
+            <hr class="col-12 my-2">
           </div>
-          <hr class="col-12 my-2">
+          <div class="col-12 col-md-6">
+            <h5 class="mb-1 col-12">Pedidos/Ventas</h5>
+            <div class="col-12 col-md-6">
+              <label for="pacaProducto">X Paca: <button class="btn btn-info btn-sm fas fa-info" data-toggle="tooltip" title="Este campo se mostrara habilitado siempre y cuando el parametro 'Productos -> Paca X' activo."></button></label>
+              <select id="ventaXPaca" data-nombre="Venta y Pedido X Paca" <?= !$editar ? 'disabled' : '' ?> name="ventaXPaca" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
+                <option value=""></option>
+                <option value="1">Si</option>
+                <option value="0" selected>No</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
       <div class="tab-pane fade" id="empresaTab" role="tabpanel" aria-labelledby="empresa-tab">
