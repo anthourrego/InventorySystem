@@ -262,6 +262,7 @@ $routes->group('Pedidos', ['filter' => 'authGuard:10'], function ($routes) {
 	$routes->get('DetallePedido/(:num)', 'cPedidos::detallePedido/$1');
 	$routes->get('DetallePedidoCaja/(:num)/(:num)', 'cPedidos::DetallePedidoCaja/$1/$2');
 	$routes->post('ImportarExcel', 'cPedidos::ImportarExcel');
+	$routes->get('DownloadExcel', 'cPedidos::downloadExcel');
 });
 
 //Empaque

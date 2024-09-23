@@ -170,7 +170,19 @@ let DTProductosPedido = $("#tblProductos").DataTable({
 			className: 'btn-uploadExcel btn-success', 
 			text: '<i class="fa-solid fa-upload"></i>', 
 			attr: { 
-				title: "Cargar excel", "data-toggle":"tooltip" 
+				title: "Cargar excel", 
+        "data-toggle":"tooltip" 
+			},
+			exportOptions: {
+				columns: ':visible:not(.noExport)'
+			},
+		},
+    { 
+			className: 'btn-downloadExcel btn-secondary', 
+			text: '<i class="fa-solid fa-download"></i>', 
+			attr: { 
+				title: "Descargar excel", 
+        "data-toggle":"tooltip" 
 			},
 			exportOptions: {
 				columns: ':visible:not(.noExport)'
@@ -537,12 +549,30 @@ $(function () {
     $("#excelFile").click();
   });
 
+  $(document).on("click", ".btn-downloadExcel", function(e) {
+    e.preventDefault();
+
+    $.ajax({
+      url: rutaBase + `DownloadExcel`,
+      xhrFields: {
+        responseType: 'blob'
+      },
+      success: (resp) => {
+        var a = document.createElement('a');
+        var url = window.URL.createObjectURL(resp);
+        a.href = url;
+        a.download = "plantilla.xlsx";
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    });
+  });
+
   $("#excelFile").change(function (e) {
     $(document).find(".btnAdd").removeClass("disabled").prop("disabled", false);
     productosPedido = [];
     DTProductosPedido.clear().draw();
     form = new FormData($("#frm-Excel")[0]);
-    console.log(form);
     $.ajax({
       url: rutaBase + "ImportarExcel",
       type: 'POST',
