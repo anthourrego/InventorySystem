@@ -55,6 +55,8 @@ class cVentas extends BaseController {
 
 		$this->content["diasVencimientoFacturaGeneral"] = (session()->has("diasVencimientoVenta") ? session()->get("diasVencimientoVenta") : 0);
 
+		$this->content["porcentajeDescuento"] = (session()->has("porcentajeDescuento") ? session()->get("porcentajeDescuento") : 0);
+
 		$this->content["venta"] = null;
 
 		$this->content["inventario_negativo"] = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
@@ -178,7 +180,8 @@ class cVentas extends BaseController {
 				CUI.nombre AS Ciudad,
 				CAST(SUBSTRING_INDEX(codigo, '$dataPref', -1) AS UNSIGNED) AS Delimitado,
 				TPR.TotalProductosReportados,
-				DATE_FORMAT(V.fecha_vencimiento, '%Y-%m-%d') AS FechaVencimiento
+				DATE_FORMAT(V.fecha_vencimiento, '%Y-%m-%d') AS FechaVencimiento,
+				V.descuento
 			")->join('clientes AS C', 'V.id_cliente = C.id', 'left')
 			->join('sucursales AS S', 'V.id_sucursal = S.id', 'left')
 			->join('ciudades AS CUI', 'S.id_ciudad = CUI.id', 'left')
@@ -287,6 +290,7 @@ class cVentas extends BaseController {
 				"metodo_pago" => $dataPost->metodoPago,
 				"observacion" => $dataPost->observacion,
 				"fecha_vencimiento" => $dataPost->fechaVencimiento,
+				"descuento" => $dataPost->descuento,
 			);
 
 			if($ventaModel->save($dataSave)){
@@ -329,6 +333,7 @@ class cVentas extends BaseController {
 
 					if ($ventaModel->save($dataSave)) {
 						$resp["success"] = true;
+						$dataSave["total"] = $valorTotal - $dataPost->descuento;
 						$resp["msj"] = $dataSave;
 					} else {
 						$resp["msj"] = "Ha ocurrido un error al guardar la venta." . listErrors($ventaModel->errors());

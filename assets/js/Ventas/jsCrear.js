@@ -124,7 +124,7 @@ let DTProductosVenta = $("#tblProductos").DataTable({
   processing: false,
   serverSide: false,
   order: [],
-  scrollY: 'calc(100vh - 575px)',
+  scrollY: 'calc(100vh - 610px)',
   scroller: {
     loadingIndicator: true
   },
@@ -282,6 +282,7 @@ $(function () {
         form.append("observacion", $("#observacion").val());
         form.append("codigoVenta", $("#nroVenta").val());
         form.append("fechaVencimiento", $("#fechaVencimiento").val());
+        form.append("descuento", $("#descuentoAplicado").val().replace('$ ', '').split(',').join(''));
         form.append("productos", JSON.stringify(productosVentas));
 
         $('.deshabilitarboton').prop('disabled', true);
@@ -303,7 +304,8 @@ $(function () {
                     $("#nroVenta").val(resp.msj.codigo + 1);
                     $("#sucursal, #vendedor").data("id", "").closest(".input-group").find(".input-group-text").text("");
                     $("#observacion").val("");
-                    $("#total").val(0)
+                    $("#total, #totalSinDescuento, #descuentoAplicado").val(0)
+                    $("#aplicarDescuento").prop('checked', false).change();
                     DTProductos.ajax.reload();
                     DTProductosVenta.clear().rows.add(productosVentas).draw();
                     resetForm("#formVenta");
@@ -418,15 +420,78 @@ $(function () {
       }, function () { });
     });
   }
-});
 
-function calcularTotal() {
-  sumTotal = 0;
-  productosVentas.forEach((it) => {
-    sumTotal += Number(it.valorTotal);
+  $("#aplicarDescuento").on('change', function () {
+    if ($(this).is(':checked')) {
+      $("#percentageDiscount").text(`${$PORCENTAJEDESCUENTOFACTURAGENERAL}%`);
+      calculateDiscount('checkDiscount');
+      $("#removeDiscount").off('click').on('click', function () {
+        $("#aplicarDescuento").prop('checked', false).change();
+      });
+
+      $("#descuentoAplicado").off('change').on('change', function () {
+        let valueDiscount = +$(this).val().replace('$ ', '').split(',').join('');
+        let valueBill = getTotalProducts();
+        if (valueDiscount > valueBill) {
+          alertify.warning("El valor de descuento es superior al total de la factura");
+          return
+        }
+        calculateDiscount('changeInputDiscount');
+      });
+    } else {
+      $("#input-applied-discount").addClass('d-none');
+      $("#input-check-discount").removeClass('d-none');
+      $("#descuentoAplicado").val('0');
+      calcularTotal();
+    }
   });
 
+});
+
+/* Calculamos el descuento de la factura */
+function calculateDiscount(fromAction) {
+  let percentageDiscount = $PORCENTAJEDESCUENTOFACTURAGENERAL;
+  let percetnageText = +$("#percentageDiscount").text().replace('%', '');
+  /* Se valida si es diferente para mantener el valor digitado en campo de descuento y nose altere */
+  if (percetnageText > 0 && $PORCENTAJEDESCUENTOFACTURAGENERAL != percetnageText) {
+    percentageDiscount = +$("#percentageDiscount").text().replace('%', '');
+    fromAction = 'changeInputDiscount';
+  }
+
+  let valueBill = getTotalProducts();
+  let totalDiscount = 0;
+  if ($("#aplicarDescuento").is(':checked')) {
+    $("#input-applied-discount").removeClass('d-none');
+    $("#input-check-discount").addClass('d-none');
+
+    if (percentageDiscount > 0) {
+      /* Validamos si viene desde digitar manual el descuento de factura */
+      if (fromAction == 'changeInputDiscount') {
+        totalDiscount = +$("#descuentoAplicado").val().replace('$ ', '').split(',').join('');
+        let percentageTotalDiscount = ((totalDiscount * 100) / valueBill).toFixed(0);
+        $("#percentageDiscount").text(`${percentageTotalDiscount}%`);
+      } else {
+        // fromAction == ('checkDiscount' || 'calculateTotal')
+        totalDiscount = (percentageDiscount * valueBill) / 100;
+      }
+    }
+  }
+  $("#descuentoAplicado").val(totalDiscount);
+  $("#totalSinDescuento").val(valueBill);
+  /* Agregamos de nuevo el total */
+  $("#total").val(valueBill - totalDiscount);
+}
+
+function calcularTotal() {
+  let sumTotal = getTotalProducts();
+
   $("#total").val(sumTotal);
+
+  calculateDiscount('calculateTotal');
+}
+
+function getTotalProducts() {
+  return productosVentas.reduce((suma, item) => suma + Number(item.valorTotal), 0)
 }
 
 function formatRepo(repo) {

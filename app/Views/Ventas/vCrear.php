@@ -63,15 +63,41 @@
 					<div class="col-12">
 						<hr class="my-2">
 					</div>
-					<div class="col-12 form-group mb-0">
+					<div class="col-12 form-group mb-2">
 						<label class="mb-0" for="observacion">Observacion</label>
 						<textarea <?= $prefijoValido == 'N' ? 'disabled' : '' ?> class="form-control" name="observacion" id="observacion" rows="2" minlength="1" maxlength="500"></textarea>
+					</div>
+					<div class="col-4 mb-0" id="input-check-discount">
+						<div class="input-group mt-4">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" id="aplicarDescuento" aria-label="Checkbox for following text input">
+								</div>
+							</div>
+							<input type="text" style="font-weight: bold;" disabled readonly class="form-control" value="¿Aplicar descuento?" aria-label="Text input with checkbox">
+						</div>
+					</div>
+					<div class="col-4 mb-0 d-none" id="input-applied-discount">
+						<label class="mb-0" for="descuentoAplicado">Descuento</label>
+						<div class="input-group mb-0">
+							<div class="input-group-prepend">
+								<button type="button" id="removeDiscount" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+							</div>
+							<input class="form-control inputPesos" type="text" name="descuentoAplicado" id="descuentoAplicado" value="0">
+							<div class="input-group-append">
+								<span class="input-group-text" id="percentageDiscount"></span>
+							</div>
+						</div>
+					</div>
+					<div class="col-4 form-group mb-0">
+						<label class="mb-0" for="totalSinDescuento">Total sin descuento</label>
+						<input class="form-control inputPesos" disabled type="text" name="totalSinDescuento" id="totalSinDescuento" value="0">
 					</div>
 					<div class="col-4 form-group mb-0">
 						<label class="mb-0" for="total">Total</label>
 						<input class="form-control inputPesos" disabled type="text" name="total" id="total" value="0">
 					</div>
-					<div class="offset-4 col-4 d-flex align-items-end justify-content-end">
+					<div class="col-12 d-flex align-items-end justify-content-end mt-3">
 
 						<?php if(is_null($venta)) { ?>
 							<button type="button" id="btnCancelarCreacion" class="btn btn-danger mr-2 deshabilitarboton"><i class="fas fa-times"></i> Cancelar</button>
@@ -131,4 +157,5 @@
 	$CAMPOSPRODUCTO = <?= json_encode($camposProducto) ?>;
 	$NOMBREEMPRESA = "<?= session()->get("nombreEmpresa") ?>";
 	$DIASVENCIMIENTOFACTURAGENERAL = <?= $diasVencimientoFacturaGeneral ?>;
+	$PORCENTAJEDESCUENTOFACTURAGENERAL = <?= $porcentajeDescuento ?>;
 </script>

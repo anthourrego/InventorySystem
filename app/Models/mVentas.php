@@ -24,7 +24,8 @@ class mVentas extends Model {
 		"total",
 		"metodo_pago",
 		"id_pedido",
-		"fecha_vencimiento"
+		"fecha_vencimiento",
+		"descuento",
 	];
 
 	// Dates
@@ -48,6 +49,7 @@ class mVentas extends Model {
 		'observacion'   		=> 'permit_empty|string|min_length[1]|max_length[500]',
 		'id_pedido'     		=> 'permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[pedidos.id]',
 		'fecha_vencimiento'     => 'required|string|min_length[1]|max_length[10]|',
+		'descuento'     		=> 'required|decimal|min_length[1]|max_length[20]',
 	];
 	protected $validationMessages   = [
 		"codigo" => [
@@ -90,7 +92,8 @@ class mVentas extends Model {
 				S.telefono,
 				CI.nombre AS Ciudad,
 				DEP.nombre AS Departamento,
-				DATE_FORMAT(V.fecha_vencimiento, '%Y-%m-%d') AS FechaVencimiento
+				DATE_FORMAT(V.fecha_vencimiento, '%Y-%m-%d') AS FechaVencimiento,
+				V.descuento
 			")->join("clientes AS C", "V.id_cliente = C.id", "left")
 			->join("usuarios AS U", "V.id_vendedor = U.id", "left")
 			->join("sucursales AS S", "V.id_sucursal = S.id", "left")

@@ -275,6 +275,14 @@ class cModificarReporte extends BaseController {
       "aplica" => ["Factura"],
       "descripcion" => "Fecha de vencimiento de la factura"
     ],
+    "totalSinDescuento" => [
+      "aplica" => ["Factura"],
+      "descripcion" => "Valor de la factura sin el descuento"
+    ],
+    "descuento" => [
+      "aplica" => ["Factura"],
+      "descripcion" => "Descuento aplicado a la factura"
+    ],
   ];
 
 	public function index() {

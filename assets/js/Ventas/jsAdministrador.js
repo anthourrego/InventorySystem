@@ -14,10 +14,10 @@ let DT = $("#table").DataTable({
     { data: 'Ciudad' },
     { data: 'metodo_pago' },
     {
-      data: 'neto',
+      data: 'descuento',
       className: 'text-right',
       render: function (meta, type, data, meta2) {
-        return formatoPesos.format(data.neto);
+        return formatoPesos.format(data.descuento);
       }
     },
     {
@@ -25,6 +25,13 @@ let DT = $("#table").DataTable({
       className: 'text-right',
       render: function (meta, type, data, meta2) {
         return formatoPesos.format(data.total);
+      }
+    },
+    {
+      data: 'totalMenosDescuento',
+      className: 'text-right',
+      render: function (meta, type, data, meta2) {
+        return formatoPesos.format(+data.total - (+data.descuento));
       }
     },
     { data: 'NombreVendedor' },

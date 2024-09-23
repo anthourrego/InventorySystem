@@ -16,6 +16,7 @@
             <th>Sucursal</th>
             <th>Ciudad</th>
             <th>Forma de pago</th>
+            <th>Descuento</th>
             <th>Neto</th>
             <th>Total</th>
             <th>Vendedor</th>

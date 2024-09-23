@@ -213,7 +213,16 @@
           <h5 class="mb-1 col-12">Ventas:</h5>
           <div class="col-12 col-md-6 col-lg-3">
             <label for="diasVencimientoVenta">Días de vencimiento:</label>
-            <input type="number" id="diasVencimientoVenta"  data-nombre="Días de vencimiento" name="diasVencimientoVenta" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad de días">
+            <input type="number" id="diasVencimientoVenta" data-nombre="Días de vencimiento" name="diasVencimientoVenta" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad de días">
+          </div>
+          <div class="col-12 col-md-6 col-lg-3 mb-3">
+            <label for="porcentajeDescuento">Porcentaje de descuento:</label>
+            <div class="input-group mb-3">
+              <input type="text" class="soloNumeros configAct form-control" data-nombre="Porcentaje de descuento" maxlength="3" <?= !$editar ? 'disabled' : '' ?> name="porcentajeDescuento" id="porcentajeDescuento" required autocomplete="off" placeholder="Porcentaje" aria-describedby="descrip_porcenteaje">
+              <div class="input-group-append">
+                <span class="input-group-text" id="descrip_porcenteaje">%</span>
+              </div>
+            </div>
           </div>
           <hr class="col-12 my-2">
         </div>

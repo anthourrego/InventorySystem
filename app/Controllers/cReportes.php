@@ -366,7 +366,7 @@ class cReportes extends BaseController {
 						V." . ($tabla == 'pedidos' ? 'pedido' : 'codigo') . " AS numeracion,
 						C.nombre AS nombreCliente,
 						U.nombre AS nombreVendedor,
-						V.total AS totalGeneral,
+						" . ($tabla == 'ventas' ? "(V.total - V.descuento)" : "V.total") . " AS totalGeneral,
 						DATE_FORMAT(V.created_at, '%d-%m-%Y') AS fechaCreacion,
 						DATE_FORMAT(V.created_at, '%H:%i:%s') AS horaCreacion,
 						S.direccion AS direccionSucursal,
@@ -378,7 +378,6 @@ class cReportes extends BaseController {
 						S.telefonoCart AS telCartSucursal,
 						CI.nombre AS ciudadSucursal,
 						DEP.nombre AS deptoSucursal,
-						" . ($tabla == 'ventas' ? "DATE_FORMAT(V.fecha_vencimiento, '%Y-%m-%d') AS fechaVencimiento," : '') . "
 						V.observacion
 					")->join("clientes AS C", "V.id_cliente = C.id", "left")
 					->join("usuarios AS U", "V.id_vendedor = U.id", "left")
@@ -389,6 +388,9 @@ class cReportes extends BaseController {
 				
 				if ($tabla == 'ventas') {
 					$venta = $venta->select("id_pedido");
+					$venta = $venta->select("V.total AS totalSinDescuento");
+					$venta = $venta->select("V.descuento AS descuento");
+					$venta = $venta->select("DATE_FORMAT(V.fecha_vencimiento, '%Y-%m-%d') AS fechaVencimiento");
 				} else {
 					$venta = $venta->select("
 						DATE_FORMAT(V.inicio_empaque, '%d-%m-%Y') AS fechaIniEmpa,
@@ -404,7 +406,7 @@ class cReportes extends BaseController {
 		$venta = $venta->get()->getResultObject()[0];
 
 		foreach ($venta as $key => $value) {
-			if ($key == 'totalGeneral') {
+			if ($key == 'totalGeneral' || $key == 'descuento' || $key == 'totalSinDescuento') {
 				$value = '$ ' . number_format($value, 0, ',', '.');
 			}
 			$pdf = str_replace("{{$key}}", (is_null($value) ? '' : $value), $pdf);
