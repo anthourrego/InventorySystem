@@ -346,6 +346,13 @@
                 <?php endforeach ?>
               </select>
             </div>
+            <div class="col-6 col-md-3 form-group form-valid <?= $camposProducto["paca"] == "1" ? '' : 'd-none' ?>">
+              <label class="mb-0" for="selectCantidadXPaca">Cantidad X Paca</label>
+              <select class="custom-select" id="selectCantidadXPaca">
+                <option selected value="0">No</option>
+                <option value="1">Si</option>
+              </select>
+            </div>
             <div class="col-6 col-md-3 form-group form-valid">
               <label class="mb-0" for="cantIni">Cantidad Inicial</label>
               <input placeholder="Cantidad Inicial" class="form-control soloNumeros" id="cantIni" name="cantIni" type="text" minlength="1" maxlength="255" autocomplete="off">
@@ -354,6 +361,7 @@
               <label class="mb-0" for="cantFin">Cantidad Final</label>
               <input placeholder="Cantidad Final" class="form-control soloNumeros" id="cantFin" name="cantFin" type="text" minlength="1" maxlength="255" autocomplete="off">
             </div>
+            <div class="<?= $camposProducto["paca"] == "1" ? '' : 'd-none' ?> col-md-3"></div>
             <div class="col-6 col-md-3 form-group form-valid">
               <label class="mb-0" for="preciIni">Precio Inicial</label>
               <input placeholder="Precio Inicial" class="form-control soloNumeros" id="preciIni" name="preciIni" type="text" minlength="1" maxlength="255" autocomplete="off">
