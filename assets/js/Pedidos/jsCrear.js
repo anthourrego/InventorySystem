@@ -204,17 +204,6 @@ let DTProductosPedido = $("#tblProductos").DataTable({
     },
   ],
   buttons: [
-		{ 
-			className: 'btn-uploadExcel btn-success', 
-			text: '<i class="fa-solid fa-upload"></i>', 
-			attr: { 
-				title: "Cargar excel", 
-        "data-toggle":"tooltip" 
-			},
-			exportOptions: {
-				columns: ':visible:not(.noExport)'
-			},
-		},
     { 
 			className: 'btn-downloadExcel btn-secondary', 
 			text: '<i class="fa-solid fa-download"></i>', 
@@ -394,6 +383,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
 });
 
 $(function () {
+  bsCustomFileInput.init();
   $("#frm-Excel").trigger("reset");
 
   if ($CANTIDADVENDEDORES == 0 || $CANTIDADCLIENTES == 0 || $PREFIJOVALIDO == 'N') {
@@ -580,10 +570,6 @@ $(function () {
     });
   }
 
-  $(document).on("click", ".btn-uploadExcel", function () {
-    $("#excelFile").click();
-  });
-
   $(document).on("click", ".btn-downloadExcel", function(e) {
     e.preventDefault();
 
@@ -604,15 +590,19 @@ $(function () {
   });
 
   $("#excelFile").change(function (e) {
+    e.preventDefault();
     $(document).find(".btnAdd").removeClass("disabled").prop("disabled", false);
     productosPedido = [];
+    let fileName = $(this).val().split('\\').pop();
     DTProductosPedido.clear().draw();
+
+    if (fileName == '') return;
+
     form = new FormData($("#frm-Excel")[0]);
     $.ajax({
       url: rutaBase + "ImportarExcel",
       type: 'POST',
       dataType: 'json',
-      async: false,
       processData: false,
       contentType: false,
       cache: false,
@@ -632,7 +622,7 @@ $(function () {
         }
       },
       complete: () => {
-        $("#frm-Excel").trigger("reset");
+        //$("#frm-Excel").trigger("reset");
       }
     });
   });
