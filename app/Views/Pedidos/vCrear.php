@@ -45,8 +45,16 @@
 						<hr class="my-2">
 					</div>
 					<div class="col-12">
-						<form class="d-none" enctype="multipart/form-data" accept-charset="utf-8" name="frmExcel" id="frm-Excel">
-							<input type="file" id="excelFile" name="excelFile" accept=".csv, application/vnd.ms-excel,xls,csv,application/xml,application/zip,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/msword,application/vn.openxmlformats-officedocument.spreadsheetml.sheet">
+						<form enctype="multipart/form-data" accept-charset="utf-8" name="frmExcel" id="frm-Excel">
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="inputGroupFileAddon01">Subir</span>
+								</div>
+								<div class="custom-file">
+									<input type="file" class="custom-file-input" id="excelFile" name="excelFile" accept=".csv, application/vnd.ms-excel,xls,csv,application/xml,application/zip,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/msword,application/vn.openxmlformats-officedocument.spreadsheetml.sheet" aria-describedby="inputGroupFileAddon01">
+									<label class="custom-file-label" for="excelFile" data-browse="Elegir">Seleccionar Archivo</label>
+								</div>
+							</div>	
 						</form>
 						<div class="table-responsive">
 							<table id="tblProductos" class="table table-sm table-striped table-hover table-bordered w-100">
