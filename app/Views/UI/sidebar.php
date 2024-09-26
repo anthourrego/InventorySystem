@@ -125,6 +125,14 @@
               </a>
             </li>
 						<?php } ?>
+						<?php if (validPermissions([100], true)) { ?>
+						<li class="nav-item">
+              <a href="<?= base_url("CuentasCobrar") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'CuentasCobrar' ? 'active' : '' ?>">
+								<i class="nav-icon fa-solid fa-receipt"></i>
+                <p>Cuentas por cobrar</p>
+              </a>
+            </li>
+						<?php } ?>
 						<?php if (validPermissions([80], true)) { ?> 
 						<li class="nav-item">
               <a href="<?= base_url("IngresoMercancia") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'IngresoMercancia' ? 'active' : '' ?>">

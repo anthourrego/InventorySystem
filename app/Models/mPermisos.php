@@ -583,6 +583,31 @@ class mPermisos extends Model {
 					]
 				]
 			],
+			[
+				"id" => 100,
+				"text" => "Cuentas por cobrar",
+				"uri" => "CuentasCobrar",
+				"icon" => "fa-solid fa-receipt",
+				"color" => "bg-secondary",
+				"children" => [
+					[
+						"id" => 1001,
+						"text" => "Crear"
+					],
+					[
+						"id" => 1002,
+						"text" => "Anular"
+					],
+					[
+						"id" => 1003,
+						"text" => "Imprimir"
+					],
+					[
+						"id" => 1004,
+						"text" => "Imprimir Todos"
+					]
+				]
+			],
 		];
 
 		if (!session()->has("manejaEmpaque") || session()->get("manejaEmpaque") == "1") {

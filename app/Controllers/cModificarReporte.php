@@ -59,36 +59,42 @@ class cModificarReporte extends BaseController {
       "color" => "#4ba7a7",
       "color-text" => "#ffffff",
       "url" => ""
+    ],
+    "Cuenta_Cobrar" => [
+      "icono" => "fa-solid fa-arrow-up-right-dots",
+      "color" => "#d3d0a4",
+      "color-text" => "#ffffff",
+      "url" => ""
     ]
   ];
 
 	public $variables = [
     "logoEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar"],
       "descripcion" => "Logo de la empresa"
     ],
     "nombreEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar"],
       "descripcion" => "Nombre de la empresa"
     ],
     "digitoVeriEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar"],
       "descripcion" => "Digito de verificación de la empresa"
     ],
     "direccionEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar"],
       "descripcion" => "Dirección de la empresa"
     ],
     "telefonoEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar"],
       "descripcion" => "Telefono de la empresa"
     ],
     "emailEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar"],
       "descripcion" => "Correo electrónico de la empresa"
     ],
     "numeracion" => [
-      "aplica" => ["Factura", "Pedido", "Empaque", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar"],
       "descripcion" => "Consecutivo de documento"
     ],
     "nombreSucursal" => [
@@ -100,11 +106,11 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Nombre del cliente"
     ],
     "fechaCreacion" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar"],
       "descripcion" => "Fecha de generación del documento"
     ],
     "horaCreacion" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar"],
       "descripcion" => "Hora de generación del documento"
     ],
     "direccionSucursal" => [
@@ -140,19 +146,19 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Departamento de la sucursal"
     ],
     "nombreVendedor" => [
-      "aplica" => ["Factura", "Pedido", "Empaque", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar"],
       "descripcion" => "Nombre del vendedor"
     ],
     "itemProductoDP" => [
-      "aplica" => ["Factura", "Pedido", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Compra", "Ing_Mercancia"],
       "descripcion" => "Número de item del producto"
     ],
     "referenciaProductoDP" => [
-      "aplica" => ["Factura", "Pedido", "Compra", "Sticker"],
+      "aplica" => ["Factura", "Pedido", "Compra", "Sticker", "Ing_Mercancia"],
       "descripcion" => "Referencia del producto"
     ],
     "descripcionProductoDP" => [
-      "aplica" => ["Factura", "Pedido", "Compra", "Sticker"],
+      "aplica" => ["Factura", "Pedido", "Compra", "Sticker", "Ing_Mercancia"],
       "descripcion" => "Descripcion del producto"
     ],
     "cantPacaProductoDP" => [
@@ -172,7 +178,7 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Total por producto"
     ],
     "totalGeneral" => [
-      "aplica" => ["Factura", "Pedido", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Compra", "Cuenta_Cobrar"],
       "descripcion" => "Valor total de la venta"
     ],
     "ubicacionProductoDP" => [
@@ -184,7 +190,7 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Manifiesto del producto"
     ],
     "observacion" => [
-      "aplica" => ["Pedido", "Factura", "Rotulo", "Empaque", "Compra"],
+      "aplica" => ["Pedido", "Factura", "Rotulo", "Empaque", "Compra", "Ing_Mercancia",],
       "descripcion" => "Observación del reporte"
     ],
     "numeroRotulo" => [
@@ -264,7 +270,7 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Total de productos dentro de la caja"
     ],
     "estadoRegistro" => [
-      "aplica" => ["Compra"],
+      "aplica" => ["Compra", "Ing_Mercancia"],
       "descripcion" => "Estado de la informacion cargada"
     ],
     "proveedor" => [
@@ -282,6 +288,34 @@ class cModificarReporte extends BaseController {
     "descuento" => [
       "aplica" => ["Factura"],
       "descripcion" => "Descuento aplicado a la factura"
+    ],
+    "codigoAbonoDP" => [
+      "aplica" => ["Cuenta_Cobrar"],
+      "descripcion" => "Código de abono a la factura"
+    ],
+    "valorAbonoDP" => [
+      "aplica" => ["Cuenta_Cobrar"],
+      "descripcion" => "Valor del abono a la factura"
+    ],
+    "observacionAbonoDP" => [
+      "aplica" => ["Cuenta_Cobrar"],
+      "descripcion" => "Observación de abono a la factura"
+    ],
+    "estadoAbonoDP" => [
+      "aplica" => ["Cuenta_Cobrar"],
+      "descripcion" => "Estado de abono a la factura"
+    ],
+    "usuarioAbonoDP" => [
+      "aplica" => ["Cuenta_Cobrar"],
+      "descripcion" => "Usuario registro abono a la factura"
+    ],
+    "fechaAbonoDP" => [
+      "aplica" => ["Cuenta_Cobrar"],
+      "descripcion" => "Fecha de registro de abono a la factura"
+    ],
+    "totalAbono" => [
+      "aplica" => ["Cuenta_Cobrar"],
+      "descripcion" => "Total de abonos a la factura"
     ],
   ];
 
@@ -309,7 +343,7 @@ class cModificarReporte extends BaseController {
   }
 
   public function reporte($reporte) {
-    $reporte = str_replace("_", " ", $reporte);
+    
     $datReporte = [];
     if (isset($this->reportes[$reporte])) {
       $datReporte = $this->reportes[$reporte];

@@ -610,3 +610,7 @@ div.dt-button-collection .dt-button {
 div.table-responsive>div.dt-container>div.row {
   margin-bottom: .5rem;
 }
+
+.cu-pointer {
+  cursor: pointer;
+}

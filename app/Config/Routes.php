@@ -163,6 +163,7 @@ $routes->group('Reportes', ['filter' => 'authGuard'], function ($routes) {
 	$routes->get('IngresoMercancia/(:num)/(:num)', 'cReportes::ingresoMercancia/$1/$2');
 	$routes->get('StickerCompra/(:num)/(:num)', 'cReportes::stickerCompra/$1/$2');
 	$routes->get('ManifiestosSinRepetir/(:num)', 'cReportes::manifiestoSinRepetir/$1');
+	$routes->get('CuentaCobrar/(:num)/(:num)', 'cReportes::cuentaCobrar/$1/$2');
 });
 
 //ReportesQR
@@ -319,4 +320,14 @@ $routes->group('Showroom', ['filter' => 'authGuard:70'], function ($routes) {
 	$routes->post('Crear', 'Showroom::crear', ['filter' => ['authGuard:7001', 'ajax']]);
 	$routes->post('validShowroom', 'Showroom::validCurrentShowroom', ['filter' => ['authGuard:7001', 'ajax']]);
 	$routes->post('changeStatusShowroom', 'Showroom::changeStatusShowroom', ['filter' => ['authGuard:7001', 'ajax']]);
+});
+
+// Abonos ventas
+$routes->group('CuentasCobrar', ['filter' => 'authGuard:100'], function ($routes) {
+	$routes->get('/', 'cCuentasCobrar::index');
+	$routes->post('DT', 'cCuentasCobrar::listaDT');
+	$routes->post('Crear', 'cCuentasCobrar::crear', ['filter' => ['authGuard:1001', 'ajax']]);
+	$routes->post('Anular', 'cCuentasCobrar::anular', ['filter' => ['authGuard:1002', 'ajax']]);
+	$routes->get('CurrentBuy', 'cCuentasCobrar::getCurrentBuy');
+	$routes->get('ObtenerCuentaCobrar/(:any)', 'cCuentasCobrar::getAccounts/$1');
 });

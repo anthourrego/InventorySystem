@@ -71,6 +71,13 @@ class mVentas extends Model {
 	protected $afterDelete    = [];
 
 	function cargarVenta($id){
+		$subQuery = $this->db->table("abonosventas AS AV")
+			->select("
+				AV.id_venta
+				, SUM(CASE WHEN AV.estado = 'CO' THEN AV.valor ELSE 0 END) AS TotalAbonosVenta
+			")
+			->groupBy("AV.id_venta")->getCompiledSelect();
+
 		$venta = $this->db->table("ventas AS V")
 			->select("
 				V.id,
@@ -93,12 +100,15 @@ class mVentas extends Model {
 				CI.nombre AS Ciudad,
 				DEP.nombre AS Departamento,
 				DATE_FORMAT(V.fecha_vencimiento, '%Y-%m-%d') AS FechaVencimiento,
-				V.descuento
+				V.descuento,
+				IF(TA.TotalAbonosVenta IS NULL, 0, TA.TotalAbonosVenta) AS AbonosVenta,
+				((V.total - V.descuento) - IF(TA.TotalAbonosVenta IS NULL, 0, TA.TotalAbonosVenta)) AS ValorPendiente
 			")->join("clientes AS C", "V.id_cliente = C.id", "left")
 			->join("usuarios AS U", "V.id_vendedor = U.id", "left")
 			->join("sucursales AS S", "V.id_sucursal = S.id", "left")
 			->join("ciudades AS CI", "S.id_ciudad = CI.id", "left")
 			->join("departamentos AS DEP", "CI.id_depto = DEP.codigo", "left")
+			->join("({$subQuery}) TA", "V.id = TA.id_venta", "left")
 			->where("V.id", $id)
 			->get()->getResultObject();
 
