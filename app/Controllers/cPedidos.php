@@ -57,7 +57,8 @@ class cPedidos extends BaseController {
 		$this->LSelect2();
 		$this->LInputMask();
 		$this->LJQueryValidation();
-    	$this->LFancybox();
+    $this->LFancybox();
+		$this->LBsCustomFileInput();
 
 		$mClientes = new mClientes();
 		$this->content["cantidadClientes"] = $mClientes->where("estado", 1)->countAllResults();
