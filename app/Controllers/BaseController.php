@@ -275,4 +275,10 @@ abstract class BaseController extends Controller
             'vendor/tinymce/tinymce/tinymce.min.js'
         ];
     }
+
+    public function LBsCustomFileInput() {
+        $this->content['js'][] = [
+            'assets/Libraries/bs-custom-file-input/bs-custom-file-input.min.js'
+        ];
+    }
 }

@@ -38,6 +38,10 @@
 			<td>Ciudad: {ciudadSucursal}, {deptoSucursal}</td>
 			<td>Vendedor: {nombreVendedor}</td>
 		</tr>
+		<tr>
+			<td>Fecha Vencimiento: {fechaVencimiento}</td>
+			<td>&nbsp;</td>
+		</tr>
 	</tbody>
 </table>
 
@@ -65,6 +69,10 @@
 </table>
 
 <p>DP]</p>
+
+<p><strong>Descuento:</strong> {descuento}</p>
+
+<p><strong>Total sin descuento:</strong> {totalSinDescuento}</p>
 
 <p><strong>Total:</strong> {totalGeneral}</p>
 

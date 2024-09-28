@@ -90,14 +90,6 @@
             <label for="pacDescarga">Sugerir Cantidad Despachar:</label>
             <input type="number" id="cantDespachar" data-nombre="Sugerir Cantidad Despachar" name="cantDespachar" min="1" max="100" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad">
           </div>
-          <div class="col-12 col-md-6 col-lg-3">
-            <label for="pacaProducto">Venta X Paca:</label>
-            <select id="ventaXPaca" data-nombre="Venta X Paca" <?= !$editar ? 'disabled' : '' ?> name="ventaXPaca" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
-              <option value=""></option>
-              <option value="1">Si</option>
-              <option value="0" selected>No</option>
-            </select>
-          </div>
         </div>
       </div>
       <div class="tab-pane fade" id="inventarioTab" role="tabpanel" aria-labelledby="inventario-tab">
@@ -155,11 +147,11 @@
           </div>
           <div class="col-12 col-md-6 col-lg-3">
             <label for="consecutivoFact">Consecutivo:</label>
-            <input type="number" id="consecutivoFact" data-nombre="Consecutivo Factura" name="consecutivoFact" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
+            <input type="number" id="consecutivoFact" data-namedigitos="consecutivoFact" data-nombre="Consecutivo Factura" name="consecutivoFact" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
           </div>
           <div class="col-12 col-md-6 col-lg-3">
             <label for="digitosFact">Cant digitos:</label>
-            <input type="number" id="digitosFact"  data-nombre="Digitos Factura" name="digitosFact" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad de digitos">
+            <input type="number" id="digitosFact"  data-nombre="Digitos Factura" name="digitosFact" data-nameconsecutivo="consecutivoFact" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad de digitos">
           </div>
           <hr class="col-12 my-2">
           <h5 class="mb-1 col-12">Pedidos:</h5>
@@ -169,11 +161,11 @@
           </div>
           <div class="col-12 col-md-6 col-lg-3">
             <label for="consecutivoPed">Consecutivo:</label>
-            <input type="number" id="consecutivoPed"  data-nombre="Consecutivo Factura" name="consecutivoPed" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
+            <input type="number" id="consecutivoPed" data-namedigitos="digitosPed" data-nombre="Consecutivo Factura" name="consecutivoPed" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
           </div>
           <div class="col-12 col-md-6 col-lg-3">
             <label for="digitosPed">Cant digitos:</label>
-            <input type="number" id="digitosPed"  data-nombre="Consecutivo Factura" name="digitosPed" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad de digitos">
+            <input type="number" id="digitosPed" data-nameconsecutivo="consecutivoPed" data-nombre="Consecutivo Factura" name="digitosPed" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad de digitos">
           </div>
           <hr class="col-12 my-2">
           <h5 class="mb-1 col-12">Compras:</h5>
@@ -183,11 +175,25 @@
           </div>
           <div class="col-12 col-md-6 col-lg-3">
             <label for="consecutivoCompra">Consecutivo:</label>
-            <input type="number" id="consecutivoCompra"  data-nombre="Consecutivo Compra" name="consecutivoCompra" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
+            <input type="number" id="consecutivoCompra" data-namedigitos="digitosCompra" data-nombre="Consecutivo Compra" name="consecutivoCompra" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
           </div>
           <div class="col-12 col-md-6 col-lg-3">
             <label for="digitosCompra">Cant digitos:</label>
-            <input type="number" id="digitosCompra"  data-nombre="Consecutivo Compra" name="digitosCompra" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad de digitos">
+            <input type="number" id="digitosCompra" data-nameconsecutivo="consecutivoCompra" data-nombre="Consecutivo Compra" name="digitosCompra" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad de digitos">
+          </div>
+          <hr class="col-12 my-2">
+          <h5 class="mb-1 col-12">Cuentas por cobrar:</h5>
+          <div class="col-12 col-md-6 col-lg-3">
+            <label for="prefijoCuentaCobrar">Prefijo:</label>
+            <input type="text" id="prefijoCuentaCobrar" data-nombre="Prefijo Compra" name="prefijoCuentaCobrar" <?= !$editar ? 'disabled' : '' ?> class="soloLetras form-control configAct" required autocomplete="off"placeholder="Ingrese el Prefijo">
+          </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <label for="consecutivoCuentaCobrar">Consecutivo:</label>
+            <input type="number" id="consecutivoCuentaCobrar" data-namedigitos="digitosCuentaCobrar" data-nombre="Consecutivo Compra" name="consecutivoCuentaCobrar" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
+          </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <label for="digitosCuentaCobrar">Cant digitos:</label>
+            <input type="number" id="digitosCuentaCobrar" data-nameconsecutivo="consecutivoCuentaCobrar" data-nombre="Consecutivo cuenta por cobrar" name="digitosCuentaCobrar" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad de digitos">
           </div>
           <hr class="col-12 my-2">
           <h5 class="mb-1 col-12">Ingreso mercancia:</h5>
@@ -200,16 +206,46 @@
       </div>
       <div class="tab-pane fade" id="ventasTab" role="tabpanel" aria-labelledby="ventas-tab">
         <div class="form-row">
-          <h5 class="mb-1 col-12">Pedidos:</h5>
-          <div class="col-12 col-md-6 col-lg-3">
-            <label for="manejaEmpaque">Maneja Empaque:</label>
-            <select id="manejaEmpaque" data-nombre="Maneja Empaque" <?= !$editar ? 'disabled' : '' ?> name="manejaEmpaque" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
-              <option value=""></option>
-              <option value="1" selected>Si</option>
-              <option value="0">No</option>
-            </select>
+          <div class="col-12 col-md-6">
+            <h5 class="mb-1 col-12">Pedidos:</h5>
+            <div class="col-12 col-md-6">
+              <label for="manejaEmpaque">Maneja Empaque:</label>
+              <select id="manejaEmpaque" data-nombre="Maneja Empaque" <?= !$editar ? 'disabled' : '' ?> name="manejaEmpaque" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
+                <option value=""></option>
+                <option value="1" selected>Si</option>
+                <option value="0">No</option>
+              </select>
+            </div>
+            <hr class="col-12 my-2">
+            <h5 class="mb-1 col-12">Ventas:</h5>
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <label for="diasVencimientoVenta">Días de vencimiento:</label>
+                <input type="number" id="diasVencimientoVenta"  data-nombre="Días de vencimiento" name="diasVencimientoVenta" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad de días">
+              </div>
+              <div class="col-12 col-md-6">
+                <label for="porcentajeDescuento">Porcentaje de descuento:</label>
+                <div class="input-group">
+                  <input type="text" class="soloNumeros configAct form-control" data-nombre="Porcentaje de descuento" maxlength="3" <?= !$editar ? 'disabled' : '' ?> name="porcentajeDescuento" id="porcentajeDescuento" required autocomplete="off" placeholder="Porcentaje" aria-describedby="descrip_porcenteaje">
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="descrip_porcenteaje">%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr class="col-12 my-2">
           </div>
-          <hr class="col-12 my-2">
+          <div class="col-12 col-md-6">
+            <h5 class="mb-1 col-12">Pedidos/Ventas</h5>
+            <div class="col-12 col-md-6">
+              <label for="pacaProducto">X Paca: <button class="btn btn-info btn-sm fas fa-info" data-toggle="tooltip" title="Este campo se mostrara habilitado siempre y cuando el parametro 'Productos -> Paca X' activo."></button></label>
+              <select id="ventaXPaca" data-nombre="Venta y Pedido X Paca" <?= !$editar ? 'disabled' : '' ?> name="ventaXPaca" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
+                <option value=""></option>
+                <option value="1">Si</option>
+                <option value="0" selected>No</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
       <div class="tab-pane fade" id="empresaTab" role="tabpanel" aria-labelledby="empresa-tab">

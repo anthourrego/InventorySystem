@@ -9,7 +9,6 @@ use App\Models\mCategorias;
 use App\Models\mCompraProductos;
 use App\Models\mCompras;
 use App\Models\mConfiguracion;
-use App\Models\mManifiesto;
 use App\Models\MovimientoInventarioModel;
 use App\Models\mPedidosProductos;
 use App\Models\mProductos;

@@ -204,17 +204,18 @@ let DTProductosPedido = $("#tblProductos").DataTable({
     },
   ],
   buttons: [
-    {
-      className: 'btn-uploadExcel btn-success',
-      text: '<i class="fa-solid fa-upload"></i>',
-      attr: {
-        title: "Cargar excel", "data-toggle": "tooltip"
-      },
-      exportOptions: {
-        columns: ':visible:not(.noExport)'
-      },
-    }
-  ],
+    { 
+			className: 'btn-downloadExcel btn-secondary', 
+			text: '<i class="fa-solid fa-download"></i>', 
+			attr: { 
+				title: "Descargar excel", 
+        "data-toggle":"tooltip" 
+			},
+			exportOptions: {
+				columns: ':visible:not(.noExport)'
+			},
+		}
+	],
   createdRow: function (row, data, dataIndex) {
     data.cantidadXPaca = Math.trunc(data.cantidadXPaca);
 
@@ -382,6 +383,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
 });
 
 $(function () {
+  bsCustomFileInput.init();
   $("#frm-Excel").trigger("reset");
 
   if ($CANTIDADVENDEDORES == 0 || $CANTIDADCLIENTES == 0 || $PREFIJOVALIDO == 'N') {
@@ -568,21 +570,39 @@ $(function () {
     });
   }
 
-  $(document).on("click", ".btn-uploadExcel", function () {
-    $("#excelFile").click();
+  $(document).on("click", ".btn-downloadExcel", function(e) {
+    e.preventDefault();
+
+    $.ajax({
+      url: rutaBase + `DownloadExcel`,
+      xhrFields: {
+        responseType: 'blob'
+      },
+      success: (resp) => {
+        var a = document.createElement('a');
+        var url = window.URL.createObjectURL(resp);
+        a.href = url;
+        a.download = "plantilla.xlsx";
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    });
   });
 
   $("#excelFile").change(function (e) {
+    e.preventDefault();
     $(document).find(".btnAdd").removeClass("disabled").prop("disabled", false);
     productosPedido = [];
+    let fileName = $(this).val().split('\\').pop();
     DTProductosPedido.clear().draw();
+
+    if (fileName == '') return;
+
     form = new FormData($("#frm-Excel")[0]);
-    console.log(form);
     $.ajax({
       url: rutaBase + "ImportarExcel",
       type: 'POST',
       dataType: 'json',
-      async: false,
       processData: false,
       contentType: false,
       cache: false,
@@ -602,7 +622,7 @@ $(function () {
         }
       },
       complete: () => {
-        $("#frm-Excel").trigger("reset");
+        //$("#frm-Excel").trigger("reset");
       }
     });
   });

@@ -9,6 +9,7 @@ use App\Models\mPedidosProductos;
 use App\Models\mVentasProductos;
 use App\Models\mCompraProductos;
 use App\Models\mIngresoMercanciaProductos;
+use App\Models\mCuentasCobrar;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
 use setasign\Fpdi\TcpdfFpdi;
@@ -366,7 +367,7 @@ class cReportes extends BaseController {
 						V." . ($tabla == 'pedidos' ? 'pedido' : 'codigo') . " AS numeracion,
 						C.nombre AS nombreCliente,
 						U.nombre AS nombreVendedor,
-						V.total AS totalGeneral,
+						" . ($tabla == 'ventas' ? "(V.total - V.descuento)" : "V.total") . " AS totalGeneral,
 						DATE_FORMAT(V.created_at, '%d-%m-%Y') AS fechaCreacion,
 						DATE_FORMAT(V.created_at, '%H:%i:%s') AS horaCreacion,
 						S.direccion AS direccionSucursal,
@@ -388,6 +389,9 @@ class cReportes extends BaseController {
 				
 				if ($tabla == 'ventas') {
 					$venta = $venta->select("id_pedido");
+					$venta = $venta->select("V.total AS totalSinDescuento");
+					$venta = $venta->select("V.descuento AS descuento");
+					$venta = $venta->select("DATE_FORMAT(V.fecha_vencimiento, '%Y-%m-%d') AS fechaVencimiento");
 				} else {
 					$venta = $venta->select("
 						DATE_FORMAT(V.inicio_empaque, '%d-%m-%Y') AS fechaIniEmpa,
@@ -403,7 +407,7 @@ class cReportes extends BaseController {
 		$venta = $venta->get()->getResultObject()[0];
 
 		foreach ($venta as $key => $value) {
-			if ($key == 'totalGeneral') {
+			if ($key == 'totalGeneral' || $key == 'descuento' || $key == 'totalSinDescuento') {
 				$value = '$ ' . number_format($value, 0, ',', '.');
 			}
 			$pdf = str_replace("{{$key}}", (is_null($value) ? '' : $value), $pdf);
@@ -460,7 +464,7 @@ class cReportes extends BaseController {
 							}
 							$value2 = '<img src="' . $path . '" width="70px" height="40px">';
 						}
-						if ($key == 'valorProductoDP' || $key == 'totalProductoDP') {
+						if ($key == 'valorProductoDP' || $key == 'totalProductoDP' || $key == 'valorAbonoDP') {
 							$value2 = '$ ' . number_format($value2, 0, ',', '.');
 						}
 						if ($key == 'paqueteProductoDP') {
@@ -763,6 +767,47 @@ class cReportes extends BaseController {
 			}
 		}
 		return $pdf;
+	}
+
+	public function cuentaCobrar($idVenta, $idAbono) {
+
+		$estrucPdf = $this->estructuraReporte("Cuenta_Cobrar");
+
+		$estrucPdf = $this->setValuesCompany($estrucPdf);
+
+		$dataVenta = $this->cargarDataVenta($estrucPdf, $idVenta, "ventas");
+		$estrucPdf = $dataVenta['pdf'];
+
+		$mCuentasCobrar = new mCuentasCobrar();
+
+		$query = $mCuentasCobrar->select("
+				abonosventas.codigo AS codigoAbonoDP,
+				abonosventas.valor AS valorAbonoDP,
+				abonosventas.observacion AS observacionAbonoDP,
+				DATE_FORMAT(abonosventas.created_at, '%d-%m-%Y') AS fechaAbonoDP,
+				U.nombre AS usuarioAbonoDP,
+				CASE
+					WHEN abonosventas.estado = 'AN'
+						THEN 'Anulado'
+					ELSE 'Confirmado'
+				END AS estadoAbonoDP
+			")->join("usuarios AS U", "abonosventas.id_usuario = U.id", "left")
+			->where("abonosventas.id_venta", $idVenta);
+
+		if ($idAbono > 0) {
+			$query->where("abonosventas.id", $idAbono);
+		}
+
+		$dataAccountBill = $query->findAll();
+
+		$estrucPdf = $this->estructuraProductos($estrucPdf, $dataAccountBill);
+
+		$pdf = $this->initPdf();
+		$pdf->writeHTML($estrucPdf, false, false, false, false, '');
+
+		$pdf->setTitle('Abonos Factura ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
+		$pdf->Output($dataVenta['codigo'] . ".pdf", 'I');
+		exit;
 	}
 
 }

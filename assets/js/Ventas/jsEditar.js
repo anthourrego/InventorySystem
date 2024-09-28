@@ -12,6 +12,7 @@ $(function(){
     $("#idVenta").val($DATOSVENTA.id);
     $('#vendedor').append(vendedorOption).trigger('change');
     $('#sucursal').append(sucursalOption).trigger('change');
+    $("#fechaVencimiento").val($DATOSVENTA.FechaVencimiento);
     
     productosVentas = $DATOSVENTA.productos;
     DTProductosVenta.clear().rows.add(productosVentas).draw();

@@ -125,6 +125,14 @@
               </a>
             </li>
 						<?php } ?>
+						<?php if (validPermissions([100], true)) { ?>
+						<li class="nav-item">
+              <a href="<?= base_url("CuentasCobrar") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'CuentasCobrar' ? 'active' : '' ?>">
+								<i class="nav-icon fa-solid fa-receipt"></i>
+                <p>Cuentas por cobrar</p>
+              </a>
+            </li>
+						<?php } ?>
 						<?php if (validPermissions([80], true)) { ?> 
 						<li class="nav-item">
               <a href="<?= base_url("IngresoMercancia") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'IngresoMercancia' ? 'active' : '' ?>">
@@ -134,12 +142,12 @@
             </li>
 						<?php } ?>
 						<?php if (validPermissions([70], true)) { ?> 
-						<!-- <li class="nav-item">
+						<li class="nav-item">
               <a href="<?= base_url("Showroom") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'Showroom' ? 'active' : '' ?>">
 								<i class="nav-icon fa-solid fa-basket-shopping"></i>
                 <p>Showroom</p>
               </a>
-            </li> -->
+            </li>
 						<?php } ?>
 						<?php if (validPermissions([5], true)) { ?> 
 						<li class="nav-item">
@@ -165,7 +173,7 @@
               </a>
             </li>
 						<?php } ?>
-						<?php if ((!session()->has("manejaEmpaque") || session()->get("manejaEmpaque") == "1") && validPermissions([30], true)) { ?> 
+						<?php if (validPermissions([30], true)) { ?> 
 						<li class="nav-item">
               <a href="<?= base_url("Empaque") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'Empaque' ? 'active' : '' ?>">
 								<i class="nav-icon fa-solid fa-box-open"></i>

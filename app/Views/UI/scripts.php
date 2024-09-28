@@ -8,9 +8,25 @@
   }
 
   function validPermissions($permiso = 0){
-    let listaPermisos = <?= json_encode(session()->get("permisos")) ?>
+    let listaPermisos = <?= json_encode(session()->get("permisos")) ?>;
+    let configManifiesto = <?= (int) (session()->has("manifiestoProducto") ? session()->get("manifiestoProducto") : '0'); ?>;
+    let configEmpaque = <?= (int) (session()->has("manejaEmpaque") ? session()->get("manejaEmpaque") : '0'); ?>;
+    let permisosManifiestos = JSON.parse('<?= json_encode(PERMISOSMANIFIESTOS) ?>');
+    let permisosEmpaque = JSON.parse('<?= json_encode(PERMISOSEMPAQUE) ?>');
 
-    return listaPermisos.some(item => item == $permiso);
+    let validPermisision = listaPermisos.some(item => item == $permiso);
+
+    if (validPermisision) {
+      if (permisosManifiestos.some(item => item == $permiso) && configManifiesto == "0") {
+        validPermisision = false;
+      }
+
+      if (permisosEmpaque.some(item => item == $permiso) && configEmpaque == "0") {
+        validPermisision = false;
+      }
+    }
+
+    return validPermisision;
   }
 </script>
   <?php 

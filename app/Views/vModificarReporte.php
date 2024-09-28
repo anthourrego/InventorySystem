@@ -21,7 +21,7 @@
       <div class="card-header">
         <?php
           foreach ($reportes as $key => $value) {
-            echo "<button type='button' class='btn bg-{$key} ml-2 mt-2 btn-reporte' title='" . str_replace("_", " ", $key) . "' data-btn='" . str_replace("_", "", $key) . "'>
+            echo "<button type='button' class='btn bg-{$key} ml-2 mt-2 btn-reporte' title='" . str_replace("_", " ", $key) . "' data-btn='" . $key . "'>
               <span class='badge'><i class='{$value['icono']}'></i></span> " . str_replace("_", " ", $key) . "
             </button>";
           }
@@ -75,7 +75,7 @@
           <?php
             foreach ($reportes as $key => $value) {
               echo "<div class='col-12 col-md-4 mt-2'>
-                <button type='button' class='btn bg-{$key} btn-modifica-reporte w-100' title='Editar " . str_replace("_", " ", $key) . "' data-btn='" . str_replace(" ", "_", $key) . "'>
+                <button type='button' class='btn bg-{$key} btn-modifica-reporte w-100' title='Editar " . str_replace("_", " ", $key) . "' data-btn='" . $key . "'>
                 <span class='badge'><i class='{$value['icono']}'></i></span>" . str_replace("_", " ", $key) . "
                 </button>
               </div>";

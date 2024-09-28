@@ -57,7 +57,8 @@ class cPedidos extends BaseController {
 		$this->LSelect2();
 		$this->LInputMask();
 		$this->LJQueryValidation();
-    	$this->LFancybox();
+    $this->LFancybox();
+		$this->LBsCustomFileInput();
 
 		$mClientes = new mClientes();
 		$this->content["cantidadClientes"] = $mClientes->where("estado", 1)->countAllResults();
@@ -285,6 +286,7 @@ class cPedidos extends BaseController {
 				$query->where("P.Estado", $estado);
 			}
 		}
+
 		return DataTable::of($query)->toJson(true);
 	}
 
@@ -1208,14 +1210,21 @@ class cPedidos extends BaseController {
 							for ($i=2; $i <= $totalrows; $i++) { 
 								$fila = new stdClass();
 
-								$cantidad = trim($hojadeExcel->getCell("B".$i)->getValue());
 								$referencia = trim($hojadeExcel->getCell("A".$i)->getValue());
+								$cantidad = trim($hojadeExcel->getCell("B".$i)->getValue());
+								$precio = trim($hojadeExcel->getCell("C".$i)->getValue());
 
 								if (strlen($referencia) > 0 && strlen($cantidad) > 0 && $cantidad > 0) {
 									$fila = $producto->detalleProducto($referencia); 
 									if (!is_null($fila)) {
 										if ($cantidad <= $fila->stock) {
 											$fila->cantidad = $cantidad;
+
+											if (strlen($precio) >= 0 && $precio != '' && $precio > 0) {
+												$fila->precio_venta = $precio;
+												$fila->valorUnitario = $precio;
+											}
+
 											$productosImportar[] = $fila;
 										} else {
 											$errores .= "<li><b>{$referencia}</b> el inventario solicitado es {$cantidad} de {$fila->stock} disponible.</li>";
@@ -1249,6 +1258,10 @@ class cPedidos extends BaseController {
 			}
 		}
 		return $this->response->setJSON($resp);
+	}
+
+	public function downloadExcel() {
+		return $this->response->download(ASSETS_PATH .  "files/plantillaPedidos.xlsx", null)->setFileName("plantilla.xlsx");
 	}
 
 }

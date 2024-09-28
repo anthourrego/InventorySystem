@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use \Hermawan\DataTables\DataTable;
-use ThirdParty\firebaseRDB;
+use App\ThirdParty\firebaseRDB;
 use App\Models\mShoowroom;
 use App\Models\mProductos;
 
@@ -24,7 +24,7 @@ class Showroom extends BaseController
 		];
 
 		$showroomModel = new mShoowroom();
-		$this->content['statusDescription'] = $showroomModel->statusDescription;
+		$this->content['statusDescription'] = $showroomModel->getStatusDescription();
 		$this->content['currentShowroom'] = $this->validCurrentShowroom(true)["showroom"];
 
 		return view('UI/viewDefault', $this->content);
@@ -33,7 +33,7 @@ class Showroom extends BaseController
 	public function listaDT(){
 		$showroomModel = new mShoowroom();
 		$caseStatus = $showroomModel->caseStatusDescription();
-		$table = $showroomModel->table;
+		$table = $showroomModel->getTable();
 
 		$showroomModel->select("
 				{$table}.id, 

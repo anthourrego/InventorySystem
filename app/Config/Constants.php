@@ -122,9 +122,16 @@ defined('ATRIBUTOSDB')      || define('ATRIBUTOSDB', array(
 
 defined('DOMINIO') || define('DOMINIO', 0);
 
-
 defined('MOTIVOSDEVOLUCION')      || define('MOTIVOSDEVOLUCION', array(
   0 => array("valor" => "1", "titulo" => "Daño")
   , 1 => array("valor" => "2", "titulo" => "Devolución")
   , 2 => array("valor" => "3", "titulo" => "Perdida")
 ));// Motivos por los cuales puede devolver un producto
+
+defined('PERMISOSMANIFIESTOS')      || define('PERMISOSMANIFIESTOS', array(
+  "8", "81", "82","83","84","85","86","87","88", "108", "1081", "1082", "1083"
+));// Permisos que se debe de tener en cuenta en manifiestos
+
+defined('PERMISOSEMPAQUE')      || define('PERMISOSEMPAQUE', array(
+  "30", "301", "302", "510", "51001", "62", "6201", "112", "1121", "60", "6001"
+));// Permisos que se debe de tener en cuenta en empaquie

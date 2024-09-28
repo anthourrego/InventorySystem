@@ -11,9 +11,7 @@ let DT = $("#table").DataTable({
       return $.extend(d, { "estado": estadoFiltro })
     }
   },
-  order: [
-    [5, "asc"]
-  ],
+  order: [[8, "desc"]],
   scrollX: true,
   columns: [
     {

@@ -8,6 +8,7 @@ use App\Models\mConfiguracion;
 use App\Models\mPedidos;
 use App\Models\mCompras;
 use App\Models\mVentas;
+use App\Models\mCuentasCobrar;
 
 class cConfiguracion extends BaseController {
 
@@ -112,7 +113,7 @@ class cConfiguracion extends BaseController {
 				if(!@unlink($filenameDelete)) {
 					$resp["success"] = false;
 					$resp["msj"] = "Error al eliminar el archivo <b>{$dataPost['nombre']}</b>, intente de nuevo";
-				} 
+				}
 			}
 		}
 		
@@ -122,79 +123,33 @@ class cConfiguracion extends BaseController {
 
 		if($mConfiguracion->save($dataSave)) {
 
-      $registros = [];
-      $tabla = '';
+			if ($dataSave["campo"] == "digitosFact") {
 
-      if ($dataSave["campo"] == "digitosFact") {
+				$ventaModel = new mVentas();
+				$this->updateConsecutivesTable($ventaModel, "prefijoFact", "codigo", "ventas", $dataPost["valor"]);
 
-        $ventaModel = new mVentas();
-        $dataPref = (session()->has("prefijoFact") ? session()->get("prefijoFact") : '');
-        
-        $registros = $ventaModel
-        ->select("
-          SUBSTRING_INDEX(codigo, '$dataPref', -1) AS Delimitado, 
-          ventas.id
-        ")
-        ->where("codigo LIKE '$dataPref%'")
-        ->findAll();
+			} elseif ($dataSave["campo"] == "digitosPed") {
 
-        $tabla = 'ventas';
+				$pedidosModel = new mPedidos();
+				$this->updateConsecutivesTable($pedidosModel, "prefijoPed", "pedido", "pedidos", $dataPost["valor"]);
 
-      } else if ($dataSave["campo"] == "digitosPed") {
+			} elseif ($dataSave["campo"] == "digitosCompra") {
 
-        $pedidosModel = new mPedidos();
-        $dataPref = (session()->has("prefijoPed") ? session()->get("prefijoPed") : '');
+				$comprasModel = new mCompras();
+				$this->updateConsecutivesTable($comprasModel, "prefijoCompra", "codigo", "compras", $dataPost["valor"]);
 
-        $registros = $pedidosModel
-        ->select("
-          SUBSTRING_INDEX(pedido, '$dataPref', -1) AS Delimitado, 
-          pedidos.id
-        ")
-        ->where("pedido LIKE '$dataPref%'")
-        ->findAll();
+			} elseif ($dataSave["campo"] == "digitosCuentaCobrar") {
 
-        $tabla = 'pedidos';
-      } else if ($dataSave["campo"] == "digitosCompra") {
+				$mCuentasCobrar = new mCuentasCobrar();
+				$this->updateConsecutivesTable($mCuentasCobrar, "prefijoCuentaCobrar", "codigo", "abonosventas", $dataPost["valor"]);
 
-        $comprasModel = new mCompras();
-        $dataPref = (session()->has("prefijoCompra") ? session()->get("prefijoCompra") : '');
-
-        $registros = $comprasModel
-        ->select("
-          SUBSTRING_INDEX(codigo, '$dataPref', -1) AS Delimitado, 
-          compras.id
-        ")
-        ->where("codigo LIKE '$dataPref%'")
-        ->findAll();
-
-        $tabla = 'compras';
-      }
-
-      if (count($registros) > 0) {
-        foreach ($registros as $value) {
-          $index = 0;
-          foreach (str_split($value->Delimitado) as $llave2 => $value2) {
-            if ((int) $value2 > 0) {
-              $index = $llave2;
-              break;
-            }
-          }
-          
-          $numeroActual = substr($value->Delimitado, $index);
-          $padAgregar = str_pad($numeroActual, $dataPost["valor"], "0", STR_PAD_LEFT);
-          
-          $builder = $this->db->table($tabla)
-            ->set(($tabla == 'ventas' || $tabla == 'compras' ? 'codigo' : 'pedido'), "{$dataPref}{$padAgregar}")
-            ->where('id', $value->id)->update();
-        }
-      }
+			}
 
 			$resp["success"] = true;
 			$resp["msj"] = "<b>{$dataPost['nombre']}</b> se actualizo correctamente.";
 		}	else {
 			$resp["msj"] = "Error al actualizar <b>{$dataPost['nombre']}</b>.";
-		}	
-
+		}
 		return $this->response->setJSON($resp);
 	}
 
@@ -232,9 +187,45 @@ class cConfiguracion extends BaseController {
 					$resp["msj"] = "<b>{$dataPost['nombre']}</b>, eliminado correctamente";
 				} else {
 					$resp["msj"] = "Error al eliminar <b>{$dataPost['nombre']}</b>.";
-				}	
+				}
 			}
 		}
 		return $this->response->setJSON($resp);
 	}
+
+	private function updateConsecutivesTable($model, $namePrefix, $columnCode, $nameTable, $valorSave) {
+		$mConfiguracion = new mConfiguracion();
+		$dataPref = '';
+		$dataPrefix = $mConfiguracion->select("valor")->where("campo", $namePrefix)->first();
+		if (!is_null($dataPrefix)) {
+			$dataPref = $dataPrefix->valor;
+		}
+
+		$registros = $model->select("
+				SUBSTRING_INDEX({$columnCode}, '$dataPref', -1) AS Delimitado,
+				{$nameTable}.id
+			")
+			->where("{$columnCode} LIKE '$dataPref%'")
+			->findAll();
+
+		if (count($registros) > 0) {
+			foreach ($registros as $value) {
+				$index = 0;
+				foreach (str_split($value->Delimitado) as $llave2 => $value2) {
+					if ((int) $value2 > 0) {
+						$index = $llave2;
+						break;
+					}
+				}
+				
+				$numeroActual = substr($value->Delimitado, $index);
+				$padAgregar = str_pad($numeroActual, $valorSave, "0", STR_PAD_LEFT);
+				
+				$this->db->table($nameTable)
+					->set($columnCode, "{$dataPref}{$padAgregar}")
+					->where('id', $value->id)->update();
+			}
+		}
+	}
+
 }

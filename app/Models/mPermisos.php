@@ -511,7 +511,7 @@ class mPermisos extends Model {
 						"text" => "Confirmar Producto Reportado"
 					]
 				]
-			]/* ,
+			],
 			[
 				"id" => 70,
 				"text" => "Showroom",
@@ -528,7 +528,7 @@ class mPermisos extends Model {
 						"text" => "Editar"
 					]
 				]
-			] */,
+			],
 			[
 				"id" => 80,
 				"text" => "Ingreso Mercancía",
@@ -580,6 +580,31 @@ class mPermisos extends Model {
 					[
 						"id" => 904,
 						"text" => "Imprimir Ingreso Mercancia"
+					]
+				]
+			],
+			[
+				"id" => 100,
+				"text" => "Cuentas por cobrar",
+				"uri" => "CuentasCobrar",
+				"icon" => "fa-solid fa-receipt",
+				"color" => "bg-secondary",
+				"children" => [
+					[
+						"id" => 1001,
+						"text" => "Crear"
+					],
+					[
+						"id" => 1002,
+						"text" => "Anular"
+					],
+					[
+						"id" => 1003,
+						"text" => "Imprimir"
+					],
+					[
+						"id" => 1004,
+						"text" => "Imprimir Todos"
 					]
 				]
 			],
