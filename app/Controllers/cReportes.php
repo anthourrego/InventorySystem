@@ -790,7 +790,8 @@ class cReportes extends BaseController {
 					WHEN abonosventas.estado = 'AN'
 						THEN 'Anulado'
 					ELSE 'Confirmado'
-				END AS estadoAbonoDP
+				END AS estadoAbonoDP,
+				abonosventas.tipo_abono AS tipoAbonoDP
 			")->join("usuarios AS U", "abonosventas.id_usuario = U.id", "left")
 			->where("abonosventas.id_venta", $idVenta);
 
@@ -799,6 +800,14 @@ class cReportes extends BaseController {
 		}
 
 		$dataAccountBill = $query->findAll();
+
+		foreach ($dataAccountBill as $value) {
+			$resultado = array_filter(TIPOSABONO, function($producto) use ($value) {
+				return $producto['valor'] == $value->tipoAbonoDP;
+			});
+			$productoBuscado = reset($resultado);
+			$value->tipoAbonoDP = $productoBuscado['titulo'];
+		}
 
 		$estrucPdf = $this->estructuraProductos($estrucPdf, $dataAccountBill);
 

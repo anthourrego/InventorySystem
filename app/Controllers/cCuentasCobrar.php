@@ -43,16 +43,17 @@ class cCuentasCobrar extends BaseController {
 				V.id,
 				V.codigo,
 				V.descuento,
-				C.nombre AS NombreCliente,
+				CONCAT(C.nombre, ' | ', S.nombre) AS NombreCliente,
 				V.id_vendedor,
 				U.nombre AS NombreVendedor,
 				(V.total - V.descuento) AS total,
-				((V.total - V.descuento) - IF(TA.TotalAbonosVenta IS NULL, 0, TA.TotalAbonosVenta)) AS ValorPendiente,
+				((V.total - V.descuento) - (CASE WHEN TA.TotalAbonosVenta IS NULL THEN 0 ELSE TA.TotalAbonosVenta END)) AS ValorPendiente,
 				V.created_at,
 				DATE_FORMAT(V.fecha_vencimiento, '%Y-%m-%d') AS FechaVencimiento,
-				IF(TA.TotalAbonosVenta IS NULL, 0, TA.TotalAbonosVenta) AS AbonosVenta
+				(CASE WHEN TA.TotalAbonosVenta IS NULL THEN 0 ELSE TA.TotalAbonosVenta END) AS AbonosVenta
 			")->join('clientes AS C', 'V.id_cliente = C.id', 'left')
 			->join('usuarios AS U', 'V.id_vendedor = U.id', 'left')
+			->join('sucursales AS S', 'V.id_sucursal = S.id', 'left')
 			->join("({$subQuery}) TA", "V.id = TA.id_venta", "left")
 			->where("V.metodo_pago", "2");
 
@@ -110,6 +111,7 @@ class cCuentasCobrar extends BaseController {
 			"observacion" => $dataPost->observacion,
 			"id_venta" => $dataPost->idVenta,
 			"id_usuario" => session()->get("id_user"),
+			"tipo_abono" => $dataPost->tipoAbono
 		);
 
 		if($mCuentasCobrar->save($dataAccount)) {

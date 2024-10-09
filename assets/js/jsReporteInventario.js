@@ -27,14 +27,15 @@ let DTMovimientos = $("#tblReporteInventario").DataTable({
             data: 'cantidad',
         },
         {
-            data: 'Descripcion_Tipo',
+            data: 'descripcionTipo',
+            searchable: false,
             className: 'text-center align-middle',
             render: function (meta, type, data, meta2) {
                 let color = "success";
                 if (data.tipo == 'S') {
                     color = "warning";
                 }
-                return `<button class="btn btn-${color}">${data.Descripcion_Tipo}</button>`;
+                return `<button class="btn btn-${color}">${data.descripcionTipo}</button>`;
             }
         },
         {

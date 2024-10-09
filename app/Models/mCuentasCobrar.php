@@ -21,6 +21,7 @@ class mCuentasCobrar extends Model {
 		"observacion",
 		"id_venta",
 		"id_usuario",
+		"tipo_abono",
 	];
 
 	// Dates
@@ -39,6 +40,7 @@ class mCuentasCobrar extends Model {
 		'observacion'  => 'permit_empty|string|min_length[1]|max_length[500]',
 		'id_venta'     => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[ventas.id]',
 		'id_usuario'   => 'required|numeric|min_length[1]|max_length[11]|is_not_unique[usuarios.id]',
+		'tipo_abono'   => 'required|numeric|min_length[1]|max_length[11]',
 	];
 	protected $validationMessages   = [
 		"codigo" => [
@@ -70,7 +72,8 @@ class mCuentasCobrar extends Model {
 				AV.estado,
 				AV.created_at,
 				U.usuario AS Usuario,
-				V.codigo
+				V.codigo,
+				AV.tipo_abono
 			")->join("usuarios AS U", "AV.id_usuario = U.id", "left")
 			->join('ventas AS V', 'AV.id_venta = V.id', 'left')
 			->where("AV.id", $id)

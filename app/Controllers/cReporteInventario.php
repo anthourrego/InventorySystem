@@ -26,7 +26,7 @@ class cReporteInventario extends BaseController {
 		$query = $this->db->table("movimientosinventario AS MI")
 				->select("
 						MI.id,
-                        CONCAT(UPPER(P.referencia), ' | ', IF(P.item IS NULL, '', P.item)) AS referenciaItem,
+                        CONCAT(P.referencia, ' | ', CASE WHEN P.item IS NULL THEN '' ELSE P.item END) AS referenciaItem,
                         P.descripcion,
                         P.referencia,
                         P.item,
@@ -37,7 +37,7 @@ class cReporteInventario extends BaseController {
 							WHEN MI.tipo = 'I'
 								THEN 'Ingreso'
 							ELSE 'Salida'
-						END AS Descripcion_Tipo,
+						END AS descripcionTipo,
                         MI.observacion,
                         MI.id_venta,
                         MI.id_pedido,

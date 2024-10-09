@@ -25,7 +25,7 @@
             <label class="input-group-text" for="selectEstado">Sin abonos</label>
           </div>
           <input type="color" disabled readonly class="form-control form-control-color cu-pointer"
-            value="#ff7c70" title="Sin abonos">
+            value="#ffffff" title="Sin abonos">
         </div>
       </div>
       <div class="col-8 col-md-3">
@@ -120,9 +120,18 @@
 
         <hr/>
 
-        <p class="h5 font-weight-bold">Agrega abonos</p>
+        <p class="h5 font-weight-bold">Agrega movimiento</p>
         <form id="formAddAbono" class="formValid">
           <div class="form-row">
+            <div class="col-12 col-md-2">
+              <label for="tipoAbono" class="mb-0">Tipo de movimiento:</label>
+              <select id="tipoAbono" data-nombre="Tipo documento" name="tipoAbono" data-placeholder="Seleccione una opción" class="custom-select select2 inputVer">
+                <?php foreach (TIPOSABONO as $key => $value) {
+                  echo '<option value="' . $value['valor'] . '">' . $value['titulo'] . '</option>';
+                }
+                ?>
+              </select>
+            </div>
             <div class="col-12 col-md-2">
               <div class="form-group form-valid">
                 <label class="mb-0" for="valor">
@@ -133,7 +142,7 @@
                   autocomplete="off">
               </div>
             </div>
-            <div class="col-12 col-md-8">
+            <div class="col-12 col-md-6">
               <div class="form-group">
                 <label for="observacion" class="mb-0">Observación</label>
                 <textarea class="form-control" placeholder="Observación..."

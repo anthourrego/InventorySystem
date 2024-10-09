@@ -49,22 +49,24 @@
 <table style="width: 100%;" border="1" cellspacing="0" cellpadding="3">
 <thead>
 <tr>
-<th style="width: 15.9116%;" scope="col"><strong><span style="font-family: Arial,Helvetica,sans-serif;">Codigo</span></strong></th>
-<th style="width: 13.9227%;" scope="col"><span style="font-family: Arial,Helvetica,sans-serif;"><strong>&nbsp; Valor</strong></span></th>
-<th style="width: 25.1934%;" scope="col"><span style="font-family: Arial,Helvetica,sans-serif;"><strong>&nbsp; Observacion</strong></span></th>
-<th style="width: 15.6906%;" scope="col"><span style="font-family: Arial,Helvetica,sans-serif;"><strong>&nbsp; Estado</strong></span></th>
-<th style="width: 15.5817%;" scope="col"><span style="font-family: Arial,Helvetica,sans-serif;"><strong>Usuario</strong></span></th>
-<th style="width: 13.7001%;" scope="col"><span style="font-family: Arial,Helvetica,sans-serif;"><strong>Fecha</strong></span></th>
+<th style="width: 15.9298%;" scope="col"><strong><span style="font-family: Arial,Helvetica,sans-serif;">Codigo</span></strong></th>
+<th style="width: 13.9142%;" scope="col"><span style="font-family: Arial,Helvetica,sans-serif;"><strong>&nbsp; Valor</strong></span></th>
+<th style="width: 12.6138%;" scope="col"><span style="font-family: Arial,Helvetica,sans-serif;"><strong>&nbsp; Observacion</strong></span></th>
+<th style="width: 12.6138%;" scope="col"><span style="font-family: Arial,Helvetica,sans-serif;"><strong>Tipo</strong></span></th>
+<th style="width: 15.6697%;" scope="col"><span style="font-family: Arial,Helvetica,sans-serif;"><strong>&nbsp; Estado</strong></span></th>
+<th style="width: 15.6047%;" scope="col"><span style="font-family: Arial,Helvetica,sans-serif;"><strong>Usuario</strong></span></th>
+<th style="width: 13.7191%;" scope="col"><span style="font-family: Arial,Helvetica,sans-serif;"><strong>Fecha</strong></span></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="width: 15.9116%;"><span style="font-size: 10px;">{codigoAbonoDP}</span></td>
-<td style="width: 13.9227%;"><span style="font-size: 10px;"><span style="font-family: Arial,Helvetica,sans-serif;">{valorAbonoDP}</span></span></td>
-<td style="width: 25.1934%;"><span style="font-size: 10px;"><span style="font-family: Arial,Helvetica,sans-serif;">{observacionAbonoDP}</span></span></td>
-<td style="text-align: center; width: 15.6906%;"><span style="font-size: 10px;"><span style="font-family: Arial,Helvetica,sans-serif;">{estadoAbonoDP}</span></span></td>
-<td style="text-align: center; width: 15.5817%;"><span style="font-size: 10px;"><span style="font-family: Arial,Helvetica,sans-serif;">{usuarioAbonoDP}</span></span></td>
-<td style="text-align: center; width: 13.7001%;"><span style="font-size: 10px;"><span style="font-family: Arial,Helvetica,sans-serif;">{fechaAbonoDP}</span></span></td>
+<td style="width: 15.9298%;"><span style="font-size: 10px;">{codigoAbonoDP}</span></td>
+<td style="width: 13.9142%;"><span style="font-size: 10px;"><span style="font-family: Arial,Helvetica,sans-serif;">{valorAbonoDP}</span></span></td>
+<td style="width: 12.6138%;"><span style="font-size: 10px;"><span style="font-family: Arial,Helvetica,sans-serif;">{observacionAbonoDP}</span></span></td>
+<td style="width: 12.6138%;"><span style="font-size: 10px;"><span style="font-family: Arial,Helvetica,sans-serif;">{tipoAbonoDP}</span></span></td>
+<td style="text-align: center; width: 15.6697%;"><span style="font-size: 10px;"><span style="font-family: Arial,Helvetica,sans-serif;">{estadoAbonoDP}</span></span></td>
+<td style="text-align: center; width: 15.6047%;"><span style="font-size: 10px;"><span style="font-family: Arial,Helvetica,sans-serif;">{usuarioAbonoDP}</span></span></td>
+<td style="text-align: center; width: 13.7191%;"><span style="font-size: 10px;"><span style="font-family: Arial,Helvetica,sans-serif;">{fechaAbonoDP}</span></span></td>
 </tr>
 </tbody>
 </table>

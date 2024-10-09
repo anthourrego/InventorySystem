@@ -446,6 +446,11 @@ $(function () {
     }
   });
 
+  /* Actiamos el descuento por defecto al crear */
+  if ($DATOSVENTA == '') {
+    $("#aplicarDescuento").prop('checked', true).change();
+  }
+
 });
 
 /* Calculamos el descuento de la factura */

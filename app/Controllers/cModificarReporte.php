@@ -313,6 +313,10 @@ class cModificarReporte extends BaseController {
       "aplica" => ["Cuenta_Cobrar"],
       "descripcion" => "Fecha de registro de abono a la factura"
     ],
+    "tipoAbonoDP" => [
+      "aplica" => ["Cuenta_Cobrar"],
+      "descripcion" => "Tipo de abono a la factura"
+    ],
     "totalAbono" => [
       "aplica" => ["Cuenta_Cobrar"],
       "descripcion" => "Total de abonos a la factura"

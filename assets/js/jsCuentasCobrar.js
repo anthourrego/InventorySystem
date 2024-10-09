@@ -82,7 +82,6 @@ let DTCuentasCobrar = $("#table").DataTable({
         url: rutaBase + "ObtenerCuentaCobrar/" + data.id,
         dataType: 'json',
         success: function ({ venta, accountsBill }) {
-          console.log('data', venta, accountsBill)
 
           if ($btn.hasClass('btnVer')) {
             $("#modalCrearEditarAbonosLabel").html(`<i class="fa-solid fa-eye"></i> Factura ${venta.codigo}`);
@@ -217,7 +216,8 @@ $(function () {
       let dataProd = {
         valor: $("#valor").val().replace("$ ", '').split(",").join(''),
         observacion: $("#observacion").val(),
-        idVenta: optionBillSelected.id
+        idVenta: optionBillSelected.id,
+        tipoAbono: $("#tipoAbono").val()
       }
 
       if (+dataProd.valor <= 0) {
@@ -281,7 +281,7 @@ function getColorBill(valorPendiente, valorTotal) {
     return "#8ae287";
   }
   if (valorTotal == valorPendiente) {
-    return "#ff7c70";
+    return "#ffffff";
   }
   return "#98c0f6";
 }

@@ -135,3 +135,10 @@ defined('PERMISOSMANIFIESTOS')      || define('PERMISOSMANIFIESTOS', array(
 defined('PERMISOSEMPAQUE')      || define('PERMISOSEMPAQUE', array(
   "30", "301", "302", "510", "51001", "62", "6201", "112", "1121", "60", "6001"
 ));// Permisos que se debe de tener en cuenta en empaquie
+
+defined('TIPOSABONO')      || define('TIPOSABONO', array(
+  0 => array("valor" => "1", "titulo" => "Abono")
+  , 1 => array("valor" => "2", "titulo" => "Descuento")
+  , 2 => array("valor" => "3", "titulo" => "Averias")
+  , 3 => array("valor" => "3", "titulo" => "Redondeo")
+));// Tipo de abono a la factura
