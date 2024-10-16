@@ -164,6 +164,7 @@ $routes->group('Reportes', ['filter' => 'authGuard'], function ($routes) {
 	$routes->get('StickerCompra/(:num)/(:num)', 'cReportes::stickerCompra/$1/$2');
 	$routes->get('ManifiestosSinRepetir/(:num)', 'cReportes::manifiestoSinRepetir/$1');
 	$routes->get('CuentaCobrar/(:num)/(:num)', 'cReportes::cuentaCobrar/$1/$2');
+	$routes->get('ReciboCaja/(:num)/(:num)', 'cReportes::reciboCaja/$1/$2');
 });
 
 //ReportesQR

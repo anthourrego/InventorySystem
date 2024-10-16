@@ -603,8 +603,16 @@ class mPermisos extends Model {
 						"text" => "Imprimir"
 					],
 					[
+						"id" => 1005,
+						"text" => "Imprimir Recibo Caja"
+					],
+					[
 						"id" => 1004,
 						"text" => "Imprimir Todos"
+					],
+					[
+						"id" => 1006,
+						"text" => "Imprimir Todos Recibos Caja"
 					]
 				]
 			],

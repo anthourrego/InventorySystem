@@ -61,8 +61,14 @@ class cModificarReporte extends BaseController {
       "url" => ""
     ],
     "Cuenta_Cobrar" => [
-      "icono" => "fa-solid fa-arrow-up-right-dots",
+      "icono" => "fa-solid fa-file-invoice-dollar",
       "color" => "#d3d0a4",
+      "color-text" => "#ffffff",
+      "url" => ""
+    ],
+    "Recibo_Caja" => [
+      "icono" => "fa-solid fa-money-check",
+      "color" => "#d3a4cd",
       "color-text" => "#ffffff",
       "url" => ""
     ]
@@ -70,11 +76,11 @@ class cModificarReporte extends BaseController {
 
 	public $variables = [
     "logoEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar", "Recibo_Caja"],
       "descripcion" => "Logo de la empresa"
     ],
     "nombreEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar", "Recibo_Caja"],
       "descripcion" => "Nombre de la empresa"
     ],
     "digitoVeriEmpresa" => [
@@ -94,19 +100,19 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Correo electrónico de la empresa"
     ],
     "numeracion" => [
-      "aplica" => ["Factura", "Pedido", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar"],
+      "aplica" => ["Factura", "Pedido", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar", "Recibo_Caja"],
       "descripcion" => "Consecutivo de documento"
     ],
     "nombreSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Recibo_Caja"],
       "descripcion" => "Nombre de la sucursal"
     ],
     "nombreCliente" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Recibo_Caja"],
       "descripcion" => "Nombre del cliente"
     ],
     "fechaCreacion" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar", "Recibo_Caja"],
       "descripcion" => "Fecha de generación del documento"
     ],
     "horaCreacion" => [
@@ -178,7 +184,7 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Total por producto"
     ],
     "totalGeneral" => [
-      "aplica" => ["Factura", "Pedido", "Compra", "Cuenta_Cobrar"],
+      "aplica" => ["Factura", "Pedido", "Compra", "Cuenta_Cobrar", "Recibo_Caja"],
       "descripcion" => "Valor total de la venta"
     ],
     "ubicacionProductoDP" => [
@@ -321,6 +327,18 @@ class cModificarReporte extends BaseController {
       "aplica" => ["Cuenta_Cobrar"],
       "descripcion" => "Total de abonos a la factura"
     ],
+    "tipoPago" => [
+      "aplica" => ["Recibo_Caja"],
+      "descripcion" => "Tipo de pago del recibo de caja"
+    ],
+    "numeroFactura" => [
+      "aplica" => ["Recibo_Caja"],
+      "descripcion" => "Número de factura en el recibo de caja"
+    ],
+    "valorEnLetras" => [
+      "aplica" => ["Recibo_Caja"],
+      "descripcion" => "Valor del documento en letras"
+    ]
   ];
 
 	public function index() {

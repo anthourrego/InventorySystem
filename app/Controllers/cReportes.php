@@ -297,7 +297,7 @@ class cReportes extends BaseController {
 		return $estructuraPdf;
 	}
 
-	private function setValuesCompany($pdf) {
+	private function setValuesCompany($pdf, $widthLogo = 130, $heightLogo = 100) {
 		$files = ['logoEmpresa', 'tipoDocumentoEmpresa', 'documentoEmpresa', 'digitoVeriEmpresa', 'telefonoEmpresa', 'nombreEmpresa', 'direccionEmpresa', 'emailEmpresa'];
 		$datos = $this->mConfiguracion
 			->select("
@@ -312,7 +312,7 @@ class cReportes extends BaseController {
 
 		foreach ($datos as $value) {
 			if ($value->campo == 'logoEmpresa') {
-				$value->valor = '<img src="' . UPLOADS_CONF_PATH . $value->valor. '" width="130px" height="100px">';
+				$value->valor = '<img src="' . UPLOADS_CONF_PATH . $value->valor. '" width="' . $widthLogo . 'px" height="' . $heightLogo . 'px">';
 			}
 			$pdf = str_replace("{{$value->campo}}", (is_null($value->valor) ? '' : $value->valor), $pdf);
 		}
@@ -817,6 +817,124 @@ class cReportes extends BaseController {
 		$pdf->setTitle('Abonos Factura ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
 		$pdf->Output($dataVenta['codigo'] . ".pdf", 'I');
 		exit;
+	}
+
+	public function reciboCaja($idVenta, $idAbono) {
+
+		$mCuentasCobrar = new mCuentasCobrar();
+
+		$query = $mCuentasCobrar->select("
+				abonosventas.codigo AS numeracion,
+				TRUNCATE(abonosventas.valor, 0) AS totalGeneral,
+				DATE_FORMAT(abonosventas.created_at, '%d-%m-%Y') AS fechaCreacion,
+				abonosventas.tipo_abono AS tipoAbonoDP
+			")->where("abonosventas.id_venta", $idVenta);
+
+		if ($idAbono > 0) {
+			$query->where("abonosventas.id", $idAbono);
+		}
+
+		$dataAccountBill = $query->findAll();
+
+		$structurePrint = '';
+
+		foreach ($dataAccountBill as $value) {
+
+			$estrucPdf = '<div style="margin-bottom: 10px;">' . $this->estructuraReporte("Recibo_Caja") . '</div>';
+
+			$estrucPdf = $this->setValuesCompany($estrucPdf, 30, 30);
+
+			$estrucPdf = str_replace("{numeracion}", $value->numeracion, $estrucPdf);
+			$estrucPdf = str_replace("{fechaCreacion}", $value->fechaCreacion, $estrucPdf);
+			$estrucPdf = str_replace("{totalGeneral}", '$ ' . number_format($value->totalGeneral, 0, ',', '.'), $estrucPdf);
+
+			$estrucPdf = str_replace("{valorEnLetras}", ucfirst($this->numberToText($value->totalGeneral)), $estrucPdf);
+
+			$resultado = array_filter(TIPOSABONO, function($producto) use ($value) {
+				return $producto['valor'] == $value->tipoAbonoDP;
+			});
+			$productoBuscado = reset($resultado);
+
+			$estrucPdf = str_replace("{tipoPago}", $productoBuscado['titulo'], $estrucPdf);
+
+			$dataVenta = $this->cargarDataVenta($estrucPdf, $idVenta, "ventas");
+			$estrucPdf = $dataVenta['pdf'];
+
+			$estrucPdf = str_replace("{numeroFactura}", $dataVenta['codigo'], $estrucPdf);
+
+			$structurePrint .= $estrucPdf;
+		}
+
+		$pdf = $this->initPdf();
+
+		$datos = $this->mConfiguracion
+			->select("valor")
+			->where('campo', 'logoEmpresa')
+			->get()->getResult()[0];
+
+		$pdf->writeHTML($structurePrint, false, false, false, false, '');
+
+		$imageWater = $datos->valor;
+		if (is_null($datos->valor) || $datos->valor == '') {
+			$imageWater = base_url("assets/img/logo-negro-bloque.jpg");
+		}
+
+		// Agregar marca de agua como imagen
+		$pdf->SetAlpha(0.1); // Hacer la imagen semitransparente (ajustar la transparencia según lo necesario)
+		for ($y = 0; $y < 210; $y += 60) { // Repetir verticalmente
+			for ($x = 0; $x < 210; $x += 60) { // Repetir horizontalmente
+				// Insertar la imagen de marca de agua en cada posición de la cuadrícula
+				$pdf->Image(UPLOADS_CONF_PATH . $imageWater, $x, $y, 50, 50, '', '', '', false, 300, '', false, false, 0);
+			}
+		}
+
+		$pdf->setTitle('Abonos Factura ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
+		$pdf->Output($dataVenta['codigo'] . ".pdf", 'I');
+		exit;
+	}
+
+	public function numberToText($numero) {
+		$unidades = [
+			'', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez',
+			'once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve', 'veinte'
+		];
+	
+		$decenas = [
+			'', '', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'
+		];
+	
+		$centenas = [
+			'', 'cien', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'
+		];
+	
+		if ($numero == 0) {
+			return 'cero';
+		}
+	
+		if ($numero < 21) {
+			return $unidades[$numero];
+		}
+	
+		if ($numero < 100) {
+			$decena = (int)($numero / 10);
+			$unidad = $numero % 10;
+			return $decenas[$decena] . ($unidad ? ' y ' . $unidades[$unidad] : '');
+		}
+	
+		if ($numero < 1000) {
+			$centena = (int)($numero / 100);
+			$resto = $numero % 100;
+			return $centenas[$centena] . ($resto ? ' ' . $this->numberToText($resto) : '');
+		}
+	
+		// Para manejar números mayores a 999
+		if ($numero < 1000000) {
+			$miles = (int)($numero / 1000);
+			$resto = $numero % 1000;
+			return ($miles == 1 ? 'mil' : $this->numberToText($miles) . ' mil') . ($resto ? ' ' . $this->numberToText($resto) : '');
+		}
+	
+		return '';
 	}
 
 }

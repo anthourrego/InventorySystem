@@ -63,6 +63,10 @@ let DTCuentasCobrar = $("#table").DataTable({
           <i class="fa-solid fa-print"></i>
         </a>` : '';
 
+        botones += validPermissions(1006) ? `<a href="${base_url()}Reportes/ReciboCaja/${data.id}/0" target="_blank" type="button" class="btn btn-secondary" title="Imprimir Recibos Caja">
+          <i class="fa-solid fa-money-check"></i>
+        </a>` : '';
+
         return `<div class="btn-group btn-group-sm" role="group">${botones}</div>`;
       }
     }
@@ -168,6 +172,10 @@ let DTDataAccountsBill = $("#tblAbonos").DataTable({
 
       buttons += validPermissions(1003) ? `<a href="${base_url()}Reportes/CuentaCobrar/${optionBillSelected.id}/${data.id}" target="_blank" type="button" class="btn btn-info" title="Imprimir Abono">
         <i class="fa-solid fa-print"></i>
+      </a>` : '';
+
+      buttons += validPermissions(1005) ? `<a href="${base_url()}Reportes/ReciboCaja/${optionBillSelected.id}/${data.id}" target="_blank" type="button" class="btn btn-secondary" title="Imprimir Recibo Caja">
+        <i class="fa-solid fa-money-check"></i>
       </a>` : '';
 
       return `<div class="btn-group btn-group-sm" role="group">${buttons}</div>`;
