@@ -13,7 +13,14 @@ let DTCuentasCobrar = $("#table").DataTable({
   scrollX: true,
   columns: [
     {
-      data: 'codigo'
+      data: 'codigo',
+      render: function (meta, type, data, meta2) {
+        console.log('data', data)
+        if (data.id_pedido > 0) {
+          return data.codigo;
+        }
+        return `<div class="d-flex align-items-center"><i class="fa-solid fa-tag text-info mr-2" style="transform: rotate(90deg);"></i>${data.codigo}</div>`;
+      }
     }, {
       data: 'NombreCliente'
     }, {

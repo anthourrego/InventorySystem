@@ -50,7 +50,8 @@ class cCuentasCobrar extends BaseController {
 				((V.total - V.descuento) - (CASE WHEN TA.TotalAbonosVenta IS NULL THEN 0 ELSE TA.TotalAbonosVenta END)) AS ValorPendiente,
 				V.created_at,
 				DATE_FORMAT(V.fecha_vencimiento, '%Y-%m-%d') AS FechaVencimiento,
-				(CASE WHEN TA.TotalAbonosVenta IS NULL THEN 0 ELSE TA.TotalAbonosVenta END) AS AbonosVenta
+				(CASE WHEN TA.TotalAbonosVenta IS NULL THEN 0 ELSE TA.TotalAbonosVenta END) AS AbonosVenta,
+				V.id_pedido
 			")->join('clientes AS C', 'V.id_cliente = C.id', 'left')
 			->join('usuarios AS U', 'V.id_vendedor = U.id', 'left')
 			->join('sucursales AS S', 'V.id_sucursal = S.id', 'left')
