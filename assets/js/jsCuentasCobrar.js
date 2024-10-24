@@ -22,7 +22,10 @@ let DTCuentasCobrar = $("#table").DataTable({
         return `<div class="d-flex align-items-center"><i class="fa-solid fa-tag text-info mr-2" style="transform: rotate(90deg);"></i>${data.codigo}</div>`;
       }
     }, {
-      data: 'NombreCliente'
+      data: 'NombreCliente',
+      render: function (meta, type, data, meta2) {
+        return `${data.NombreCliente} | ${data.NombreSucursal}`;
+      }
     }, {
       data: 'NombreVendedor',
       className: 'text-center'
@@ -54,7 +57,10 @@ let DTCuentasCobrar = $("#table").DataTable({
       }
     },
     {
-      data: 'FechaVencimiento'
+      data: 'FechaVencimiento',
+      render: function (meta, type, data, meta2) {
+        return moment(data.FechaVencimiento, "YYYY-MM-DD").format("DD/MM/YYYY");
+      }
     }, {
       orderable: false,
       searchable: false,

@@ -42,7 +42,10 @@ let DT = $("#table").DataTable({
       }
     },
     {
-      data: 'FechaVencimiento'
+      data: 'FechaVencimiento',
+      render: function (meta, type, data, meta2) {
+        return moment(data.FechaVencimiento, "YYYY-MM-DD").format("DD/MM/YYYY");
+      }
     },
     {
       orderable: false,

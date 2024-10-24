@@ -58,7 +58,7 @@ class cCompras extends BaseController {
 						U.nombre AS Nombre_Usuario,
 						CP.Total_Productos,
 						CP.Total_Costo,
-						0 AS Ganancia,
+						'0' AS Ganancia,
 						C.observacion,
 						C.neto AS Neto,
 						C.total AS Total,
