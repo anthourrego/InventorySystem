@@ -884,7 +884,7 @@ class cReportes extends BaseController {
 		for ($y = 0; $y < 210; $y += 60) { // Repetir verticalmente
 			for ($x = 0; $x < 210; $x += 60) { // Repetir horizontalmente
 				// Insertar la imagen de marca de agua en cada posición de la cuadrícula
-				$pdf->Image(UPLOADS_CONF_PATH . $imageWater, $x, $y, 50, 50, '', '', '', false, 300, '', false, false, 0);
+				$pdf->Image(UPLOADS_CONF_PATH . $imageWater, $x, $y, 70, 50, '', '', '', false, 300, '', false, false, 0);
 			}
 		}
 
