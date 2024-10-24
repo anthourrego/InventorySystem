@@ -147,7 +147,7 @@
           </div>
           <div class="col-12 col-md-6 col-lg-3">
             <label for="consecutivoFact">Consecutivo:</label>
-            <input type="number" id="consecutivoFact" data-namedigitos="consecutivoFact" data-nombre="Consecutivo Factura" name="consecutivoFact" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
+            <input type="number" id="consecutivoFact" data-namedigitos="digitosFact" data-nombre="Consecutivo Factura" name="consecutivoFact" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese el consecutivo">
           </div>
           <div class="col-12 col-md-6 col-lg-3">
             <label for="digitosFact">Cant digitos:</label>

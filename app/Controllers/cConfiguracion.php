@@ -125,8 +125,9 @@ class cConfiguracion extends BaseController {
 
 			if ($dataSave["campo"] == "digitosFact") {
 
-				$ventaModel = new mVentas();
-				$this->updateConsecutivesTable($ventaModel, "prefijoFact", "codigo", "ventas", $dataPost["valor"]);
+				/* Se comenta por solicitud de Pedro que no actualice los campos de la factura */
+				/* $ventaModel = new mVentas();
+				$this->updateConsecutivesTable($ventaModel, "prefijoFact", "codigo", "ventas", $dataPost["valor"]); */
 
 			} elseif ($dataSave["campo"] == "digitosPed") {
 
