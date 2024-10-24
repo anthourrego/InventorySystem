@@ -17,6 +17,7 @@ use App\Models\mVentas;
 use App\Models\mVentasProductos;
 use App\Models\mPedidosCajas;
 use App\Models\mPedidosCajasProductos;
+use App\Models\mSucursalesCliente;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
 use \PhpOffice\PhpSpreadsheet\IOFactory;
@@ -1050,6 +1051,10 @@ class cPedidos extends BaseController {
 		$pedido = $pedidoModel->find($data->id);
 		$pedidoProductos = $mPedidosProductos->where("id_pedido", $data->id)->findAll();
 
+		$fechaVencimiento = $this->calculateMaturiyInvoice($pedido->id_sucursal);
+
+		$descuento = $this->calculateDiscount($pedido->total);
+
 		$ventaSave = [
 			"codigo" => $codigo,
 			"id_cliente" => $pedido->id_cliente,
@@ -1060,7 +1065,9 @@ class cPedidos extends BaseController {
 			"total" => $pedido->total,
 			"metodo_pago" => $pedido->metodo_pago,
 			"id_sucursal" => $pedido->id_sucursal,
-			"id_pedido" => $data->id
+			"id_pedido" => $data->id,
+			"fecha_vencimiento" => $fechaVencimiento->format('Y-m-d'),
+			"descuento" => $descuento,
 		];
 
 		if ($qr == true) {
@@ -1263,6 +1270,34 @@ class cPedidos extends BaseController {
 
 	public function downloadExcel() {
 		return $this->response->download(ASSETS_PATH .  "files/plantillaPedidos.xlsx", null)->setFileName("plantilla.xlsx");
+	}
+
+	private function calculateMaturiyInvoice($idSucursal) {
+		$mConfiguracion = new mConfiguracion();
+		$mSucursalesCliente = new mSucursalesCliente();
+		$fechaVencimiento = new \DateTime();
+		
+		$diasVencimientoSucursal = $mSucursalesCliente->asObject()->find($idSucursal)->dias_vencimiento_factura;
+
+		if (!is_null($diasVencimientoSucursal) && $diasVencimientoSucursal > 0) {
+			$fechaVencimiento->modify("+{$diasVencimientoSucursal} days");
+		} else {
+			$diasVencimientoGeneral = $mConfiguracion->select("valor")->where("campo", "diasVencimientoVenta")->first();
+			if (!is_null($diasVencimientoGeneral->valor) && $diasVencimientoGeneral->valor > 0) {
+				$fechaVencimiento->modify("+{$diasVencimientoGeneral->valor} days");
+			}
+		}
+		return $fechaVencimiento;
+	}
+
+	private function calculateDiscount($valueBill) {
+		$mConfiguracion = new mConfiguracion();
+		$porcentajeDescuentoGeneral = $mConfiguracion->select("valor")->where("campo", "porcentajeDescuento")->first();
+		$totalDiscount = 0;
+		if (!is_null($porcentajeDescuentoGeneral->valor) && $porcentajeDescuentoGeneral->valor > 0) {
+			$totalDiscount = ($porcentajeDescuentoGeneral->valor * $valueBill) / 100;
+		}
+		return $totalDiscount;
 	}
 
 }
