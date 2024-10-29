@@ -577,7 +577,7 @@ function buscarManifiestos(info) {
 
         $(".lgicaja .h6-click").first().click();
 
-        $("#btn-imprimir-multiple-manifiesto").on('click', function () {
+        $("#btn-imprimir-multiple-manifiesto").off('click').on('click', function () {
           if ($("input.manifiestos-caja:checked").length) {
             let cajasManifiestos = $.map($("input.manifiestos-caja:checked"), function (item) {
               return $(item).data('manifiestoscaja')
