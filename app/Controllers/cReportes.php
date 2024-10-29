@@ -503,7 +503,7 @@ class cReportes extends BaseController {
 
 	public function manifiestos($boxesManifest) {
 
-		$boxes = explode("*", $boxesManifest);
+		$boxes = explode(".", $boxesManifest);
 		$pdf = $this->initPdf(false, false);
 
 		if (count($boxes) > 0) {
@@ -512,16 +512,15 @@ class cReportes extends BaseController {
 
 			foreach ($boxes as $box) {
 
-				$informationBox = explode("=", $box);
+				$informationBox = explode("-", $box);
 
 				$idsManifest = explode("_", $informationBox[1]);
 				$numberBox = str_replace("C", "", $informationBox[0]);
 
 				$manifiestos = $mManifiesto->select("ruta_archivo")->whereIn("id", $idsManifest)->findAll();
 
-				$pdf->startPageGroup();
-
 				if (count($manifiestos) > 0) {
+					$pdf->startPageGroup();
 					$this->validarArchivoManifiesto($pdf, $manifiestos, $numberBox);
 				}
 			}
@@ -725,6 +724,9 @@ class cReportes extends BaseController {
 	private function validarArchivoManifiesto($pdf, $manifiestos, $numberBox) {
 		foreach ($manifiestos as $manif) {
 			$manif = (object) $manif;
+			if (is_null($manif->ruta_archivo) || trim($manif->ruta_archivo) == '') {
+				continue;
+			}
 			$ext = explode('.', $manif->ruta_archivo)[1];
 			$file = UPLOADS_MANIFEST_PATH . $manif->ruta_archivo;
 			if ($ext == 'pdf') {

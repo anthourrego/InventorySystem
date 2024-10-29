@@ -532,7 +532,7 @@ function buscarManifiestos(info) {
         datos.forEach((it, x) => {
 
           let ids = it.manifiestos.map((op, p) => op.id);
-          let cajaManifiestos = 'C' + it.numeroCaja + '=' + ids.join('_')
+          let cajaManifiestos = 'C' + it.numeroCaja + '-' + (ids.length ? ids.join('_') : '0')
 
           estructura += `<div class="list-group-item list-group-item-action lgicaja p-2">
               <div class="d-flex justify-content-between align-items-center h6-click" data-pos="${x}">
@@ -582,7 +582,7 @@ function buscarManifiestos(info) {
             let cajasManifiestos = $.map($("input.manifiestos-caja:checked"), function (item) {
               return $(item).data('manifiestoscaja')
             });
-            window.open(`${base_url()}Reportes/Manifiestos/${cajasManifiestos.join("*")}`, "_blank");
+            window.open(`${base_url()}Reportes/Manifiestos/${cajasManifiestos.join(".")}`, "_blank");
           } else {
             alertify.warning("No se han seleccionado cajas");
           }
