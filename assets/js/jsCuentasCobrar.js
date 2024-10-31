@@ -273,8 +273,9 @@ $(function () {
             $("#valor, #observacion").val('')
             $("#valorPendienteFactura").html(formatoPesos.format(info.venta.ValorPendiente));
 
+            optionBillSelected.ValorPendiente = info.venta.ValorPendiente;
+
             if (+info.venta.ValorPendiente <= 0) {
-              optionBillSelected.ValorPendiente = info.venta.ValorPendiente;
               $("#formAddAbono").addClass('d-none');
             }
           } else {
