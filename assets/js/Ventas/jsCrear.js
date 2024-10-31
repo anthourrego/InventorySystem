@@ -449,6 +449,16 @@ $(function () {
   /* Actiamos el descuento por defecto al crear */
   if ($DATOSVENTA == '') {
     $("#aplicarDescuento").prop('checked', true).change();
+  } else {
+    if ($DATOSVENTA.descuento > 0) {
+      $("#aplicarDescuento").prop('checked', true);
+      $("#descuentoAplicado").val($DATOSVENTA.descuento);
+      $("#input-applied-discount").removeClass('d-none');
+      $("#input-check-discount").addClass('d-none');
+      setTimeout(() => {
+        calculateDiscount('changeInputDiscount');
+      }, 100);
+    }
   }
 
 });

@@ -139,6 +139,8 @@ class cVentas extends BaseController {
 
 		$this->content["diasVencimientoFacturaGeneral"] = (session()->has("diasVencimientoVenta") ? session()->get("diasVencimientoVenta") : 0);
 
+		$this->content["porcentajeDescuento"] = (session()->has("porcentajeDescuento") ? session()->get("porcentajeDescuento") : 0);
+
 		$this->content['js_add'][] = [
 			'Ventas/jsCrear.js',
 			'Ventas/jsEditar.js'
