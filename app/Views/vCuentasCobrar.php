@@ -38,6 +38,7 @@
             <option value="2">Pago completo</option>
             <option value="1">Con abonos</option>
             <option value="0">Sin abonos</option>
+            <option value="3">Vencidas</option>
           </select>
         </div>
       </div>
@@ -162,6 +163,7 @@
             <thead>
               <tr>
                 <th>Código</th>
+                <th>Tipo abono</th>
                 <th>Valor</th>
                 <th>Estado</th>
                 <th>Observación</th>
@@ -182,3 +184,7 @@
     </div>
   </div>
 </div>
+
+<script>
+  let TIPOSABONO = <?= json_encode(TIPOSABONO); ?>
+</script>

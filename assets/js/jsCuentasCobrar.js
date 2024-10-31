@@ -15,7 +15,6 @@ let DTCuentasCobrar = $("#table").DataTable({
     {
       data: 'codigo',
       render: function (meta, type, data, meta2) {
-        console.log('data', data)
         if (data.id_pedido > 0) {
           return data.codigo;
         }
@@ -143,6 +142,11 @@ let DTDataAccountsBill = $("#tblAbonos").DataTable({
   },
   columns: [{
     data: 'codigo'
+  },{
+    data: 'tipo_abono',
+    render: function (meta, type, data, meta2) {
+      return TIPOSABONO.find(tipo => tipo.valor === data.tipo_abono)?.titulo;
+    }
   }, {
     data: 'valor',
     render: function (meta, type, data, meta2) {

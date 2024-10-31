@@ -71,6 +71,10 @@ class cCuentasCobrar extends BaseController {
 			$query->where("TA.TotalAbonosVenta IS NULL OR TA.TotalAbonosVenta = 0");
 		}
 
+		if ($postData->type == "3") {
+			$query->where("V.fecha_vencimiento < CURRENT_DATE()");
+		}
+
 		return DataTable::of($query)->toJson(true);
 	}
 
@@ -170,6 +174,7 @@ class cCuentasCobrar extends BaseController {
 				abonosventas.observacion,
 				abonosventas.id_usuario,
 				abonosventas.created_at,
+				abonosventas.tipo_abono,
 				U.nombre AS NombreUsuario,
 				CASE
 					WHEN abonosventas.estado = 'AN'

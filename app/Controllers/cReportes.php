@@ -13,6 +13,7 @@ use App\Models\mCuentasCobrar;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
 use setasign\Fpdi\TcpdfFpdi;
+use NumberFormatter;
 
 class cReportes extends BaseController {
 
@@ -850,7 +851,8 @@ class cReportes extends BaseController {
 			$estrucPdf = str_replace("{fechaCreacion}", $value->fechaCreacion, $estrucPdf);
 			$estrucPdf = str_replace("{totalGeneral}", '$ ' . number_format($value->totalGeneral, 0, ',', '.'), $estrucPdf);
 
-			$estrucPdf = str_replace("{valorEnLetras}", ucfirst($this->numberToText($value->totalGeneral)), $estrucPdf);
+			$f = new NumberFormatter("es", NumberFormatter::SPELLOUT);
+			$estrucPdf = str_replace("{valorEnLetras}", ucfirst($f->format($value->totalGeneral)), $estrucPdf);
 
 			$resultado = array_filter(TIPOSABONO, function($producto) use ($value) {
 				return $producto['valor'] == $value->tipoAbonoDP;
@@ -890,53 +892,11 @@ class cReportes extends BaseController {
 			}
 		}
 
-		$pdf->setTitle('Abonos Factura ' . $dataVenta['codigo'] . ' | ' . session()->get("nombreEmpresa"));
-		$pdf->Output($dataVenta['codigo'] . ".pdf", 'I');
-		exit;
-	}
+		$ventaFind = $this->db->table("ventas")->select("ventas.codigo")->where("ventas.id", $idVenta)->get()->getResultObject()[0];
 
-	public function numberToText($numero) {
-		$unidades = [
-			'', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez',
-			'once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve', 'veinte'
-		];
-	
-		$decenas = [
-			'', '', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'
-		];
-	
-		$centenas = [
-			'', 'cien', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'
-		];
-	
-		if ($numero == 0) {
-			return 'cero';
-		}
-	
-		if ($numero < 21) {
-			return $unidades[$numero];
-		}
-	
-		if ($numero < 100) {
-			$decena = (int)($numero / 10);
-			$unidad = $numero % 10;
-			return $decenas[$decena] . ($unidad ? ' y ' . $unidades[$unidad] : '');
-		}
-	
-		if ($numero < 1000) {
-			$centena = (int)($numero / 100);
-			$resto = $numero % 100;
-			return $centenas[$centena] . ($resto ? ' ' . $this->numberToText($resto) : '');
-		}
-	
-		// Para manejar números mayores a 999
-		if ($numero < 1000000) {
-			$miles = (int)($numero / 1000);
-			$resto = $numero % 1000;
-			return ($miles == 1 ? 'mil' : $this->numberToText($miles) . ' mil') . ($resto ? ' ' . $this->numberToText($resto) : '');
-		}
-	
-		return '';
+		$pdf->setTitle('Abonos Factura ' . $ventaFind->codigo . ' | ' . session()->get("nombreEmpresa"));
+		$pdf->Output($ventaFind->codigo . ".pdf", 'I');
+		exit;
 	}
 
 }
