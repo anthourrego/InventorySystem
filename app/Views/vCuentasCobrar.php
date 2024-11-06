@@ -1,7 +1,7 @@
 <div class="card">
   <div class="card-header">
     <div class="row">
-      <div class="col-6 col-md-2">
+      <div class="col-12 mb-2 mb-md-0 col-md-2">
         <div class="input-group option-color" data-type="pago-completo" title="La factura ha sido pagada en su totalidad">
           <div class="input-group-prepend">
             <label class="input-group-text" for="selectEstado">Pago completo</label>
@@ -10,7 +10,7 @@
             value="#8ae287" title="Pago completo">
         </div>
       </div>
-      <div class="col-6 col-md-2">
+      <div class="col-12 mb-2 mb-md-0 col-md-2">
         <div class="input-group option-color" data-type="con-abonos" title="La factura cuenta con abonos">
           <div class="input-group-prepend">
             <label class="input-group-text" for="selectEstado">Con abonos</label>
@@ -19,7 +19,7 @@
           value="#98c0f6" title="Con abonos">
         </div>
       </div>
-      <div class="col-6 col-md-2">
+      <div class="col-12 mb-2 mb-md-0 col-md-2">
         <div class="input-group option-color" data-type="sin-abonos" title="La factura no cuenta con abonos">
           <div class="input-group-prepend">
             <label class="input-group-text" for="selectEstado">Sin abonos</label>
@@ -28,7 +28,7 @@
             value="#ffffff" title="Sin abonos">
         </div>
       </div>
-      <div class="col-8 col-md-3">
+      <div class="col-12 mb-2 mb-md-0 col-md-8 col-md-3">
         <div class="input-group">
           <div class="input-group-prepend">
             <label class="input-group-text" for="selectTipoFacturas">Tipo</label>
