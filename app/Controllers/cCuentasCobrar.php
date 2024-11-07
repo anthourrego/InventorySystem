@@ -20,6 +20,7 @@ class cCuentasCobrar extends BaseController {
 		$this->LMoment();
 		$this->LJQueryValidation();
 		$this->LInputMask();
+		$this->LSelect2();
 		
 		$this->content['js_add'][] = [
 			'jsCuentasCobrar.js'
@@ -52,7 +53,7 @@ class cCuentasCobrar extends BaseController {
 				V.fecha_vencimiento AS FechaVencimiento,
 				V.id_pedido,
 				C.nombre AS NombreCliente,
-				C.nombre AS NombreSucursal
+				S.nombre AS NombreSucursal
 			")->join('clientes AS C', 'V.id_cliente = C.id', 'left')
 			->join('usuarios AS U', 'V.id_vendedor = U.id', 'left')
 			->join('sucursales AS S', 'V.id_sucursal = S.id', 'left')
@@ -73,6 +74,10 @@ class cCuentasCobrar extends BaseController {
 
 		if ($postData->type == "3") {
 			$query->where("V.fecha_vencimiento < CURRENT_DATE()");
+		}
+
+		if (isset($postData->branches) && $postData->branches != "") {
+			$query->where("S.id", $postData->branches);
 		}
 
 		return DataTable::of($query)->toJson(true);

@@ -1,7 +1,7 @@
 <div class="card">
   <div class="card-header">
     <div class="row">
-      <div class="col-12 mb-2 mb-md-0 col-md-2">
+      <div class="col-12 mb-2 mb-md-0 col-md-4 col-lg-3 col-xl-2">
         <div class="input-group option-color" data-type="pago-completo" title="La factura ha sido pagada en su totalidad">
           <div class="input-group-prepend">
             <label class="input-group-text" for="selectEstado">Pago completo</label>
@@ -10,7 +10,7 @@
             value="#8ae287" title="Pago completo">
         </div>
       </div>
-      <div class="col-12 mb-2 mb-md-0 col-md-2">
+      <div class="col-12 mb-2 mb-xl-0 col-md-4 col-lg-3 col-xl-2">
         <div class="input-group option-color" data-type="con-abonos" title="La factura cuenta con abonos">
           <div class="input-group-prepend">
             <label class="input-group-text" for="selectEstado">Con abonos</label>
@@ -19,7 +19,7 @@
           value="#98c0f6" title="Con abonos">
         </div>
       </div>
-      <div class="col-12 mb-2 mb-md-0 col-md-2">
+      <div class="col-12 mb-2 mb-xl-0 col-md-4 col-lg-3 col-xl-2">
         <div class="input-group option-color" data-type="sin-abonos" title="La factura no cuenta con abonos">
           <div class="input-group-prepend">
             <label class="input-group-text" for="selectEstado">Sin abonos</label>
@@ -28,7 +28,7 @@
             value="#ffffff" title="Sin abonos">
         </div>
       </div>
-      <div class="col-12 mb-2 mb-md-0 col-md-8 col-md-3">
+     <!--  <div class="col-12 mb-2 mb-md-0 col-md-4 col-lg-3 col-xl-2">
         <div class="input-group">
           <div class="input-group-prepend">
             <label class="input-group-text" for="selectTipoFacturas">Tipo</label>
@@ -41,6 +41,11 @@
             <option value="3">Vencidas</option>
           </select>
         </div>
+      </div> -->
+      <div class="col-12 mb-2 mb-md-0 col-md-4 col-lg-3 col-xl-2">
+        <button class="btn btn-secondary w-100" data-toggle="modal" data-target="#modalFilter">
+          <i class="fas fa-filter"></i> Filtros
+        </button>
       </div>
     </div>
   </div>
@@ -180,6 +185,44 @@
         <button type="button" class="btn btn-secondary" data-dismiss="modal">
           <i class="fas fa-times"></i> Cerrar
         </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalFilter" data-backdrop="static" data-keyboard="false" aria-labelledby="modalFilterLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-width">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalFilterLabel"><i class="fa-solid fa-filter"></i> Filtros</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="col-12 col-md-6 form-group mb-1">
+            <label class="mb-0" for="selectTipoFacturas">Tipo</label>
+            <select class="custom-select" id="selectTipoFacturas">
+              <option selected value="-1">Todos</option>
+              <option value="2">Pago completo</option>
+              <option value="1">Con abonos</option>
+              <option value="0">Sin abonos</option>
+              <option value="3">Vencidas</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-6 form-group">
+            <label class="mb-0" for="sucursal">Sucursales</label>
+            <select id="sucursal" required name="sucursal" class="custom-select custom-select-sm" data-placeholder="Seleccione un sucursal..." data-allow-clear="1">
+              <option></option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="btnFilter"><i class="fas fa-filter"></i> Filtrar</button>
+        <button type="button" class="btn btn-warning" id="reiniciarFiltros"><i class="fas fa-refresh"></i> Reiniciar Filtros</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
       </div>
     </div>
   </div>

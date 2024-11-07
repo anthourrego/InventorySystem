@@ -1,12 +1,17 @@
 let rutaBase = `${base_url()}CuentasCobrar/`;
 let optionBillSelected = {};
-let filtroFacturas = {};
+let sucursales = [];
+let filtrosConfig = {
+  type: "-1",
+  branches: "",
+  branchesName: ""
+};
 let DTCuentasCobrar = $("#table").DataTable({
   ajax: {
     url: rutaBase + "DT",
     type: "POST",
     data: function (d) {
-      return $.extend(d, { "type": $("#selectTipoFacturas").val() })
+      return $.extend(d, filtrosConfig)
     }
   },
   order: [[0, "desc"]],
@@ -290,9 +295,64 @@ $(function () {
     DTCuentasCobrar.ajax.reload();
   });
 
-  $("#selectTipoFacturas").on('change', function () {
+  $("#sucursal").select2({
+    ajax: {
+      url: base_url() + "Busqueda/SucursalesClientes",
+      type: "POST",
+      dataType: 'json',
+      delay: 250,
+      data: function (params) {
+        var query = {
+          cliente: $("#cliente").val(),
+          search: params.term,
+          page: params.page || 1,
+          _type: "query_append",
+        }
+        return query;
+      },
+      processResults: function (data, params) {
+        params.page = params.page || 1;
+        sucursales = data.data;
+        return {
+          results: data.data,
+          pagination: {
+            more: (params.page * 10) < data.total_count
+          }
+        };
+      },
+      async: false,
+      cache: true
+    }
+  });
+
+  $("#btnFilter").on("click", (e) => {
+    branchesName = filtrosConfig.branchesName;
+    if ($("#sucursal").val() != filtrosConfig.branches) {
+      branchesName = (sucursales.length ? sucursales.find(x => x.id == $("#sucursal").val()).text : "")
+    }
+    
+    filtrosConfig = {
+      type: $("#selectTipoFacturas").val(),
+      branches: $("#sucursal").val(),
+      branchesName
+    };
     DTCuentasCobrar.ajax.reload();
-  })
+    $("#modalFilter").modal("hide");
+  });
+
+  $('#modalFilter').on('show.bs.modal', function (event) {
+    resetFilter(false);
+  });
+
+  $("#reiniciarFiltros").on("click", function() {
+    filtrosConfig = {
+      type: "-1",
+      branches: "",
+      branchesName: ""
+    }
+    resetFilter(true);
+  });
+
 });
 
 function setValuesAccounts(accountsBill) {
@@ -310,4 +370,15 @@ function getColorBill(valorPendiente, valorTotal) {
     return "#ffffff";
   }
   return "#98c0f6";
+}
+
+const resetFilter = (reload = true) => {
+  var sucursalOption = new Option(filtrosConfig.branchesName, filtrosConfig.branches, true, true);
+  $('#sucursal').append(sucursalOption).trigger('change');
+  $("#selectTipoFacturas").val(filtrosConfig.type);
+
+  if (reload === true) {
+    DTCuentasCobrar.ajax.reload();
+    $("#modalFilter").modal("hide");
+  }
 }
