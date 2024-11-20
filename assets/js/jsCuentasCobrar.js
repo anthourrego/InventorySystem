@@ -26,12 +26,9 @@ let DTCuentasCobrar = $("#table").DataTable({
         return `<div class="d-flex align-items-center"><i class="fa-solid fa-tag text-info mr-2" style="transform: rotate(90deg);"></i>${data.codigo}</div>`;
       }
     }, {
-      data: 'NombreCliente',
-      render: function (meta, type, data, meta2) {
-        return `${data.NombreCliente} | ${data.NombreSucursal}`;
-      }
+      data: 'NombreCliente'
     }, {
-      data: 'NombreVendedor',
+      data: 'Ciudad',
       className: 'text-center'
     }, {
       data: 'descuento',

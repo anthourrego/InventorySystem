@@ -18,8 +18,7 @@
         </div>
       </div>
       <div class="col-8 col-md-9 d-none d-md-block">
-        <button type="button" class="btn-filtro-pedido btn btn-outline-primary btn-lg active"
-          data-valor="-1">Todos</button>
+        <button type="button" class="btn-filtro-pedido btn btn-outline-primary btn-lg active" data-valor="-1">Todos</button>
         <button type="button" class="btn-filtro-pedido btn btn-outline-warning" data-valor="PE">Pendiente</button>
         <button type="button" class="btn-filtro-pedido btn btn-outline-secondary" data-valor="EP">En Proceso</button>
         <button type="button" class="btn-filtro-pedido btn btn-outline-info" data-valor="EM">Empacado</button>

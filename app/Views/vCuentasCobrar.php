@@ -1,6 +1,12 @@
 <div class="card">
   <div class="card-header">
     <div class="row">
+      <div class="col-8 col-md-9 d-none d-md-block">
+        <button type="button" class="btn-filtro-pedido btn btn-outline-primary btn-lg active" data-valor="-1">Todos</button>
+        <button type="button" class="btn-filtro-pedido btn btn-outline-warning" data-valor="PE">Pendiente</button>
+        <button type="button" class="btn-filtro-pedido btn btn-outline-secondary" data-valor="EP">En Proceso</button>
+        <button type="button" class="btn-filtro-pedido btn btn-outline-info" data-valor="EM">Empacado</button>
+      </div>
       <div class="col-12 mb-2 mb-md-0 col-md-4 col-lg-3 col-xl-2">
         <div class="input-group option-color" data-type="pago-completo" title="La factura ha sido pagada en su totalidad">
           <div class="input-group-prepend">
@@ -57,7 +63,7 @@
           <tr>
             <th>Código</th>
             <th>Cliente</th>
-            <th>Vendedor</th>
+            <th>Ciudad</th>
             <th>Descuento</th>
             <th>Total</th>
             <th>Total Abonos</th>

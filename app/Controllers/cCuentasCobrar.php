@@ -52,11 +52,12 @@ class cCuentasCobrar extends BaseController {
 				(CASE WHEN TA.TotalAbonosVenta IS NULL THEN 0 ELSE TA.TotalAbonosVenta END) AS AbonosVenta,
 				V.fecha_vencimiento AS FechaVencimiento,
 				V.id_pedido,
-				C.nombre AS NombreCliente,
-				S.nombre AS NombreSucursal
+				CONCAT(C.nombre, ' | ', S.nombre) AS NombreCliente,
+				CU.nombre AS Ciudad
 			")->join('clientes AS C', 'V.id_cliente = C.id', 'left')
 			->join('usuarios AS U', 'V.id_vendedor = U.id', 'left')
 			->join('sucursales AS S', 'V.id_sucursal = S.id', 'left')
+			->join('ciudades AS CU', 'S.id_ciudad = CU.id', 'left')
 			->join("({$subQuery}) TA", "V.id = TA.id_venta", "left")
 			->where("V.metodo_pago", "2");
 
