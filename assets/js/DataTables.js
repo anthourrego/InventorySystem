@@ -20,12 +20,12 @@ var language = {
 			_: 'Mostrar %d registros'
 			, '-1': "Mostrar todo"
 		},
-		colvis: 'Visibilidad Columnas'
-		, copy: 'Copiar'
-		, csv: 'CVS'
-		, excel: 'Excel'
-		, pdf: 'PDF'
-		, print: 'Imprimir'
+		colvis: 'Visibilidad Columnas', 
+		copy: 'Copiar', 
+		csv: 'CVS', 
+		excel: 'Excel', 
+		pdf: 'PDF', 
+		print: 'Imprimir'
 	},
 	infoFiltered: "(_MAX_ Registros filtrados en total)"
 };
@@ -115,6 +115,80 @@ $.extend(true, $.fn.dataTable.defaults, {
 		{ extend: 'pageLength' },
 	],
 });
+
+/**
+ * Genera un array de configuraciones de botones de DataTable basado en las opciones proporcionadas y botones adicionales.
+ *
+ * @param {Array<string>} options - Un array de tipos de botones a incluir. Valores válidos son 'collection', 'print' y 'pageLength'.
+ * @param {Array<Object>} [btnAdicional=[]] - Un array de configuraciones de botones adicionales a incluir.
+ * @returns {Array<Object>} Un array de objetos de configuración de botones para DataTables.
+ *
+ * @example
+ * const options = ['collection', 'print'];
+ * const additionalButtons = [{ extend: 'colvis', text: 'Visibilidad de Columnas' }];
+ * const buttons = buttonsDT(options, additionalButtons);
+ * // buttons contendrá las configuraciones para 'collection', 'print' y el botón adicional 'colvis'.
+ */
+function buttonsDT(options, btnAdicional = []) {
+	let btns = [];
+	let botones = {
+		collection:{
+			extend: 'collection',
+			text:'<i class="fa-solid fa-download"></i>',
+			className: 'btn-primary',
+			autoClose: true,
+			buttons: [
+				{
+					extend: 'copyHtml5',
+					exportOptions: {
+							columns: ':visible:not(.noExport)'
+					},
+				},
+				{
+					extend: 'excelHtml5',
+					exportOptions: {
+							columns: ':visible:not(.noExport)'
+					},
+				},
+				{
+					extend: 'csvHtml5',
+					exportOptions: {
+							columns: ':visible:not(.noExport)'
+					},
+				},
+				{
+					extend: 'pdfHtml5',
+					exportOptions: {
+							columns: ':visible:not(.noExport)'
+					},
+				},
+			],
+			attr: { title: "Exportar", "data-toggle":"tooltip" }
+		},
+		print: { 
+			extend: 'print', 
+			className: 'printButton btn-info', 
+			text: '<i class="fa-solid fa-print"></i>', 
+			attr: { 
+				title: "Imprimir", "data-toggle":"tooltip" 
+			},
+			exportOptions: {
+				columns: ':visible:not(.noExport)'
+			},
+		},
+		pageLength: { extend: "pageLength" }
+	};
+
+	options.forEach((it) => {
+		btns.push(botones[it]);
+	});
+
+	btnAdicional.forEach((btnAdd) => {
+		btns.push(btnAdd);
+	});
+
+	return btns;
+}
 
 var oldExportAction = function (self, e, dt, button, config) {
 	if (button[0].className.indexOf('buttons-excel') >= 0) {

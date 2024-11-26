@@ -16,6 +16,16 @@ let DTCuentasCobrar = $("#table").DataTable({
   },
   order: [[0, "desc"]],
   scrollX: true,
+  buttons: buttonsDT(["collection", "print", "pageLength"], [
+    /* {
+      text: '<i class="fa-solid fa-filter"></i>',
+      className: 'btn-dark',
+      attr: { title: "Filtrar", "data-toggle": "tooltip" },
+      action: function (e, dt, node, config) {
+        $("#modalFilter").modal("show");
+      }
+    } */
+  ]),
   columns: [
     {
       data: 'codigo',
@@ -25,12 +35,11 @@ let DTCuentasCobrar = $("#table").DataTable({
         }
         return `<div class="d-flex align-items-center"><i class="fa-solid fa-tag text-info mr-2" style="transform: rotate(90deg);"></i>${data.codigo}</div>`;
       }
-    }, {
-      data: 'NombreCliente'
-    }, {
-      data: 'Ciudad',
-      className: 'text-center'
-    }, {
+    }, 
+    { data: 'NombreCliente'}, 
+    { data: 'Sucursal'}, 
+    { data: 'Ciudad'}, 
+    {
       data: 'descuento',
       render: function (meta, type, data, meta2) {
         return formatoPesos.format(data.descuento);
@@ -52,17 +61,18 @@ let DTCuentasCobrar = $("#table").DataTable({
       }
     },
     {
+      data: 'FechaVencimiento',
+      render: function (meta, type, data, meta2) {
+        return moment(data.FechaVencimiento, "YYYY-MM-DD").format("DD/MM/YYYY");
+      }
+    },
+    {
       data: 'created_at',
       render: function (meta, type, data, meta2) {
         return moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A");
       }
     },
     {
-      data: 'FechaVencimiento',
-      render: function (meta, type, data, meta2) {
-        return moment(data.FechaVencimiento, "YYYY-MM-DD").format("DD/MM/YYYY");
-      }
-    }, {
       orderable: false,
       searchable: false,
       defaultContent: '',
@@ -86,8 +96,7 @@ let DTCuentasCobrar = $("#table").DataTable({
     }
   ],
   createdRow: function (row, data, dataIndex) {
-
-    $(row).css({ 'background-color': getColorBill(+data.ValorPendiente, +data.total) })
+    $(row).css({ 'background-color': getColorBill(+data.ValorPendiente, data.FechaVencimiento, data.AbonosVenta) })
 
     //Editar
     $(row).find(".btnVer, .btnAgregar").click(function (e) {
@@ -337,6 +346,19 @@ $(function () {
     $("#modalFilter").modal("hide");
   });
 
+  document.querySelectorAll(".btn-fast-filter").forEach(button => {
+    button.addEventListener("click", function () {
+      //Removemos la clase de todos los botones
+      document.querySelectorAll(".btn-fast-filter").forEach(button => {
+        button.classList.remove("btn-lg");
+      });
+      const newFilter = this.getAttribute("data-filter");
+      this.classList.add("btn-lg");
+      filtrosConfig.type = newFilter.toString();
+      resetFilter(true);
+    });
+  });
+
   $('#modalFilter').on('show.bs.modal', function (event) {
     resetFilter(false);
   });
@@ -359,14 +381,20 @@ function setValuesAccounts(accountsBill) {
   }, 200);
 }
 
-function getColorBill(valorPendiente, valorTotal) {
-  if (valorPendiente <= 0) {
+function getColorBill(valorPendiente, fechaVencimiento, abonosVenta) {
+  if (moment(fechaVencimiento, "YYYY-MM-DD").isBefore(moment()) && abonosVenta > 0) {
+    return "#f7b267";
+  } else if (moment(fechaVencimiento, "YYYY-MM-DD").isBefore(moment())) {
+    return "#f6a8a8";
+  } else if (valorPendiente <= 0) {
     return "#8ae287";
-  }
-  if (valorTotal == valorPendiente) {
+  } else if (abonosVenta == 0) {
     return "#ffffff";
+  } else if (abonosVenta > 0) {
+    return "#98c0f6";
   }
-  return "#98c0f6";
+
+  return "#f4f6f9";
 }
 
 const resetFilter = (reload = true) => {

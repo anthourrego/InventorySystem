@@ -1,0 +1,162 @@
+/* Estilo para el botón pago completo */
+.btn-fullpay {
+  color: #fff;
+  background-color: #8ae287;
+  border-color: #8ae287;
+}
+
+.btn-fullpay:hover {
+  color: #fff;
+  background-color: #7bd77a;
+  border-color: #7bd77a;
+}
+
+.btn-fullpay:focus, .btn-fullpay.focus {
+  color: #fff;
+  background-color: #7bd77a;
+  border-color: #7bd77a;
+  box-shadow: 0 0 0 0.2rem rgba(138, 226, 135, 0.5);
+}
+
+.btn-fullpay.disabled, .btn-fullpay:disabled {
+  color: #fff;
+  background-color: #8ae287;
+  border-color: #8ae287;
+}
+
+.btn-fullpay:not(:disabled):not(.disabled):active, .btn-fullpay:not(:disabled):not(.disabled).active,
+.show > .btn-fullpay.dropdown-toggle {
+  color: #fff;
+  background-color: #6fcf6b;
+  border-color: #6fcf6b;
+}
+
+.btn-fullpay:not(:disabled):not(.disabled):active:focus, .btn-fullpay:not(:disabled):not(.disabled).active:focus,
+.show > .btn-fullpay.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(138, 226, 135, 0.5);
+}
+
+/* Estilo para el botón pargo parcial */
+.btn-partialpay {
+  color: #fff;
+  background-color: #98c0f6;
+  border-color: #98c0f6;
+}
+
+.btn-partialpay:hover {
+  color: #fff;
+  background-color: #87b0e6;
+  border-color: #87b0e6;
+}
+
+.btn-partialpay:focus, .btn-partialpay.focus {
+  color: #fff;
+  background-color: #87b0e6;
+  border-color: #87b0e6;
+  box-shadow: 0 0 0 0.2rem rgba(152, 192, 246, 0.5);
+}
+
+.btn-partialpay.disabled, .btn-partialpay:disabled {
+  color: #fff;
+  background-color: #98c0f6;
+  border-color: #98c0f6;
+}
+
+.btn-partialpay:not(:disabled):not(.disabled):active, .btn-partialpay:not(:disabled):not(.disabled).active,
+.show > .btn-partialpay.dropdown-toggle {
+  color: #fff;
+  background-color: #76a0d6;
+  border-color: #76a0d6;
+}
+
+.btn-partialpay:not(:disabled):not(.disabled):active:focus, .btn-partialpay:not(:disabled):not(.disabled).active:focus,
+.show > .btn-partialpay.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(152, 192, 246, 0.5);
+}
+
+/* Estilo para el vencido con pago parcial */
+.btn-expiredwithoutpayment {
+  color: #fff;
+  background-color: #f7b267;
+  border-color: #f7b267;
+}
+
+.btn-expiredwithoutpayment:hover {
+  color: #fff;
+  background-color: #e6a55e;
+  border-color: #e6a55e;
+}
+
+.btn-expiredwithoutpayment:focus, .btn-expiredwithoutpayment.focus {
+  color: #fff;
+  background-color: #e6a55e;
+  border-color: #e6a55e;
+  box-shadow: 0 0 0 0.2rem rgba(247, 178, 103, 0.5);
+}
+
+.btn-expiredwithoutpayment.disabled, .btn-expiredwithoutpayment:disabled {
+  color: #fff;
+  background-color: #f7b267;
+  border-color: #f7b267;
+}
+
+.btn-expiredwithoutpayment:not(:disabled):not(.disabled):active, .btn-expiredwithoutpayment:not(:disabled):not(.disabled).active,
+.show > .btn-expiredwithoutpayment.dropdown-toggle {
+  color: #fff;
+  background-color: #d69455;
+  border-color: #d69455;
+}
+
+.btn-expiredwithoutpayment:not(:disabled):not(.disabled):active:focus, .btn-expiredwithoutpayment:not(:disabled):not(.disabled).active:focus,
+.show > .btn-expiredwithoutpayment.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(247, 178, 103, 0.5);
+}
+
+/* Estilo para el botón de pago vencido */
+.btn-expired {
+  color: #fff;
+  background-color: #f28b82;
+  border-color: #f28b82;
+}
+
+.btn-expired:hover {
+  color: #fff;
+  background-color: #e67a73;
+  border-color: #e67a73;
+}
+
+.btn-expired:focus, .btn-expired.focus {
+  color: #fff;
+  background-color: #e67a73;
+  border-color: #e67a73;
+  box-shadow: 0 0 0 0.2rem rgba(242, 139, 130, 0.5);
+}
+
+.btn-expired.disabled, .btn-expired:disabled {
+  color: #fff;
+  background-color: #f28b82;
+  border-color: #f28b82;
+}
+
+.btn-expired:not(:disabled):not(.disabled):active, .btn-expired:not(:disabled):not(.disabled).active,
+.show > .btn-expired.dropdown-toggle {
+  color: #fff;
+  background-color: #d66a63;
+  border-color: #d66a63;
+}
+
+.btn-expired:not(:disabled):not(.disabled):active:focus, .btn-expired:not(:disabled):not(.disabled).active:focus,
+.show > .btn-expired.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(242, 139, 130, 0.5);
+}
+
+.btn-fast-filter {
+  transition: all 0.3s ease;
+}
+
+.btn-fast-filter:hover {
+  padding: 0.5rem 1rem;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  border-radius: 0.3rem;
+}

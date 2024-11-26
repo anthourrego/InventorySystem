@@ -21,7 +21,18 @@ class cCuentasCobrar extends BaseController {
 		$this->LJQueryValidation();
 		$this->LInputMask();
 		$this->LSelect2();
-		
+
+		//Buscamos facturas que no tengas fecha de vencimiento
+		$mVentas = new mVentas();
+
+		$facturaVencidas = $mVentas->where("fecha_vencimiento IS NULL")->countAllResults();
+
+		$this->content['facturaVencidas'] = $facturaVencidas;
+
+		$this->content['css_add'][] = [
+			'CuentasCobrar.css'
+		];
+
 		$this->content['js_add'][] = [
 			'jsCuentasCobrar.js'
 		];
@@ -33,11 +44,11 @@ class cCuentasCobrar extends BaseController {
 		$postData = (object) $this->request->getPost();
 
 		$subQuery = $this->db->table("abonosventas AS AV")
-					->select("
-						AV.id_venta
-						, SUM(CASE WHEN AV.estado = 'CO' THEN AV.valor ELSE 0 END) AS TotalAbonosVenta
-					")
-					->groupBy("AV.id_venta")->getCompiledSelect();
+			->select("
+				AV.id_venta,
+				SUM(CASE WHEN AV.estado = 'CO' THEN AV.valor ELSE 0 END) AS TotalAbonosVenta
+			")->groupBy("AV.id_venta")
+			->getCompiledSelect();
 
 		$query = $this->db->table('ventas AS V')
 			->select("
@@ -47,34 +58,44 @@ class cCuentasCobrar extends BaseController {
 				U.id AS IdVendedor,
 				U.nombre AS NombreVendedor,
 				(V.total - V.descuento) AS total,
-				((V.total - V.descuento) - (CASE WHEN TA.TotalAbonosVenta IS NULL THEN 0 ELSE TA.TotalAbonosVenta END)) AS ValorPendiente,
+				((V.total - V.descuento) - IFNULL(TA.TotalAbonosVenta, 0)) AS ValorPendiente,
 				V.created_at,
-				(CASE WHEN TA.TotalAbonosVenta IS NULL THEN 0 ELSE TA.TotalAbonosVenta END) AS AbonosVenta,
+				IFNULL(TA.TotalAbonosVenta, 0) AS AbonosVenta,
 				V.fecha_vencimiento AS FechaVencimiento,
 				V.id_pedido,
-				CONCAT(C.nombre, ' | ', S.nombre) AS NombreCliente,
+				C.nombre AS NombreCliente,
+				S.nombre As Sucursal,
 				CU.nombre AS Ciudad
 			")->join('clientes AS C', 'V.id_cliente = C.id', 'left')
 			->join('usuarios AS U', 'V.id_vendedor = U.id', 'left')
 			->join('sucursales AS S', 'V.id_sucursal = S.id', 'left')
 			->join('ciudades AS CU', 'S.id_ciudad = CU.id', 'left')
 			->join("({$subQuery}) TA", "V.id = TA.id_venta", "left")
-			->where("V.metodo_pago", "2");
-
-		if ($postData->type == "2") {
-			$query->where("TA.TotalAbonosVenta = (V.total - V.descuento)");
-		}
-
-		if ($postData->type == "1") {
-			$query->where("TA.TotalAbonosVenta > 0 AND TA.TotalAbonosVenta < (V.total - V.descuento)");
-		}
+			->where("V.metodo_pago", "2")
+			->where("V.fecha_vencimiento IS NOT NULL");
 
 		if ($postData->type == "0") {
-			$query->where("TA.TotalAbonosVenta IS NULL OR TA.TotalAbonosVenta = 0");
+			$query->where("IFNULL(TA.TotalAbonosVenta, 0) <= 0");
+		}
+	
+		if ($postData->type == "1") {
+			$query->where("IFNULL(TA.TotalAbonosVenta, 0) > 0 AND IFNULL(TA.TotalAbonosVenta, 0) < (V.total - V.descuento)");
 		}
 
-		if ($postData->type == "3") {
+		if ($postData->type == "2") {
+			$query->where("IFNULL(TA.TotalAbonosVenta, 0) >= (V.total - V.descuento)");
+		}
+
+		if ($postData->type == "3" || $postData->type == "4") {
 			$query->where("V.fecha_vencimiento < CURRENT_DATE()");
+		}
+		
+		if ($postData->type == "3") {
+			$query->where("IFNULL(TA.TotalAbonosVenta, 0) <=", "(V.total - V.descuento)");
+		}
+
+		if ($postData->type == "4") {
+			$query->where("IFNULL(TA.TotalAbonosVenta, 0) >", 0);
 		}
 
 		if (isset($postData->branches) && $postData->branches != "") {
