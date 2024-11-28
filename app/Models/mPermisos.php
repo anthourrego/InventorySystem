@@ -613,7 +613,11 @@ class mPermisos extends Model {
 					[
 						"id" => 1006,
 						"text" => "Imprimir Todos Recibos Caja"
-					]
+					],
+					[
+						"id" => 1007,
+						"text" => "Asignar Fechas"
+					],
 				]
 			],
 		];

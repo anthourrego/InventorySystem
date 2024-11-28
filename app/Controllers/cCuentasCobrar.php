@@ -27,7 +27,7 @@ class cCuentasCobrar extends BaseController {
 
 		$facturaVencidas = $mVentas->where("fecha_vencimiento IS NULL")->countAllResults();
 
-		$this->content['facturaVencidas'] = $facturaVencidas;
+		$this->content['facturaSinFecha'] = $facturaVencidas;
 
 		$this->content['css_add'][] = [
 			'CuentasCobrar.css'
@@ -71,8 +71,13 @@ class cCuentasCobrar extends BaseController {
 			->join('sucursales AS S', 'V.id_sucursal = S.id', 'left')
 			->join('ciudades AS CU', 'S.id_ciudad = CU.id', 'left')
 			->join("({$subQuery}) TA", "V.id = TA.id_venta", "left")
-			->where("V.metodo_pago", "2")
-			->where("V.fecha_vencimiento IS NOT NULL");
+			->where("V.metodo_pago", "2");
+
+		if ($postData->type == "5") {
+			$query->where("V.fecha_vencimiento IS NULL");
+		} else {
+			$query->where("V.fecha_vencimiento IS NOT NULL");
+		}
 
 		if ($postData->type == "0") {
 			$query->where("IFNULL(TA.TotalAbonosVenta, 0) <= 0");

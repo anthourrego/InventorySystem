@@ -1,7 +1,20 @@
 <div class="card">
   <div class="card-header">
     <div class="row">
-      <div class="col-8 col-md-9 d-none d-md-block">
+      <div class="col-12 d-md-none">
+      <div class="form-group mb-0">
+        <label class="mb-0" for="filterMobile">Filtros</label>
+        <select class="form-control" id="filterMobile">
+          <option value="-1" selected>Todos</option>
+          <option value="2">Pago Completo</option>
+          <option value="1">Con Abonos</option>
+          <option value="0">Sin Abonos</option>
+          <option value="3">Vencidos</option>
+          <option value="4">Vencidos Con Abono</option>
+        </select>
+      </div>
+      </div>
+      <div class="col-12 col-md-9 d-none d-md-block">
         <button type="button" class="btn btn-outline-primary btn-lg active btn-fast-filter" data-filter="-1">Todos</button>
         <button type="button" class="btn btn-fullpay btn-fast-filter" data-filter="2">Pago Completo</button>
         <button type="button" class="btn btn-partialpay btn-fast-filter" data-filter="1">Con Abonos</button>
@@ -9,47 +22,13 @@
         <button type="button" class="btn btn-expired btn-fast-filter" data-filter="3">Vencidos</button>
         <button type="button" class="btn btn-expiredwithoutpayment btn-fast-filter" data-filter="4">Vencidos Con Abono</button>
       </div>
-      <!-- <div class="col-12 mb-2 mb-md-0 col-md-4 col-lg-3 col-xl-2">
-        <div class="input-group option-color" data-type="pago-completo" title="La factura ha sido pagada en su totalidad">
-          <div class="input-group-prepend">
-            <label class="input-group-text" for="selectEstado">Pago completo</label>
-          </div>
-          <input type="color" disabled readonly class="form-control form-control-color cu-pointer"
-            value="#8ae287" title="Pago completo">
-        </div>
+      <?php if (validPermissions([1007], true) && $facturaSinFecha > 0) { ?>
+      <div class="col-12 col-md-3 mt-3 mt-md-0">
+        <button type="button" class="btn btn-primary float-right w-100 w-md-50" id="assign-dates">
+          <i class="fa-regular fa-calendar-plus"></i> Asignar Fechas
+        </button>
       </div>
-      <div class="col-12 mb-2 mb-xl-0 col-md-4 col-lg-3 col-xl-2">
-        <div class="input-group option-color" data-type="con-abonos" title="La factura cuenta con abonos">
-          <div class="input-group-prepend">
-            <label class="input-group-text" for="selectEstado">Con abonos</label>
-          </div>
-          <input type="color" disabled readonly class="form-control form-control-color cu-pointer"
-          value="#98c0f6" title="Con abonos">
-        </div>
-      </div>
-      <div class="col-12 mb-2 mb-xl-0 col-md-4 col-lg-3 col-xl-2">
-        <div class="input-group option-color" data-type="sin-abonos" title="La factura no cuenta con abonos">
-          <div class="input-group-prepend">
-            <label class="input-group-text" for="selectEstado">Sin abonos</label>
-          </div>
-          <input type="color" disabled readonly class="form-control form-control-color cu-pointer"
-            value="#ffffff" title="Sin abonos">
-        </div>
-      </div> -->
-     <!--  <div class="col-12 mb-2 mb-md-0 col-md-4 col-lg-3 col-xl-2">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <label class="input-group-text" for="selectTipoFacturas">Tipo</label>
-          </div>
-          <select class="custom-select" id="selectTipoFacturas">
-            <option selected value="-1">Todos</option>
-            <option value="2">Pago completo</option>
-            <option value="1">Con abonos</option>
-            <option value="0">Sin abonos</option>
-            <option value="3">Vencidas</option>
-          </select>
-        </div>
-      </div> -->
+      <?php } ?>
     </div>
   </div>
   <div class="card-body">
@@ -234,5 +213,5 @@
 
 <script>
   const TIPOSABONO = <?= json_encode(TIPOSABONO); ?>;
-  const FACTURASVENCIDAS = <?= $facturaVencidas ?>;
+  const FACTURASINFECHA = <?= $facturaSinFecha ?>;
 </script>

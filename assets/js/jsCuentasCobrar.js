@@ -1,6 +1,7 @@
 let rutaBase = `${base_url()}CuentasCobrar/`;
 let optionBillSelected = {};
 let sucursales = [];
+const btnAssignDates = document.getElementById("assign-dates");
 let filtrosConfig = {
   type: "-1",
   branches: "",
@@ -78,18 +79,21 @@ let DTCuentasCobrar = $("#table").DataTable({
       defaultContent: '',
       className: 'text-center noExport',
       render: function (meta, type, data, meta2) {
-
         let botones = ``;
 
-        botones += validPermissions(1001) ? `<button type="button" class="btn btn-primary btnAgregar" title="Ver"><i class="fa-solid fa-plus"></i></button>` : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
-
-        botones += validPermissions(1004) ? `<a href="${base_url()}Reportes/CuentaCobrar/${data.id}/0" target="_blank" type="button" class="btn btn-info" title="Imprimir Abonos">
-          <i class="fa-solid fa-print"></i>
-        </a>` : '';
-
-        botones += validPermissions(1006) ? `<a href="${base_url()}Reportes/ReciboCaja/${data.id}/0" target="_blank" type="button" class="btn btn-secondary" title="Imprimir Recibos Caja">
-          <i class="fa-solid fa-money-check"></i>
-        </a>` : '';
+        if (data.FechaVencimiento != null) {
+          botones += validPermissions(1001) ? `<button type="button" class="btn btn-primary btnAgregar" title="Ver"><i class="fa-solid fa-plus"></i></button>` : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
+  
+          botones += validPermissions(1004) ? `<a href="${base_url()}Reportes/CuentaCobrar/${data.id}/0" target="_blank" type="button" class="btn btn-info" title="Imprimir Abonos">
+            <i class="fa-solid fa-print"></i>
+          </a>` : '';
+  
+          botones += validPermissions(1006) ? `<a href="${base_url()}Reportes/ReciboCaja/${data.id}/0" target="_blank" type="button" class="btn btn-secondary" title="Imprimir Recibos Caja">
+            <i class="fa-solid fa-money-check"></i>
+          </a>` : '';
+        } else {
+          botones += validPermissions(1007) && FACTURASINFECHA > 0 ? `<button type="button" class="btn btn-primary btn-assign-dates" title="Asignar Fecha"><i class="fa-regular fa-calendar-plus"></i></button>` : '';
+        }
 
         return `<div class="btn-group btn-group-sm" role="group">${botones}</div>`;
       }
@@ -358,6 +362,20 @@ $(function () {
       resetFilter(true);
     });
   });
+
+  document.getElementById("filterMobile").addEventListener("change", function () {
+    const newFilter = this.value;
+    filtrosConfig.type = newFilter.toString();
+    resetFilter(true);
+  });
+
+  if (btnAssignDates && FACTURASINFECHA > 0) {
+    btnAssignDates.addEventListener("click", function () {
+      filtrosConfig.type = "5";
+      resetFilter(true);
+    });
+  }
+
 
   $('#modalFilter').on('show.bs.modal', function (event) {
     resetFilter(false);
