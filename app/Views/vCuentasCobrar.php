@@ -211,6 +211,39 @@
   </div>
 </div>
 
+<div class="modal fade" id="modalAssignDate" data-backdrop="static" data-keyboard="false" aria-labelledby="modalAssignDateLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-width">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAssignDateLabel"><i class="fa-regular fa-calendar-plus"></i> Asignar Fecha</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="formAssignDate">
+          <input type="hidden" name="idFactura" id="idFactura">
+          <div class="form-row">
+            <div class="col-12 form-group mb-1">
+              <label for="fechaVencimiento">Fecha de Vencimiento:</label>
+              <div class="input-group date" id="fechaVencimientoDate" data-target-input="nearest">
+                <input type="text" name="fechaVencimiento" class="form-control datetimepicker-input datetimepicker-focus" data-target="#fechaVencimientoDate" id="fechaVencimiento" required/>
+                <div class="input-group-append" data-target="#fechaVencimientoDate" data-toggle="datetimepicker">
+                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success" form="formAssignDate"><i class="fas fa-save"></i> Aceptar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   const TIPOSABONO = <?= json_encode(TIPOSABONO); ?>;
   const FACTURASINFECHA = <?= $facturaSinFecha ?>;

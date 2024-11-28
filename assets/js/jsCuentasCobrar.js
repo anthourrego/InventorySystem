@@ -1,4 +1,4 @@
-let rutaBase = `${base_url()}CuentasCobrar/`;
+const rutaBase = `${base_url()}CuentasCobrar/`;
 let optionBillSelected = {};
 let sucursales = [];
 const btnAssignDates = document.getElementById("assign-dates");
@@ -92,7 +92,7 @@ let DTCuentasCobrar = $("#table").DataTable({
             <i class="fa-solid fa-money-check"></i>
           </a>` : '';
         } else {
-          botones += validPermissions(1007) && FACTURASINFECHA > 0 ? `<button type="button" class="btn btn-primary btn-assign-dates" title="Asignar Fecha"><i class="fa-regular fa-calendar-plus"></i></button>` : '';
+          botones += validPermissions(1007) && FACTURASINFECHA > 0 ? `<button type="button" class="btn btn-secondary btn-assign-dates" title="Asignar Fecha"><i class="fa-regular fa-calendar-plus"></i></button>` : '';
         }
 
         return `<div class="btn-group btn-group-sm" role="group">${botones}</div>`;
@@ -141,6 +141,13 @@ let DTCuentasCobrar = $("#table").DataTable({
           $("#modalAgregarAbono").modal('show');
         }
       });
+    });
+
+    $(row).find(".btn-assign-dates").click(function (e) {
+      e.preventDefault();
+      $("#idFactura").val(data.id);
+      $("#fechaVencimiento").val(moment().format("DD/MM/YYYY"));
+      $("#modalAssignDate").modal('show');
     });
   }
 });
@@ -376,7 +383,6 @@ $(function () {
     });
   }
 
-
   $('#modalFilter').on('show.bs.modal', function (event) {
     resetFilter(false);
   });
@@ -390,6 +396,55 @@ $(function () {
     resetFilter(true);
   });
 
+  // Inicializar el datetimepicker
+  $('#fechaVencimientoDate').datetimepicker({
+    minDate: moment(),
+    format: 'L',
+    defaultDate: moment()
+  });
+
+  document.addEventListener("focusin", function(event) {
+    if (event.target.classList.contains("datetimepicker-focus")) {
+      event.target.nextElementSibling.click();
+    }
+  });
+
+  $('#formAssignDate').submit(function (e) {
+    e.preventDefault();
+
+    if (!validPermissions(1007)) {
+      alertify.error("No tiene permisos para realizar esta acción.");
+      return;
+    }
+
+    if ($(this).valid()) {
+      let fechaVencimiento = $("#fechaVencimiento").val();
+      if (fechaVencimiento) {
+        $.ajax({
+          type: "POST",
+          url: rutaBase + "AsignarFechaVencimiento",
+          dataType: 'json',
+          processData: false,
+          contentType: false,
+          cache: false,
+          data: new FormData(this),
+          success: ({ success, msj }) => {
+            if (success) {
+              alertify.success(msj);
+              $("#idFactura").val('');
+              $("#fechaVencimiento").val(moment().format("DD/MM/YYYY"));
+              $("#modalAssignDate").modal('hide');
+              DTCuentasCobrar.ajax.reload();
+            } else {
+              alertify.error(msj);
+            }
+          }
+        });
+      } else {
+        alertify.error('Debe seleccionar una fecha de vencimiento.');
+      }
+    }
+  });
 });
 
 function setValuesAccounts(accountsBill) {

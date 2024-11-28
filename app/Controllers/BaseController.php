@@ -281,4 +281,13 @@ abstract class BaseController extends Controller
             'assets/Libraries/bs-custom-file-input/bs-custom-file-input.min.js'
         ];
     }
+
+    public function LTempusDominusBoostrap4() {
+        $this->content['css'][] = [
+            'vendor/tempusdominus/bootstrap-4/build/css/tempusdominus-bootstrap-4.min.css'
+        ];
+        $this->content['js'][] = [
+            'vendor/tempusdominus/bootstrap-4/build/js/tempusdominus-bootstrap-4.min.js'
+        ];
+    }
 }

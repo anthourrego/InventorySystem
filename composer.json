@@ -34,6 +34,7 @@
         "setasign/fpdi": "^2.6.1",
         "stuk/jszip": "^3.0.1",
         "tecnickcom/tcpdf": "^6.7.5",
+        "tempusdominus/bootstrap-4": "^5.1.2",
         "tinymce/tinymce": "^7.3.0",
         "ttskch/select2-bootstrap4-theme": "^1.5.2",
         "twbs/bootstrap": "^4.6.2"
@@ -63,7 +64,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "composer/installers": true,
-            "oomphinc/composer-installers-extender": true
+            "oomphinc/composer-installers-extender": true,
+            "robloach/component-installer": false
         }
     },
     "suggest": {

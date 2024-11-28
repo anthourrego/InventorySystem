@@ -330,6 +330,7 @@ $routes->group('CuentasCobrar', ['filter' => 'authGuard:100'], function ($routes
 	$routes->post('DT', 'cCuentasCobrar::listaDT');
 	$routes->post('Crear', 'cCuentasCobrar::crear', ['filter' => ['authGuard:1001', 'ajax']]);
 	$routes->post('Anular', 'cCuentasCobrar::anular', ['filter' => ['authGuard:1002', 'ajax']]);
+	$routes->post('AsignarFechaVencimiento', 'cCuentasCobrar::AsignarFechaVencimiento', ['filter' => ['authGuard:1007', 'ajax']]);
 	$routes->get('CurrentBuy', 'cCuentasCobrar::getCurrentBuy');
 	$routes->get('ObtenerCuentaCobrar/(:any)', 'cCuentasCobrar::getAccounts/$1');
 });

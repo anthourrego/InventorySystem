@@ -18,6 +18,7 @@ class cCuentasCobrar extends BaseController {
 
 		$this->LDataTables();
 		$this->LMoment();
+		$this->LTempusDominusBoostrap4();
 		$this->LJQueryValidation();
 		$this->LInputMask();
 		$this->LSelect2();
@@ -248,6 +249,29 @@ class cCuentasCobrar extends BaseController {
 			$this->db->transRollback();
 			$resp["success"] = false;
 			$resp['msj'] = "Error al anular el abono";
+		}
+		return $this->response->setJSON($resp);
+	}
+
+	public function AsignarFechaVencimiento() {
+		$resp["success"] = true;
+		//Traemos los datos del post
+		$data = (object) $this->request->getPost();
+
+		$mVentas = new mVentas();
+
+		$data->fechaVencimiento = date("Y-m-d", strtotime($data->fechaVencimiento));
+
+		$dataAddAccount = [
+			"id" => $data->idFactura,
+			"fecha_vencimiento" => $data->fechaVencimiento
+		];
+
+		if($mVentas->save($dataAddAccount)) {
+			$resp['msj'] = "Fecha de vencimiento asignada correctamente";
+		} else {
+			$resp["success"] = false;
+			$resp['msj'] = "Error al asignar la fecha de vencimiento";
 		}
 		return $this->response->setJSON($resp);
 	}
