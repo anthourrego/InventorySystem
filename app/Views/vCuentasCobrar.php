@@ -223,6 +223,7 @@
       <div class="modal-body">
         <form id="formAssignDate">
           <input type="hidden" name="idFactura" id="idFactura">
+          <input type="hidden" name="fechaFactura" id="fechaFactura">
           <div class="form-row">
             <div class="col-12 form-group mb-1">
               <label for="fechaVencimiento">Fecha de Vencimiento:</label>

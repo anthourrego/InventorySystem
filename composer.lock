@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7e84a106933d8b0990dd2ef3fd88d35c",
+    "content-hash": "7cf72acc5a500bd91e11c75f99da861d",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -2420,12 +2420,12 @@
             "type": "component",
             "extra": {
                 "component": {
-                    "scripts": [
-                        "src/js/tempusdominus-bootstrap-4.js"
-                    ],
                     "files": [
                         "build/js/tempusdominus-bootstrap-4.min.js",
                         "build/css/tempusdominus-bootstrap-4.min.css"
+                    ],
+                    "scripts": [
+                        "src/js/tempusdominus-bootstrap-4.js"
                     ]
                 }
             },

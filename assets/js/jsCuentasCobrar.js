@@ -145,8 +145,11 @@ let DTCuentasCobrar = $("#table").DataTable({
 
     $(row).find(".btn-assign-dates").click(function (e) {
       e.preventDefault();
+      let fechaVen = moment(data.created_at, "YYYY-MM-DD").format("DD/MM/YYYY");
       $("#idFactura").val(data.id);
+      $("#fechaFactura").val(fechaVen);
       $("#fechaVencimiento").val(moment().format("DD/MM/YYYY"));
+      $('#fechaVencimientoDate').datetimepicker('minDate', fechaVen);
       $("#modalAssignDate").modal('show');
     });
   }
@@ -297,6 +300,8 @@ $(function () {
 
             optionBillSelected.ValorPendiente = info.venta.ValorPendiente;
 
+            console.log(optionBillSelected.ValorPendiente);
+
             if (+info.venta.ValorPendiente <= 0) {
               $("#formAddAbono").addClass('d-none');
             }
@@ -376,6 +381,16 @@ $(function () {
     resetFilter(true);
   });
 
+  $("#tipoAbono").on("change", function (e) {
+    e.preventDefault();
+    const tipoAbono = $(this).val();
+    if (tipoAbono == "5") {
+      $("#valor").val(optionBillSelected.ValorPendiente);
+    } else {
+      $("#valor").val(0);
+    }
+  });
+
   if (btnAssignDates && FACTURASINFECHA > 0) {
     btnAssignDates.addEventListener("click", function () {
       filtrosConfig.type = "5";
@@ -398,9 +413,19 @@ $(function () {
 
   // Inicializar el datetimepicker
   $('#fechaVencimientoDate').datetimepicker({
-    minDate: moment(),
-    format: 'L',
-    defaultDate: moment()
+    format: 'DD/MM/YYYY',
+    defaultDate: moment().format("DD/MM/YYYY"),
+  });
+
+  $("#fechaVencimientoDate").on("change.datetimepicker", function (e) {
+    let fechaFactura = $("#fechaFactura").val();
+    let fechaVencimiento = $("#fechaVencimiento").val();
+
+    if (!moment(fechaFactura, "DD/MM/YYYY").isSameOrBefore(moment(fechaVencimiento, "DD/MM/YYYY"))) {
+      alertify.error('La fecha de vencimiento no puede ser menor que la fecha original.');
+      $("#fechaVencimiento").val(fechaFactura);
+      return;
+    }
   });
 
   document.addEventListener("focusin", function(event) {
@@ -419,30 +444,38 @@ $(function () {
 
     if ($(this).valid()) {
       let fechaVencimiento = $("#fechaVencimiento").val();
-      if (fechaVencimiento) {
-        $.ajax({
-          type: "POST",
-          url: rutaBase + "AsignarFechaVencimiento",
-          dataType: 'json',
-          processData: false,
-          contentType: false,
-          cache: false,
-          data: new FormData(this),
-          success: ({ success, msj }) => {
-            if (success) {
-              alertify.success(msj);
-              $("#idFactura").val('');
-              $("#fechaVencimiento").val(moment().format("DD/MM/YYYY"));
-              $("#modalAssignDate").modal('hide');
-              DTCuentasCobrar.ajax.reload();
-            } else {
-              alertify.error(msj);
-            }
-          }
-        });
-      } else {
-        alertify.error('Debe seleccionar una fecha de vencimiento.');
+      let fechaOriginal = $("#fechaFactura").val();
+
+      // Convertir las fechas al formato ISO para evitar advertencias de deprecación
+      fechaOriginal = moment(fechaOriginal, "DD/MM/YYYY").format("YYYY-MM-DD");
+      fechaVencimiento = moment(fechaVencimiento, "DD/MM/YYYY").format("YYYY-MM-DD");
+
+      // Verificar si la fecha de vencimiento es menor que la fecha original
+      if (moment(fechaVencimiento).isBefore(moment(fechaOriginal))) {
+        alertify.error('La fecha de vencimiento no puede ser menor que la fecha original.');
+        return;
       }
+      
+      $.ajax({
+        type: "POST",
+        url: rutaBase + "AsignarFechaVencimiento",
+        dataType: 'json',
+        processData: false,
+        contentType: false,
+        cache: false,
+        data: new FormData(this),
+        success: ({ success, msj }) => {
+          if (success) {
+            alertify.success(msj);
+            $("#idFactura").val('');
+            $("#fechaVencimiento, #fechaFactura").val(moment().format("DD/MM/YYYY"));
+            $("#modalAssignDate").modal('hide');
+            DTCuentasCobrar.ajax.reload();
+          } else {
+            alertify.error(msj);
+          }
+        }
+      });
     }
   });
 });

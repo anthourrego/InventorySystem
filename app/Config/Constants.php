@@ -141,4 +141,5 @@ defined('TIPOSABONO')      || define('TIPOSABONO', array(
   , 1 => array("valor" => "2", "titulo" => "Descuento")
   , 2 => array("valor" => "3", "titulo" => "Averias")
   , 3 => array("valor" => "4", "titulo" => "Redondeo")
+  , 4 => array("valor" => "5", "titulo" => "Cancelado")
 ));// Tipo de abono a la factura

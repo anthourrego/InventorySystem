@@ -59,9 +59,9 @@ class cCuentasCobrar extends BaseController {
 				U.id AS IdVendedor,
 				U.nombre AS NombreVendedor,
 				(V.total - V.descuento) AS total,
-				((V.total - V.descuento) - IFNULL(TA.TotalAbonosVenta, 0)) AS ValorPendiente,
+				((V.total - V.descuento) - (CASE WHEN TA.TotalAbonosVenta IS NULL THEN 0 ELSE TA.TotalAbonosVenta END)) AS ValorPendiente,
 				V.created_at,
-				IFNULL(TA.TotalAbonosVenta, 0) AS AbonosVenta,
+				(CASE WHEN TA.TotalAbonosVenta IS NULL THEN 0 ELSE TA.TotalAbonosVenta END) AS AbonosVenta,
 				V.fecha_vencimiento AS FechaVencimiento,
 				V.id_pedido,
 				C.nombre AS NombreCliente,
@@ -116,7 +116,7 @@ class cCuentasCobrar extends BaseController {
 		$mConfiguracion = new mConfiguracion();
 
 		$cantDigitos = (session()->has("digitosCuentaCobrar") ? session()->get("digitosCuentaCobrar") : 0);
-		$dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoCuentaCobrar")->first();
+		$dataConse = $mConfiguracion->select("id, valor")->where("campo", "consecutivoCuentaCobrar")->first();
 
 		$numerVenta = str_pad((is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1)), $cantDigitos, "0", STR_PAD_LEFT);
 
@@ -132,7 +132,7 @@ class cCuentasCobrar extends BaseController {
 		return $this->response->setJSON(["codigo" => $codigo]);
 	}
 
-	public function crear() {
+	public function crear($dataAlterna = null) {
 		$resp["success"] = false;
 		//Traemos los datos del post
 		$dataPost = (object) $this->request->getPost();
@@ -155,29 +155,28 @@ class cCuentasCobrar extends BaseController {
 
 		if($mCuentasCobrar->save($dataAccount)) {
 
-			if (is_null($codigo['dataConse'])) {
-				$mConfiguracion = new mConfiguracion();
-				$dataSave = [
-					"campo" => "consecutivoCuentaCobrar",
-					"valor" => $codigo['numerVenta']
-				];
-				if(!$mConfiguracion->save($dataSave)) {
-					$this->db->transRollback();
-					$resp["msj"] = "Ha ocurrido un error al guardar el abono." . listErrors($mConfiguracion->errors());
-				} else {
-					$resp["success"] = true;
-					$this->db->transCommit();
-				}
+			$mConfiguracion = new mConfiguracion();
+
+			$dataSave = [
+				"valor" => $codigo['numerVenta'],
+				"campo" => "consecutivoCuentaCobrar"
+			];
+
+			if (!is_null($codigo['dataConse'])) {
+				$dataSave["campo"] = "consecutivoCuentaCobrar";
+				$dataSave["id"] = $codigo['dataConse']->id;
+			}
+
+			if(!$mConfiguracion->save($dataSave)) {
+				$this->db->transRollback();
+				$resp["msj"] = "Ha ocurrido un error al guardar el abono." . listErrors($mConfiguracion->errors());
 			} else {
-				$builder = $this->db->table('configuracion')
-					->set("valor", $codigo['numerVenta'])
-					->where('campo', "consecutivoCuentaCobrar");
-				if($builder->update()) {
-					$this->db->transCommit();
-					$resp["success"] = true;
-				} else {
-					$this->db->transRollback();
+				if ($dataPost->tipoAbono == "5") {
+					
 				}
+
+				$resp["success"] = true;
+				$this->db->transCommit();
 			}
 
 			if ($resp["success"]) {
@@ -260,7 +259,8 @@ class cCuentasCobrar extends BaseController {
 
 		$mVentas = new mVentas();
 
-		$data->fechaVencimiento = date("Y-m-d", strtotime($data->fechaVencimiento));
+		$data->fechaVencimiento = strtotime(str_replace("/", "-", $data->fechaVencimiento));
+		$data->fechaVencimiento = date("Y-m-d", $data->fechaVencimiento);
 
 		$dataAddAccount = [
 			"id" => $data->idFactura,
