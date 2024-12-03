@@ -171,10 +171,6 @@ class cCuentasCobrar extends BaseController {
 				$this->db->transRollback();
 				$resp["msj"] = "Ha ocurrido un error al guardar el abono." . listErrors($mConfiguracion->errors());
 			} else {
-				if ($dataPost->tipoAbono == "5") {
-					
-				}
-
 				$resp["success"] = true;
 				$this->db->transCommit();
 			}
