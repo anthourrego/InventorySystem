@@ -58,7 +58,7 @@ let DTManifiestos = $("#table").DataTable({
 
         btnVerArchivo = validPermissions(84) ? `<a href="${rutaBase}Ver/${data.id}" target="_blank" type="button" class="btn btn-light btnVerArchivo" title="Ver Archivo"><i class="fa-solid fa-file-circle-check"></i></a>` : '';
 
-        btnDescargarArhivo = validPermissions(85) ? `<a href="${rutaBase}Descargar/${data.id}" type="button" class="btn btn-dark btnDescargarArhivo" title="Descargar Archivo"><i class="fa-solid fa-download"></i></a>` : '';
+        btnDescargarArchivo = validPermissions(85) ? `<a href="${rutaBase}Descargar/${data.id}" type="button" class="btn btn-dark btnDescargarArchivo" title="Descargar Archivo"><i class="fa-solid fa-download"></i></a>` : '';
 
         btnVerProdsManif = validPermissions(88) ? `<button type="button" class="btn btn-primary btnVerProdsManif" title="Ver Productos"><i class="fa-solid fa-eye"></i></button>` : '';
 
@@ -67,7 +67,7 @@ let DTManifiestos = $("#table").DataTable({
           ${btnCambiarEstado}
           ${btnAsignarProductos}
           ${btnVerArchivo}
-          ${btnDescargarArhivo}
+          ${btnDescargarArchivo}
           ${btnVerProdsManif}
         </div>`;
       }
@@ -126,7 +126,7 @@ let DTManifiestos = $("#table").DataTable({
       $(row).addClass('bg-selected-tb');
       manifiestoActual = data.id;
       if (!DTProductos) {
-        DTProductos = $("#tableProds").DataTable(DTProductosStruc)
+        DTProductos = $("#tableProds").DataTable(DTProductosEstructura)
       } else {
         DTProductos.ajax.reload();
       }
@@ -135,7 +135,7 @@ let DTManifiestos = $("#table").DataTable({
     $(row).find(".btnVerProdsManif").on("click", function () {
       manifiestoActual = data.id;
       if (!DTVerProductos) {
-        DTVerProductos = $("#tableProdsManif").DataTable(DTVerProductosStruc);
+        DTVerProductos = $("#tableProdsManif").DataTable(DTVerProductosEstructura);
       } else {
         DTVerProductos.ajax.reload();
       }
@@ -203,7 +203,7 @@ let DTManifiestos = $("#table").DataTable({
 
 });
 
-let DTProductosStruc = {
+let DTProductosEstructura = {
   ajax: {
     url: rutaBase + "DTProductos",
     type: "POST",
@@ -280,7 +280,7 @@ let DTProductosStruc = {
   }
 };
 
-let DTVerProductosStruc = {
+let DTVerProductosEstructura = {
   ajax: {
     url: rutaBase + "DTProductos",
     type: "POST",

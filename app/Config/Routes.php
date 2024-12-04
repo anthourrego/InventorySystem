@@ -1,41 +1,17 @@
 <?php
 
-namespace Config;
+use CodeIgniter\Router\RouteCollection;
 
-// Create a new instance of our RouteCollection class.
-$routes = Services::routes();
-
-/*
- * --------------------------------------------------------------------
- * Router Setup
- * --------------------------------------------------------------------
+/**
+ * @var RouteCollection $routes
  */
-$routes->setDefaultNamespace('App\Controllers');
-$routes->setDefaultController('Home');
-$routes->setDefaultMethod('index');
-$routes->setTranslateURIDashes(false);
-$routes->set404Override();
-// The Auto Routing (Legacy) is very dangerous. It is easy to create vulnerable apps
-// where controller filters or CSRF protection are bypassed.
-// If you don't want to define all routes, please use the Auto Routing (Improved).
-// Set `$autoRoutesImproved` to true in `app/Config/Feature.php` and set the following to true.
-$routes->setAutoRoute(false);
-
-/*
- * --------------------------------------------------------------------
- * Route Definitions
- * --------------------------------------------------------------------
- */
-
-// We get a performance increase by specifying the default
-// route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 $routes->get('Foto/(:any)', 'Home::foto/$1');
-$routes->post('/iniciarSesion', 'Home::iniciarSesion', ['filter' => 'ajax']);
-$routes->post('/cerrarSesion', 'Home::cerrarSesion', ['filter' => ['authGuard', 'ajax']]);
-$routes->post('sidebar', 'Home::sidebar', ['filter' => ['authGuard', 'ajax']]);
 $routes->get('productosAPP', 'cProductos::productosAPP');
 $routes->get('fotoProductosAPP/(:num)/(:any)', 'cProductos::foto/$1/$2');
+$routes->post('iniciarSesion', 'Home::iniciarSesion', ['filter' => 'ajax']);
+$routes->post('cerrarSesion', 'Home::cerrarSesion', ['filter' => ['authGuard', 'ajax']]);
+$routes->post('sidebar', 'Home::sidebar', ['filter' => ['authGuard', 'ajax']]);
 
 /* Ruta para la lectura de QR */
 //$routes->get('FacturaQR/(:num)/(:num)', 'cPedidos::facturaQR/$1/$2');
@@ -48,10 +24,10 @@ $routes->group('Usuarios', ['filter' => 'authGuard:1'], function ($routes) {
 	$routes->post('DT', 'cUsuarios::listaDT');
 	$routes->get('Foto', 'cUsuarios::foto');
 	$routes->get('Foto/(:any)', 'cUsuarios::foto/$1');
-	$routes->post('Eliminar', 'cUsuarios::eliminar', ['filter' => ['authGuard:14', 'ajax']]);
 	$routes->post('Crear', 'cUsuarios::crearEditar', ['filter' => ['authGuard:11', 'ajax']]);
 	$routes->post('Editar', 'cUsuarios::crearEditar', ['filter' => ['authGuard:12', 'ajax']]);
 	$routes->post('CambiarPass', 'cUsuarios::cambiarPass', ['filter' => ['authGuard:13', 'ajax']]);
+	$routes->post('Eliminar', 'cUsuarios::eliminar', ['filter' => ['authGuard:14', 'ajax']]);
 	$routes->get('ValidaUsuario/(:any)/(:num)', 'cUsuarios::validaUsuario/$1/$2', ['filter' => ['authGuard:11,12', 'ajax']]);
 });
 
@@ -155,16 +131,16 @@ $routes->group('ModificarReporte', ['filter' => 'authGuard:7'], function ($route
 
 //Manifiesto
 $routes->group('Manifiesto', ['filter' => 'authGuard:8'], function ($routes) {
-    $routes->get('/', 'cManifiesto::index');
-    $routes->post('DT', 'cManifiesto::listaDT');
-    $routes->get('Archivo/(:any)', 'cManifiesto::archivo/$1');
-    $routes->post('DTProductos', 'cManifiesto::listaDTProds');
-    $routes->post('AgregarProducto', 'cManifiesto::actualizarManifiesto');
-    $routes->get('Descargar/(:any)', 'cManifiesto::descargarVerArchivo/$1/0');
-    $routes->get('Ver/(:any)', 'cManifiesto::descargarVerArchivo/$1/1');
-    $routes->post('Crear', 'cManifiesto::crearEditar', ['filter' => ['authGuard:81', 'ajax']]);
-    $routes->post('Editar', 'cManifiesto::crearEditar', ['filter' => ['authGuard:82', 'ajax']]);
-    $routes->post('Eliminar', 'cManifiesto::eliminar', ['filter' => ['authGuard:83', 'ajax']]);
+	$routes->get('/', 'cManifiesto::index');
+	$routes->post('DT', 'cManifiesto::listaDT');
+	$routes->get('Archivo/(:any)', 'cManifiesto::archivo/$1');
+	$routes->post('DTProductos', 'cManifiesto::listaDTProds');
+	$routes->post('AgregarProducto', 'cManifiesto::actualizarManifiesto');
+	$routes->get('Descargar/(:any)', 'cManifiesto::descargarVerArchivo/$1/0');
+	$routes->get('Ver/(:any)', 'cManifiesto::descargarVerArchivo/$1/1');
+	$routes->post('Crear', 'cManifiesto::crearEditar', ['filter' => ['authGuard:81', 'ajax']]);
+	$routes->post('Editar', 'cManifiesto::crearEditar', ['filter' => ['authGuard:82', 'ajax']]);
+	$routes->post('Eliminar', 'cManifiesto::eliminar', ['filter' => ['authGuard:83', 'ajax']]);
 });
 
 $routes->group('Perfil', ['filter' => 'authGuard'], function ($routes) {
@@ -184,8 +160,11 @@ $routes->group('Reportes', ['filter' => 'authGuard'], function ($routes) {
 	$routes->get('Envio/(:num)/(:any)', 'cReportes::envio/$1/$2');
 	$routes->get('Empaque/(:num)/(:num)', 'cReportes::empaque/$1/$2');
 	$routes->get('Compra/(:num)/(:num)', 'cReportes::compra/$1/$2');
+	$routes->get('IngresoMercancia/(:num)/(:num)', 'cReportes::ingresoMercancia/$1/$2');
 	$routes->get('StickerCompra/(:num)/(:num)', 'cReportes::stickerCompra/$1/$2');
-	//$routes->get('DT', 'cManifiesto::listaDT');
+	$routes->get('ManifiestosSinRepetir/(:num)', 'cReportes::manifiestoSinRepetir/$1');
+	$routes->get('CuentaCobrar/(:num)/(:num)', 'cReportes::cuentaCobrar/$1/$2');
+	$routes->get('ReciboCaja/(:num)/(:num)', 'cReportes::reciboCaja/$1/$2');
 });
 
 //ReportesQR
@@ -279,6 +258,7 @@ $routes->group('Empaque', ['filter' => 'authGuard:30'], function ($routes) {
 	$routes->post('ReabrirCaja', 'cEmpaque::reabrirCaja');
 	$routes->post('ReabrirEmpaque', 'cEmpaque::reabrirEmpaque');
 	$routes->post('ObservacionProductos', 'cEmpaque::observacionProductos');
+	$routes->post('Reordenarcajas', 'cEmpaque::reordenarCajas');
 });
 
 //Compras
@@ -313,20 +293,44 @@ $routes->group('ProductosReportados', ['filter' => 'authGuard:60', 'namespace' =
 	$routes->post('Confirmar', 'cProductosReportados::confirmar');
 });
 
+// Mobile app
+$routes->group('Mobile', function ($routes) {
+	$routes->post('Login', 'cClientes::inicioAppCliente');
+});
 
-/*
- * --------------------------------------------------------------------
- * Additional Routing
- * --------------------------------------------------------------------
- *
- * There will often be times that you need additional routing and you
- * need it to be able to override any defaults in this file. Environment
- * based routes is one such time. require() additional route files here
- * to make that happen.
- *
- * You will have access to the $routes object within that file without
- * needing to reload it.
- */
-if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
-    require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
-}
+//Ingreso Mercancia
+$routes->group('IngresoMercancia', ['filter' => 'authGuard:80'], function ($routes) {
+	$routes->get('/', 'cIngresoMercancia::index');
+	$routes->get('Obtener/(:any)', 'cIngresoMercancia::getEntry/$1');
+	$routes->get('ValidaProducto/(:any)/(:any)', 'cIngresoMercancia::validarProducto/$1/$2', ['filter' => ['authGuard:801,802', 'ajax']]);
+	$routes->get('CurrentEntry', 'cIngresoMercancia::getCurrentEntry');
+	$routes->post('DT', 'cIngresoMercancia::listaDT');
+	$routes->post('Crear', 'cIngresoMercancia::crear', ['filter' => ['authGuard:801', 'ajax']]);
+	$routes->post('Editar', 'cIngresoMercancia::guardarEditar', ['filter' => ['authGuard:802', 'ajax']]);
+	$routes->post('Anular', 'cIngresoMercancia::anular', ['filter' => ['authGuard:804', 'ajax']]);
+});
+
+$routes->group('ReporteInventario', ['filter' => 'authGuard:90'], function ($routes) {
+	$routes->get('/', 'cReporteInventario::index');
+	$routes->post('DT', 'cReporteInventario::listaDT');
+});
+
+//Showroom
+$routes->group('Showroom', ['filter' => 'authGuard:70'], function ($routes) {
+	$routes->get('/', 'Showroom::index');
+	$routes->post('DT', 'Showroom::listaDT');
+	$routes->post('Crear', 'Showroom::crear', ['filter' => ['authGuard:7001', 'ajax']]);
+	$routes->post('validShowroom', 'Showroom::validCurrentShowroom', ['filter' => ['authGuard:7001', 'ajax']]);
+	$routes->post('changeStatusShowroom', 'Showroom::changeStatusShowroom', ['filter' => ['authGuard:7001', 'ajax']]);
+});
+
+// Abonos ventas
+$routes->group('CuentasCobrar', ['filter' => 'authGuard:100'], function ($routes) {
+	$routes->get('/', 'cCuentasCobrar::index');
+	$routes->post('DT', 'cCuentasCobrar::listaDT');
+	$routes->post('Crear', 'cCuentasCobrar::crear', ['filter' => ['authGuard:1001', 'ajax']]);
+	$routes->post('Anular', 'cCuentasCobrar::anular', ['filter' => ['authGuard:1002', 'ajax']]);
+	$routes->post('AsignarFechaVencimiento', 'cCuentasCobrar::AsignarFechaVencimiento', ['filter' => ['authGuard:1007', 'ajax']]);
+	$routes->get('CurrentBuy', 'cCuentasCobrar::getCurrentBuy');
+	$routes->get('ObtenerCuentaCobrar/(:any)', 'cCuentasCobrar::getAccounts/$1');
+});

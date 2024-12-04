@@ -62,7 +62,7 @@ class cMiPerfil extends BaseController {
 
 		$this->db->transBegin();
 
-		//Validamos para elminar la foto
+		//Validamos para eliminar la foto
 		if ($filenameDelete != '' && file_exists($filenameDelete)) {
 			if(!@unlink($filenameDelete)) {
 				$resp["success"] = false;

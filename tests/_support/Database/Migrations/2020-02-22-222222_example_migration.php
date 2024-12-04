@@ -8,7 +8,7 @@ class ExampleMigration extends Migration
 {
     protected $DBGroup = 'tests';
 
-    public function up()
+    public function up(): void
     {
         $this->forge->addField('id');
         $this->forge->addField([
@@ -27,10 +27,10 @@ class ExampleMigration extends Migration
         $this->forge->addKey(['deleted_at', 'id']);
         $this->forge->addKey('created_at');
 
-        $this->forge->createTable('factories');
+        $this->forge->createTable('factories', false, ATRIBUTOSDB);
     }
 
-    public function down()
+    public function down(): void
     {
         $this->forge->dropTable('factories');
     }

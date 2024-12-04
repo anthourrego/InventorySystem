@@ -22,10 +22,11 @@ class mSucursalesCliente extends Model
 		"cartera",
 		"telefonocart",
 		"estado",
-    "id_cliente",
+    	"id_cliente",
 		"id_depto",
 		"id_ciudad",
-		"barrio"
+		"barrio",
+		"dias_vencimiento_factura"
 	];
 
 	// Dates
@@ -37,17 +38,18 @@ class mSucursalesCliente extends Model
 
 	// Validation
 	protected $validationRules      = [
-		'id'            => "permit_empty|is_natural_no_zero",
-		"nombre"        => "required|alpha_numeric_space|min_length[1]|max_length[255]",
-		"direccion"     => 'required|string|min_length[1]|max_length[300]',
-		"administrador" => "permit_empty|alpha_numeric_space|min_length[1]|max_length[255]",
-		"cartera"       => "permit_empty|alpha_numeric_space|min_length[1]|max_length[255]",
-		"telefonocart"  => "permit_empty|string|min_length[10]|max_length[50]",
-		"telefono"      => "required|string|min_length[10]|max_length[50]",
-    "id_cliente"    => "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[clientes.id]",
-		"id_depto"      => "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[departamentos.id]",
-		"id_ciudad"     => "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[ciudades.id]",
-		"barrio"        => 'permit_empty|string|min_length[1]|max_length[254]'
+		'id'            			=> "permit_empty|is_natural_no_zero",
+		"nombre"        			=> "required|alpha_numeric_space|min_length[1]|max_length[255]",
+		"direccion"     			=> 'required|string|min_length[1]|max_length[300]',
+		"administrador" 			=> "permit_empty|alpha_numeric_space|min_length[1]|max_length[255]",
+		"cartera"       			=> "permit_empty|alpha_numeric_space|min_length[1]|max_length[255]",
+		"telefonocart"  			=> "permit_empty|string|min_length[10]|max_length[50]",
+		"telefono"      			=> "required|string|min_length[10]|max_length[50]",
+    	"id_cliente"    			=> "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[clientes.id]",
+		"id_depto"      			=> "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[departamentos.id]",
+		"id_ciudad"     			=> "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[ciudades.id]",
+		"barrio"        			=> 'permit_empty|string|min_length[1]|max_length[254]',
+		"dias_vencimiento_factura"  => 'permit_empty|numeric|min_length[1]|max_length[11]'
 	];
 	protected $validationMessages   = [];
 	protected $skipValidation       = false;

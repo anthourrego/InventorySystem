@@ -79,29 +79,15 @@ defined('EXIT__AUTO_MIN')      || define('EXIT__AUTO_MIN', 9);      // lowest au
 defined('EXIT__AUTO_MAX')      || define('EXIT__AUTO_MAX', 125);    // highest automatically-assigned error code
 
 //Routes
-defined('ASSETS_PATH')      || define('ASSETS_PATH', ROOTPATH . "assets/");
-defined('UPLOADS_PATH')      || define('UPLOADS_PATH', WRITEPATH  . "uploads/");
+defined('ASSETS_PATH')            || define('ASSETS_PATH', ROOTPATH . "assets/");
+defined('UPLOADS_PATH')           || define('UPLOADS_PATH', WRITEPATH  . "uploads/");
 defined('UPLOADS_USER_PATH')      || define('UPLOADS_USER_PATH', WRITEPATH  . "uploads/usuarios/");
-defined('UPLOADS_PRODUCT_PATH')      || define('UPLOADS_PRODUCT_PATH', WRITEPATH  . "uploads/productos/");
-defined('UPLOADS_MANIFEST_PATH')      || define('UPLOADS_MANIFEST_PATH', WRITEPATH  . "uploads/manifiestos/");
+defined('UPLOADS_PRODUCT_PATH')   || define('UPLOADS_PRODUCT_PATH', WRITEPATH  . "uploads/productos/");
+defined('UPLOADS_MANIFEST_PATH')  || define('UPLOADS_MANIFEST_PATH', WRITEPATH  . "uploads/manifiestos/");
 defined('UPLOADS_CONF_PATH')      || define('UPLOADS_CONF_PATH', WRITEPATH  . "uploads/configuracion/");
-defined('UPLOADS_REPOR_PATH')      || define('UPLOADS_REPOR_PATH', WRITEPATH  . "uploads/reportes/");
-defined('REPOR_BASE_PATH')      || define('REPOR_BASE_PATH', ROOTPATH  . "Plantilla_Reporte/");
-defined('UPLOADS_PEDIDOS_PATH')      || define('UPLOADS_PEDIDOS_PATH', WRITEPATH  . "uploads/pedidos/");
-
-
-defined('TIPODOCS')      || define('TIPODOCS', array(
-  0 => array("valor" => "NIT", "titulo" => "Nit")
-  , 1 => array("valor" => "CC", "titulo" => "Cedula Ciudadania")
-));// Tipos de documentos
-
-defined('TIPOCORREO')      || define('TIPOCORREO', array(
-  0 => array("valor" => "H", "titulo" => "Hotmail", "smtp" => "smtp.live.com")
-  , 1 => array("valor" => "G", "titulo" => "Gmail", "smtp" => "smtp.gmail.com")
-  , 2 => array("valor" => "O", "titulo" => "Otro", "smtp" => "N/A")
-));// Tipos de documentos
-
-defined('DOMINIO') || define('DOMINIO', 0);
+defined('UPLOADS_REPOR_PATH')     || define('UPLOADS_REPOR_PATH', WRITEPATH  . "uploads/reportes/");
+defined('REPOR_BASE_PATH')        || define('REPOR_BASE_PATH', ROOTPATH  . "Plantilla_Reporte/");
+defined('UPLOADS_PEDIDOS_PATH')   || define('UPLOADS_PEDIDOS_PATH', WRITEPATH  . "uploads/pedidos/");
 
 /**
  * @deprecated Use \CodeIgniter\Events\Events::PRIORITY_LOW instead.
@@ -118,8 +104,43 @@ define('EVENT_PRIORITY_NORMAL', 100);
  */
 define('EVENT_PRIORITY_HIGH', 10);
 
+
+defined('TIPODOCS')      || define('TIPODOCS', array(
+  0 => array("valor" => "NIT", "titulo" => "Nit")
+  , 1 => array("valor" => "CC", "titulo" => "Cedula Ciudadania")
+));// Tipos de documentos
+
+defined('TIPOCORREO')      || define('TIPOCORREO', array(
+  0 => array("valor" => "H", "titulo" => "Hotmail", "smtp" => "smtp.live.com")
+  , 1 => array("valor" => "G", "titulo" => "Gmail", "smtp" => "smtp.gmail.com")
+  , 2 => array("valor" => "O", "titulo" => "Otro", "smtp" => "N/A")
+));// Tipos de documentos
+
+defined('ATRIBUTOSDB')      || define('ATRIBUTOSDB', array(
+  'ENGINE' => 'InnoDB'
+));// Atributos para crear la tablas de la base de datos
+
+defined('DOMINIO') || define('DOMINIO', 0);
+
 defined('MOTIVOSDEVOLUCION')      || define('MOTIVOSDEVOLUCION', array(
   0 => array("valor" => "1", "titulo" => "Daño")
   , 1 => array("valor" => "2", "titulo" => "Devolución")
   , 2 => array("valor" => "3", "titulo" => "Perdida")
 ));// Motivos por los cuales puede devolver un producto
+
+defined('PERMISOSMANIFIESTOS')      || define('PERMISOSMANIFIESTOS', array(
+  "8", "81", "82","83","84","85","86","87","88", "108", "1081", "1082", "1083"
+));// Permisos que se debe de tener en cuenta en manifiestos
+
+defined('PERMISOSEMPAQUE')      || define('PERMISOSEMPAQUE', array(
+  "30", "301", "302", "510", "51001", "62", "6201", "112", "1121", "60", "6001"
+));// Permisos que se debe de tener en cuenta en empaquie
+
+defined('TIPOSABONO')      || define('TIPOSABONO', array(
+  0 => array("valor" => "1", "titulo" => "Abono")
+  , 1 => array("valor" => "2", "titulo" => "Descuento")
+  , 2 => array("valor" => "3", "titulo" => "Averias")
+  , 3 => array("valor" => "4", "titulo" => "Redondeo")
+  , 4 => array("valor" => "5", "titulo" => "Cancelado")
+  , 5 => array("valor" => "6", "titulo" => "Flete")
+));// Tipo de abono a la factura

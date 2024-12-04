@@ -15,7 +15,10 @@ let DTProductos = {
     loadingIndicator: true
   },
   dom: domBftri50,
-  order: [[2, "asc"]],
+  order: {
+    name: 'stock',
+    dir: 'desc'
+  },
   columns: [
     {
       orderable: false,
@@ -23,7 +26,7 @@ let DTProductos = {
       visible: $IMAGENPROD,
       defaultContent: '',
       className: "text-center imgProdTb",
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         let extension = data.imagen == null ? null : "01-small." + data.imagen.split(".").pop();
         return $IMAGENPROD ? `<a href="${base_url()}Productos/Foto/${data.id}/${data.imagen}" data-fancybox="images${data.id}" data-caption="${data.referencia} - ${data.item}">
           <img class="img-thumbnail" src="${base_url()}Productos/Foto/${data.id}/${extension}" alt="" />
@@ -33,22 +36,24 @@ let DTProductos = {
     { data: 'referencia' },
     {
       data: 'item',
-      visible: ($CAMPOSPRODUCTO.item == '1' ? true : false)
+      visible: ($CAMPOSPRODUCTO.item == '1')
     },
     {
       data: 'descripcion',
       width: "30%",
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
       }
     },
     {
-      data: 'cantPaca'
+      data: 'cantPaca',
+      visible: ($CAMPOSPRODUCTO.paca == '1') ? true : false
     },
     {
+      name: 'stock',
       data: 'stock',
       className: 'text-center align-middle',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return `<button class="btn btn-${data.ColorStock}">${data.stock}</button>`;
       }
     },
@@ -57,15 +62,22 @@ let DTProductos = {
       searchable: false,
       defaultContent: '',
       className: 'text-center align-middle noExport',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
+        data.cantidadXPaca = Math.trunc(data.cantidadXPaca);
         let btn = true;
         let resultado = productosPedido.find((it) => it.id == data.id);
 
         if (resultado) {
           btn = false;
         }
-
-        if (data.stock <= 0 && $INVENTARIONEGATIVO == "0") return '';
+  
+        if (btn && ($INVENTARIONEGATIVO == "0" && Number(data.stock) <= 0)) {
+          btn = false;
+        }
+  
+        if (btn && ($INVENTARIONEGATIVO == "0" && $CAMPOSPRODUCTO.paca == "1" && $CAMPOSPRODUCTO.ventaPaca == "1" && Number(data.cantidadXPaca) < 1)) {
+          btn = false;  
+        }
 
         return `<div class="btn-group btn-group-sm" role="group">
                   <button id="p${data.id}" type="button" class="btn btn-primary btnAdd ${(btn ? '' : 'disabled')}" ${(btn ? '' : 'disabled')} title="Agregar"><i class="fa-solid fa-plus"></i></button>
@@ -77,15 +89,30 @@ let DTProductos = {
     'pageLength'
   ],
   createdRow: function (row, data, dataIndex) {
-    $(row).find(".btnAdd").on("click", function () {
+    $(row).find(".btnAdd:not([disabled])").on("click", function () {
       let result = productosPedido.find((it) => it.id == data.id);
       if (result) {
         alertify.error("Este producto ya se encuentra agregado");
       } else {
-        $("#p" + data.id).addClass("disabled").prop("disabled", true);
+        if (data.stock < 1) {
+          alertify.error("La cantidad de no es sufienciente.");
+          return;
+        }
         data.cantidad = 1;
+        data.cantidadPaca = 0;
+        if ($CAMPOSPRODUCTO.paca == "1" && $CAMPOSPRODUCTO.ventaPaca == '1') {
+          if (Number(data.cantidadXPaca) >= 1) {
+            data.cantidadPaca = 1;
+            data.cantidad = Number(data.cantPaca);
+          } else {
+            alertify.error("La cantidad de no es sufienciente para completar una paca");
+            return;
+          }
+        }
+
+        $("#p" + data.id).addClass("disabled").prop("disabled", true);
         data.valorUnitario = data.precio_venta;
-        data.valorTotal = data.precio_venta;
+        data.valorTotal = data.precio_venta * data.cantidad;
         data.nuevo = true;
         productosPedido.unshift(data);
         DTProductosPedido.clear().rows.add(productosPedido).draw();
@@ -112,7 +139,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       defaultContent: '',
       visible: ($DATOSPEDIDO != '' && $DATOSPEDIDO.estado == 'FA' ? false : true),
       className: 'text-center noExport',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "PE";
         return `
           ${(estadoPedido != 'PE' ? '<button type="button" class="btn btn-secondary btn-sm btnEditar" title="Editar Producto"><i class="fa-solid fa-pen-to-square"></i></button>' : '')}
@@ -126,31 +153,42 @@ let DTProductosPedido = $("#tblProductos").DataTable({
     {
       data: 'referencia',
       width: "25%",
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return `<span title="${data.referencia}" class="text-descripcion">${data.referencia}</span>`;
       }
     },
     {
       data: 'descripcion',
       width: "30%",
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
       }
     },
     {
       orderable: false,
       searchable: false,
-      data: 'cantidad',
+      visible: ($CAMPOSPRODUCTO.paca == '1' && $CAMPOSPRODUCTO.ventaPaca == '1') ? true : false,
+      data: 'cantidadPaca',
       render: function (meta, type, data, meta) {
         let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "PE";
-        return `<input type="number" ${(estadoPedido != 'PE' || $EDITARPEDIDO == 'N' ? 'disabled' : '')} class="form-control form-control-sm cantidadProduct inputFocusSelect soloNumeros" min="1" value="${data.cantidad}">`;
+        data.cantidadPaca = Math.trunc(data.cantidadPaca);
+        return `<input type="number" ${(estadoPedido != 'PE' || $EDITARPEDIDO == 'N' ? 'disabled' : '')} class="form-control form-control-sm cantidadPacaProduct inputFocusSelect soloNumeros" min="1" value="${data.cantidadPaca}">`;
+      }
+    },
+    {
+      orderable: false,
+      searchable: false,
+      data: 'cantidad',
+      render: function (meta, type, data, meta2) {
+        let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "PE";
+        return `<input type="number" ${(estadoPedido != 'PE' || $EDITARPEDIDO == 'N' ? 'disabled' : '')} class="form-control form-control-sm cantidadProduct inputFocusSelect soloNumeros" ${($CAMPOSPRODUCTO.paca == "1" && $CAMPOSPRODUCTO.ventaPaca == '1' ? 'readonly' : '')} min="1" value="${data.cantidad}">`;
       }
     },
     {
       orderable: false,
       searchable: false,
       data: 'valorUnitario',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         let estadoPedido = $DATOSPEDIDO != '' ? $DATOSPEDIDO.estado : "PE";
         return `<input type="tel" ${(estadoPedido != "PE" || $EDITARPEDIDO == 'N' ? 'disabled' : '')} class="form-control form-control-sm inputPesos text-right inputFocusSelect soloNumeros valorUnitario" min="0" value="${data.valorUnitario}">`;
       }
@@ -160,7 +198,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
       searchable: false,
       data: 'valorTotal',
       className: 'text-right valorTotal',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return formatoPesos.format(data.valorTotal);
       }
     },
@@ -179,6 +217,22 @@ let DTProductosPedido = $("#tblProductos").DataTable({
 		}
 	],
   createdRow: function (row, data, dataIndex) {
+    data.cantidadXPaca = Math.trunc(data.cantidadXPaca);
+
+    if ($CAMPOSPRODUCTO.paca == "1" && $CAMPOSPRODUCTO.ventaPaca == "1") {
+      $(row).find(".cantidadPacaProduct").on("change", function () {
+        let cantPaca = Number($(this).val());
+
+        if (cantPaca > data.cantidadXPaca){
+          alertify.alert("Advertencia", `Ha superado la cantidad maxima de pacas, solo hay <b>${data.cantidadXPaca}</b> disponibles pacas`);
+          cantPaca = data.cantidadXPaca;
+        }
+        let cant = cantPaca * Number(data.cantPaca);
+        $(this).val(cantPaca);
+        $(row).find(".cantidadProduct").val(cant).change();
+      });
+    }
+
     $(row).find(".cantidadProduct, .valorUnitario").on("change", function () {
       let cant = Number($(row).find(".cantidadProduct").val().trim());
       let valorUnitario = $(row).find(".valorUnitario").val().trim().replaceAll(",", "").replaceAll("$ ", "");
@@ -227,8 +281,18 @@ let DTProductosPedido = $("#tblProductos").DataTable({
 
     $(row).find(".btnBorrar").click(function (e) {
       e.preventDefault();
+
+      let itemProducto = (data.item ? data.item + ' - ' : '');
+
+      if (data.cantidadEnCaja > 0 && data.productoEnCajas) {
+        let descriptionMain = `El producto <b>${itemProducto}${data.descripcion}</b> se encuentra empacado en las caja(s) <b>${data.productoEnCajas}</b> distribuidos en ${data.cantidadEnCaja} unidades.`;
+        let description = `<b>Nota:</b> si desea eliminar el producto del pedido, edite la cantidad del producto y asi el pedido volverá a empaque donde podrá eliminar los productos de las cajas mencionadas.`;
+        alertify.alert('¡Advertencia!', `${descriptionMain}</br></br>${description}`);
+        return;
+      }
+
       if ($DATOSPEDIDO.estado == "EP") {
-        let mensaje = `<li> ¿Por que esta eliminando el producto (${data.item} - ${data.descripcion})?</li>`;
+        let mensaje = `<li> ¿Por que esta eliminando el producto (${itemProducto}${data.descripcion})?</li>`;
 
         $(row).find('input').attr('disabled', true);
         $(row).find('.btnAceptarEdicion, .btnBorrar').addClass("d-none");
@@ -277,7 +341,7 @@ let DTProductosPedido = $("#tblProductos").DataTable({
 
           if (+data.valorUnitarioOriginal != +data.valorUnitario) {
             observacion = true;
-            mensaje += '<li> ¿Por que el valor es ' + (+data.valorUnitarioOriginal > +data.valorUnitario ? 'menor' : 'mayor') + ' al orignal del pedido?</li>';
+            mensaje += '<li> ¿Por que el valor es ' + (+data.valorUnitarioOriginal > +data.valorUnitario ? 'menor' : 'mayor') + ' al original del pedido?</li>';
           }
 
           /* Se agrega la segunda validacion para que solo salga con la cantidad cuando se disminuye */
@@ -324,7 +388,7 @@ $(function () {
 
   if ($CANTIDADVENDEDORES == 0 || $CANTIDADCLIENTES == 0 || $PREFIJOVALIDO == 'N') {
     if ($CANTIDADVENDEDORES == 0 && $CANTIDADCLIENTES == 0) {
-      $msj = "vendedore y clientes";
+      $msj = "vendedores y clientes";
     } else if ($PREFIJOVALIDO == 'N') {
       $msj = "prefijo de pedido disponible";
     } else {
@@ -369,6 +433,7 @@ $(function () {
         form.append("idSucursal", $("#sucursal").val());
         form.append("idUsuario", $("#vendedor").val());
         form.append("observacion", $("#observacion").val());
+        form.append("codigoPedido", $("#nroPedido").val());
         form.append("productos", JSON.stringify(productosPedido));
 
         /* Valor por si esta en empacado y modifican cantidad se regrese a empaque */
@@ -421,7 +486,7 @@ $(function () {
           }
         });
       } else {
-        alertify.alert("Advertencia", "Debe de elegir minimo un producto para guardar el pedido.");
+        alertify.alert("Advertencia", "Debe de elegir mínimo un producto para guardar el pedido.");
       }
     }
   });
@@ -454,36 +519,6 @@ $(function () {
       cache: true
     }
   });
-
-  /* $("#cliente").select2({
-    ajax: {
-      url: base_url() + "Busqueda/Clientes",
-      type: "POST",
-      dataType: 'json',
-      delay: 250,
-      data: function (params) {
-        var query = {
-          search: params.term,
-          page: params.page || 1,
-          _type: "query_append",
-        }
-        return query;
-      },
-      processResults: function (data, params) {
-        params.page = params.page || 1;
-        return {
-          results: data.data,
-          pagination: {
-            more: (params.page * 10) < data.total_count
-          }
-        };
-      },
-      async: false,
-      cache: true
-    }
-  }).on("change", function () {
-    $("#sucursal").val('').trigger('change.select2');
-  }); */
 
   $("#sucursal").select2({
     ajax: {

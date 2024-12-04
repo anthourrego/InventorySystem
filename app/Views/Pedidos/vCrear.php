@@ -63,6 +63,7 @@
 										<th>Acción</th>
 										<th>Referencia</th>
 										<th>Descripción</th>
+										<th>Pacas</th>
 										<th>Cantidad</th>
 										<th>Precio</th>
 										<th>Total</th>

@@ -4,8 +4,10 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class ProductosCampos extends Migration {
-	public function up() {
+class ProductosCampos extends Migration
+{
+	public function up()
+	{
 		$fields = [
 			'item' => [
 				'name'        => 'item',
@@ -27,7 +29,8 @@ class ProductosCampos extends Migration {
 		$this->forge->addColumn('productos', $addFields);
 	}
 
-	public function down() {
+	public function down()
+	{
 		$this->forge->dropColumn("productos", "cantPaca");
 	}
 }

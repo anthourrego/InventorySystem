@@ -10,7 +10,7 @@
 				<form id="formVenta" class="formValid form-row">
 					<input type="hidden" name="idVenta" id="idVenta">
 					<div class="col-4 form-group mb-1">
-						<label class="mb-0">Nro venta<span class="text-danger">*</span></label>
+						<label class="mb-0" for="nroVenta">Nro venta<span class="text-danger">*</span></label>
 						<input type="text" id="nroVenta" name="nroVenta" class="form-control form-control-sm" disabled value="<?= $nroVenta ?>">
 					</div>
 					<div class="col-4 form-group mb-1 form-valid">
@@ -27,19 +27,17 @@
 							<option></option>
 						</select>
 					</div>
-					<!-- <div class="col-6 form-group mb-1 form-valid">
-						<label class="mb-0" for="cliente">Cliente<span class="text-danger">*</span></label>
-						<select <?= $prefijoValido == 'N' ? 'disabled' : '' ?> id="cliente" required name="cliente" class="custom-select custom-select-sm select2" data-placeholder="Seleccione un cliente..." data-allow-clear="1">
-							<option></option>
-						</select>
-					</div> -->
-					<div class="col-12 form-group mb-1 form-valid">
+					<div class="col-8 form-group mb-1 form-valid">
 						<label class="mb-0" for="sucursal">Sucursales<span class="text-danger">*</span></label>
 						<select <?= $prefijoValido == 'N' ? 'disabled' : '' ?> id="sucursal" required name="sucursal" class="custom-select custom-select-sm select2" data-placeholder="Seleccione un sucursal..." data-allow-clear="1">
 							<option></option>
 						</select>
 					</div>
-				</form>     
+					<div class="col-4 form-group mb-1">
+						<label class="mb-0" for="fechaVencimiento">Fecha de vencimiento<span class="text-danger">*</span></label>
+						<input type="text" id="fechaVencimiento" name="fechaVencimiento" class="form-control form-control-sm" disabled>
+					</div>
+				</form>
 				<div class="form-row">
 					<div class="col-12">
 						<hr class="my-2">
@@ -47,11 +45,12 @@
 					<div class="col-12">
 						<div class="table-responsive">
 							<table id="tblProductos" class="table table-sm table-striped table-hover table-bordered w-100">
-								<thead> 
+								<thead>
 									<tr>
 										<th>Acción</th>
 										<th>Referencia</th>
 										<th>Descripción</th>
+										<th>Pacas</th>
 										<th>Cantidad</th>
 										<th>Precio</th>
 										<th>Total</th>
@@ -64,15 +63,41 @@
 					<div class="col-12">
 						<hr class="my-2">
 					</div>
-					<div class="col-12 form-group mb-0">
+					<div class="col-12 form-group mb-2">
 						<label class="mb-0" for="observacion">Observacion</label>
 						<textarea <?= $prefijoValido == 'N' ? 'disabled' : '' ?> class="form-control" name="observacion" id="observacion" rows="2" minlength="1" maxlength="500"></textarea>
+					</div>
+					<div class="col-4 mb-0" id="input-check-discount">
+						<div class="input-group mt-4">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" id="aplicarDescuento" aria-label="Checkbox for following text input">
+								</div>
+							</div>
+							<input type="text" style="font-weight: bold;" disabled readonly class="form-control" value="¿Aplicar descuento?" aria-label="Text input with checkbox">
+						</div>
+					</div>
+					<div class="col-4 mb-0 d-none" id="input-applied-discount">
+						<label class="mb-0" for="descuentoAplicado">Descuento</label>
+						<div class="input-group mb-0">
+							<div class="input-group-prepend">
+								<button type="button" id="removeDiscount" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+							</div>
+							<input class="form-control inputPesos" type="text" name="descuentoAplicado" id="descuentoAplicado" value="0">
+							<div class="input-group-append">
+								<span class="input-group-text" id="percentageDiscount"></span>
+							</div>
+						</div>
+					</div>
+					<div class="col-4 form-group mb-0">
+						<label class="mb-0" for="totalSinDescuento">Total sin descuento</label>
+						<input class="form-control inputPesos" disabled type="text" name="totalSinDescuento" id="totalSinDescuento" value="0">
 					</div>
 					<div class="col-4 form-group mb-0">
 						<label class="mb-0" for="total">Total</label>
 						<input class="form-control inputPesos" disabled type="text" name="total" id="total" value="0">
 					</div>
-					<div class="offset-4 col-4 d-flex align-items-end justify-content-end">
+					<div class="col-12 d-flex align-items-end justify-content-end mt-3">
 
 						<?php if(is_null($venta)) { ?>
 							<button type="button" id="btnCancelarCreacion" class="btn btn-danger mr-2 deshabilitarboton"><i class="fas fa-times"></i> Cancelar</button>
@@ -131,4 +156,6 @@
 	$IMAGENPROD = <?= $imagenProd ?>;
 	$CAMPOSPRODUCTO = <?= json_encode($camposProducto) ?>;
 	$NOMBREEMPRESA = "<?= session()->get("nombreEmpresa") ?>";
+	$DIASVENCIMIENTOFACTURAGENERAL = <?= $diasVencimientoFacturaGeneral ?>;
+	$PORCENTAJEDESCUENTOFACTURAGENERAL = <?= $porcentajeDescuento ?>;
 </script>

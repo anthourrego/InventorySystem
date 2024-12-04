@@ -1,0 +1,74 @@
+<table style="width: 100%;" border="0" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<td rowspan="5">{logoEmpresa}</td>
+<td><strong>{nombreEmpresa}</strong></td>
+<td style="text-align: center; vertical-align: middle;" rowspan="5">
+<h2><span style="color: #c0392b;">Factura N.{numeracion}</span></h2>
+</td>
+</tr>
+<tr>
+<td>NIT: {documentoEmpresa}-{digitoVeriEmpresa}</td>
+</tr>
+<tr>
+<td>Direcci&oacute;n: {direccionEmpresa}</td>
+</tr>
+<tr>
+<td>Tel&eacute;fono: {telefonoEmpresa}</td>
+</tr>
+<tr>
+<td>{emailEmpresa}</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>Datos Factura</p>
+<table style="width: 100%;" border="0" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<td>Cliente: {nombreSucursal} - {nombreCliente}</td>
+<td>Fecha: {fechaCreacion}</td>
+</tr>
+<tr>
+<td>Direcci&oacute;n:{direccionSucursal}</td>
+<td>Telefono: {telefonoSucursal}</td>
+</tr>
+<tr>
+<td>Ciudad: {ciudadSucursal}, {deptoSucursal}</td>
+<td>Vendedor: {nombreVendedor}</td>
+</tr>
+<tr>
+<td>Fecha Vencimiento: {fechaVencimiento}</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p style="text-align: center;">Abonos</p>
+<p>[DP</p>
+<table style="width: 100%;" border="1" cellspacing="0" cellpadding="3">
+<thead>
+<tr>
+<th style="width: 15.9298%;" scope="col"><strong><span style="font-family: Arial,Helvetica,sans-serif;">Codigo</span></strong></th>
+<th style="width: 13.9142%;" scope="col"><span style="font-family: Arial,Helvetica,sans-serif;"><strong>&nbsp; Valor</strong></span></th>
+<th style="width: 12.6138%;" scope="col"><span style="font-family: Arial,Helvetica,sans-serif;"><strong>&nbsp; Observacion</strong></span></th>
+<th style="width: 12.6138%;" scope="col"><span style="font-family: Arial,Helvetica,sans-serif;"><strong>Tipo</strong></span></th>
+<th style="width: 15.6697%;" scope="col"><span style="font-family: Arial,Helvetica,sans-serif;"><strong>&nbsp; Estado</strong></span></th>
+<th style="width: 15.6047%;" scope="col"><span style="font-family: Arial,Helvetica,sans-serif;"><strong>Usuario</strong></span></th>
+<th style="width: 13.7191%;" scope="col"><span style="font-family: Arial,Helvetica,sans-serif;"><strong>Fecha</strong></span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="width: 15.9298%;"><span style="font-size: 10px;">{codigoAbonoDP}</span></td>
+<td style="width: 13.9142%;"><span style="font-size: 10px;"><span style="font-family: Arial,Helvetica,sans-serif;">{valorAbonoDP}</span></span></td>
+<td style="width: 12.6138%;"><span style="font-size: 10px;"><span style="font-family: Arial,Helvetica,sans-serif;">{observacionAbonoDP}</span></span></td>
+<td style="width: 12.6138%;"><span style="font-size: 10px;"><span style="font-family: Arial,Helvetica,sans-serif;">{tipoAbonoDP}</span></span></td>
+<td style="text-align: center; width: 15.6697%;"><span style="font-size: 10px;"><span style="font-family: Arial,Helvetica,sans-serif;">{estadoAbonoDP}</span></span></td>
+<td style="text-align: center; width: 15.6047%;"><span style="font-size: 10px;"><span style="font-family: Arial,Helvetica,sans-serif;">{usuarioAbonoDP}</span></span></td>
+<td style="text-align: center; width: 13.7191%;"><span style="font-size: 10px;"><span style="font-family: Arial,Helvetica,sans-serif;">{fechaAbonoDP}</span></span></td>
+</tr>
+</tbody>
+</table>
+<p>DP]</p>
+<p><strong>Total Factura:</strong> {totalGeneral}</p>

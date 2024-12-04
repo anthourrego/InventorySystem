@@ -1,0 +1,30 @@
+<table style="width: 100%; border-collapse: collapse; height: 213.547px;">
+<tbody>
+<tr style="height: 40px;">
+<td style="padding: 5px; border: 1px solid #000;">{logoEmpresa}</td>
+<td style="padding: 5px; border: 1px solid #000; font-weight: bold; text-align: right;" colspan="2"><span style="font-size: 18pt;">Recibo de Caja Menor # {numeracion}</span></td>
+</tr>
+<tr style="height: 40px;">
+<td style="padding: 5px; border: 1px solid #000;">Factura relacionada: {numeroFactura}</td>
+<td style="padding: 5px; border: 1px solid #000;">&nbsp;</td>
+<td style="padding: 5px; border: 1px solid #000; font-weight: bold;" rowspan="2">{totalGeneral}</td>
+</tr>
+<tr style="height: 40px;">
+<td style="padding: 5px; border: 1px solid #000;">Pagado a: {nombreEmpresa}</td>
+<td style="padding: 5px; border: 1px solid #000;">Fecha: {fechaCreacion}</td>
+</tr>
+<tr style="height: 40px;">
+<td style="padding: 5px; border: 1px solid #000;" colspan="3">Valor (en letras): {valorEnLetras}</td>
+</tr>
+<tr style="height: 40px;">
+<td style="padding: 5px; border: 1px solid #000;" colspan="3">Cliente: {nombreCliente} - ({nombreSucursal})</td>
+</tr>
+<tr style="height: 40px;">
+<td style="padding: 5px; border: 1px solid #000;">Tipo de pago: {tipoPago}</td>
+<td style="padding: 5px; border: 1px solid #000;" colspan="2">
+<p style="text-align: right;">{logoEmpresa}</p>
+<p style="text-align: right;">Firma</p>
+</td>
+</tr>
+</tbody>
+</table>

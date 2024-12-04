@@ -29,7 +29,30 @@ $(function () {
             }
           }
         });
+
+        //Validamos si los productos por capas estan inactivo para deshabilitar el campo de venta o actualizarlo
+        if ($("#pacaProducto").val() == '0') {
+          if ($("#ventaXPaca").val() == '1') {
+            $("#ventaXPaca").val(0).change();
+          }
+          $("#ventaXPaca").attr("disabled", true);
+        }
       }
+    }
+  });
+
+  $("#pacaProducto").on("change", function (e) {
+    e.preventDefault();
+    const ventaXPaca = $("#ventaXPaca");
+
+    if ($(this).val() == 1) {
+      ventaXPaca.attr("disabled", false);
+    } else {
+      if (ventaXPaca.val() == '1') {
+        ventaXPaca.val(0).change();
+      }
+
+      ventaXPaca.attr("disabled", true);
     }
   });
 
@@ -40,9 +63,8 @@ $(function () {
     let valor = $(this).val();
     let nombre = $(this).data("nombre");
 
-    if (campo == "consecutivoPed" || campo == "consecutivoFact") {
-      let tipo = (campo == "consecutivoFact" ? "Fact" : "Ped");
-      let digitos = $(`#digitos${tipo}`).val();
+    if (["consecutivoPed", "consecutivoFact", "consecutivoCompra", "consecutivoCuentaCobrar"].includes(campo)) {
+      let digitos = $(`#${input.data('namedigitos')}`).val();
       valor = valor.substr(Array.from(valor).findIndex(it => +it > 0)).padStart(digitos, '0');
       $(this).val(valor);
     }
@@ -94,8 +116,8 @@ $(function () {
             $("#content-upload-" + campo).addClass("d-none");
           }
 
-          if (campo == "digitosPed" || campo == "digitosFact") {
-            $(`#consecutivo${(campo == "digitosFact" ? "Fact" : "Ped")}`).change();
+          if (["digitosPed", "digitosFact", "digitosCompra", "digitosCuentaCobrar"].includes(campo)) {
+            $(`#${input.data('nameconsecutivo')}`).change();
           }
         } else {
           alertify.error(resp.msj);
@@ -105,9 +127,11 @@ $(function () {
   });
 
   $(".infobtn").on('click', function () {
-    $(".alert.alert-info").html(`El color rojo ira hasta el ${$("#inventarioBajo").val()}, el color amarillo desde el ${+$("#inventarioBajo").val() + 1} hasta el  ${$("#inventarioMedio").val()} y el color verde apartir de una cantidad mayor a ${$("#inventarioAlto").val()}`);
+    $(".alert.alert-info").html(`El color rojo ira hasta el ${$("#inventarioBajo").val()}, el color amarillo desde el ${+$("#inventarioBajo").val() + 1} hasta el  ${$("#inventarioMedio").val()} y el color verde a partir de una cantidad mayor a ${$("#inventarioAlto").val()}`);
     $(".alert-info-data").toggle();
   });
+
+  $('[data-toggle="tooltip"]').tooltip()
 });
 
 function eliminarImagen(file, nombre) {

@@ -11,7 +11,7 @@ let DT = $("#table").DataTable({
       return $.extend(d, { "estado": estadoFiltro })
     }
   },
-  order: [[7, "desc"]],
+  order: [[8, "desc"]],
   scrollX: true,
   columns: [
     {
@@ -24,6 +24,7 @@ let DT = $("#table").DataTable({
     { data: 'NombreSucursal' },
     { data: 'direccion' },
     { data: 'Ciudad' },
+    { data: 'Orden', visible: false },
     {
       data: 'NombreEstado',
       className: 'text-center align-middle',
@@ -97,7 +98,7 @@ let DT = $("#table").DataTable({
           botones += `<a href="${base_url()}Reportes/Pedido/${data.id}/0" target="_blank" type="button" class="btn btn-info" title="Imprimir Pedido">
             <i class="fa-solid fa-print"></i>
           </a>`;
-          /* Conpermiso y tenga factura */
+          /* Con permiso y tenga factura */
           if (facturado) {
             botones += `<a href="${base_url()}Reportes/Factura/${data.idFactura}" target="_blank" type="button" class="btn btn-success" title="Imprimir Factura">
               <i class="fa-solid fa-receipt"></i>
@@ -169,7 +170,7 @@ let DT = $("#table").DataTable({
           </button>`;
         }
 
-        if (validPermissions(112) && ['EM', 'FA', 'DE'].includes(data.estado)) {
+        if (validPermissions(112) && ['EM', 'FA', 'DE'].includes(data.estado) && data.TotalProductosReportados) {
           botones += `<button type="button" class="btn btn-dark btnProductosReportados" title="Producto Reportado">
             <i class="fa-solid fa-exclamation-triangle"></i>
           </button>`;
@@ -307,9 +308,9 @@ let DT = $("#table").DataTable({
 
           $("#listacajasDetalle").html(`<div class="font-weight-bold text-center p-2 col-12">No se encontraron cajas</div>`);
           if (pedido.cajas.length) {
-            let estrcutura = '';
+            let estructura = '';
             pedido.cajas.forEach((it, pos) => {
-              estrcutura += `<div class="col-8 col-lg-3">
+              estructura += `<div class="col-8 col-lg-3" id="cajaId${it.id}">
                 <div class="card mb-2 item-caja" data-pos="${pos}" style="border-width: 3px !important;">
                   <div class="card-body" style="cursor: pointer;">
                     <div class="d-flex align-items-center justify-content-between">
@@ -325,7 +326,7 @@ let DT = $("#table").DataTable({
                 </div>
               </div>`;
             });
-            $("#listacajasDetalle").html(estrcutura);
+            $("#listacajasDetalle").html(estructura);
 
             $("#inicioEmpaque").html(moment(pedido.inicio_empaque).format('DD/MM/YYYY hh:mm:ss A'))
             if (pedido.fin_empaque) {
@@ -405,6 +406,18 @@ let DT = $("#table").DataTable({
             $("#inicioEmpaque, #inicioEmpaqueCaja, #finEmpaqueCaja, #tiempoEmpaqueCaja, #totalReferenciasCaja, #totalProductos, #finEmpaque, #tiempoEmpaque").html('No hay datos')
           }
           $("#modalDetallePedido").modal('show');
+
+          $("#btnBuscarEnCaja").off('click').on('click', function () {
+            let valueSearch = $("#inputBuscarProd").val();
+            pedido.cajas.forEach(caja => {
+              let showBox = caja.infoCaja.referenciasEnCajas.includes(valueSearch);
+              if (showBox) {
+                $(`#cajaId${caja.id}`).show();
+              } else {
+                $(`#cajaId${caja.id}`).hide();
+              }
+            })
+          })
         }
       });
 
@@ -486,6 +499,7 @@ function eliminar(data) {
         dataType: 'json',
         data: {
           id: data.id,
+          codigo: data.pedido
         },
         success: function (resp) {
           if (resp.success) {
@@ -518,15 +532,15 @@ function buscarManifiestos(info) {
         datos.forEach((it, x) => {
 
           let ids = it.manifiestos.map((op, p) => op.id);
-          let cajaManiestos = 'C' + it.numeroCaja + '=' + ids.join('_')
+          let cajaManifiestos = 'C' + it.numeroCaja + '-' + (ids.length ? ids.join('_') : '0')
 
           estructura += `<div class="list-group-item list-group-item-action lgicaja p-2">
               <div class="d-flex justify-content-between align-items-center h6-click" data-pos="${x}">
                 <h6 class="mb-0 text-truncate w-75" style="cursor: pointer">
                   Caja ${it.numeroCaja}
                 </h6>
-                ${validPermissions(1082) ? `<input class="manifiestos-caja mr-3" id="verImg" type="checkbox" data-manifiestoscaja="${cajaManiestos}">` : ''}
-                ${validPermissions(1081) ? `<a href="${base_url()}Reportes/Manifiestos/${cajaManiestos}" target="_blank" type="button" class="btn btn-info" title="Imprimir Manifiestos">
+                ${validPermissions(1082) ? `<input class="manifiestos-caja mr-3" id="verImg" type="checkbox" data-manifiestoscaja="${cajaManifiestos}">` : ''}
+                ${validPermissions(1081) ? `<a href="${base_url()}Reportes/Manifiestos/${cajaManifiestos}" target="_blank" type="button" class="btn btn-info" title="Imprimir Manifiestos">
                   <i class="fa-solid fa-print"></i>
                 </a>` : ''}
               </div>
@@ -568,10 +582,14 @@ function buscarManifiestos(info) {
             let cajasManifiestos = $.map($("input.manifiestos-caja:checked"), function (item) {
               return $(item).data('manifiestoscaja')
             });
-            window.open(`${base_url()}Reportes/Manifiestos/${cajasManifiestos.join("*")}`, "_blank");
+            window.open(`${base_url()}Reportes/Manifiestos/${cajasManifiestos.join(".")}`, "_blank");
           } else {
             alertify.warning("No se han seleccionado cajas");
           }
+        });
+
+        $("#btn-imprimir-manifiesto-sin-repetir").off('click').on('click', function () {
+          window.open(`${base_url()}Reportes/ManifiestosSinRepetir/${info.id}`, "_blank");
         });
 
         $("#modalManifiestos").modal('show');

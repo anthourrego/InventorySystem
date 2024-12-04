@@ -15,6 +15,10 @@ let DTVariables = $("#tblVariables").DataTable({
 let dataOriginal = DTVariables.rows().data();
 
 $(function () {
+  setTimeout(() => {
+    DTVariables.draw()
+  }, 1000);
+
   $(".btn-reporte").on('click', function () {
     if (!$(this).hasClass('active')) {
       let btn = $(this).data('btn');

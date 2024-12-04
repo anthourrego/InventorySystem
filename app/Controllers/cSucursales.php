@@ -13,33 +13,33 @@ class cSucursales extends BaseController {
     $cliente = $this->request->getPost("cliente");
 
 		$query = $this->db->table('sucursales s')
-      ->select("
-          s.id, 
-          s.nombre, 
-          s.direccion, 
-          s.administrador, 
-          s.cartera, 
-          s.telefonocart, 
-					s.telefono, 
-          s.estado,
-          s.created_at,
-          s.updated_at,
-					s.id_depto,
-					s.id_ciudad,
-					s.barrio,
-					c.nombre AS ciudad,
-          CASE 
-              WHEN s.estado = 1 THEN 'Activo' 
-              ELSE 'Inactivo' 
-          END AS Estadito,
-      ")
+			->select("
+				s.id,
+				s.nombre,
+				s.direccion,
+				s.administrador,
+				s.cartera,
+				s.telefonocart,
+				s.telefono,
+				s.estado,
+				s.created_at,
+				s.updated_at,
+							s.id_depto,
+							s.id_ciudad,
+							s.barrio,
+							c.nombre AS ciudad,
+				CASE
+					WHEN s.estado = 1 THEN 'Activo'
+					ELSE 'Inactivo'
+				END AS Estadito,
+				s.dias_vencimiento_factura AS diasVencimientoVenta
+			")
 			->join("ciudades c", "s.id_ciudad = c.id", "LEFT")
-      ->where("s.id_cliente", $cliente);
+      		->where("s.id_cliente", $cliente);
 
 		if($estado != "-1"){
 			$query->where("s.estado", $estado);
 		}
-
 		return DataTable::of($query)->toJson(true);
 	}
 
@@ -56,10 +56,11 @@ class cSucursales extends BaseController {
 			"cartera" => trim($postData["carteraSucursal"]),
 			"telefonocart" => trim($postData["telefonoCartSucursal"]),
 			"telefono" => trim($postData["telefonoSucursal"]),
-      "id_cliente" => $postData["id_cliente"],
+			"id_cliente" => $postData["id_cliente"],
 			"id_depto" => $postData["id_deptoSucursal"],
 			"id_ciudad" => $postData["id_ciudadSucursal"],
 			"barrio" => $postData["barrioSucursal"],
+			"dias_vencimiento_factura" => $postData["diasVencimientoVenta"],
 		);
 
 		$sucursal = new mSucursalesCliente();
@@ -143,13 +144,12 @@ class cSucursales extends BaseController {
 					c.id AS idCliente
 					, CONCAT(c.documento, ' | ', c.nombre, ' | ', ci.nombre, ' | ', sucursales.nombre) AS text
 					, sucursales.id
+					, sucursales.dias_vencimiento_factura AS diasVencimientoVenta
 				")
 				->join("clientes c", "sucursales.id_cliente = c.id", "LEFT")
 				->join("ciudades ci", "sucursales.id_ciudad = ci.id", "LEFT")
 				->where("c.estado", 1)
 				->where("sucursales.estado", 1);
-
-		// 1144038430 | Carlos Arias | Buga | El gangazo paisa Buga
 
 		if (isset($data->search) && strlen(trim($data->search))) {
 

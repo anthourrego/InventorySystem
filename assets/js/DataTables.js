@@ -10,33 +10,33 @@ var language = {
 	loadingRecords: "Cargando...",
 	processing: "Procesando...",
 	paginate: {
-		first: "Primero",
-		last: "Último",
-		next: "Siguiente",
-		previous: "Anterior"
+		first: "«",
+		last: "»",
+		next: "›",
+		previous: "‹"
 	},
 	buttons: {
 		pageLength: {
 			_: 'Mostrar %d registros'
 			, '-1': "Mostrar todo"
 		},
-		colvis: 'Visibilidad Columnas'
-		, copy: 'Copiar'
-		, csv: 'CVS'
-		, excel: 'Excel'
-		, pdf: 'PDF'
-		, print: 'Imprimir'
+		colvis: 'Visibilidad Columnas', 
+		copy: 'Copiar', 
+		csv: 'CVS', 
+		excel: 'Excel', 
+		pdf: 'PDF', 
+		print: 'Imprimir'
 	},
 	infoFiltered: "(_MAX_ Registros filtrados en total)"
 };
 
-var domBftrip = "<'row no-gutters pt-1 px-1'<'col-sm-12 col-md-8 mb-2 mb-md-0'B><'col-sm-12 col-md-4'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>";
-var domBftri50 = "<'row no-gutters pt-1 px-1'<'col-12 col-xl-8 mb-2 mb-md-0'B><'col-12 col-xl-4'f>><'row'<'col-12'tr>><'row'<'col-12'i>>";
-var domBftri = "<'row no-gutters pt-1 px-1'<'col-sm-12 col-md-8 mb-2 mb-md-0'B><'col-sm-12 col-md-4'f>><'row'<'col-sm-12'tr>><'row'<'col-12'i>>";
-var domlftrip = "<'row no-gutters pt-1 px-1'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>";
-var domftrip = "<'row no-gutters pt-1 px-1'<'col-sm-12'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>";
+var domBftrip = "<'row no-gutters pt-1 px-1'<'col-sm-12 col-md-8 mb-2 mb-md-0'B><'col-sm-12 col-md-4 d-flex justify-content-end'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 d-flex justify-content-end'p>>";
+var domBftri50 = "<'row no-gutters pt-1 px-1'<'col-12 col-xl-8 mb-2 mb-md-0'B><'col-12 col-xl-4 d-flex justify-content-end'f>><'row'<'col-12'tr>><'row'<'col-12'i>>";
+var domBftri = "<'row no-gutters pt-1 px-1'<'col-sm-12 col-md-8 mb-2 mb-md-0'B><'col-sm-12 col-md-4 d-flex justify-content-end'f>><'row'<'col-sm-12'tr>><'row'<'col-12 d-flex justify-content-end'i>>";
+var domlftrip = "<'row no-gutters pt-1 px-1'<'col-sm-6'l><'col-sm-6 d-flex justify-content-end'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 d-flex justify-content-end'p>>";
+var domftrip = "<'row no-gutters pt-1 px-1'<'col-sm-12 d-flex justify-content-end'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 d-flex justify-content-end'p>>";
 var domftr = "<'row no-gutters pt-1 px-1'<'col-12'f>><'row'<'col-md-12't>><'row'<'col-md-6'><'col-md-6'>>r";
-var domlftri = "<'row no-gutters pt-1 px-1'<'col-sm-12'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i>>";
+var domlftri = "<'row no-gutters pt-1 px-1'<'col-sm-12 d-flex justify-content-end'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5 d-flex justify-content-end'i>>";
 var domSearch = "<'row no-gutters pt-3 px-1'<'col-12'f>><'row'<'col-sm-12'tr>><'row'<'col-12'i>>";
 var domSearch1 = "<'row no-gutters pt-0 px-1'<'col-12'f>><'row'<'col-sm-12'tr>><'row'<'col-12'i>>";
 var domBSearch = "<'row no-gutters pt-0 px-1'<'col-sm-12 col-md-8 mb-2 mb-md-0'B><'col-sm-12 col-md-4'f>><'row'<'col-sm-12'tr>><'row'<'col-12'i>>";
@@ -115,6 +115,80 @@ $.extend(true, $.fn.dataTable.defaults, {
 		{ extend: 'pageLength' },
 	],
 });
+
+/**
+ * Genera un array de configuraciones de botones de DataTable basado en las opciones proporcionadas y botones adicionales.
+ *
+ * @param {Array<string>} options - Un array de tipos de botones a incluir. Valores válidos son 'collection', 'print' y 'pageLength'.
+ * @param {Array<Object>} [btnAdicional=[]] - Un array de configuraciones de botones adicionales a incluir.
+ * @returns {Array<Object>} Un array de objetos de configuración de botones para DataTables.
+ *
+ * @example
+ * const options = ['collection', 'print'];
+ * const additionalButtons = [{ extend: 'colvis', text: 'Visibilidad de Columnas' }];
+ * const buttons = buttonsDT(options, additionalButtons);
+ * // buttons contendrá las configuraciones para 'collection', 'print' y el botón adicional 'colvis'.
+ */
+function buttonsDT(options, btnAdicional = []) {
+	let btns = [];
+	let botones = {
+		collection:{
+			extend: 'collection',
+			text:'<i class="fa-solid fa-download"></i>',
+			className: 'btn-primary',
+			autoClose: true,
+			buttons: [
+				{
+					extend: 'copyHtml5',
+					exportOptions: {
+							columns: ':visible:not(.noExport)'
+					},
+				},
+				{
+					extend: 'excelHtml5',
+					exportOptions: {
+							columns: ':visible:not(.noExport)'
+					},
+				},
+				{
+					extend: 'csvHtml5',
+					exportOptions: {
+							columns: ':visible:not(.noExport)'
+					},
+				},
+				{
+					extend: 'pdfHtml5',
+					exportOptions: {
+							columns: ':visible:not(.noExport)'
+					},
+				},
+			],
+			attr: { title: "Exportar", "data-toggle":"tooltip" }
+		},
+		print: { 
+			extend: 'print', 
+			className: 'printButton btn-info', 
+			text: '<i class="fa-solid fa-print"></i>', 
+			attr: { 
+				title: "Imprimir", "data-toggle":"tooltip" 
+			},
+			exportOptions: {
+				columns: ':visible:not(.noExport)'
+			},
+		},
+		pageLength: { extend: "pageLength" }
+	};
+
+	options.forEach((it) => {
+		btns.push(botones[it]);
+	});
+
+	btnAdicional.forEach((btnAdd) => {
+		btns.push(btnAdd);
+	});
+
+	return btns;
+}
 
 var oldExportAction = function (self, e, dt, button, config) {
 	if (button[0].className.indexOf('buttons-excel') >= 0) {

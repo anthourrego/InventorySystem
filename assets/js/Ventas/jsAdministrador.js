@@ -14,24 +14,37 @@ let DT = $("#table").DataTable({
     { data: 'Ciudad' },
     { data: 'metodo_pago' },
     {
-      data: 'neto',
+      data: 'descuento',
       className: 'text-right',
-      render: function (meta, type, data, meta) {
-        return formatoPesos.format(data.neto);
+      render: function (meta, type, data, meta2) {
+        return formatoPesos.format(data.descuento);
       }
     },
     {
       data: 'total',
       className: 'text-right',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return formatoPesos.format(data.total);
+      }
+    },
+    {
+      data: 'totalMenosDescuento',
+      className: 'text-right',
+      render: function (meta, type, data, meta2) {
+        return formatoPesos.format(+data.total - (+data.descuento));
       }
     },
     { data: 'NombreVendedor' },
     {
       data: 'created_at',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A");
+      }
+    },
+    {
+      data: 'FechaVencimiento',
+      render: function (meta, type, data, meta2) {
+        return moment(data.FechaVencimiento, "YYYY-MM-DD").format("DD/MM/YYYY");
       }
     },
     {
@@ -39,7 +52,7 @@ let DT = $("#table").DataTable({
       searchable: false,
       defaultContent: '',
       className: 'text-center noExport',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return `<div class="btn-group btn-group-sm" role="group">
           <a href="${base_url()}Reportes/Factura/${data.id}/1" target="_blank" type="button" class="btn btn-info" title="Imprimir factura"><i class="fa-solid fa-print"></i></a>
           ${data.id_pedido != null ?
@@ -53,7 +66,7 @@ let DT = $("#table").DataTable({
             <i class="fa-solid fa-qrcode"></i>
           </button>
 
-          ${validPermissions(62) ? `<button type="button" class="btn btn-dark btnProductosReportados" title="Producto Reportado">
+          ${validPermissions(62) && data.TotalProductosReportados > 0 ? `<button type="button" class="btn btn-dark btnProductosReportados" title="Producto Reportado">
             <i class="fa-solid fa-exclamation-triangle"></i>
           </button>` : ''}
         </div>`;
@@ -106,6 +119,7 @@ function eliminar(data) {
         dataType: 'json',
         data: {
           id: data.id,
+          codigo: data.codigo
         },
         success: function (resp) {
           if (resp.success) {

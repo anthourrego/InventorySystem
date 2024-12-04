@@ -3,7 +3,7 @@ let rutaBaseSucursal = base_url() + "Sucursales/";
 let rutaBaseUbicacion = base_url() + "Ubicacion/";
 let DTSucursales = null;
 let crearSucursal = false;
-let permiSucursales = validPermissions(44);
+let permisoSucursales = validPermissions(44);
 let dataSucursal = {};
 let datosFiltro = {
   estado: $("#selectEstado").val(),
@@ -27,14 +27,14 @@ let DTClientes = $("#table").DataTable({
     { data: 'compras' },
     {
       data: 'ultima_compra',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return data.ultima_compra ? moment(data.ultima_compra, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A") : '';
       }
     },
     { data: 'sucursales' },
     {
       data: 'created_at',
-      render: function (meta, type, data, meta) {
+      render: function (meta, type, data, meta2) {
         return moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A");
       }
     },
@@ -43,10 +43,10 @@ let DTClientes = $("#table").DataTable({
       searchable: false,
       defaultContent: '',
       className: 'text-center noExport',
-      render: function (meta, type, data, meta) {
-        btnEditar = validPermissions(42) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
+      render: function (meta, type, data, meta2) {
+        let btnEditar = validPermissions(42) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
 
-        btnCambiarEstado = validPermissions(43) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
+        let btnCambiarEstado = validPermissions(43) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
 
         return `<div class="btn-group btn-group-sm" role="group">
                   ${btnEditar}
@@ -153,7 +153,7 @@ $(function () {
           if (resp.success) {
             DTClientes.ajax.reload();
             $("#sucursales-tab").removeClass('disabled');
-            if (permiSucursales && (!id.length || crearSucursal)) {
+            if (permisoSucursales && (!id.length || crearSucursal)) {
               crearSucursal = false;
               $("#id").val(resp.id);
               $("#sucursales-tab").click();
@@ -217,7 +217,7 @@ $(function () {
           success: function (resp) {
             if (resp.success) {
               DTSucursales.ajax.reload();
-              $("#idSucursal, #nombreSucursal, #direccionSucursal, #administradorSucursal, #carteraSucursal, #telefonoCartSucursal, #telefonoSucursal, #barrioSucursal").val('');
+              $("#idSucursal, #nombreSucursal, #direccionSucursal, #administradorSucursal, #carteraSucursal, #telefonoCartSucursal, #telefonoSucursal, #barrioSucursal, #diasVencimientoVenta").val('');
               $("#id_ciudadSucursal, #id_deptoSucursal").val(0).change();
               $('#collapseDatosBasicos').collapse('hide');
               alertify.success(resp.msj);
@@ -325,15 +325,16 @@ function tablaSucursales() {
         { data: 'cartera' },
         { data: 'telefonocart' },
         { data: 'barrio' },
+        { data: 'diasVencimientoVenta' },
         {
           orderable: false,
           searchable: false,
           defaultContent: '',
           className: 'text-center noExport',
-          render: function (meta, type, data, meta) {
-            btnEditar = validPermissions(442) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
+          render: function (meta, type, data, meta2) {
+            let btnEditar = validPermissions(442) ? '<button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>' : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
 
-            btnCambiarEstado = validPermissions(443) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
+            let btnCambiarEstado = validPermissions(443) ? `<button type="button" class="btn btn-${data.estado == "1" ? "danger" : "success"} btnCambiarEstado" title="${data.estado == "1" ? "Ina" : "A"}ctivar"><i class="fa-solid fa-${data.estado == "1" ? "ban" : "check"}"></i></button>` : '';
 
             return `<div class="btn-group btn-group-sm" role="group">
               ${btnEditar}
@@ -370,6 +371,7 @@ function tablaSucursales() {
           $("#telefonoCartSucursal").val(data.telefonocart);
           $("#telefonoSucursal").val(data.telefono);
           $("#barrioSucursal").val(data.barrio);
+          $("#diasVencimientoVenta").val(data.diasVencimientoVenta);
           dataSucursal = data;
           $('#collapseDatosBasicos').collapse('show');
         });

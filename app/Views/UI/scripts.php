@@ -8,9 +8,25 @@
   }
 
   function validPermissions($permiso = 0){
-    let listaPermisos = <?= json_encode(session()->get("permisos")) ?>
+    let listaPermisos = <?= json_encode(session()->get("permisos")) ?>;
+    let configManifiesto = <?= (int) (session()->has("manifiestoProducto") ? session()->get("manifiestoProducto") : '0'); ?>;
+    let configEmpaque = <?= (int) (session()->has("manejaEmpaque") ? session()->get("manejaEmpaque") : '0'); ?>;
+    let permisosManifiestos = JSON.parse('<?= json_encode(PERMISOSMANIFIESTOS) ?>');
+    let permisosEmpaque = JSON.parse('<?= json_encode(PERMISOSEMPAQUE) ?>');
 
-    return listaPermisos.some(item => item == $permiso);
+    let validPermisision = listaPermisos.some(item => item == $permiso);
+
+    if (validPermisision) {
+      if (permisosManifiestos.some(item => item == $permiso) && configManifiesto == "0") {
+        validPermisision = false;
+      }
+
+      if (permisosEmpaque.some(item => item == $permiso) && configEmpaque == "0") {
+        validPermisision = false;
+      }
+    }
+
+    return validPermisision;
   }
 </script>
   <?php 
@@ -18,10 +34,10 @@
       foreach ($js as $js1) {
         if(is_array($js1)) {
           foreach ($js1 as $js2) {
-            printf('<script src="%s"></script>', base_url(esc($js2)));
+            echo(script_tag(esc($js2)));
           }
         } else {
-          printf('<script src="%s"></script>', base_url(esc($js1)));
+          echo(script_tag(esc($js1)));
         }
       }
     }
@@ -30,10 +46,10 @@
       foreach ($js_add as $js_add1) {
         if(is_array($js_add1)) {
           foreach ($js_add1 as $js_add2) {
-            printf('<script src="%s"></script>', base_url("assets/js/" . esc($js_add2) . "?" . rand()));
+            echo(script_tag("assets/js/{$js_add2}?" . rand()));
           }
         } else {
-          printf('<script src="%s"></script>', base_url("assets/js/" . esc($js_add1) . "?". rand() ));
+          echo(script_tag("assets/js/{$js_add1}?" . rand()));
         }
       }
     }

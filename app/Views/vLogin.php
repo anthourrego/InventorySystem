@@ -1,7 +1,7 @@
 <div class="container-fluid position-absolute">
   <div class="row no-gutter">
     <div class="d-none d-lg-flex col-lg-6 p-0 login-background">
-      <img class="w-100 vh-100" src="<?= base_url('Foto/' . $imagenes['fondo']) ?>">
+      <img class="w-100 vh-100" src="<?= base_url('Foto/' . $imagenes->fondo) ?>">
     </div>
     <div class="col-12 col-lg-6 overflow-auto" style="max-height: 100vh !important">
       <div class="login d-flex align-items-center py-5">
@@ -10,7 +10,7 @@
             <!-- Formulario de Login -->
             <div id="contentLogin" class="col-12 col-md-10 col-xl-7 mx-auto">
               <div class="text-center">
-                <img class="w-50 mb-5" src="<?= base_url('Foto/' . $imagenes['logo'])?>">
+                <img class="w-50 mb-5" src="<?= base_url('Foto/' . $imagenes->logo)?>">
               </div>
               <form id="formLogin" autocomplete="off">
                 <div class="form-label-group form-valid">

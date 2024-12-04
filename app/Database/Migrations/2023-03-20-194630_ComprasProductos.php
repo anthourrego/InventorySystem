@@ -3,10 +3,12 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use CodeIgniter\Database\RawSql;
 
 class ComprasProductos extends Migration
 {
-    public function up() {
+	public function up()
+	{
 		$this->forge->addField([
 			'id'   => [
 				'type'           => 'INT',
@@ -48,24 +50,31 @@ class ComprasProductos extends Migration
 			'creado_compra' => [
 				'type'          => 'TINYINT',
 				'constraint'    => 1,
-        'default'       => 0
+				'default'       => 0
 			],
 			'costo' => [
 				'type'        => 'DECIMAL',
 				'constraint'  => '20,2',
 				'default'     => 0
 			],
-			'created_at datetime default current_timestamp',
-			'updated_at datetime default current_timestamp on update current_timestamp'
+			'created_at' => [
+				'type'    => 'datetime',
+				'default' => new RawSql('CURRENT_TIMESTAMP'),
+			],
+			'updated_at' => [
+				'type'    => 'datetime',
+				'default' => new RawSql('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+			]
 		]);
 
 		$this->forge->addKey('id', true);
 		$this->forge->addForeignKey('id_compra', 'compras', 'id');
 		$this->forge->addForeignKey('id_producto', 'productos', 'id');
-		$this->forge->createTable('comprasproductos');
+		$this->forge->createTable('comprasproductos', false, ATRIBUTOSDB);
 	}
 
-	public function down() {
+	public function down()
+	{
 		$this->forge->dropTable('comprasproductos');
 	}
 }

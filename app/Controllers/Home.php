@@ -5,6 +5,7 @@ use App\Models\mUsuarios;
 use App\Models\mPermisos;
 use App\Models\mConfiguracion;
 use App\Models\mAlmacen;
+use CodeIgniter\Files\File;
 
 class Home extends BaseController {
 
@@ -33,10 +34,10 @@ class Home extends BaseController {
 		} else {
 			$this->LJQueryValidation();
 
-			$this->content['imagenes'] = array(
+			$this->content['imagenes'] = (object) [
 				"fondo" => $this->getValConfig('logoFondoLogin', true),
 				"logo" => $this->getValConfig('logoLogin', true)
-			);
+			];
 							
 			$this->content['title'] = "Inicio Sesión";
 			$this->content['view'] = "vLogin";
@@ -148,14 +149,20 @@ class Home extends BaseController {
 		$filename = UPLOADS_CONF_PATH ."{$img}"; //<-- specify the image  file
 		//Si la foto no existe la colocamos por defecto
 		if(is_null($img) || !file_exists($filename)) {
-			$filename = ASSETS_PATH . "img/" . $img . ".png";
+			$filename = ASSETS_PATH . "img/{$img}.png";
+			if (!file_exists($filename)) {
+				$filename = ASSETS_PATH . "img/nofoto.png";
+			}
 		}
-		//$mime = mime_content_type($filename); //<-- detect file type
-		header('Content-Length: '.filesize($filename)); //<-- sends filesize header
-		header("Content-Type: image/png"); //<-- send mime-type header
-		header("Content-Disposition: inline; filename='{$filename}';"); //<-- sends filename header
-		readfile($filename); //<--reads and outputs the file onto the output buffer
-		exit(); // or die()
+
+		$dataFile = new File($filename);
+
+		return $this->response->setHeader("Content-Length", $dataFile->getSize())
+			->setHeader("Content-Type", $dataFile->getMimeType())
+			->setHeader("Content-Disposition", "inline")
+			->setHeader("filename", $dataFile->getRealPath())
+			->download($dataFile->getRealPath(), null)
+			->inline();
 	}
 
 	private function getValConfig($campo, $retCampo) {

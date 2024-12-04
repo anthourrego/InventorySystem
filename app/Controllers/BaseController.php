@@ -21,7 +21,8 @@ use Config\Database;
  *
  * For security be sure to declare any new methods as protected or private.
  */
-abstract class BaseController extends Controller {
+abstract class BaseController extends Controller
+{
 
     public $content;
     /**
@@ -39,7 +40,7 @@ abstract class BaseController extends Controller {
      * class instantiation. These helpers will be available
      * to all other controllers that extend BaseController.
      *
-     * @var array
+     * @var list<string>
      */
     protected $helpers = [];
 
@@ -50,9 +51,10 @@ abstract class BaseController extends Controller {
     // protected $session;
 
     /**
-     * Constructor.
+     * @return void
      */
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
+    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
+    {
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
 
@@ -167,7 +169,7 @@ abstract class BaseController extends Controller {
         ];
 
         $this->content['js'][] = [
-            'vendor/datatables.net/datatables.net/js/jquery.dataTables.min.js'
+            'vendor/datatables.net/datatables.net/js/dataTables.min.js'
             ,'vendor/datatables.net/datatables.net-bs4/js/dataTables.bootstrap4.min.js'
             ,'vendor/datatables.net/datatables.net-buttons/js/dataTables.buttons.min.js'
             ,'vendor/datatables.net/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js'
@@ -249,7 +251,7 @@ abstract class BaseController extends Controller {
         ];
     }
 
-    public function LSweetAlet2(){
+    public function LSweetAlert2(){
         $this->content['css'][] = [
             'assets/Libraries/sweetAlert2/css/sweetalert2.min.css'
         ];
@@ -268,15 +270,24 @@ abstract class BaseController extends Controller {
         ];
     }
 
-    public function LCKEditor() {
+    public function LTinymceEditor() {
         $this->content['js'][] = [
-            'vendor/ckeditor/ckeditor/ckeditor.js'
+            'vendor/tinymce/tinymce/tinymce.min.js'
         ];
     }
 
     public function LBsCustomFileInput() {
         $this->content['js'][] = [
             'assets/Libraries/bs-custom-file-input/bs-custom-file-input.min.js'
+        ];
+    }
+
+    public function LTempusDominusBoostrap4() {
+        $this->content['css'][] = [
+            'vendor/tempusdominus/bootstrap-4/build/css/tempusdominus-bootstrap-4.min.css'
+        ];
+        $this->content['js'][] = [
+            'vendor/tempusdominus/bootstrap-4/build/js/tempusdominus-bootstrap-4.min.js'
         ];
     }
 }

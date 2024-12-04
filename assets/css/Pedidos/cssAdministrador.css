@@ -1,6 +1,6 @@
 #listacajasPadre {
   overflow-y: auto;
-  height: calc(100vh - 303px)
+  height: calc(100vh - 360px)
 }
 
 .lista-detalle-caja {

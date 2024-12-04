@@ -93,7 +93,7 @@ let DTProductos = $("#table").DataTable({
 
       btnUbicacionBodeguero = validPermissions(59) && $CAMPOSPRODUCTO.ubicacion == '1' ? '<button type="button" class="btn btn-warning btnUbicacionBodeguero" title="Modificar ubicación"><i class="fa-solid fa-pen"></i></button>' : '';
 
-      btnProductosReportados = validPermissions(510) ? '<button type="button" class="btn btn-dark btnProductosReportados" title="Producto Reportado"><i class="fa-solid fa-exclamation-triangle"></i></button>' : '';
+      btnProductosReportados = validPermissions(510) && data.TotalProductosReportados > 0 ? '<button type="button" class="btn btn-dark btnProductosReportados" title="Producto Reportado"><i class="fa-solid fa-exclamation-triangle"></i></button>' : '';
 
       return `<div class="btn-group btn-group-sm" role="group">
                   ${btnEditar}
@@ -363,7 +363,6 @@ $(function () {
 
   //Se genera alerta informando que no hay ninguna categoria creada o habilitada
   if ($CATEGORIAS <= 0) {
-    S
     alertify.alert("¡Advertencia!", "No hay ninguna categoria creada y/o habilitada. Por favor cree una.");
   }
 

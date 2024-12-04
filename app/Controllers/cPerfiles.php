@@ -87,7 +87,7 @@ class cPerfiles extends BaseController {
 		$perfil = new mPerfiles();
 		if ($perfil->save($datosSave)) {
 			$resp["success"] = true;
-			$resp["msj"] = "El pefil <b>{$datosSave["nombre"]}</b> se " . (empty($postData['id']) ? 'creo' : 'actualizo') . " correctamente.";
+			$resp["msj"] = "El perfil <b>{$datosSave["nombre"]}</b> se " . (empty($postData['id']) ? 'creo' : 'actualizo') . " correctamente.";
 		} else {
 			$resp["msj"] = "No puede " . (empty($postData['id']) ? 'crear' : 'actualizar') . " el perfil." . listErrors($perfil->errors());
 		}

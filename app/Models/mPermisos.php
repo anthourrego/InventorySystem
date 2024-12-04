@@ -211,7 +211,7 @@ class mPermisos extends Model {
 					],
 					[
 						"id" => 510,
-						"text" => "Productos reportados",
+						"text" => "Reporte de Empaque",
 						"children" => [
 							[
 								"id" => 51001,
@@ -234,7 +234,7 @@ class mPermisos extends Model {
 					],
 					[
 						"id" => 62,
-						"text" => "Productos reportados",
+						"text" => "Reporte de Empaque",
 						"children" => [
 							[
 								"id" => 6201,
@@ -411,6 +411,10 @@ class mPermisos extends Model {
 								"id" => 1082,
 								"text" => "Imprimir Múltiple Manifiesto"
 							],
+							[
+								"id" => 1083,
+								"text" => "Imprimir Manifiestos Sin Repetir"
+							],
 						]
 					],
 					[
@@ -427,7 +431,7 @@ class mPermisos extends Model {
 					],
 					[
 						"id" => 112,
-						"text" => "Productos reportados",
+						"text" => "Reporte de Empaque",
 						"children" => [
 							[
 								"id" => 1121,
@@ -497,7 +501,7 @@ class mPermisos extends Model {
 			],
 			[
 				"id" => 60,
-				"text" => "Productos Reportados",
+				"text" => "Reporte de Empaque",
 				"uri" => "ProductosReportados",
 				"icon" => "fa-solid fa-exclamation-triangle",
 				"color" => "bg-light",
@@ -507,7 +511,115 @@ class mPermisos extends Model {
 						"text" => "Confirmar Producto Reportado"
 					]
 				]
-			]
+			],
+			[
+				"id" => 70,
+				"text" => "Showroom",
+				"uri" => "Showroom",
+				"icon" => "fa-solid fa-basket-shopping",
+				"color" => "bg-success",
+				"children" => [
+					[
+						"id" => 7001,
+						"text" => "Crear"
+					],
+					[
+						"id" => 7002,
+						"text" => "Editar"
+					]
+				]
+			],
+			[
+				"id" => 80,
+				"text" => "Ingreso Mercancía",
+				"uri" => "IngresoMercancia",
+				"icon" => "fa-solid fa-arrow-up-right-dots",
+				"color" => "bg-dark",
+				"children" => [
+					[
+						"id" => 801,
+						"text" => "Crear"
+					],
+					[
+						"id" => 802,
+						"text" => "Editar"
+					],
+					[
+						"id" => 803,
+						"text" => "Confirmar Ingreso Mercancía"
+					],
+					[
+						"id" => 804,
+						"text" => "Anular Ingreso Mercancía"
+					],
+					[
+						"id" => 805,
+						"text" => "Imprimir Ingreso Mercancía"
+					]
+				]
+			],
+			[
+				"id" => 90,
+				"text" => "Reporte de inventario",
+				"uri" => "ReporteInventario",
+				"icon" => "fa-solid fa-cart-flatbed",
+				"color" => "bg-primary",
+				"children" => [
+					[
+						"id" => 901,
+						"text" => "Imprimir Factura"
+					],
+					[
+						"id" => 902,
+						"text" => "Imprimir Pedido"
+					],
+					[
+						"id" => 903,
+						"text" => "Imprimir Compra"
+					],
+					[
+						"id" => 904,
+						"text" => "Imprimir Ingreso Mercancia"
+					]
+				]
+			],
+			[
+				"id" => 100,
+				"text" => "Cuentas por cobrar",
+				"uri" => "CuentasCobrar",
+				"icon" => "fa-solid fa-receipt",
+				"color" => "bg-secondary",
+				"children" => [
+					[
+						"id" => 1001,
+						"text" => "Crear"
+					],
+					[
+						"id" => 1002,
+						"text" => "Anular"
+					],
+					[
+						"id" => 1003,
+						"text" => "Imprimir"
+					],
+					[
+						"id" => 1005,
+						"text" => "Imprimir Recibo Caja"
+					],
+					[
+						"id" => 1004,
+						"text" => "Imprimir Todos"
+					],
+					[
+						"id" => 1006,
+						"text" => "Imprimir Todos Recibos Caja"
+					],
+					[
+						"id" => 1007,
+						"text" => "Asignar Fechas"
+					],
+				]
+			],
 		];
 
 		if (!session()->has("manejaEmpaque") || session()->get("manejaEmpaque") == "1") {
@@ -518,7 +630,7 @@ class mPermisos extends Model {
 					"text" => "Empaque",
 					"uri" => "Empaque",
 					"icon" => "fa-solid fa-box-open",
-					"color" => "bg-dark",
+					"color" => "bg-secondary",
 					"children" => [
 						[
 							"id" => 301,

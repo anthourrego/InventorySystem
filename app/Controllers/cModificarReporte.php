@@ -14,84 +14,109 @@ class cModificarReporte extends BaseController {
   public $reportes = [
     "Factura" => [
       "icono" => "fa-solid fa-store",
-      "color" => "primary",
+      "color" => "#007bff",
+      "color-text" => "#ffffff",
       "url" => ""
     ],
     "Pedido" => [
       "icono" => "fa-solid fa-boxes-stacked",
-      "color" => "secondary",
+      "color" => "#6c757d",
+      "color-text" => "#ffffff",
       "url" => ""
     ],
     "Rotulo" => [
       "icono" => "fa-solid fa-tags",
-      "color" => "info",
+      "color" => "#17a2b8",
+      "color-text" => "#ffffff",
       "url" => ""
     ],
     "Envio" => [
       "icono" => "fa-solid fa-paper-plane",
-      "color" => "success",
+      "color" => "#28a745",
+      "color-text" => "#ffffff",
       "url" => ""
     ],
     "Empaque" => [
       "icono" => "fa-solid fa-file-invoice",
-      "color" => "warning",
+      "color" => "#ffc107",
+      "color-text" => "#ffffff",
       "url" => ""
     ],
     "Compra" => [
       "icono" => "fa-solid fa-dollar",
-      "color" => "dark",
+      "color" => "#343a40",
+      "color-text" => "#ffffff",
       "url" => ""
     ],
     "Sticker" => [
       "icono" => "fa-solid fa-note-sticky",
-      "color" => "danger",
+      "color" => "#dc3545",
+      "color-text" => "#ffffff",
+      "url" => ""
+    ],
+    "Ing_Mercancia" => [
+      "icono" => "fa-solid fa-arrow-up-right-dots",
+      "color" => "#4ba7a7",
+      "color-text" => "#ffffff",
+      "url" => ""
+    ],
+    "Cuenta_Cobrar" => [
+      "icono" => "fa-solid fa-file-invoice-dollar",
+      "color" => "#d3d0a4",
+      "color-text" => "#ffffff",
+      "url" => ""
+    ],
+    "Recibo_Caja" => [
+      "icono" => "fa-solid fa-money-check",
+      "color" => "#d3a4cd",
+      "color-text" => "#ffffff",
       "url" => ""
     ]
   ];
 
 	public $variables = [
     "logoEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar", "Recibo_Caja"],
       "descripcion" => "Logo de la empresa"
     ],
     "nombreEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar", "Recibo_Caja"],
       "descripcion" => "Nombre de la empresa"
     ],
     "digitoVeriEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar"],
       "descripcion" => "Digito de verificación de la empresa"
     ],
     "direccionEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar"],
       "descripcion" => "Dirección de la empresa"
     ],
     "telefonoEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar"],
       "descripcion" => "Telefono de la empresa"
     ],
     "emailEmpresa" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar"],
       "descripcion" => "Correo electrónico de la empresa"
     ],
     "numeracion" => [
-      "aplica" => ["Factura", "Pedido", "Empaque", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar", "Recibo_Caja"],
       "descripcion" => "Consecutivo de documento"
     ],
     "nombreSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Recibo_Caja"],
       "descripcion" => "Nombre de la sucursal"
     ],
     "nombreCliente" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Recibo_Caja"],
       "descripcion" => "Nombre del cliente"
     ],
     "fechaCreacion" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar", "Recibo_Caja"],
       "descripcion" => "Fecha de generación del documento"
     ],
     "horaCreacion" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar"],
       "descripcion" => "Hora de generación del documento"
     ],
     "direccionSucursal" => [
@@ -127,19 +152,19 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Departamento de la sucursal"
     ],
     "nombreVendedor" => [
-      "aplica" => ["Factura", "Pedido", "Empaque", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Empaque", "Compra", "Ing_Mercancia", "Cuenta_Cobrar"],
       "descripcion" => "Nombre del vendedor"
     ],
     "itemProductoDP" => [
-      "aplica" => ["Factura", "Pedido", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Compra", "Ing_Mercancia"],
       "descripcion" => "Número de item del producto"
     ],
     "referenciaProductoDP" => [
-      "aplica" => ["Factura", "Pedido", "Compra", "Sticker"],
+      "aplica" => ["Factura", "Pedido", "Compra", "Sticker", "Ing_Mercancia"],
       "descripcion" => "Referencia del producto"
     ],
     "descripcionProductoDP" => [
-      "aplica" => ["Factura", "Pedido", "Compra", "Sticker"],
+      "aplica" => ["Factura", "Pedido", "Compra", "Sticker", "Ing_Mercancia"],
       "descripcion" => "Descripcion del producto"
     ],
     "cantPacaProductoDP" => [
@@ -159,7 +184,7 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Total por producto"
     ],
     "totalGeneral" => [
-      "aplica" => ["Factura", "Pedido", "Compra"],
+      "aplica" => ["Factura", "Pedido", "Compra", "Cuenta_Cobrar", "Recibo_Caja"],
       "descripcion" => "Valor total de la venta"
     ],
     "ubicacionProductoDP" => [
@@ -171,7 +196,7 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Manifiesto del producto"
     ],
     "observacion" => [
-      "aplica" => ["Pedido", "Factura", "Rotulo", "Empaque", "Compra"],
+      "aplica" => ["Pedido", "Factura", "Rotulo", "Empaque", "Compra", "Ing_Mercancia",],
       "descripcion" => "Observación del reporte"
     ],
     "numeroRotulo" => [
@@ -251,16 +276,72 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Total de productos dentro de la caja"
     ],
     "estadoRegistro" => [
-      "aplica" => ["Compra"],
+      "aplica" => ["Compra", "Ing_Mercancia"],
       "descripcion" => "Estado de la informacion cargada"
     ],
     "proveedor" => [
       "aplica" => ["Compra"],
       "descripcion" => "Proveedor de la compra"
     ],
+    "fechaVencimiento" => [
+      "aplica" => ["Factura"],
+      "descripcion" => "Fecha de vencimiento de la factura"
+    ],
+    "totalSinDescuento" => [
+      "aplica" => ["Factura"],
+      "descripcion" => "Valor de la factura sin el descuento"
+    ],
+    "descuento" => [
+      "aplica" => ["Factura"],
+      "descripcion" => "Descuento aplicado a la factura"
+    ],
+    "codigoAbonoDP" => [
+      "aplica" => ["Cuenta_Cobrar"],
+      "descripcion" => "Código de abono a la factura"
+    ],
+    "valorAbonoDP" => [
+      "aplica" => ["Cuenta_Cobrar"],
+      "descripcion" => "Valor del abono a la factura"
+    ],
+    "observacionAbonoDP" => [
+      "aplica" => ["Cuenta_Cobrar"],
+      "descripcion" => "Observación de abono a la factura"
+    ],
+    "estadoAbonoDP" => [
+      "aplica" => ["Cuenta_Cobrar"],
+      "descripcion" => "Estado de abono a la factura"
+    ],
+    "usuarioAbonoDP" => [
+      "aplica" => ["Cuenta_Cobrar"],
+      "descripcion" => "Usuario registro abono a la factura"
+    ],
+    "fechaAbonoDP" => [
+      "aplica" => ["Cuenta_Cobrar"],
+      "descripcion" => "Fecha de registro de abono a la factura"
+    ],
+    "tipoAbonoDP" => [
+      "aplica" => ["Cuenta_Cobrar"],
+      "descripcion" => "Tipo de abono a la factura"
+    ],
+    "totalAbono" => [
+      "aplica" => ["Cuenta_Cobrar"],
+      "descripcion" => "Total de abonos a la factura"
+    ],
+    "tipoPago" => [
+      "aplica" => ["Recibo_Caja"],
+      "descripcion" => "Tipo de pago del recibo de caja"
+    ],
+    "numeroFactura" => [
+      "aplica" => ["Recibo_Caja"],
+      "descripcion" => "Número de factura en el recibo de caja"
+    ],
+    "valorEnLetras" => [
+      "aplica" => ["Recibo_Caja"],
+      "descripcion" => "Valor del documento en letras"
+    ]
   ];
 
-	function index() {
+	public function index() {
     $this->content['title'] = "Modificar Reporte";
 		$this->content['view'] = "vModificarReporte";
 
@@ -283,8 +364,8 @@ class cModificarReporte extends BaseController {
 		return view('UI/viewDefault', $this->content);
   }
 
-  function reporte($reporte) {
-    $reporte = str_replace("_", " ", $reporte);
+  public function reporte($reporte) {
+    
     $datReporte = [];
     if (isset($this->reportes[$reporte])) {
       $datReporte = $this->reportes[$reporte];
@@ -299,7 +380,7 @@ class cModificarReporte extends BaseController {
 			'jsModificarEstructuraReporte.js'
 		];
 
-    $this->LCKEditor();
+    $this->LTinymceEditor();
 
     $this->content['variables'] = [];
     $this->content['contenidoEditor'] = '';
@@ -317,7 +398,7 @@ class cModificarReporte extends BaseController {
               "verify_peer"=>false,
               "verify_peer_name"=>false,
             ),
-          );  
+          );
           $this->content['contenidoEditor'] = file_get_contents($path, false, stream_context_create($arrContextOptions));
         } else {
           $this->content['contenidoEditor'] = '';
@@ -332,7 +413,7 @@ class cModificarReporte extends BaseController {
 		return view('UI/viewDefault', $this->content);
   }
 
-  function guardar() {
+  public function guardar() {
     $resp["success"] = true;
     $resp["msj"] = "Reporte guardado correctamente";
     $postData = (object) $this->request->getPost();
@@ -349,7 +430,7 @@ class cModificarReporte extends BaseController {
     return $this->response->setJSON($resp);
   }
 
-  function plantilla() {
+  public function plantilla() {
     $resp["success"] = true;
     $resp["msj"] = "Reporte reemplazado con éxito";
     $postData = (object) $this->request->getPost();

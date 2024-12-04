@@ -42,16 +42,19 @@ let DTCompras = $("#table").DataTable({
     }, {
       data: 'Proveedor'
     }, {
-      data: 'Neto',
-      render: function (meta, type, data, meta) {
-        return formatoPesos.format(data.Neto);
-      }
-    }, {
       data: 'Total',
       render: function (meta, type, data, meta) {
         return formatoPesos.format(data.Total);
       }
     }, {
+      data: 'Total_Costo',
+      render: function (meta, type, data, meta) {
+        return formatoPesos.format(data.Total_Costo);
+      }
+    }, {
+      data:'Ganancia',
+      className:'ganancia'
+    },{
       data: 'Fecha_Creacion',
       render: function (meta, type, data, meta) {
         return moment(data.Fecha_Creacion, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A");
@@ -86,6 +89,9 @@ let DTCompras = $("#table").DataTable({
     }
   ],
   createdRow: function (row, data, dataIndex) {
+    let porcentajeGanancia = calculateBenefit(+data.Total, +data.Total_Costo);
+    $(row).find('.ganancia').html(porcentajeGanancia + ' %');
+
     //Editar
     $(row).find(".btnEditar, .btnVer").click(function (e) {
       e.preventDefault();
@@ -246,7 +252,9 @@ let DTDataProdsAdd = $("#tblProducts").DataTable({
     return: false,
   },
   columns: [{
-    data: 'referenciaItem'
+    data: 'referencia'
+  },{
+    data: 'item'
   }, {
     data: 'descripcion',
     width: "30%",
@@ -503,7 +511,7 @@ $(function () {
       DTDataProdsAdd.draw();
     }, 300);
 
-    $("#btnSearchReferecnia").off('click').on('click', function () {
+    $("#btnSearchReferencia").off('click').on('click', function () {
 
       let structureHtmlProds = '';
 
@@ -638,6 +646,11 @@ $(function () {
       // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
     }
   });
+
+  $('#modalSearchProd').on('hidden.bs.modal', function (event) {
+    $("#modalProdCuenta").modal('show');
+    $('.input-search').find('.input-group-append').addClass('d-none');
+  });
 });
 
 function calculateDataProds() {
@@ -725,7 +738,7 @@ function validateColorRow(data) {
 
 function verifyProductWithoutPrice() {
   let prodsWithoutPrice = dataProdsAdd.filter(
-    product => (!product.costo || product.costo == 0) || (!product.precioVenta || product.precioVenta == 0)
+    product => (MANEJACOSTO && (!product.costo || product.costo == 0)) || (!product.precioVenta || product.precioVenta == 0)
   ).map(
     (productFilter) => `<li class='mt-2'>
       <b>${productFilter.referenciaItem}:</b>

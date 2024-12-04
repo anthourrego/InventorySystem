@@ -8,10 +8,11 @@ use App\Models\mProductos;
 use App\Models\mManifiesto;
 use \Config\Services;
 use \PhpZip\ZipFile;
-use \Shuchkin\SimpleXLSXGen;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use App\Models\MovimientoInventarioModel;
+use App\Entities\MovimientoInventarioEntity;
 
 class cProductos extends BaseController {
 
@@ -126,6 +127,12 @@ class cProductos extends BaseController {
 			$stringStock = "(P.stock + CASE WHEN PP.cantidad IS NULL THEN 0 ELSE PP.cantidad END)";
 		}
 
+		$subQuery = $this->db->table("observacionproductos AS OP")
+					->select("PP.id_producto, COUNT(PP.id_producto) AS TotalProductosReportados")
+					->join("pedidosproductos PP", "OP.id_pedido_producto = PP.id", "left")
+					->where("OP.fecha_confirmacion IS NULL")
+					->groupBy("PP.id_producto")->getCompiledSelect();
+
 		$query = $this->db
 				->table('productos AS P')
 				->select("
@@ -164,9 +171,11 @@ class cProductos extends BaseController {
 									THEN P.id_manifiesto
 								ELSE '0'
 						END AS manifiesto,
+						TPR.TotalProductosReportados,
 						CAST(({$stringStock} / P.cantPaca) AS DECIMAL(12,2)) AS cantidadXPaca,
 				")->join('categorias AS C', 'P.id_categoria = C.id', 'left')
-				->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left');
+				->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left')
+				->join("({$subQuery}) TPR", "P.id = TPR.id_producto", "left");
 
 		if (isset($postData->sumarPedidos) && $postData->sumarPedidos == 1) {
 			$query->join("({$subQuery}) PP", "P.id = PP.id_producto", "left");
@@ -213,7 +222,7 @@ class cProductos extends BaseController {
 			$query->where("P.precio_venta <= $postData->preciFin");
 		}
 
-		//validamos si aplica para ventas para realziar algunas validaciones
+		//validamos si aplica para ventas para realizar algunas validaciones
 		if (isset($postData->ventas) && $postData->ventas == 1) {
 			$arrayFiltro['ventas'] = $postData->ventas;
 			if ($this->inventarioNegativo == "0") {
@@ -263,7 +272,7 @@ class cProductos extends BaseController {
 				,"referencia" => trim($postData->referencia)
 				,"item" => ($this->itemProducto == '1' ? trim($postData->item) : null)
 				,"descripcion" => trim($postData->descripcion)
-				,"stock" => $postData->stock
+				// ,"stock" => $postData->stock
 				,"precio_venta" => str_replace(",", "", trim(str_replace("$", "", $postData->precioVent)))
 				,"precio_venta_dos" => str_replace(",", "", trim(str_replace("$", "", $postData->precioVentDos)))
 				,"ubicacion" => ($this->ubicacionProducto == '1' ? trim($postData->ubicacion) : null)
@@ -272,6 +281,13 @@ class cProductos extends BaseController {
 				,"cantPaca" => ($this->pacaProducto == '1' ? trim($postData->paca) : 1)
 				,"updated_at" => date("Y-m-d H:i:s")
 			);
+
+			$currentStock = null;
+			if ($postData->id > 0) {
+				$currentStock = $product->asObject()->find($postData->id)->stock;
+			} else {
+				$producto["stock"] = 0;
+			}
 	
 			//Validamos si eliminar la foto de perfil y buscamos el usuario
 			if($postData->editFoto != 0 && !empty($postData->id)) {
@@ -285,8 +301,17 @@ class cProductos extends BaseController {
 			//Validamos si el usuario que ingresaron ya existe
 			if ($product->save($producto)) {
 				//Traemos el id insertado
-				$product->id = empty($postData->id) ? $product->getInsertID() : $postData->id; 
-				$imgFoto = $this->request->getFile("imagen"); 
+				$product->id = empty($postData->id) ? $product->getInsertID() : $postData->id;
+
+				//Agregamos movimiento de inventario
+				$responseConfirm = $this->updateInventoryProduct($currentStock, $postData->stock, $product->id);
+				if (is_string($responseConfirm)) {
+					$resp["msj"] = $responseConfirm;
+					$this->db->transRollback();
+					return;
+				}
+				
+				$imgFoto = $this->request->getFile("imagen");
 				if (!empty($imgFoto->getBasename())) {
 					//Validamos la foto
 					$validated = $this->validate([
@@ -371,7 +396,7 @@ class cProductos extends BaseController {
 				$resp["msj"] = "No puede " . (empty($postData->id) ? 'crear' : 'actualizar') . " el producto." . listErrors($product->errors());
 			}
 					
-			//Validamos para elminar la foto
+			//Validamos para eliminar la foto
 			if ($filenameDelete != '' && file_exists($filenameDelete)) {
 				if(!@unlink($filenameDelete)) {
 					$resp["success"] = false;
@@ -469,7 +494,7 @@ class cProductos extends BaseController {
 		}
 
 		if (!file_exists(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/{$nombreArchivo}.png")) {
-			//Elimanos el directorio si existe lo eliminamos para crear el nuevo
+			//Eliminanos el directorio si existe lo eliminamos para crear el nuevo
 			if ($precioVenta == '') {
 				if(is_dir(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/")){
 					$this->borrar_directorio(UPLOADS_PRODUCT_PATH . "{$producto->id}/convert/");
@@ -637,7 +662,7 @@ class cProductos extends BaseController {
 			$mProducto1->where("P.precio_venta <= $filtros->preciFin");
 		}
 
-		//validamos si aplica para ventas para realziar algunas validaciones
+		//validamos si aplica para ventas para realizar algunas validaciones
 		if (isset($filtros->ventas) && $filtros->ventas == 1) {
 			if ($this->inventarioNegativo == "0") {
 				$mProducto->where("P.stock >=", 0);
@@ -976,5 +1001,35 @@ class cProductos extends BaseController {
 	public function totalInventario($sumaPedidos) {
 		$mProductos = new mProductos();
 		return $this->response->setJSON($mProductos->totalInventario($sumaPedidos));
+	}
+
+	private function updateInventoryProduct($currentStock, $newStock, $idProduct) {
+		$movimientoInventarioModel = new MovimientoInventarioModel();
+		$movimiento = new MovimientoInventarioEntity();
+		$response = true;
+
+		$movimiento->id_producto = $idProduct;
+		if (is_null($currentStock) || $newStock > $currentStock) {
+			// Ingreso
+			$movimiento->tipo = "I";
+			$movimiento->observacion = "Aumenta cantidad en módulo de producto";
+			if (is_null($currentStock)) {
+				$movimiento->cantidad = $newStock;
+			} else {
+				$movimiento->cantidad = (((int) $newStock) - ((int) $currentStock));
+			}
+		} elseif ($currentStock > $newStock) {
+			// Salida
+			$movimiento->tipo = "S";
+			$movimiento->cantidad = (((int) $currentStock) - ((int) $newStock));
+			$movimiento->observacion = "Disminuye cantidad en módulo de producto";
+		}
+		if(!$movimientoInventarioModel->save($movimiento)) {
+			return "Error al registrar el movimiento. " . listErrors($movimientoInventarioModel->errors());
+		}
+		if($movimientoInventarioModel->errorAfterInsert){
+			return $movimientoInventarioModel->errorAfterInsertMsg;
+		}
+		return $response;
 	}
 }

@@ -3,15 +3,18 @@
   <div class="card-header">
     <div class="row justify-content-between">
       <div class="col-12 col-md-3 offset-md-9 mt-2 mt-md-0 text-right">
-        <button type="button" class="btn btn-primary mb-2 mb-xl-0" id="btnCrear"><i class="fa-solid fa-plus"></i> Crear</button>
+        <button type="button" class="btn btn-primary mb-2 mb-xl-0" id="btnCrear">
+          <i class="fa-solid fa-plus"></i> Crear
+        </button>
       </div>
     </div>
   </div>
   <?php } ?>
   <div class="card-body">
     <div class="table-responsive">
-      <table id="table" class="table table-sm table-striped table-hover table-bordered w-100">
-        <thead> 
+      <table id="table" class="table table-sm table-striped table-hover table-bordered w-100"
+        aria-describedby="Tabla de Compras">
+        <thead>
           <tr>
             <th>Código</th>
             <th>Usuario</th>
@@ -19,8 +22,9 @@
             <th>T. Productos</th>
             <th>Observación</th>
             <th>Proveedor</th>
-            <th>Neto</th>
-            <th>Total</th>
+            <th>Total Compra</th>
+            <th>Total Costo</th>
+            <th>Ganancia</th>
             <th>Fecha Creación</th>
             <th>Acciones</th>
           </tr>
@@ -31,7 +35,8 @@
   </div>
 </div>
 
-<div class="modal fade modalFormulario" id="modalCrearEditarCompra" data-backdrop="static" data-keyboard="false" aria-labelledby="modalCrearEditarCompraLabel" aria-hidden="true">
+<div class="modal fade modalFormulario" id="modalCrearEditarCompra" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="modalCrearEditarCompraLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-xl">
     <div class="modal-content">
       <div class="modal-header">
@@ -47,7 +52,8 @@
               <div class="input-group-prepend">
                 <label class="input-group-text" for="selectEstado">Valor menor</label>
               </div>
-              <input type="color" disabled readonly class="form-control form-control-color" value="#ff7c70" title="Sin Asignar">
+              <input type="color" disabled readonly class="form-control form-control-color"
+                value="#ff7c70" title="Sin Asignar">
             </div>
           </div>
           <div class="col-6 col-md-3">
@@ -55,7 +61,8 @@
               <div class="input-group-prepend">
                 <label class="input-group-text" for="selectEstado">Producto nuevo</label>
               </div>
-              <input type="color" disabled readonly class="form-control form-control-color" value="#8ae287" title="Sin Asignar">
+              <input type="color" disabled readonly class="form-control form-control-color"
+                value="#8ae287" title="Sin Asignar">
             </div>
           </div>
           <div class="col-6 col-md-3">
@@ -63,7 +70,8 @@
               <div class="input-group-prepend">
                 <label class="input-group-text" for="selectEstado">Valor mayor</label>
               </div>
-              <input type="color" disabled readonly class="form-control form-control-color" value="#98c0f6" title="Sin Asignar">
+              <input type="color" disabled readonly class="form-control form-control-color"
+                value="#98c0f6" title="Sin Asignar">
             </div>
           </div>
           <div class="col-6 col-md-3 d-flex justify-content-end">
@@ -74,10 +82,12 @@
         </div>
 
         <div class="table-responsive mt-3">
-          <table id="tblProducts" class="table table-sm table-striped table-hover table-bordered w-100">
-            <thead> 
+          <table id="tblProducts" class="table table-sm table-striped table-hover table-bordered w-100"
+          aria-describedby="Tabla de Productos">
+            <thead>
               <tr>
-                <th>Referencia | Item</th>
+                <th>Referencia</th>
+                <th>Item</th>
                 <th>Descripción</th>
                 <th>Categoria</th>
                 <th>Ubicación</th>
@@ -99,12 +109,14 @@
           <div class="col-12 col-md-7">
             <div class="form-group">
               <label for="observacion-compra">Observación</label>
-              <textarea class="form-control" placeholder="Observación..." name="observacion-compra" id="observacion-compra" cols="30" rows="2"></textarea>
+              <textarea class="form-control" placeholder="Observación..."
+                name="observacion-compra" id="observacion-compra" cols="30" rows="2"></textarea>
             </div>
 
             <div class="form-group">
               <label class="mb-0" for="proveedor">Proveedor</label>
-              <select id="proveedor" name="proveedor" class="custom-select custom-select-sm select2" data-placeholder="Seleccione un proveedor..." data-allow-clear="1">
+              <select id="proveedor" name="proveedor" class="custom-select custom-select-sm select2"
+                data-placeholder="Seleccione un proveedor..." data-allow-clear="1">
                 <option></option>
               </select>
             </div>
@@ -139,7 +151,8 @@
   </div>
 </div>
 
-<div class="modal fade modalFormulario" id="modalSearchProd" data-backdrop="static" data-keyboard="false" aria-labelledby="modalSearchProdLabel" aria-hidden="true">
+<div class="modal fade modalFormulario" id="modalSearchProd" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="modalSearchProdLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
@@ -151,7 +164,8 @@
       <div class="modal-body">
         <form id="formSearch" class="formValid">
           <div class="d-flex">
-            <input placeholder="Buscar" type="text" id="buscar" name="buscar" class="form-control w-50" autocomplete="off">
+            <input placeholder="Buscar" type="text" id="buscar" name="buscar"
+              class="form-control w-50" autocomplete="off">
             <button type="submit" class="btn btn-primary ml-3" form="formSearch">
               <i class="fas fa-search"></i> Buscar
             </button>
@@ -170,7 +184,8 @@
   </div>
 </div>
 
-<div class="modal fade modalFormulario" id="modalProdCuenta" data-backdrop="static" data-keyboard="false" aria-labelledby="modalProdCuentaLabel" aria-hidden="true">
+<div class="modal fade modalFormulario" id="modalProdCuenta" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="modalProdCuentaLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
@@ -190,9 +205,11 @@
                   Referencia <span class="text-danger">*</span>
                 </label>
                 <div class="input-search">
-                  <input placeholder="Ingrese la referencia" data-campo="referencia" class="form-control soloLetras validarenie validaCampo inputVer volverMayuscula" id="referencia" name="referencia" type="text" minlength="1" maxlength="255" required autocomplete="off">
+                  <input placeholder="Ingrese la referencia" data-campo="referencia"
+                    class="form-control soloLetras validarenie validaCampo inputVer volverMayuscula" id="referencia"
+                    name="referencia" type="text" minlength="1" maxlength="255" required autocomplete="off">
                   <div class="input-group-append d-none">
-                    <button type="button" class="btn btn-secondary" id="btnSearchReferecnia">
+                    <button type="button" class="btn btn-secondary" id="btnSearchReferencia">
                       <i class="fas fa-filter"></i>
                     </button>
                   </div>
@@ -204,7 +221,9 @@
                 <label class="mb-0" for="item">
                   Item <span class="text-danger">*</span>
                 </label>
-                <input placeholder="Ingrese el ítem" type="text" id="item" name="item" class="form-control soloLetras validarPuntoComa validarSlash inputVer" minlength="1" maxlength="300" required autocomplete="off">
+                <input placeholder="Ingrese el ítem" type="text" id="item" name="item"
+                  class="form-control soloLetras validarPuntoComa validarSlash inputVer" minlength="1" maxlength="300"
+                  required autocomplete="off">
               </div>
             </div>
             <div class="col-12 col-md-6">
@@ -212,13 +231,16 @@
                 <label class="mb-0" for="descripcion">
                   Descripción <span class="text-danger">*</span>
                 </label>
-                <textarea class="form-control inputVer" id="descripcion" name="descripcion" minlength="1" required maxlength="500" placeholder="Ingrese la descripción" rows="1" autocomplete="off"></textarea>
+                <textarea class="form-control inputVer" id="descripcion" name="descripcion"
+                  minlength="1" required maxlength="500" placeholder="Ingrese la descripción"
+                  rows="1" autocomplete="off"></textarea>
               </div>
             </div>
             <div class="col-12 col-md-3">
               <div class="form-group form-valid">
                 <label class="mb-0" for="cateFiltro">Categoria</label>
-                <select id="cateFiltro" name="cateFiltro" class="custom-select select2" data-placeholder="Seleccione..." data-allow-clear="1">
+                <select id="cateFiltro" name="cateFiltro" class="custom-select select2"
+                  data-placeholder="Seleccione..." data-allow-clear="1">
                   <option></option>
                   <?php foreach ($categorias as $it) : ?>
                     <option value="<?=  $it->id?>"><?= $it->nombre ?></option>
@@ -229,7 +251,9 @@
             <div class="col-12 col-md-3 <?= $camposProducto["ubicacion"] == "1" ? '' : 'd-none' ?>">
               <div class="form-group form-valid">
                 <label class="mb-0" for="ubicacion">Ubicación</label>
-                <input class="form-control inputVer volverMayuscula" id="ubicacion" <?= $camposProducto["ubicacion"] == "1" ? '' : 'disabled' ?> name="ubicacion" type="text" minlength="0" maxlength="255" placeholder="Ingrese la ubicación" autocomplete="off">
+                <input class="form-control inputVer volverMayuscula" id="ubicacion"
+                  <?= $camposProducto["ubicacion"] == "1" ? '' : 'disabled' ?> name="ubicacion" type="text"
+                  minlength="0" maxlength="255" placeholder="Ingrese la ubicación" autocomplete="off">
               </div>
             </div>
             <!-- <div class="col-12 col-md-3 ?= $camposProducto['manifiesto'] == '1' ? '' : 'd-none' ?>">
@@ -248,7 +272,8 @@
                 <label class="mb-0" for="paca">
                   Paca X <span class="text-danger">*</span>
                 </label>
-                <input class="form-control inputFocusSelect inputVer soloNumeros" id="paca" name="paca" type="number" min="1" placeholder="Ingrese # por paca" autocomplete="off" required autocomplete="off">
+                <input class="form-control inputFocusSelect inputVer soloNumeros" id="paca" name="paca"
+                  type="number" min="1" placeholder="Ingrese # por paca" autocomplete="off" required autocomplete="off">
               </div>
             </div>
             <div class="col-12 col-md-3">
@@ -256,7 +281,8 @@
                 <label class="mb-0" for="stock">
                   Stock <span class="text-danger">*</span>
                 </label>
-                <input class="form-control inputFocusSelect inputVer" id="stock" name="stock" type="number" placeholder="Ingrese el stock" autocomplete="off" autocomplete="off" required>
+                <input class="form-control inputFocusSelect inputVer" id="stock" name="stock" type="number"
+                  placeholder="Ingrese el stock" autocomplete="off" autocomplete="off" required>
               </div>
             </div>
             <div class="col-12 col-md-3">
@@ -264,7 +290,9 @@
                 <label class="mb-0" for="precioVent">
                   Precio venta <span class="text-danger">*</span>
                 </label>
-                <input class="form-control inputPesos inputVer" data-valororiginal="0" id="precioVent" name="precioVent" type="tel" placeholder="Ingrese el precio de venta" autocomplete="off" autocomplete="off">
+                <input class="form-control inputPesos inputVer" data-valororiginal="0" id="precioVent"
+                  name="precioVent" type="tel" placeholder="Ingrese el precio de venta" autocomplete="off"
+                  autocomplete="off">
               </div>
             </div>
             <div class="col-12 col-md-3 <?= $camposProducto["costo"] == "1" ? '' : 'd-none' ?>">
@@ -272,7 +300,8 @@
                 <label class="mb-0" for="costo">
                   Costo <span class="text-danger">*</span>
                 </label>
-                <input class="form-control inputPesos inputVer" id="costo" name="costo" type="tel" placeholder="Ingrese el costo" autocomplete="off" autocomplete="off">
+                <input class="form-control inputPesos inputVer" id="costo" name="costo" type="tel"
+                  placeholder="Ingrese el costo" autocomplete="off" autocomplete="off">
               </div>
             </div>
           </div>
@@ -289,3 +318,7 @@
     </div>
   </div>
 </div>
+
+<script>
+  let MANEJACOSTO = <?= $camposProducto["costo"]; ?>;
+</script>

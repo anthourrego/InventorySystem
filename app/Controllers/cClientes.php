@@ -3,6 +3,7 @@
 namespace App\Controllers;
 use \Hermawan\DataTables\DataTable;
 use App\Models\mClientes;
+use App\Models\mSucursalesCliente;
 
 class cClientes extends BaseController {
 	public function index() {
@@ -169,6 +170,51 @@ class cClientes extends BaseController {
 			$resp['total_count'] = $clienteModel->where("estado", 1)->countAllResults();
 		}
 
+		return $this->response->setJSON($resp);
+	}
+
+	public function inicioAppCliente() {
+		$resp["success"] = false;
+		$data = (object) $this->request->getPost();
+		$clienteModel = new mClientes();
+		$sucursalModel = new mSucursalesCliente();
+
+		if (isset($data->username) && strlen(trim($data->username))) {
+
+			if (isset($data->password) && strlen(trim($data->password))) {
+
+				$clienteModel = $clienteModel->like('nombre', $data->username);
+				if ($clienteModel->countAllResults() > 0) {
+					
+					$cliente = $clienteModel->where('documento', $data->password)->get()->getRow();
+
+					if (!is_null($cliente)) {
+
+						$sucursales = $sucursalModel->select("id, nombre, direccion, telefono")
+							->where('id_cliente', $cliente->id)
+							->findAll();
+
+						$resp["success"] = true;
+						$resp['cliente'] = array(
+							"nombre" => $cliente->nombre,
+							"direccion" => $cliente->direccion,
+							"telefono" => $cliente->telefono,
+							"id" => $cliente->id,
+							"sucursales" => $sucursales,
+							"isAdmin" => ($data->username == "Neider")
+						);
+					} else {
+						$resp['msg'] = "No se encontro usuario";
+					}
+				} else {
+					$resp['msg'] = "No se encontro usuario";
+				}
+			} else {
+				$resp['msg'] = "No se encontro contraseña relacionada";
+			}
+		} else {
+			$resp['msg'] = "No se encontro usuario relacionado";
+		}
 		return $this->response->setJSON($resp);
 	}
 }

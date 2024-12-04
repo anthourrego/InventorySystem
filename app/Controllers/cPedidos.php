@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Entities\MovimientoInventarioEntity;
 use \Hermawan\DataTables\DataTable;
 use App\Models\mPedidos;
 use App\Models\mProductos;
@@ -11,10 +12,12 @@ use App\Models\mClientes;
 use App\Models\mPedidosProductos;
 use App\Models\mConfiguracion;
 use App\Models\mObservacionProductos;
+use App\Models\MovimientoInventarioModel;
 use App\Models\mVentas;
 use App\Models\mVentasProductos;
 use App\Models\mPedidosCajas;
 use App\Models\mPedidosCajasProductos;
+use App\Models\mSucursalesCliente;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
 use \PhpOffice\PhpSpreadsheet\IOFactory;
@@ -32,7 +35,9 @@ class cPedidos extends BaseController {
 		$this->LDataTables();
 		$this->LMoment();
 
-		$this->content['manejaEmpaque'] = (!session()->has("manejaEmpaque") || session()->get("manejaEmpaque") == "1" ? "1" : "0");
+		$this->content['manejaEmpaque'] = (
+			!session()->has("manejaEmpaque") || session()->get("manejaEmpaque") == "1" ? "1" : "0"
+		);
 
 		$this->content['usuario'] = (session()->has("id_user") ? session()->get("id_user") : null);
 
@@ -59,26 +64,30 @@ class cPedidos extends BaseController {
 		$mClientes = new mClientes();
 		$this->content["cantidadClientes"] = $mClientes->where("estado", 1)->countAllResults();
 
-    $mConfiguracion = new mConfiguracion();
+    	$mConfiguracion = new mConfiguracion();
 
 		$dataPref = (session()->has("prefijoPed") ? session()->get("prefijoPed") : '');
 		$cantDigitos = (session()->has("digitosPed") ? session()->get("digitosPed") : 0);
 
-    $dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoPed")->first();
+		$dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoPed")->first();
 
-		$this->content["nroPedido"] = $dataPref . str_pad((is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1)), $cantDigitos, "0", STR_PAD_LEFT);
+		$value = (is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1));
+		$this->content["nroPedido"] = $dataPref . str_pad($value, $cantDigitos, "0", STR_PAD_LEFT);
 
 		$this->content["prefijoValido"] = ($dataPref != '' ? 'S' : 'N');
 
 		$this->content["pedido"] = null;
 
-		$this->content["inventario_negativo"] = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
+		$this->content["inventario_negativo"] = (
+			session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0'
+		);
 
 		$this->content["cantidad_despachar"] = (session()->has("cantDespachar") ? session()->get("cantDespachar") : '6');
 
 		$this->content["camposProducto"] = [
 			"item" => (session()->has("itemProducto") ? session()->get("itemProducto") : '0'),
-			"paca" => (session()->has("pacaProducto") ? session()->get("pacaProducto") : '0')
+			"paca" => (session()->has("pacaProducto") ? session()->get("pacaProducto") : '0'),
+			"ventaPaca" => (session()->has("ventaXPaca") ? session()->get("ventaXPaca") : '0')
  		];
 
 		 $this->content["editarPedido"] = 'S';
@@ -108,8 +117,8 @@ class cPedidos extends BaseController {
 		$productos = $mPedidosProductos->select("
 				p.id,
 				pedidosproductos.id AS idProductoPedido,
-				p.referencia, 
-				p.item, 
+				p.referencia,
+				p.item,
 				p.descripcion,
 				(p.stock + pedidosproductos.cantidad) AS stock,
 				pedidosproductos.cantidad,
@@ -118,8 +127,20 @@ class cPedidos extends BaseController {
 				pedidosproductos.valor AS valorUnitarioOriginal,
 				pedidosproductos.valor_original,
 				p.precio_venta,
-				(pedidosproductos.valor * pedidosproductos.cantidad) AS valorTotal
+				(pedidosproductos.valor * pedidosproductos.cantidad) AS valorTotal,
+				SUB_PC.cantidadEnCaja,
+				SUB_PC.productoEnCajas
 			")->join("productos AS p", "pedidosproductos.id_producto = p.id")
+			->join("(
+				SELECT
+					PCP.id_producto,
+					SUM(PCP.cantidad) AS cantidadEnCaja,
+					GROUP_CONCAT(DISTINCT(PC.numero_caja) ORDER BY PC.numero_caja ASC SEPARATOR ', ') AS productoEnCajas
+				FROM pedidoscajas PC
+					LEFT JOIN pedidoscajasproductos PCP ON PC.ID = PCP.id_caja
+				WHERE PC.id_pedido = {$pedido->id}
+				GROUP BY PCP.id_producto
+			) AS SUB_PC", "pedidosproductos.id_producto = SUB_PC.id_producto", "LEFT")
 			->where("pedidosproductos.id_pedido", $pedido->id)
 			->where("pedidosproductos.cantidad > 0")
 			->findAll();
@@ -156,7 +177,9 @@ class cPedidos extends BaseController {
 		$mClientes = new mClientes();
 		$this->content["cantidadClientes"] = $mClientes->where("estado", 1)->countAllResults();
 		$this->content["cantidadVendedores"] = $this->cantidadVendedores();
-		$this->content["inventario_negativo"] = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
+		$this->content["inventario_negativo"] = (
+			session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0'
+		);
 		$this->content["cantidad_despachar"] = (session()->has("cantDespachar") ? session()->get("cantDespachar") : '6');
 		$this->content["camposProducto"] = [
 			"item" => (session()->has("itemProducto") ? session()->get("itemProducto") : '0'),
@@ -178,6 +201,12 @@ class cPedidos extends BaseController {
 
 		$dataPref = (session()->has("prefijoPed") ? session()->get("prefijoPed") : '');
 
+		$subQuery = $this->db->table("observacionproductos AS OP")
+					->select("PP.id_pedido AS id_pedido, COUNT(PP.id_producto) AS TotalProductosReportados")
+					->join("pedidosproductos PP", "OP.id_pedido_producto = PP.id", "left")
+					->where("OP.fecha_confirmacion IS NULL")
+					->groupBy("PP.id_pedido")->getCompiledSelect();
+
 		$query = $this->db->table('pedidos AS P')
 			->select("
 				P.id,
@@ -190,7 +219,7 @@ class cPedidos extends BaseController {
 				P.created_at,
 				P.updated_at,
 				P.estado,
-				CASE 
+				CASE
 					WHEN V.id IS NOT NULL
 						THEN CASE
 							WHEN V.leidoQR = 1
@@ -200,11 +229,22 @@ class cPedidos extends BaseController {
 					WHEN P.Estado = 'DE'
 						THEN 'Despachado'
 					WHEN P.Estado = 'PE'
-						THEN 'Pendiente' 
+						THEN 'Pendiente'
 					WHEN P.Estado = 'EP'
 						THEN 'En Proceso'
 					ELSE 'Empacado'
 				END AS NombreEstado,
+				CASE
+					WHEN P.Estado = 'DE'
+						THEN 1
+					WHEN P.Estado = 'PE'
+						THEN 2
+					WHEN P.Estado = 'EP'
+						THEN 3
+					WHEN V.id IS NOT NULL
+						THEN 5
+					ELSE 4
+				END AS Orden,
 				P.total,
 				S.direccion,
 				S.nombre AS NombreSucursal,
@@ -213,19 +253,21 @@ class cPedidos extends BaseController {
 				TC.TotalCajas,
 				V.codigo AS factura,
 				V.leidoQR,
-				CAST(SUBSTRING_INDEX(codigo, '$dataPref', -1) AS UNSIGNED) AS Delimitado
+				CAST(SUBSTRING_INDEX(codigo, '$dataPref', -1) AS UNSIGNED) AS Delimitado,
+				TPR.TotalProductosReportados
 			")->join('clientes AS C', 'P.id_cliente = C.id', 'left')
 			->join('sucursales AS S', 'P.id_sucursal = S.id', 'left')
 			->join('ciudades AS CUI', 'S.id_ciudad = CUI.id', 'left')
 			->join('usuarios AS U', 'P.id_vendedor = U.id', 'left')
 			->join('ventas AS V', 'P.id = V.id_pedido', 'left')
 			->join("(
-				SELECT 
+				SELECT
 					COUNT(id_pedido) AS TotalCajas
 					, id_pedido
 				FROM pedidoscajas
 				GROUP BY id_pedido
-			) AS TC", "P.id = TC.id_pedido", "left");
+			) AS TC", "P.id = TC.id_pedido", "left")
+			->join("({$subQuery}) TPR", "P.id = TPR.id_pedido", "left");
 
 		if($estado != "-1") {
 			if($estado == "FA") {
@@ -234,13 +276,13 @@ class cPedidos extends BaseController {
 							->where("V.leidoQR IS NULL")
 							->orWhere('V.leidoQR', '0')
 					->groupEnd();
-			} else if ($estado == "FQ") {
+			} elseif ($estado == "FQ") {
 				$query->where("V.id IS NOT NULL")
 					->groupStart()
 							->where("V.leidoQR IS NOT NULL")
 							->Where('V.leidoQR', 1)
 					->groupEnd();
-			} else if($estado == "EM") {
+			} elseif($estado == "EM") {
 				$query->where("(P.Estado IN('EM', 'FA') AND V.id IS NULL)");
 			} else {
 				$query->where("P.Estado", $estado);
@@ -250,7 +292,7 @@ class cPedidos extends BaseController {
 		return DataTable::of($query)->toJson(true);
 	}
 
-	public function eliminar(){
+	public function eliminar() {
 		$resp["success"] = false;
 		//Traemos los datos del post
 		$data = (object) $this->request->getPost();
@@ -265,13 +307,13 @@ class cPedidos extends BaseController {
 		foreach ($cajas as $it) {
 			
 			/* Eliminamos los productos de la caja actual */
-			if (!$mPedidosCajasProductos->where('id_caja', $it->id)->delete()) { 
+			if (!$mPedidosCajasProductos->where('id_caja', $it->id)->delete()) {
 				$contActProd = false;
 				break;
 			}
 
 			/* Eliminamos la caja */
-			if (!$mPedidosCajas->delete($it->id)) { 
+			if (!$mPedidosCajas->delete($it->id)) {
 				$contActProd = false;
 				break;
 			}
@@ -279,41 +321,51 @@ class cPedidos extends BaseController {
 
 		if ($contActProd == true) {
 			$mPedidosProductos = new mPedidosProductos();
-			$mProductos = new mProductos();
 			$mObservacionProductos = new mObservacionProductos();
+			$moveEntity = new MovimientoInventarioEntity(["tipo" => "I", "observacion" => "Elimia pedido {$data->codigo} con id {$data->id}"]);
+			$moveInventoryModel = new MovimientoInventarioModel();
 	
 			$productosPedidos = $mPedidosProductos->where("id_pedido", $data->id)->findAll();
-	
+
 			//Actualizamos el inventario de los productos
 			foreach ($productosPedidos as $it) {
-				$producto = $mProductos->asObject()->find($it->id_producto);
+
+				//Actualizamos los datos a cambiar
+				$moveEntity->id_producto = $it->id_producto;
+				$moveEntity->cantidad = $it->cantidad;
 				
-				$dataSave = [
-					"id" => $it->id_producto,
-					"stock" => ($producto->stock + $it->cantidad)
-				];
-	
-				if (!$mProductos->save($dataSave)) {
+				if (!$moveInventoryModel->save($moveEntity)) {
 					$contActProd = false;
 					break;
 				}
-	
+
+				if ($moveInventoryModel->errorAfterInsert) {
+					$contActProd = false;
+					break;
+				}
 				$mObservacionProductos->where('id_pedido_producto', $it->id)->where("tipo IS NULL")->delete();
 			}
 		}
 		
 		//Eliminamos todos los datos
 		if ($contActProd == true) {
-			if($mPedidosProductos->where("id_pedido", $data->id)->delete()){
-				$pedidos = new mPedidos();
-				if ($pedidos->delete($data->id)) { 
-					$resp["success"] = true;
-					$resp['msj'] = "Pedido eliminado correctamente";
+			//Actualizamos todos los movmientos de inventairo quitandole la relación con los pedidos
+			$moveInventoryModel->set("id_pedido", null)->where("id_pedido", $data->id);
+
+			if ($moveInventoryModel->update()) {
+				if($mPedidosProductos->where("id_pedido", $data->id)->delete()){
+					$pedidos = new mPedidos();
+					if ($pedidos->delete($data->id)) {
+						$resp["success"] = true;
+						$resp['msj'] = "Pedido eliminado correctamente";
+					} else {
+						$resp['msj'] = "Error al eliminar el pedido";
+					}
 				} else {
-					$resp['msj'] = "Error al eliminar el pedido";
+					$resp['msj'] = "Error al eliminar los productos del pedido.";
 				}
 			} else {
-				$resp['msj'] = "Error al eliminar los productos del pedido.";
+				$resp['msj'] = "Error al actualizar el inventario.";
 			}
 		} else {
 			$resp['msj'] = "Error al actualizar el inventario.";
@@ -335,17 +387,14 @@ class cPedidos extends BaseController {
 		$valorTotal = 0;
 		$prod = json_decode($dataPost->productos);
 
-		$productoModel = new mProductos();
 		$pedidoModel = new mPedidos();
 		$mPedidosProductos = new mPedidosProductos();
-    $mConfiguracion = new mConfiguracion();
-
-    $dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoPed")->first();
+		$mConfiguracion = new mConfiguracion();
 
 		$dataPref = (session()->has("prefijoPed") ? session()->get("prefijoPed") : '');
 		$cantDigitos = (session()->has("digitosPed") ? session()->get("digitosPed") : 0);
 
-    $dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoPed")->first();
+		$dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoPed")->first();
 
 		$numerPedido = str_pad((is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1)), $cantDigitos, "0", STR_PAD_LEFT);
 		$pedido = $dataPref . $numerPedido;
@@ -364,7 +413,7 @@ class cPedidos extends BaseController {
 				"pedido" => $pedido,
 				"id_cliente" => $dataPost->idCliente,
 				"id_vendedor" => $dataPost->idUsuario,
-        "id_sucursal" => $dataPost->idSucursal,
+				"id_sucursal" => $dataPost->idSucursal,
 				"impuesto" => 0,
 				"neto" => 0,
 				"total" => 0,
@@ -375,10 +424,13 @@ class cPedidos extends BaseController {
 
 			if($pedidoModel->save($dataSave)){
 				$dataSave["id"] = $pedidoModel->getInsertID();
+				$moventInventoryModel = new MovimientoInventarioModel();
+				$moventEntity = new MovimientoInventarioEntity(["tipo" => "S", "id_pedido" => $dataSave["id"]]);
+
 				foreach ($prod as $it) {
 					$dataProductoPedido = [
 						"id_pedido" => $dataSave["id"],
-            "id_producto" => $it->id,
+						"id_producto" => $it->id,
 						"cantidad" => $it->cantidad,
 						"valor" => $it->valorUnitario,
 						"valor_original" => $it->precio_venta
@@ -386,16 +438,21 @@ class cPedidos extends BaseController {
 
 					$valorTotal = $valorTotal + ($it->cantidad * $it->valorUnitario);
 
-					$product = $productoModel->find($it->id);
-					$product["stock"] = $product["stock"] - $it->cantidad;
-
 					if (!$mPedidosProductos->save($dataProductoPedido)) {
 						$resp["msj"] = "Ha ocurrido un error al guardar los productos." . listErrors($mPedidosProductos->errors());
 						break;
 					}
 
-					if(!$productoModel->save($product)){
-						$resp["msj"] = "Error al guardar al actualizar el producto. " . listErrors($productoModel->errors());
+					$moventEntity->id_producto = $it->id;
+					$moventEntity->cantidad = $it->cantidad;
+
+					if(!$moventInventoryModel->save($moventEntity)){
+						$resp["msj"] = "Error al guardar al registrar el movimiento. " . listErrors($moventInventoryModel->errors());
+						break;
+					}
+
+					if($moventInventoryModel->errorAfterInsert){
+						$resp["msj"] = $moventInventoryModel->errorAfterInsertMsg;
 						break;
 					}
 				}
@@ -462,8 +519,8 @@ class cPedidos extends BaseController {
 		$mPedidos = new mPedidos();
 		$mPedidosProductos = new mPedidosProductos();
 		$mObservacionProductos = new mObservacionProductos();
-
-		$pediOrigi = $mPedidos->asObject()->where("id", $dataPost->idPedido)->first();
+		$moventInventoryModel = new MovimientoInventarioModel();
+		$moventEntity = new MovimientoInventarioEntity(["id_pedido" => $dataPost->idPedido]);
 		
 		if (count($prod) > 0) {
 			$this->db->transBegin();
@@ -482,10 +539,10 @@ class cPedidos extends BaseController {
 			if ($dataPost->estado == 'EM' && $dataPost->regresarEmpaque == 1) {
 				$dataSave['estado'] = 'EP';
 				$dataSave['fin_empaque'] = null;
-			} 
+			}
 
 			if($mPedidos->save($dataSave)){
-				//Tramos los productos actuales para comparalos con los que ingresan
+				//mostramos los productos actuales para comparalos con los que ingresan
 				$productoActuales = $mPedidosProductos->asArray()->where("id_pedido", $dataPost->idPedido)->findAll();
 
 				foreach ($prod as $it) {
@@ -499,7 +556,10 @@ class cPedidos extends BaseController {
 						}
 
 						//Validamos si los valores y las cantidades cambian
-						if($it->cantidad != $productoActuales[$productoAct]["cantidad"] || $it->valorUnitario != $productoActuales[$productoAct]["valor"]) {
+						if(
+							$it->cantidad != $productoActuales[$productoAct]["cantidad"]
+							|| $it->valorUnitario != $productoActuales[$productoAct]["valor"]
+						) {
 							$cantidadNueva = $productoActuales[$productoAct]["cantidad"] - $it->cantidad;
 							
 							$dataProductoPedido = [
@@ -514,11 +574,18 @@ class cPedidos extends BaseController {
 							}
 
 							if (!isset($it->motivoDiferencia)) {
-								$product = $mProductos->find($it->id);
-								$product["stock"] = $product["stock"] + $cantidadNueva;
-	
-								if(!$mProductos->save($product)){
-									$resp["msj"] = "Error al guardar al actualizar el producto. " . listErrors($mProductos->errors());
+								$moventEntity->id_producto = $it->id;
+								$moventEntity->tipo = ($cantidadNueva > 0 ? "I" : "S");
+								$moventEntity->cantidad = abs($cantidadNueva);
+								$moventEntity->observacion = ($cantidadNueva > 0 ? "Disminuye" : "Aumenta") . " el producto por edición del pedido {$dataPost->codigoPedido}";
+								
+								if(!$moventInventoryModel->save($moventEntity)){
+									$resp["msj"] = "Error al guardar al registrar el movimiento. " . listErrors($moventInventoryModel->errors());
+									break;
+								}
+
+								if($moventInventoryModel->errorAfterInsert){
+									$resp["msj"] = $moventInventoryModel->errorAfterInsertMsg;
 									break;
 								}
 							}
@@ -541,17 +608,6 @@ class cPedidos extends BaseController {
 								$resp["msj"] = "Error al guardar la observación del producto. " . listErrors($mObservacionProductos->errors());
 								break;
 							}
-
-							if ($it->motivoDiferencia == "2") {
-								$cantidadNueva = $productoActuales[$productoAct]["cantidad"] - $it->cantidad;
-								$product = $mProductos->find($it->id);
-								$product["stock"] = $product["stock"] + $cantidadNueva;
-
-								if(!$mProductos->save($product)){
-									$resp["msj"] = "Error al guardar el producto. " . listErrors($mProductos->errors());
-									break;
-								}
-							}
 						}
 
 						$valorTotal = $valorTotal + ($it->cantidad * $it->valorUnitario);
@@ -567,17 +623,25 @@ class cPedidos extends BaseController {
 						];
 	
 						$valorTotal = $valorTotal + ($it->cantidad * $it->valorUnitario);
-	
-						$product = $mProductos->find($it->id);
-						$product["stock"] = $product["stock"] - $it->cantidad;
+
 	
 						if (!$mPedidosProductos->save($dataProductoPedido)) {
 							$resp["msj"] = "Ha ocurrido un error al guardar los productos." . listErrors($mPedidosProductos->errors());
 							break;
 						}
 	
-						if(!$mProductos->save($product)){
-							$resp["msj"] = "Error al guardar al actualizar el producto. " . listErrors($mProductos->errors());
+						$moventEntity->id_producto = $it->id;
+						$moventEntity->tipo = "S";
+						$moventEntity->cantidad = $it->cantidad;
+						$moventEntity->observacion = "Agrega el producto nuevo por edición de la venta {$dataPost->codigoPedido}";
+						
+						if(!$moventInventoryModel->save($moventEntity)){
+							$resp["msj"] = "Error al guardar al registrar el movimiento. " . listErrors($moventInventoryModel->errors());
+							break;
+						}
+
+						if($moventInventoryModel->errorAfterInsert){
+							$resp["msj"] = $moventInventoryModel->errorAfterInsertMsg;
 							break;
 						}
 
@@ -603,16 +667,23 @@ class cPedidos extends BaseController {
 
 				//Eliminamos los productos restantes de la venta
 				foreach ($productoActuales as $it) {
+					$it = is_object($it) ? $it : (object) $it;
 
-					$mObservacionProductos->where('id_pedido_producto', $it["id"])->delete();
+					$mObservacionProductos->where('id_pedido_producto', $it->id)->delete();
 
-					if($mPedidosProductos->delete($it["id"])) {
+					if($mPedidosProductos->delete($it->id)) {
+						$moventEntity->id_producto = $it->id_producto;
+						$moventEntity->tipo = "I";
+						$moventEntity->cantidad = $it->cantidad;
+						$moventEntity->observacion = "Elimina el producto nuevo por edición de la venta {$dataPost->codigoPedido}";
+						
+						if(!$moventInventoryModel->save($moventEntity)){
+							$resp["msj"] = "Error al guardar al registrar el movimiento. " . listErrors($moventInventoryModel->errors());
+							break;
+						}
 
-						$product = $mProductos->find($it["id_producto"]);
-						$product["stock"] = $product["stock"] + $it["cantidad"];
-	
-						if(!$mProductos->save($product)){
-							$resp["msj"] = "Error al guardar al actualizar el inventario del producto eliminado. " . listErrors($mProductos->errors());
+						if($moventInventoryModel->errorAfterInsert){
+							$resp["msj"] = $moventInventoryModel->errorAfterInsertMsg;
 							break;
 						}
 					} else {
@@ -651,21 +722,18 @@ class cPedidos extends BaseController {
 
 	public function cantidadVendedores(){
 		$mUsuarios = new mUsuarios();
-
-		$vendedores = $mUsuarios->join("(
-											SELECT 
-												usuarioId,
-												perfilId, 
-												COUNT(*) AS Vendedor 
-											FROM permisosusuarioperfil 
-											WHERE permiso = '61' 
-											GROUP BY usuarioId, perfilId) AS pup", 
-											"(CASE WHEN usuarios.perfil IS NULL THEN usuarios.id = pup.usuarioId ELSE usuarios.perfil = pup.perfilId END)", "inner", 
-											false)
-											->where("usuarios.estado", 1)
-											->countAllResults();
-		
-		return $vendedores;
+		return $mUsuarios->join("(
+			SELECT
+				usuarioId,
+				perfilId,
+				COUNT(*) AS Vendedor
+			FROM permisosusuarioperfil
+			WHERE permiso = '61'
+			GROUP BY usuarioId, perfilId) AS pup",
+			"(CASE WHEN usuarios.perfil IS NULL THEN usuarios.id = pup.usuarioId ELSE usuarios.perfil = pup.perfilId END
+		)", "inner", false)
+		->where("usuarios.estado", 1)
+		->countAllResults();
 	}
 
 	public function estadoPedido(){
@@ -764,7 +832,7 @@ class cPedidos extends BaseController {
 				->findAll();
 	
 				$manifiestos = [];
-				foreach ($productos as $key => $value) {
+				foreach ($productos as $value) {
 					if (!is_null($value->idManifiesto)) {
 						$enc = array_search($value->idManifiesto, array_column($manifiestos, "id"));
 						if ($enc === false) {
@@ -802,7 +870,6 @@ class cPedidos extends BaseController {
 		$mPedidos = new mPedidos();
 		$mVentasProductos = new mVentasProductos();
 		$mPedidosCajas = new mPedidosCajas();
-		$mPedidosCajasProductos = new mPedidosCajasProductos();
 		$mConfiguracion = new mConfiguracion();
 
 		$this->content['cajas'] = [];
@@ -906,19 +973,24 @@ class cPedidos extends BaseController {
 			$emailEmpresa = $mConfiguracion->select("valor, campo")->where('campo', "emailEmpresa")->get()->getRow('valor');
 
 			if (
-				!is_null($emailEmpresa) 
-				&& $emailEmpresa != '' 
-				&& strpos($emailEmpresa, '@') !== false 
+				!is_null($emailEmpresa)
+				&& $emailEmpresa != ''
+				&& strpos($emailEmpresa, '@') !== false
 				&& strpos($emailEmpresa, '.') !== false
 			) {
 				$body = "<div>
 					<h3>Descarga Factura QR</h3>
 					<p>
-						Se ha descargado la factura " . $this->content['factura']->codigo . " por un total de " . $this->content['factura']->total . " desde la opción del QR
+						Se ha descargado la factura " . $this->content['factura']->codigo .
+						" por un total de " . $this->content['factura']->total . " desde la opción del QR
 					</p>
 				</div>";
 
-				$this->content['respuestaCorreo'] = sendEmail($mConfiguracion, [$emailEmpresa], "Descarga Factura " . $this->content['factura']->codigo, $body);
+				$this->content['respuestaCorreo'] = sendEmail(
+					$mConfiguracion
+					, [$emailEmpresa]
+					, "Descarga Factura " . $this->content['factura']->codigo, $body
+				);
 			}
 
 			$mClientes = new mClientes();
@@ -968,16 +1040,20 @@ class cPedidos extends BaseController {
 		$mPedidosProductos = new mPedidosProductos();
 		$ventaModel = new mVentas();
 		$mVentasProductos = new mVentasProductos();
-		$mPedidosCajas = new mPedidosCajas();
 
 		$dataConse = $mConfiguracion->select("valor")->where("campo", "consecutivoFact")->first();
 		$cantDigitos = (session()->has("digitosFact") ? session()->get("digitosFact") : 0);
 
 		$numerVenta = str_pad((is_null($dataConse) ? 1 : (((int) $dataConse->valor) + 1)), $cantDigitos, "0", STR_PAD_LEFT);
-		$codigo = (session()->has("prefijoFact") ? session()->get("prefijoFact") : (isset($data->prefijo) ? $data->prefijo : '')) . $numerVenta;
+		$prefijoVal = (isset($data->prefijo) ? $data->prefijo : '');
+		$codigo = (session()->has("prefijoFact") ? session()->get("prefijoFact") : $prefijoVal) . $numerVenta;
 
 		$pedido = $pedidoModel->find($data->id);
 		$pedidoProductos = $mPedidosProductos->where("id_pedido", $data->id)->findAll();
+
+		$fechaVencimiento = $this->calculateMaturiyInvoice($pedido->id_sucursal);
+
+		$descuento = $this->calculateDiscount($pedido->total);
 
 		$ventaSave = [
 			"codigo" => $codigo,
@@ -989,7 +1065,9 @@ class cPedidos extends BaseController {
 			"total" => $pedido->total,
 			"metodo_pago" => $pedido->metodo_pago,
 			"id_sucursal" => $pedido->id_sucursal,
-			"id_pedido" => $data->id
+			"id_pedido" => $data->id,
+			"fecha_vencimiento" => $fechaVencimiento->format('Y-m-d'),
+			"descuento" => $descuento,
 		];
 
 		if ($qr == true) {
@@ -1062,9 +1140,12 @@ class cPedidos extends BaseController {
 		")->join('usuarios AS U', 'pedidoscajas.id_empacador = U.id', 'left')
 		->where("id_pedido", $idPedido)->findAll();
 
-		foreach ($pedido->cajas as $key => $value) {
+		foreach ($pedido->cajas as $value) {
 			$value->{'infoCaja'} = $mPedidosCajasProductos->select("
-				COUNT(*) AS Total, COUNT(DISTINCT(P.referencia)) AS TotalRef, pedidoscajasproductos.id_caja
+				COUNT(*) AS Total,
+				COUNT(DISTINCT(P.referencia)) AS TotalRef,
+				pedidoscajasproductos.id_caja,
+				GROUP_CONCAT(DISTINCT(P.referencia) SEPARATOR ' | ') AS referenciasEnCajas
 			")->join('productos P', 'pedidoscajasproductos.id_producto = P.id', 'left')
 			->where("pedidoscajasproductos.id_caja", $value->id)
 			->groupBy("pedidoscajasproductos.id_caja")
@@ -1189,6 +1270,34 @@ class cPedidos extends BaseController {
 
 	public function downloadExcel() {
 		return $this->response->download(ASSETS_PATH .  "files/plantillaPedidos.xlsx", null)->setFileName("plantilla.xlsx");
+	}
+
+	private function calculateMaturiyInvoice($idSucursal) {
+		$mConfiguracion = new mConfiguracion();
+		$mSucursalesCliente = new mSucursalesCliente();
+		$fechaVencimiento = new \DateTime();
+		
+		$diasVencimientoSucursal = $mSucursalesCliente->asObject()->find($idSucursal)->dias_vencimiento_factura;
+
+		if (!is_null($diasVencimientoSucursal) && $diasVencimientoSucursal > 0) {
+			$fechaVencimiento->modify("+{$diasVencimientoSucursal} days");
+		} else {
+			$diasVencimientoGeneral = $mConfiguracion->select("valor")->where("campo", "diasVencimientoVenta")->first();
+			if (!is_null($diasVencimientoGeneral->valor) && $diasVencimientoGeneral->valor > 0) {
+				$fechaVencimiento->modify("+{$diasVencimientoGeneral->valor} days");
+			}
+		}
+		return $fechaVencimiento;
+	}
+
+	private function calculateDiscount($valueBill) {
+		$mConfiguracion = new mConfiguracion();
+		$porcentajeDescuentoGeneral = $mConfiguracion->select("valor")->where("campo", "porcentajeDescuento")->first();
+		$totalDiscount = 0;
+		if (!is_null($porcentajeDescuentoGeneral->valor) && $porcentajeDescuentoGeneral->valor > 0) {
+			$totalDiscount = ($porcentajeDescuentoGeneral->valor * $valueBill) / 100;
+		}
+		return $totalDiscount;
 	}
 
 }

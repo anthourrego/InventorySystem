@@ -83,7 +83,7 @@ class cProductosReportados extends BaseController {
         OP.motivo AS motivo,
         PP.valor AS valorProductoPedido,
         PP.id_producto AS idProducto,
-        CONCAT(P.referencia, ' | ', P.item) AS referenciaItem,
+        CONCAT(P.referencia, ' | ', IF(P.item IS NULL, '', P.item)) AS referenciaItem,
         P.descripcion,
         P.descripcion AS codigo,
         PP.id_pedido AS idPedido,
@@ -138,7 +138,6 @@ class cProductosReportados extends BaseController {
 		if($resp["success"] == false || $this->db->transStatus() === false) {
 			$this->db->transRollback();
 		} else {
-			//$this->db->transRollback();
 			$this->db->transCommit();
 		}
 		return $this->response->setJSON($resp);
