@@ -1283,7 +1283,7 @@ class cPedidos extends BaseController {
 			$fechaVencimiento->modify("+{$diasVencimientoSucursal} days");
 		} else {
 			$diasVencimientoGeneral = $mConfiguracion->select("valor")->where("campo", "diasVencimientoVenta")->first();
-			if (!is_null($diasVencimientoGeneral->valor) && $diasVencimientoGeneral->valor > 0) {
+			if (!is_null($diasVencimientoGeneral) && !is_null($diasVencimientoGeneral->valor) && $diasVencimientoGeneral->valor > 0) {
 				$fechaVencimiento->modify("+{$diasVencimientoGeneral->valor} days");
 			}
 		}
@@ -1294,7 +1294,7 @@ class cPedidos extends BaseController {
 		$mConfiguracion = new mConfiguracion();
 		$porcentajeDescuentoGeneral = $mConfiguracion->select("valor")->where("campo", "porcentajeDescuento")->first();
 		$totalDiscount = 0;
-		if (!is_null($porcentajeDescuentoGeneral->valor) && $porcentajeDescuentoGeneral->valor > 0) {
+		if (!is_null($porcentajeDescuentoGeneral) && !is_null($porcentajeDescuentoGeneral->valor) && $porcentajeDescuentoGeneral->valor > 0) {
 			$totalDiscount = ($porcentajeDescuentoGeneral->valor * $valueBill) / 100;
 		}
 		return $totalDiscount;
