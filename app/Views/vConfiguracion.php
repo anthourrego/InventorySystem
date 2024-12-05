@@ -321,7 +321,7 @@
                   </div>
                 </div>
                 <div id="content-preview-logoLogin" class="d-none text-center">
-                  <img id="imgFotoLogoLogin" src="#" class="img-thumbnail h-100">
+                  <img id="imgFotologoLogin" src="#" class="img-thumbnail h-100">
                   <button type="button" onclick="eliminarImagen('logoLogin', 'Logo Empresa')" class="btn btn-danger btn-sm btn-eliminar-foto"><i class="fas fa-times"></i></button>
                 </div>
               </div>
@@ -337,7 +337,7 @@
                   </div>
                 </div>
                 <div id="content-preview-logoFondoLogin" class="d-none text-center">
-                  <img id="imgFotoLogoFondoLogin" src="#" class="img-thumbnail h-100">
+                  <img id="imgFotologoFondoLogin" src="#" class="img-thumbnail h-100">
                   <button type="button" onclick="eliminarImagen('logoFondoLogin', 'Logo Empresa')" class="btn btn-danger btn-sm btn-eliminar-foto"><i class="fas fa-times"></i></button>
                 </div>
               </div>
