@@ -14,7 +14,7 @@
         </select>
       </div>
       </div>
-      <div class="col-12 col-md-9 d-none d-md-block">
+      <div class="col-12 col-md-7 d-none d-md-block">
         <button type="button" class="btn btn-outline-primary btn-lg active btn-fast-filter" data-filter="-1">Todos</button>
         <button type="button" class="btn btn-fullpay btn-fast-filter" data-filter="2">Pago Completo</button>
         <button type="button" class="btn btn-partialpay btn-fast-filter" data-filter="1">Con Abonos</button>
@@ -22,9 +22,17 @@
         <button type="button" class="btn btn-expired btn-fast-filter" data-filter="3">Vencidos</button>
         <button type="button" class="btn btn-expiredwithoutpayment btn-fast-filter" data-filter="4">Vencidos Con Abono</button>
       </div>
-      <?php if (validPermissions([1007], true) && $facturaSinFecha > 0) { ?>
       <div class="col-12 col-md-3 mt-3 mt-md-0">
-        <button type="button" class="btn btn-primary float-right w-100 w-md-50" id="assign-dates">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="outstandingBalance">Saldo Pendiente</label>
+          </div>
+          <input type="text" id="outstandingBalance" class="form-control" disabled value="$ 0">
+        </div>
+      </div>
+      <?php if (validPermissions([1007], true) && $facturaSinFecha > 0) { ?>
+      <div class="col-12 col-md-2 mt-3 mt-md-0">
+        <button type="button" class="btn btn-primary float-right w-100" id="assign-dates">
           <i class="fa-regular fa-calendar-plus"></i> Asignar Fechas
         </button>
       </div>
@@ -248,4 +256,5 @@
 <script>
   const TIPOSABONO = <?= json_encode(TIPOSABONO); ?>;
   const FACTURASINFECHA = <?= $facturaSinFecha ?>;
+  const $outstandingBalance = '<?= $outstandingBalance ?>';
 </script>

@@ -28,7 +28,10 @@ class cCuentasCobrar extends BaseController {
 
 		$facturaVencidas = $mVentas->where("fecha_vencimiento IS NULL")->countAllResults();
 
+		$mCuentasCobrar = new mCuentasCobrar();
+
 		$this->content['facturaSinFecha'] = $facturaVencidas;
+		$this->content['outstandingBalance'] = $mCuentasCobrar->getOutstandingBalance();
 
 		$this->content['css_add'][] = [
 			'CuentasCobrar.css'
@@ -58,8 +61,8 @@ class cCuentasCobrar extends BaseController {
 				V.descuento,
 				U.id AS IdVendedor,
 				U.nombre AS NombreVendedor,
-				(V.total - V.descuento) AS total,
-				((V.total - V.descuento) - (CASE WHEN TA.TotalAbonosVenta IS NULL THEN 0 ELSE TA.TotalAbonosVenta END)) AS ValorPendiente,
+				(V.total) AS total,
+				(V.total - (CASE WHEN TA.TotalAbonosVenta IS NULL THEN 0 ELSE TA.TotalAbonosVenta END)) AS ValorPendiente,
 				V.created_at,
 				(CASE WHEN TA.TotalAbonosVenta IS NULL THEN 0 ELSE TA.TotalAbonosVenta END) AS AbonosVenta,
 				V.fecha_vencimiento AS FechaVencimiento,
@@ -85,11 +88,11 @@ class cCuentasCobrar extends BaseController {
 		}
 	
 		if ($postData->type == "1") {
-			$query->where("IFNULL(TA.TotalAbonosVenta, 0) > 0 AND IFNULL(TA.TotalAbonosVenta, 0) < (V.total - V.descuento)");
+			$query->where("IFNULL(TA.TotalAbonosVenta, 0) > 0 AND IFNULL(TA.TotalAbonosVenta, 0) < (V.total)");
 		}
 
 		if ($postData->type == "2") {
-			$query->where("IFNULL(TA.TotalAbonosVenta, 0) >= (V.total - V.descuento)");
+			$query->where("IFNULL(TA.TotalAbonosVenta, 0) >= (V.total)");
 		}
 
 		if ($postData->type == "3" || $postData->type == "4") {
@@ -97,7 +100,7 @@ class cCuentasCobrar extends BaseController {
 		}
 		
 		if ($postData->type == "3") {
-			$query->where("IFNULL(TA.TotalAbonosVenta, 0) <=", "(V.total - V.descuento)");
+			$query->where("IFNULL(TA.TotalAbonosVenta, 0) <=", "(V.total)");
 		}
 
 		if ($postData->type == "4") {

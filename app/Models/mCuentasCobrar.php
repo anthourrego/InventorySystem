@@ -79,4 +79,22 @@ class mCuentasCobrar extends Model {
 			->where("AV.id", $id)
 			->get()->getResultObject();
 	}
+
+	public function getOutstandingBalance() {
+
+		$balancePaid = $this->select("SUM(valor) AS total")
+			->where("estado", "CO")
+			->get() ->getRow("total");
+
+		$balancePaid = is_null($balancePaid) ? 0 : (float) $balancePaid;
+
+		$totalInvoiced = $this->db->table("ventas")
+			->select("SUM(total) AS total")
+			->where("fecha_vencimiento IS NOT NULL")
+			->get()->getRow("total");
+
+		$totalInvoiced = is_null($totalInvoiced) ? 0 :(float) $totalInvoiced;
+
+		return ($totalInvoiced - $balancePaid);
+	}
 }

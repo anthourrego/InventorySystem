@@ -102,7 +102,7 @@ class mVentas extends Model {
 				DATE_FORMAT(V.fecha_vencimiento, '%Y-%m-%d') AS FechaVencimiento,
 				V.descuento,
 				IF(TA.TotalAbonosVenta IS NULL, 0, TA.TotalAbonosVenta) AS AbonosVenta,
-				((V.total - V.descuento) - IF(TA.TotalAbonosVenta IS NULL, 0, TA.TotalAbonosVenta)) AS ValorPendiente
+				((V.total) - IF(TA.TotalAbonosVenta IS NULL, 0, TA.TotalAbonosVenta)) AS ValorPendiente
 			")->join("clientes AS C", "V.id_cliente = C.id", "left")
 			->join("usuarios AS U", "V.id_vendedor = U.id", "left")
 			->join("sucursales AS S", "V.id_sucursal = S.id", "left")
