@@ -191,8 +191,8 @@ class cEmpaque extends BaseController {
 				pedidoscajasproductos.cantidad,
 				pedidoscajasproductos.created_at AS FechaAgregado,
 				p.id,
-				p.referencia, 
-				p.item, 
+				p.referencia,
+				p.item,
 				p.descripcion,
 				p.precio_venta
 			")->join("productos AS p", "pedidoscajasproductos.id_producto = p.id")
@@ -356,7 +356,7 @@ class cEmpaque extends BaseController {
 				$cantiFalta = ((double) $producPedi[0]->cantidad - ((double) $producActual[0]->cantidad));
 
 				if (!($cantiFalta > 0 && $dataCajaProd["cantidad"] <= $cantiFalta)) {
-					$res['msj'] = 'La cantidad supera a la cantidad faltante del pedido';	
+					$res['msj'] = 'La cantidad supera a la cantidad faltante del pedido';
 				} else {
 					$res['success'] = true;
 				}
@@ -364,7 +364,7 @@ class cEmpaque extends BaseController {
 			} else {
 	
 				if (!($dataCajaProd['cantidad'] > 0 && $dataCajaProd['cantidad'] <= $producPedi[0]->cantidad)) {
-					$res['msj'] = 'La cantidad supera a la registrada en el pedido';	
+					$res['msj'] = 'La cantidad supera a la registrada en el pedido';
 				} else {
 					$res['success'] = true;
 				}
@@ -575,6 +575,8 @@ class cEmpaque extends BaseController {
 			return $this->response->setJSON($responseDelete);
 		}
 
+		$pedido = $responseDelete['pedido'];
+
 		$productos = $this->pedidosPendientes($data->idPedido);
 		if(count($productos) == 0) {
 			$res['success'] = false;
@@ -632,7 +634,7 @@ class cEmpaque extends BaseController {
 
 			if($builder->update()) {
 				
-				$valorTotalPedido = $pedido[0]->total - $valorTotalPedido;
+				$valorTotalPedido = $pedido->total - $valorTotalPedido;
 
 				$builder = $this->db->table('pedidos')
 					->set("fin_empaque", date("Y-m-d H:i:s"))
@@ -702,6 +704,8 @@ class cEmpaque extends BaseController {
 			$res['success'] = false;
 			$res['msj'] = "El Pedido fue eliminado";
 			$res['recargar'] = true;
+		} else {
+			$res['pedido'] = $pedido[0];
 		}
 		return $res;
 	}
