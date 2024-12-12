@@ -874,7 +874,13 @@ class cReportes extends BaseController {
 		$datos = $this->mConfiguracion
 			->select("valor")
 			->where('campo', 'logoEmpresa')
-			->get()->getResult()[0];
+			->get()->getResult();
+			
+		if (count($datos) > 0) {
+		    $datos = $datos[0];
+		} else {
+		    $datos = (object) ["valor" => null];
+		}
 
 		$pdf->writeHTML($structurePrint, false, false, false, false, '');
 

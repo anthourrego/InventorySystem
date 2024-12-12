@@ -2,6 +2,7 @@ const rutaBase = `${base_url()}CuentasCobrar/`;
 let optionBillSelected = {};
 let sucursales = [];
 const btnAssignDates = document.getElementById("assign-dates");
+const inputOutstandingBalance = document.getElementById("outstandingBalance");
 let filtrosConfig = {
   type: "-1",
   branches: "",
@@ -258,6 +259,8 @@ let DTDataAccountsBill = $("#tblAbonos").DataTable({
 });
 
 $(function () {
+
+  inputOutstandingBalance.value = formatoPesos.format($outstandingBalance);
 
   $("#formAddAbono").submit(function (e) {
     e.preventDefault();
