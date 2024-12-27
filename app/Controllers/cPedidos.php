@@ -254,7 +254,8 @@ class cPedidos extends BaseController {
 				V.codigo AS factura,
 				V.leidoQR,
 				CAST(SUBSTRING_INDEX(codigo, '$dataPref', -1) AS UNSIGNED) AS Delimitado,
-				TPR.TotalProductosReportados
+				TPR.TotalProductosReportados,
+				P.observacion
 			")->join('clientes AS C', 'P.id_cliente = C.id', 'left')
 			->join('sucursales AS S', 'P.id_sucursal = S.id', 'left')
 			->join('ciudades AS CUI', 'S.id_ciudad = CUI.id', 'left')

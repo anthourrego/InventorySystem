@@ -22,6 +22,7 @@
             <th>Vendedor</th>
             <th>Fecha Creación</th>
             <th>Fecha Vence</th>
+            <th>Observación</th>
             <th>Acciones</th>
           </tr>
         </thead>

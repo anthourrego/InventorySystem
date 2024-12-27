@@ -69,7 +69,8 @@ class cCuentasCobrar extends BaseController {
 				V.id_pedido,
 				C.nombre AS NombreCliente,
 				S.nombre As Sucursal,
-				CU.nombre AS Ciudad
+				CU.nombre AS Ciudad,
+				V.observacion
 			")->join('clientes AS C', 'V.id_cliente = C.id', 'left')
 			->join('usuarios AS U', 'V.id_vendedor = U.id', 'left')
 			->join('sucursales AS S', 'V.id_sucursal = S.id', 'left')

@@ -380,8 +380,12 @@ div.dt-button-collection .dt-button {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 5;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
+}
+
+.text-descripcion:hover {
+  cursor: pointer;
 }
 
 .select2-container--bootstrap4.select2-container--focus .select2-selection {

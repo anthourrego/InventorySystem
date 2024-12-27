@@ -74,6 +74,13 @@ let DTCuentasCobrar = $("#table").DataTable({
         return moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A");
       }
     },
+    { 
+      data: 'observacion',
+      width: "20%",
+      render: function(data, type, row, meta) {
+        return `<span title="${data}" class="text-descripcion">${data}</span>`;
+      }
+    },
     {
       orderable: false,
       searchable: false,

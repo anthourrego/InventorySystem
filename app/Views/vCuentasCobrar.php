@@ -55,6 +55,7 @@
             <th>Saldo Pendiente</th>
             <th>Fecha Vence</th>
             <th>Fecha Creación</th>
+            <th>Observación</th>
             <th>Acciones</th>
           </tr>
         </thead>

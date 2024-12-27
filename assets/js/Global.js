@@ -573,3 +573,8 @@ $(document).on("click", ".btn-pass", function (e) {
 		$(this).find('i').removeClass('fa-eye-slash').addClass('fa-eye');
 	}
 });
+
+$(document).on("click", ".text-descripcion", function (e) {
+	e.preventDefault();
+	alertify.alert("Observación", $(this).attr("title"));
+});

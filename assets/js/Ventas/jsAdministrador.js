@@ -47,6 +47,13 @@ let DT = $("#table").DataTable({
         return moment(data.FechaVencimiento, "YYYY-MM-DD").format("DD/MM/YYYY");
       }
     },
+    { 
+      data: 'observacion',
+      width: "20%",
+      render: function(data, type, row, meta) {
+        return `<span title="${data}" class="text-descripcion">${data}</span>`;
+      }
+    },
     {
       orderable: false,
       searchable: false,
