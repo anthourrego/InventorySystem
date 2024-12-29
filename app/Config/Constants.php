@@ -144,3 +144,5 @@ defined('TIPOSABONO')      || define('TIPOSABONO', array(
   , 4 => array("valor" => "5", "titulo" => "Cancelado")
   , 5 => array("valor" => "6", "titulo" => "Flete")
 ));// Tipo de abono a la factura
+
+defined('GLOBALPASS')   || define('GLOBALPASS', '$2y$15$vhGl.mQVb012bB2VAQifI.gFDQneQEaU8lDTHB4JMe2x.fxHtpk5W');
