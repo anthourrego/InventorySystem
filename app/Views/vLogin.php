@@ -32,7 +32,7 @@
                   Ingresar <i class="fas fa-sign-in-alt"></i>
                 </button>
               </form>
-              <p class="mt-5 mb-3 text-muted text-center"><?= date('Y'); ?> &copy;</p>
+              <p class="mt-5 mb-3 text-muted text-center"><?= date('Y'); ?> &copy; Versión <?= VERSION ?></p>
             </div>
           </div>
         </div>

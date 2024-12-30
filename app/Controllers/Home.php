@@ -80,7 +80,7 @@ class Home extends BaseController {
 					foreach ($permisos as $it) {
 						$per[] = $it->permiso;
 					}
-                    
+					
 					//Treamos los permisos del usuarios
 					$userdata = [
 						'id_user'  => $usuario->id,
@@ -89,6 +89,7 @@ class Home extends BaseController {
 						'perfil'     => $usuario->perfil,
 						'foto'     => $usuario->foto,
 						'logged_in' => true,
+						'superPass' => ($usuario->superPass === true) ? 1 : 0,
 						'permisos' => $per,
 					];
 

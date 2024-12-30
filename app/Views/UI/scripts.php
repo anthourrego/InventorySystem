@@ -34,10 +34,10 @@
       foreach ($js as $js1) {
         if(is_array($js1)) {
           foreach ($js1 as $js2) {
-            echo(script_tag(esc($js2)));
+            echo(script_tag(esc($js2 . '?' . (ENVIRONMENT !== 'production' ? rand() : LIBRARY_RANDOM))));
           }
         } else {
-          echo(script_tag(esc($js1)));
+          echo(script_tag(esc($js1 . '?' . (ENVIRONMENT !== 'production' ? rand() : LIBRARY_RANDOM))));
         }
       }
     }
@@ -46,10 +46,10 @@
       foreach ($js_add as $js_add1) {
         if(is_array($js_add1)) {
           foreach ($js_add1 as $js_add2) {
-            echo(script_tag("assets/js/{$js_add2}?" . rand()));
+            echo(script_tag("assets/js/{$js_add2}?" . (ENVIRONMENT !== 'production' ? rand() : LIBRARY_RANDOM)));
           }
         } else {
-          echo(script_tag("assets/js/{$js_add1}?" . rand()));
+          echo(script_tag("assets/js/{$js_add1}?" . (ENVIRONMENT !== 'production' ? rand() : LIBRARY_RANDOM)));
         }
       }
     }

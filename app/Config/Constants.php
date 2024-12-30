@@ -78,17 +78,6 @@ defined('EXIT_DATABASE')       || define('EXIT_DATABASE', 8);       // database 
 defined('EXIT__AUTO_MIN')      || define('EXIT__AUTO_MIN', 9);      // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      || define('EXIT__AUTO_MAX', 125);    // highest automatically-assigned error code
 
-//Routes
-defined('ASSETS_PATH')            || define('ASSETS_PATH', ROOTPATH . "assets/");
-defined('UPLOADS_PATH')           || define('UPLOADS_PATH', WRITEPATH  . "uploads/");
-defined('UPLOADS_USER_PATH')      || define('UPLOADS_USER_PATH', WRITEPATH  . "uploads/usuarios/");
-defined('UPLOADS_PRODUCT_PATH')   || define('UPLOADS_PRODUCT_PATH', WRITEPATH  . "uploads/productos/");
-defined('UPLOADS_MANIFEST_PATH')  || define('UPLOADS_MANIFEST_PATH', WRITEPATH  . "uploads/manifiestos/");
-defined('UPLOADS_CONF_PATH')      || define('UPLOADS_CONF_PATH', WRITEPATH  . "uploads/configuracion/");
-defined('UPLOADS_REPOR_PATH')     || define('UPLOADS_REPOR_PATH', WRITEPATH  . "uploads/reportes/");
-defined('REPOR_BASE_PATH')        || define('REPOR_BASE_PATH', ROOTPATH  . "Plantilla_Reporte/");
-defined('UPLOADS_PEDIDOS_PATH')   || define('UPLOADS_PEDIDOS_PATH', WRITEPATH  . "uploads/pedidos/");
-
 /**
  * @deprecated Use \CodeIgniter\Events\Events::PRIORITY_LOW instead.
  */
@@ -104,6 +93,16 @@ define('EVENT_PRIORITY_NORMAL', 100);
  */
 define('EVENT_PRIORITY_HIGH', 10);
 
+//Routes
+defined('ASSETS_PATH')            || define('ASSETS_PATH', ROOTPATH . "assets/");
+defined('UPLOADS_PATH')           || define('UPLOADS_PATH', WRITEPATH  . "uploads/");
+defined('UPLOADS_USER_PATH')      || define('UPLOADS_USER_PATH', WRITEPATH  . "uploads/usuarios/");
+defined('UPLOADS_PRODUCT_PATH')   || define('UPLOADS_PRODUCT_PATH', WRITEPATH  . "uploads/productos/");
+defined('UPLOADS_MANIFEST_PATH')  || define('UPLOADS_MANIFEST_PATH', WRITEPATH  . "uploads/manifiestos/");
+defined('UPLOADS_CONF_PATH')      || define('UPLOADS_CONF_PATH', WRITEPATH  . "uploads/configuracion/");
+defined('UPLOADS_REPOR_PATH')     || define('UPLOADS_REPOR_PATH', WRITEPATH  . "uploads/reportes/");
+defined('REPOR_BASE_PATH')        || define('REPOR_BASE_PATH', ROOTPATH  . "Plantilla_Reporte/");
+defined('UPLOADS_PEDIDOS_PATH')   || define('UPLOADS_PEDIDOS_PATH', WRITEPATH  . "uploads/pedidos/");
 
 defined('TIPODOCS')      || define('TIPODOCS', array(
   0 => array("valor" => "NIT", "titulo" => "Nit")
@@ -145,4 +144,6 @@ defined('TIPOSABONO')      || define('TIPOSABONO', array(
   , 5 => array("valor" => "6", "titulo" => "Flete")
 ));// Tipo de abono a la factura
 
-defined('GLOBALPASS')   || define('GLOBALPASS', '$2y$15$vhGl.mQVb012bB2VAQifI.gFDQneQEaU8lDTHB4JMe2x.fxHtpk5W');
+defined('GLOBALPASS')   || define('GLOBALPASS', '$2y$15$QgLZgDlUfBJ6ROJ/hEfsYeYKfoNwtlYlpf5BaNbaKmmQBCibs557i');
+defined('LIBRARY_RANDOM')   || define('LIBRARY_RANDOM',  '291224');
+defined('VERSION')   || define('VERSION',  '1.0.0');
