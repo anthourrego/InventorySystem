@@ -8,7 +8,6 @@ use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
-use Config\Services;
 use Config\Database;
 
 /**
@@ -60,7 +59,7 @@ abstract class BaseController extends Controller
 
         // Preload any models, libraries, etc, here.
 
-        $this->routes = Services::routes();
+        $this->routes = service("routes");
         $this->db = Database::connect();
 
         $this->content['Project_Name'] = "Inventory System";
