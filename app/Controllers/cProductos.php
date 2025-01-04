@@ -587,7 +587,7 @@ class cProductos extends BaseController {
 			"P.item",
 			"P.descripcion",
 			"C.nombre",
-			"{$stringStock} As stock",
+			"{$stringStock}",
 			"P.cantPaca",
 			"P.costo",
 			"P.precio_venta",
