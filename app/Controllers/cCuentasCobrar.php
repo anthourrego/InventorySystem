@@ -26,11 +26,9 @@ class cCuentasCobrar extends BaseController {
 		//Buscamos facturas que no tengas fecha de vencimiento
 		$mVentas = new mVentas();
 
-		$facturaVencidas = $mVentas->where("fecha_vencimiento IS NULL")->countAllResults();
-
 		$mCuentasCobrar = new mCuentasCobrar();
 
-		$this->content['facturaSinFecha'] = $facturaVencidas;
+		$this->content['facturaSinFecha'] = $mVentas->where("fecha_vencimiento IS NULL")->countAllResults();
 		$this->content['outstandingBalance'] = $mCuentasCobrar->getOutstandingBalance();
 
 		$this->content['css_add'][] = [

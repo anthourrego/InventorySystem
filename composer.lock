@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7cf72acc5a500bd91e11c75f99da861d",
+    "content-hash": "2f65c7d82814df86cd72889dc2b020c2",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -51,16 +51,16 @@
         },
         {
             "name": "bpampuch/pdfmake",
-            "version": "0.2.16",
+            "version": "0.2.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bpampuch/pdfmake.git",
-                "reference": "6196207704f193734002ee509c286ef4645cb05e"
+                "reference": "bfe7fd32f743ea17f39ca2aa13efb641fc23e664"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bpampuch/pdfmake/zipball/6196207704f193734002ee509c286ef4645cb05e",
-                "reference": "6196207704f193734002ee509c286ef4645cb05e",
+                "url": "https://api.github.com/repos/bpampuch/pdfmake/zipball/bfe7fd32f743ea17f39ca2aa13efb641fc23e664",
+                "reference": "bfe7fd32f743ea17f39ca2aa13efb641fc23e664",
                 "shasum": ""
             },
             "type": "library",
@@ -85,9 +85,9 @@
             ],
             "support": {
                 "issues": "https://github.com/bpampuch/pdfmake/issues",
-                "source": "https://github.com/bpampuch/pdfmake/tree/0.2.16"
+                "source": "https://github.com/bpampuch/pdfmake/tree/0.2.17"
             },
-            "time": "2024-12-15T13:59:18+00:00"
+            "time": "2024-12-23T08:41:24+00:00"
         },
         {
             "name": "chillerlan/php-qrcode",
@@ -250,16 +250,16 @@
         },
         {
             "name": "codeigniter4/framework",
-            "version": "v4.5.6",
+            "version": "v4.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeigniter4/framework.git",
-                "reference": "7822476e6c672387b0ca1d64a74040ed28c42d9f"
+                "reference": "f253839c071abbef5262cbb8f49a6077dc5dd568"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeigniter4/framework/zipball/7822476e6c672387b0ca1d64a74040ed28c42d9f",
-                "reference": "7822476e6c672387b0ca1d64a74040ed28c42d9f",
+                "url": "https://api.github.com/repos/codeigniter4/framework/zipball/f253839c071abbef5262cbb8f49a6077dc5dd568",
+                "reference": "f253839c071abbef5262cbb8f49a6077dc5dd568",
                 "shasum": ""
             },
             "require": {
@@ -320,7 +320,7 @@
                 "slack": "https://codeigniterchat.slack.com",
                 "source": "https://github.com/codeigniter4/CodeIgniter4"
             },
-            "time": "2024-12-28T18:27:37+00:00"
+            "time": "2024-12-31T12:13:44+00:00"
         },
         {
             "name": "codeigniter4/translations",
@@ -570,16 +570,16 @@
         },
         {
             "name": "datatables.net/datatables.net",
-            "version": "2.1.8",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DataTables/Dist-DataTables.git",
-                "reference": "155c47bc13a0b44c1084887d597e33bddbff268b"
+                "reference": "fb1c55771232d22b1b41244066bbbbbc559654b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DataTables/Dist-DataTables/zipball/155c47bc13a0b44c1084887d597e33bddbff268b",
-                "reference": "155c47bc13a0b44c1084887d597e33bddbff268b",
+                "url": "https://api.github.com/repos/DataTables/Dist-DataTables/zipball/fb1c55771232d22b1b41244066bbbbbc559654b9",
+                "reference": "fb1c55771232d22b1b41244066bbbbbc559654b9",
                 "shasum": ""
             },
             "require": {
@@ -607,20 +607,20 @@
                 "forum": "https://datatables.net/forums",
                 "source": "https://github.com/DataTables/Dist-DataTables"
             },
-            "time": "2024-10-04T10:00:46+00:00"
+            "time": "2025-01-06T16:00:23+00:00"
         },
         {
             "name": "datatables.net/datatables.net-bs4",
-            "version": "2.1.8",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DataTables/Dist-DataTables-Bootstrap4.git",
-                "reference": "db510208c84584a1cf89a31607ef7a00083abf44"
+                "reference": "d45475abbcf5bf76a66e663a97c78e1d9479e5bc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DataTables/Dist-DataTables-Bootstrap4/zipball/db510208c84584a1cf89a31607ef7a00083abf44",
-                "reference": "db510208c84584a1cf89a31607ef7a00083abf44",
+                "url": "https://api.github.com/repos/DataTables/Dist-DataTables-Bootstrap4/zipball/d45475abbcf5bf76a66e663a97c78e1d9479e5bc",
+                "reference": "d45475abbcf5bf76a66e663a97c78e1d9479e5bc",
                 "shasum": ""
             },
             "require": {
@@ -651,7 +651,7 @@
                 "forum": "https://datatables.net/forums",
                 "source": "https://github.com/DataTables/Dist-DataTables-Bootstrap4"
             },
-            "time": "2024-10-04T10:02:22+00:00"
+            "time": "2025-01-06T16:01:39+00:00"
         },
         {
             "name": "datatables.net/datatables.net-buttons",
@@ -2202,16 +2202,16 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v7.2.0",
+            "version": "v7.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "6de263e5868b9a137602dd1e33e4d48bfae99c49"
+                "reference": "87a71856f2f56e4100373e92529eed3171695cfb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/6de263e5868b9a137602dd1e33e4d48bfae99c49",
-                "reference": "6de263e5868b9a137602dd1e33e4d48bfae99c49",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/87a71856f2f56e4100373e92529eed3171695cfb",
+                "reference": "87a71856f2f56e4100373e92529eed3171695cfb",
                 "shasum": ""
             },
             "require": {
@@ -2246,7 +2246,7 @@
             "description": "Finds files and directories via an intuitive fluent interface",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/finder/tree/v7.2.0"
+                "source": "https://github.com/symfony/finder/tree/v7.2.2"
             },
             "funding": [
                 {
@@ -2262,7 +2262,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-23T06:56:12+00:00"
+            "time": "2024-12-30T19:00:17+00:00"
         },
         {
             "name": "symfony/process",
@@ -2831,16 +2831,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.3.1",
+            "version": "v5.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "8eea230464783aa9671db8eea6f8c6ac5285794b"
+                "reference": "447a020a1f875a434d62f2a401f53b82a396e494"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/8eea230464783aa9671db8eea6f8c6ac5285794b",
-                "reference": "8eea230464783aa9671db8eea6f8c6ac5285794b",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/447a020a1f875a434d62f2a401f53b82a396e494",
+                "reference": "447a020a1f875a434d62f2a401f53b82a396e494",
                 "shasum": ""
             },
             "require": {
@@ -2883,9 +2883,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.3.1"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.4.0"
             },
-            "time": "2024-10-08T18:51:32+00:00"
+            "time": "2024-12-30T11:07:19+00:00"
         },
         {
             "name": "phar-io/manifest",
