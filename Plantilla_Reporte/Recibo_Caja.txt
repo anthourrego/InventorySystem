@@ -19,6 +19,9 @@
 <tr style="height: 40px;">
 <td style="padding: 5px; border: 1px solid #000;" colspan="3">Cliente: {nombreCliente} - ({nombreSucursal})</td>
 </tr>
+<tr>
+<td style="padding: 5px; border: 1px solid rgb(0, 0, 0);" colspan="3">Ciudad: {ciudadSucursal} - ({deptoSucursal})</td>
+</tr>
 <tr style="height: 40px;">
 <td style="padding: 5px; border: 1px solid #000;">Tipo de pago: {tipoPago}</td>
 <td style="padding: 5px; border: 1px solid #000;" colspan="2">

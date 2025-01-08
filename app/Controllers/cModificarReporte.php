@@ -144,11 +144,11 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Telefono cartera de la sucursal"
     ],
     "ciudadSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Recibo_Caja"],
       "descripcion" => "Ciudad de la sucursal"
     ],
     "deptoSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Recibo_Caja"],
       "descripcion" => "Departamento de la sucursal"
     ],
     "nombreVendedor" => [
