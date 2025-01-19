@@ -12,13 +12,13 @@
     "require": {
         "php": "^8.1",
         "almasaeed2010/adminlte": "^3.2.0",
-        "bpampuch/pdfmake": "^0.2.17",
+        "bpampuch/pdfmake": "^0.2.18",
         "chillerlan/php-qrcode": "^5.0.3",
-        "codeigniter4/framework": "^4.5.7",
+        "codeigniter4/framework": "^4.6.0",
         "codeigniter4/translations": "^4.5.4",
         "components/jquery": "^3.7.1",
-        "datatables.net/datatables.net": "^2.2.0",
-        "datatables.net/datatables.net-bs4": "^2.2.0",
+        "datatables.net/datatables.net": "^2.2.1",
+        "datatables.net/datatables.net-bs4": "^2.2.1",
         "datatables.net/datatables.net-buttons": "^3.2.0",
         "datatables.net/datatables.net-buttons-bs4": "^3.2.0",
         "datatables.net/datatables.net-scroller": "^2.4.3",
@@ -28,7 +28,7 @@
         "moment/moment": "^2.30.1",
         "nelexa/zip": "^4.0.2",
         "phpmailer/phpmailer": "^6.9.3",
-        "phpoffice/phpspreadsheet": "^2.3.5",
+        "phpoffice/phpspreadsheet": "^2.3.6",
         "robinherbots/jquery.inputmask": "^5.0.9",
         "select2/select2": "^4.0.13",
         "setasign/fpdi": "^2.6.2",
@@ -42,7 +42,7 @@
     "require-dev": {
         "fakerphp/faker": "^1.24.1",
         "mikey179/vfsstream": "^1.6.12",
-        "phpunit/phpunit": "^10.5.40"
+        "phpunit/phpunit": "^10.5.41"
     },
     "autoload": {
         "psr-4": {

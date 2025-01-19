@@ -16,7 +16,7 @@ class Home extends BaseController {
 	}
 
 	public function index() {
-        
+
 		if (session()->has("logged_in") && session()->get("logged_in")) {
 			$this->content['title'] = "Inicio";
 			$this->content['view'] = "vInicio";
@@ -28,7 +28,7 @@ class Home extends BaseController {
 			$this->content['css_add'][] = [
 				'cssInicio.css'
 			];
-			
+
 			return view('UI/viewDefault', $this->content);
 
 		} else {
@@ -38,21 +38,21 @@ class Home extends BaseController {
 				"fondo" => $this->getValConfig('logoFondoLogin', true),
 				"logo" => $this->getValConfig('logoLogin', true)
 			];
-							
+
 			$this->content['title'] = "Inicio Sesión";
 			$this->content['view'] = "vLogin";
 			$this->content['css_add'][] = [
 				'cssLogin.css'
 			];
-			
+
 			$this->content['js_add'][] = [
 				'jsLogin.js'
 			];
-			
+
 			return view('UI/viewSimple', $this->content);
 		}
 	}
-    
+
 	public function iniciarSesion(){
 		$resp['success'] = false;
 
@@ -80,7 +80,7 @@ class Home extends BaseController {
 					foreach ($permisos as $it) {
 						$per[] = $it->permiso;
 					}
-					
+
 					//Treamos los permisos del usuarios
 					$userdata = [
 						'id_user'  => $usuario->id,
@@ -118,7 +118,7 @@ class Home extends BaseController {
 
 					$resp["success"] = true;
 				} else {
-					$resp["msj"] = "Error al iniciar sesión.";  
+					$resp["msj"] = "Error al iniciar sesión.";
 				}
 
 			} else {
@@ -178,7 +178,7 @@ class Home extends BaseController {
 	public function fotoEmpresa() {
 		$logo = $this->mConfiguracion->select("valor")->where("campo", "logoEmpresa")->get()->getRow('valor');
 		$filename = UPLOADS_CONF_PATH . $logo;
-		
+
 		// Si la foto no existe la colocamos por defecto
 		if(is_null($logo) || empty($logo) || !file_exists($filename)){ 
 			$filename = base_url("assets/img/logo-negro-bloque.jpg");

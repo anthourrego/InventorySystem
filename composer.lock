@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2f65c7d82814df86cd72889dc2b020c2",
+    "content-hash": "6113a4f154399241222d8e574a6ef8f0",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -51,16 +51,16 @@
         },
         {
             "name": "bpampuch/pdfmake",
-            "version": "0.2.17",
+            "version": "0.2.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bpampuch/pdfmake.git",
-                "reference": "bfe7fd32f743ea17f39ca2aa13efb641fc23e664"
+                "reference": "a7b349a3f0603871e7cac085f8159db7ba92dfbe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bpampuch/pdfmake/zipball/bfe7fd32f743ea17f39ca2aa13efb641fc23e664",
-                "reference": "bfe7fd32f743ea17f39ca2aa13efb641fc23e664",
+                "url": "https://api.github.com/repos/bpampuch/pdfmake/zipball/a7b349a3f0603871e7cac085f8159db7ba92dfbe",
+                "reference": "a7b349a3f0603871e7cac085f8159db7ba92dfbe",
                 "shasum": ""
             },
             "type": "library",
@@ -85,9 +85,9 @@
             ],
             "support": {
                 "issues": "https://github.com/bpampuch/pdfmake/issues",
-                "source": "https://github.com/bpampuch/pdfmake/tree/0.2.17"
+                "source": "https://github.com/bpampuch/pdfmake/tree/0.2.18"
             },
-            "time": "2024-12-23T08:41:24+00:00"
+            "time": "2025-01-01T12:24:06+00:00"
         },
         {
             "name": "chillerlan/php-qrcode",
@@ -250,34 +250,34 @@
         },
         {
             "name": "codeigniter4/framework",
-            "version": "v4.5.7",
+            "version": "v4.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeigniter4/framework.git",
-                "reference": "f253839c071abbef5262cbb8f49a6077dc5dd568"
+                "reference": "96a1e603b9a0f022b0febb2e249eab6971a7e0d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeigniter4/framework/zipball/f253839c071abbef5262cbb8f49a6077dc5dd568",
-                "reference": "f253839c071abbef5262cbb8f49a6077dc5dd568",
+                "url": "https://api.github.com/repos/codeigniter4/framework/zipball/96a1e603b9a0f022b0febb2e249eab6971a7e0d5",
+                "reference": "96a1e603b9a0f022b0febb2e249eab6971a7e0d5",
                 "shasum": ""
             },
             "require": {
                 "ext-intl": "*",
                 "ext-mbstring": "*",
-                "laminas/laminas-escaper": "^2.13",
+                "laminas/laminas-escaper": "^2.14",
                 "php": "^8.1",
                 "psr/log": "^3.0"
             },
             "require-dev": {
                 "codeigniter/coding-standard": "^1.7",
-                "fakerphp/faker": "^1.9",
+                "fakerphp/faker": "^1.24",
                 "friendsofphp/php-cs-fixer": "^3.47.1",
-                "kint-php/kint": "^5.0.4",
-                "mikey179/vfsstream": "^1.6",
+                "kint-php/kint": "^6.0",
+                "mikey179/vfsstream": "^1.6.12",
                 "nexusphp/cs-config": "^3.6",
                 "phpunit/phpunit": "^10.5.16 || ^11.2",
-                "predis/predis": "^1.1 || ^2.0"
+                "predis/predis": "^1.1 || ^2.3"
             },
             "suggest": {
                 "ext-curl": "If you use CURLRequest class",
@@ -320,7 +320,7 @@
                 "slack": "https://codeigniterchat.slack.com",
                 "source": "https://github.com/codeigniter4/CodeIgniter4"
             },
-            "time": "2024-12-31T12:13:44+00:00"
+            "time": "2025-01-19T18:31:34+00:00"
         },
         {
             "name": "codeigniter4/translations",
@@ -570,16 +570,16 @@
         },
         {
             "name": "datatables.net/datatables.net",
-            "version": "2.2.0",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DataTables/Dist-DataTables.git",
-                "reference": "fb1c55771232d22b1b41244066bbbbbc559654b9"
+                "reference": "33f552b5d2829e5768eaeed1e79714dd5c7be6ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DataTables/Dist-DataTables/zipball/fb1c55771232d22b1b41244066bbbbbc559654b9",
-                "reference": "fb1c55771232d22b1b41244066bbbbbc559654b9",
+                "url": "https://api.github.com/repos/DataTables/Dist-DataTables/zipball/33f552b5d2829e5768eaeed1e79714dd5c7be6ac",
+                "reference": "33f552b5d2829e5768eaeed1e79714dd5c7be6ac",
                 "shasum": ""
             },
             "require": {
@@ -607,20 +607,20 @@
                 "forum": "https://datatables.net/forums",
                 "source": "https://github.com/DataTables/Dist-DataTables"
             },
-            "time": "2025-01-06T16:00:23+00:00"
+            "time": "2025-01-09T17:20:45+00:00"
         },
         {
             "name": "datatables.net/datatables.net-bs4",
-            "version": "2.2.0",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DataTables/Dist-DataTables-Bootstrap4.git",
-                "reference": "d45475abbcf5bf76a66e663a97c78e1d9479e5bc"
+                "reference": "355cd6fa87a800a3ccfc2def51759d734af97858"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DataTables/Dist-DataTables-Bootstrap4/zipball/d45475abbcf5bf76a66e663a97c78e1d9479e5bc",
-                "reference": "d45475abbcf5bf76a66e663a97c78e1d9479e5bc",
+                "url": "https://api.github.com/repos/DataTables/Dist-DataTables-Bootstrap4/zipball/355cd6fa87a800a3ccfc2def51759d734af97858",
+                "reference": "355cd6fa87a800a3ccfc2def51759d734af97858",
                 "shasum": ""
             },
             "require": {
@@ -651,7 +651,7 @@
                 "forum": "https://datatables.net/forums",
                 "source": "https://github.com/DataTables/Dist-DataTables-Bootstrap4"
             },
-            "time": "2025-01-06T16:01:39+00:00"
+            "time": "2025-01-09T17:22:23+00:00"
         },
         {
             "name": "datatables.net/datatables.net-buttons",
@@ -1581,16 +1581,16 @@
         },
         {
             "name": "phpoffice/phpspreadsheet",
-            "version": "2.3.5",
+            "version": "2.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PhpSpreadsheet.git",
-                "reference": "d836f2d7308a192441ccd1546545890b378af913"
+                "reference": "098b848ee6688cb9a252d9ce97889defc517ee88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/d836f2d7308a192441ccd1546545890b378af913",
-                "reference": "d836f2d7308a192441ccd1546545890b378af913",
+                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/098b848ee6688cb9a252d9ce97889defc517ee88",
+                "reference": "098b848ee6688cb9a252d9ce97889defc517ee88",
                 "shasum": ""
             },
             "require": {
@@ -1679,9 +1679,9 @@
             ],
             "support": {
                 "issues": "https://github.com/PHPOffice/PhpSpreadsheet/issues",
-                "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/2.3.5"
+                "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/2.3.6"
             },
-            "time": "2024-12-27T05:17:46+00:00"
+            "time": "2025-01-12T03:22:26+00:00"
         },
         {
             "name": "psr/http-client",
@@ -3328,16 +3328,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.5.40",
+            "version": "10.5.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "e6ddda95af52f69c1e0c7b4f977cccb58048798c"
+                "reference": "e76586fa3d49714f230221734b44892e384109d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e6ddda95af52f69c1e0c7b4f977cccb58048798c",
-                "reference": "e6ddda95af52f69c1e0c7b4f977cccb58048798c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e76586fa3d49714f230221734b44892e384109d7",
+                "reference": "e76586fa3d49714f230221734b44892e384109d7",
                 "shasum": ""
             },
             "require": {
@@ -3409,7 +3409,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.40"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.41"
             },
             "funding": [
                 {
@@ -3425,7 +3425,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-12-21T05:49:06+00:00"
+            "time": "2025-01-13T09:33:05+00:00"
         },
         {
             "name": "psr/container",
@@ -4516,12 +4516,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.1"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }
