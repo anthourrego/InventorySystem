@@ -1,6 +1,6 @@
 <div class="card">
 	<div class="card-header">
-		<div class="row">
+		<div class="row justify-content-between">
 			<div class="col-12 d-md-none">
 				<div class="form-group mb-0">
 					<label class="mb-0" for="filterMobile">Filtros</label>
@@ -22,21 +22,23 @@
 				<button type="button" class="btn btn-expired btn-fast-filter" data-filter="3">Vencidos</button>
 				<button type="button" class="btn btn-expiredwithoutpayment btn-fast-filter" data-filter="4">Vencidos Con Abono</button>
 			</div>
-			<div class="col-12 col-md-3 mt-3 mt-md-0">
-				<div class="input-group">
-					<div class="input-group-prepend">
-						<label class="input-group-text" for="outstandingBalance">Saldo Pendiente</label>
+			<div class="col-12 col-md-4 col-xl-5 row no-gutters justify-content-end">
+				<div class="col-12 col-xl-8 mt-1">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<label class="input-group-text" for="outstandingBalance">Saldo Pendiente</label>
+						</div>
+						<input type="text" id="outstandingBalance" class="form-control text-right" disabled value="$ 0">
 					</div>
-					<input type="text" id="outstandingBalance" class="form-control" disabled value="$ 0">
 				</div>
+				<?php if (validPermissions([1007], true) && $facturaSinFecha > 0) { ?>
+				<div class="col-12 col-xl-8 mt-1">
+					<button type="button" class="btn btn-primary float-right w-100" id="assign-dates">
+						<i class="fa-regular fa-calendar-plus"></i> Asignar Fechas
+					</button>
+				</div>
+				<?php } ?>
 			</div>
-			<?php if (validPermissions([1007], true) && $facturaSinFecha > 0) { ?>
-			<div class="col-12 col-md-2 mt-3 mt-md-0">
-				<button type="button" class="btn btn-primary float-right w-100" id="assign-dates">
-					<i class="fa-regular fa-calendar-plus"></i> Asignar Fechas
-				</button>
-			</div>
-			<?php } ?>
 		</div>
 	</div>
 	<div class="card-body">
@@ -45,7 +47,7 @@
 				aria-describedby="Tabla de Compras">
 				<thead>
 					<tr>
-						<th>Código</th>
+						<th>Factura</th>
 						<th>Cliente</th>
 						<th>Sucursal</th>
 						<th>Ciudad</th>

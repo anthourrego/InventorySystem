@@ -31,11 +31,12 @@ let DTCuentasCobrar = $("#table").DataTable({
 	columns: [
 		{
 			data: 'codigo',
-			render: function (meta, type, data, meta2) {
-				if (data.id_pedido > 0) {
-					return data.codigo;
+			render: function (data, type, row, meta) {
+				let bill = data;
+				if (row.id_pedido > 0) {
+					bill = `<div class="d-flex align-items-center"><i class="fa-solid fa-tag text-info mr-2" title='Nro Pedido: ${row.NroPedido}' style="transform: rotate(90deg);"></i>${bill}</div>`;
 				}
-				return `<div class="d-flex align-items-center"><i class="fa-solid fa-tag text-info mr-2" style="transform: rotate(90deg);"></i>${data.codigo}</div>`;
+				return bill;
 			}
 		}, 
 		{ data: 'NombreCliente'}, 
@@ -43,41 +44,45 @@ let DTCuentasCobrar = $("#table").DataTable({
 		{ data: 'Ciudad'}, 
 		{
 			data: 'descuento',
-			render: function (meta, type, data, meta2) {
-				return formatoPesos.format(data.descuento);
+			className: "text-right",
+			render: (data, type, row, meta) => {
+				return formatoPesos.format(data);
 			}
 		}, {
 			data: 'total',
-			render: function (meta, type, data, meta2) {
-				return formatoPesos.format(data.total);
+			className: "text-right",
+			render: (data, type, row, meta) => {
+				return formatoPesos.format(data);
 			}
 		}, {
 			data: 'AbonosVenta',
-			render: function (meta, type, data, meta2) {
-				return formatoPesos.format(data.AbonosVenta);
+			className: "text-right",
+			render: (data, type, row, meta) => {
+				return formatoPesos.format(data);
 			}
 		}, {
 			data: 'ValorPendiente',
-			render: function (meta, type, data, meta2) {
-				return formatoPesos.format(data.ValorPendiente);
+			className: "text-right",
+			render: (data, type, row, meta) => {
+				return formatoPesos.format(data);
 			}
 		},
 		{
 			data: 'FechaVencimiento',
-			render: function (meta, type, data, meta2) {
-				return moment(data.FechaVencimiento, "YYYY-MM-DD").format("DD/MM/YYYY");
+			render: (data, type, row, meta) => {
+				return moment(data, "YYYY-MM-DD").format("DD/MM/YYYY");
 			}
 		},
 		{
 			data: 'created_at',
-			render: function (meta, type, data, meta2) {
-				return moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A");
+			render: (data, type, row, meta) => {
+				return moment(data, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A");
 			}
 		},
 		{ 
 			data: 'observacion',
 			width: "20%",
-			render: function(data, type, row, meta) {
+			render: (data, type, row, meta) => {
 				return `<span title="${data}" class="text-descripcion">${data}</span>`;
 			}
 		},
@@ -86,17 +91,17 @@ let DTCuentasCobrar = $("#table").DataTable({
 			searchable: false,
 			defaultContent: '',
 			className: 'text-center noExport',
-			render: function (meta, type, data, meta2) {
+			render: (data, type, row, meta) => {
 				let botones = ``;
 
-				if (data.FechaVencimiento != null) {
+				if (row.FechaVencimiento != null) {
 					botones += validPermissions(1001) ? `<button type="button" class="btn btn-primary btnAgregar" title="Ver"><i class="fa-solid fa-plus"></i></button>` : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
 	
-					botones += validPermissions(1004) ? `<a href="${base_url()}Reportes/CuentaCobrar/${data.id}/0" target="_blank" type="button" class="btn btn-info" title="Imprimir Abonos">
+					botones += validPermissions(1004) ? `<a href="${base_url()}Reportes/CuentaCobrar/${row.id}/0" target="_blank" type="button" class="btn btn-info" title="Imprimir Abonos">
 						<i class="fa-solid fa-print"></i>
 					</a>` : '';
 	
-					botones += validPermissions(1006) ? `<a href="${base_url()}Reportes/ReciboCaja/${data.id}/0" target="_blank" type="button" class="btn btn-secondary" title="Imprimir Recibos Caja">
+					botones += validPermissions(1006) ? `<a href="${base_url()}Reportes/ReciboCaja/${row.id}/0" target="_blank" type="button" class="btn btn-secondary" title="Imprimir Recibos Caja">
 						<i class="fa-solid fa-money-check"></i>
 					</a>` : '';
 				} else {
@@ -114,7 +119,7 @@ let DTCuentasCobrar = $("#table").DataTable({
 		$(row).find(".btnVer, .btnAgregar").click(function (e) {
 			e.preventDefault();
 
-			let $btn = $(this);
+			const $btn = $(this);
 
 			$.ajax({
 				type: "GET",
@@ -135,12 +140,13 @@ let DTCuentasCobrar = $("#table").DataTable({
 					}
 					optionBillSelected = data;
 					setValuesAccounts(accountsBill);
+					console.log(venta.FechaVencimiento);
 
 					$("#clienteFactura").html(venta.NombreCliente);
 					$("#vendedorFactura").html(venta.NombreVendedor);
 					$("#metodoPagoFactura").html((venta.metodo_pago == '2' ? 'Credito' : 'Contado'));
 					$("#fechaCreacionFactura").html(moment(venta.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
-					$("#fechaVencimientoFactura").html(venta.FechaVencimiento);
+					$("#fechaVencimientoFactura").html(moment(venta.FechaVencimiento, "YYYY-MM-DD").format("DD/MM/YYYY"));
 					$("#descuentoFactura").html(formatoPesos.format(venta.descuento));
 					$("#totalFactura").html(formatoPesos.format(venta.total));
 					$("#totalAbonosFactura").html(formatoPesos.format(venta.AbonosVenta));
@@ -424,7 +430,7 @@ $(function () {
 	// Inicializar el datetimepicker
 	$('#fechaVencimientoDate').datetimepicker({
 		format: 'DD/MM/YYYY',
-		defaultDate: moment().format("DD/MM/YYYY"),
+		defaultDate: moment(),
 	});
 
 	$("#fechaVencimientoDate").on("change.datetimepicker", function (e) {
