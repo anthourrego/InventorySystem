@@ -29,7 +29,7 @@
     return validPermisision;
   }
 </script>
-  <?php 
+  <?php
     if(isset($js)){
       foreach ($js as $js1) {
         if(is_array($js1)) {

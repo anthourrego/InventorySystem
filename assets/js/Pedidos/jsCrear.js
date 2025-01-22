@@ -70,13 +70,13 @@ let DTProductos = {
         if (resultado) {
           btn = false;
         }
-  
+
         if (btn && ($INVENTARIONEGATIVO == "0" && Number(data.stock) <= 0)) {
           btn = false;
         }
-  
+
         if (btn && ($INVENTARIONEGATIVO == "0" && $CAMPOSPRODUCTO.paca == "1" && $CAMPOSPRODUCTO.ventaPaca == "1" && Number(data.cantidadXPaca) < 1)) {
-          btn = false;  
+          btn = false;
         }
 
         return `<div class="btn-group btn-group-sm" role="group">
@@ -94,7 +94,7 @@ let DTProductos = {
       if (result) {
         alertify.error("Este producto ya se encuentra agregado");
       } else {
-        if (data.stock < 1) {
+        if ($INVENTARIONEGATIVO == '0' && data.stock < 1) {
           alertify.error("La cantidad de no es sufienciente.");
           return;
         }

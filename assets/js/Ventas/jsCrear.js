@@ -91,7 +91,7 @@ let DTProductos = {
       if (result) {
         alertify.error("Este producto ya se encuentra agregado");
       } else {
-        if (data.stock < 1) {
+        if ($INVENTARIONEGATIVO == "0" && data.stock < 1) {
           alertify.error("La cantidad de no es sufienciente.");
           return;
         }
