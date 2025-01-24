@@ -208,13 +208,31 @@
         <div class="form-row">
           <div class="col-12 col-md-6">
             <h5 class="mb-1 col-12">Pedidos:</h5>
-            <div class="col-12 col-md-6">
-              <label for="manejaEmpaque">Maneja Empaque:</label>
-              <select id="manejaEmpaque" data-nombre="Maneja Empaque" <?= !$editar ? 'disabled' : '' ?> name="manejaEmpaque" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
-                <option value=""></option>
-                <option value="1">Si</option>
-                <option value="0" selected>No</option>
-              </select>
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <label for="manejaEmpaque">Maneja Empaque:</label>
+                <select id="manejaEmpaque" data-nombre="Maneja Empaque" <?= !$editar ? 'disabled' : '' ?> name="manejaEmpaque" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
+                  <option value=""></option>
+                  <option value="1">Si</option>
+                  <option value="0" selected>No</option>
+                </select>
+              </div>
+              <div class="col-12 col-md-6">
+                <label for="imprimeRotuloAuto">Imprime rótulo automáticamente:</label>
+                <select id="imprimeRotuloAuto" data-nombre="Imprime rótulo automáticamente" <?= !$editar ? 'disabled' : '' ?> name="imprimeRotuloAuto" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
+                  <option value=""></option>
+                  <option value="1">Si</option>
+                  <option value="0" selected>No</option>
+                </select>
+              </div>
+              <div class="col-12 col-md-6">
+                <label for="imprimeManifiestoAuto">Imprime manifiestos automáticamente:</label>
+                <select id="imprimeManifiestoAuto" data-nombre="Imprime manifiestos automáticamente" <?= !$editar ? 'disabled' : '' ?> name="imprimeManifiestoAuto" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
+                  <option value=""></option>
+                  <option value="1">Si</option>
+                  <option value="0" selected>No</option>
+                </select>
+              </div>
             </div>
             <hr class="col-12 my-2">
             <h5 class="mb-1 col-12">Ventas:</h5>

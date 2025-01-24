@@ -28,6 +28,10 @@ class cEmpaque extends BaseController {
 			'cssEmpaque.css'
 		];
 
+		$this->content["imprimeManifiestoAuto"] = (session()->has("imprimeManifiestoAuto") ? session()->get("imprimeManifiestoAuto") : '0');
+
+		$this->content["imprimeRotuloAuto"] = (session()->has("imprimeRotuloAuto") ? session()->get("imprimeRotuloAuto") : '0');
+
 		$this->content['usuario'] = (session()->has("id_user") ? session()->get("id_user") : null);
 
 		return view('UI/viewDefault', $this->content);
@@ -418,6 +422,13 @@ class cEmpaque extends BaseController {
 
 					if(count($totalProds) > 0) {
 
+						$cajaUpdate = $this->db->table('pedidoscajas')->select('id, numero_caja')
+							->where("id_empacador", session()->get("id_user"))
+							->where("fin_empaque IS NULL")
+							->where('id_pedido', $data->idPedido)
+							->get()
+							->getRow();
+
 						$builder = $this->db->table('pedidoscajas')
 							->set("fin_empaque", date("Y-m-d H:i:s"))
 							->where("id_empacador", session()->get("id_user"))
@@ -427,6 +438,31 @@ class cEmpaque extends BaseController {
 						if($builder->update()) {
 							$resp["success"] = true;
 							$resp['msj'] = "Caja finalizada correctamente";
+
+							$productos = $mPedidosCajasProductos->select("
+								M.nombre AS Manifiesto,
+								M.id AS idManifiesto,
+							")
+							->join("productos AS P", "pedidoscajasproductos.id_producto = P.id", "left")
+							->join("manifiestos AS M", "P.id_manifiesto = M.id", "left")
+							->where("id_caja", $cajaUpdate->id)
+							->orderBy("pedidoscajasproductos.id", "DESC")
+							->findAll();
+				
+							$manifiestos = [];
+							foreach ($productos as $value) {
+								if (!is_null($value->idManifiesto)) {
+									$enc = array_search($value->idManifiesto, array_column($manifiestos, "id"));
+									if ($enc === false) {
+										$manifiestos[] = [
+											"id" => $value->idManifiesto,
+											"nombre" => $value->Manifiesto
+										];
+									}
+								}
+							}
+							$resp['manifiestosCaja'] = $manifiestos;
+							$resp['numeroCaja'] = $cajaUpdate->numero_caja;
 						} else {
 							$resp['msj'] = "No fue posible finalizar la caja";
 						}

@@ -146,4 +146,6 @@
 <script>
   $USUARIOID = <?= $usuario ?>;
   $DATAMOTIVOS = JSON.parse('<?= json_encode(MOTIVOSDEVOLUCION) ?>');
+  $IMPRIMEMANIFIESTOAUTO = <?= $imprimeManifiestoAuto ?>;
+  $IMPRIMEROTULOAUTO = <?= $imprimeRotuloAuto ?>;
 </script>

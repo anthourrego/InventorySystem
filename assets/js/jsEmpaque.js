@@ -526,9 +526,20 @@ function obtenerInfoPedido(pedido, sync = false) {
         caja: 1
       },
       success: function (resp) {
+        console.log('resp', resp)
         if (resp.success) {
           alertify.success(resp.msj);
           obtenerInfoPedido(resp.pedido);
+
+          if ($IMPRIMEMANIFIESTOAUTO != 0) {
+            let ids = resp.manifiestosCaja.map((op, p) => op.id);
+            let cajaManifiestos = 'C' + resp.numeroCaja + '-' + (ids.length ? ids.join('_') : '0')
+            window.open(`${base_url()}Reportes/Manifiestos/${cajaManifiestos}`, '_blank');
+          }
+
+          if ($IMPRIMEROTULOAUTO != 0) {
+            window.open(`${base_url()}Reportes/Rotulo/${resp.pedido.id.trim()}/1`, '_blank');
+          }
         } else {
           alertify.error(resp.msj);
         }
