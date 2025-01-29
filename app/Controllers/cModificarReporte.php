@@ -104,11 +104,11 @@ class cModificarReporte extends BaseController {
       "descripcion" => "Consecutivo de documento"
     ],
     "nombreSucursal" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Recibo_Caja"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Cuenta_Cobrar", "Recibo_Caja"],
       "descripcion" => "Nombre de la sucursal"
     ],
     "nombreCliente" => [
-      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Recibo_Caja"],
+      "aplica" => ["Factura", "Pedido", "Rotulo", "Envio", "Empaque", "Cuenta_Cobrar", "Recibo_Caja"],
       "descripcion" => "Nombre del cliente"
     ],
     "fechaCreacion" => [

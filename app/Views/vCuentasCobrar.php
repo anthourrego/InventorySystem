@@ -62,6 +62,14 @@
 					</tr>
 				</thead>
 				<tbody></tbody>
+				<tfoot>
+					<tr>
+						<th colspan="5" class="text-right">Total:</th>
+						<th>$ 0</th>
+						<th>$ 0</th>
+						<th>$ 0</th>
+					</tr>
+        </tfoot>
 			</table>
 		</div>
 	</div>
@@ -79,42 +87,41 @@
 			</div>
 			<div class="modal-body">
 				<p class="h5 font-weight-bold">Datos básicos</p>
-				<div class="row mx-0">
-					<div class="border col-12 col-md-4 d-flex">
-						<p class="font-weight-bold mb-0">Cliente:</p>&nbsp
-						<p class="font-weight-normal mb-0" id="clienteFactura"></p>
+				<div class="row">
+					<div class="col-6">
+						<div class="row row-cols-1">
+							<div class="col border d-flex">
+								<p class="font-weight-bold mb-0">Cliente: <span id="clienteFactura" class="font-weight-normal"></span></p>
+							</div>
+							<div class="col border d-flex">
+								<p class="font-weight-bold mb-0">Vendedor: <span id="vendedorFactura" class="font-weight-normal"></span></p>
+							</div>
+							<div class="col border d-flex">
+								<p class="font-weight-bold mb-0">Método de pago: <span id="metodoPagoFactura" class="font-weight-normal"></span></p>
+							</div>
+							<div class="col border d-flex">
+								<p class="font-weight-bold mb-0">Fecha de creación: <span id="fechaCreacionFactura" class="font-weight-normal"></span></p>
+							</div>
+							<div class="col border d-flex">
+								<p class="font-weight-bold mb-0">Fecha de vencimiento: <span id="fechaVencimientoFactura" class="font-weight-normal"></span></p>
+							</div>
+						</div>
 					</div>
-					<div class="border col-12 col-md-4 d-flex">
-						<p class="font-weight-bold mb-0">Vendedor: </p>&nbsp
-						<p class="font-weight-normal mb-0" id="vendedorFactura"></p>
-					</div>
-					<div class="border col-12 col-md-4 d-flex">
-						<p class="font-weight-bold mb-0">Método de pago: </p>&nbsp
-						<p class="font-weight-normal mb-0" id="metodoPagoFactura"></p>
-					</div>
-					<div class="border col-12 col-md-4 d-flex">
-						<p class="font-weight-bold mb-0">Fecha de creación: </p>&nbsp
-						<p class="font-weight-normal mb-0" id="fechaCreacionFactura"></p>
-					</div>
-					<div class="border col-12 col-md-4 d-flex">
-						<p class="font-weight-bold mb-0">Fecha de vencimiento: </p>&nbsp
-						<p class="font-weight-normal mb-0" id="fechaVencimientoFactura"></p>
-					</div>
-					<div class="border col-12 col-md-4 d-flex">
-						<p class="font-weight-bold mb-0">Descuento factura: </p>&nbsp
-						<p class="font-weight-normal mb-0" id="descuentoFactura"></p>
-					</div>
-					<div class="border col-12 col-md-4 d-flex">
-						<p class="font-weight-bold mb-0">Total factura: </p>&nbsp
-						<p class="font-weight-normal mb-0" id="totalFactura"></p>
-					</div>
-					<div class="border col-12 col-md-4 d-flex">
-						<p class="font-weight-bold mb-0">Total abonos factura: </p>&nbsp
-						<p class="font-weight-normal mb-0" id="totalAbonosFactura"></p>
-					</div>
-					<div class="border col-12 col-md-4 d-flex">
-						<p class="font-weight-bold mb-0">Valor pendiente factura: </p>&nbsp
-						<p class="font-weight-normal mb-0" id="valorPendienteFactura"></p>
+					<div class="col-6">
+						<div class="row row-cols-1">
+							<div class="col border d-flex">
+								<p class="font-weight-bold mb-0">Descuento factura: <span id="descuentoFactura" class="font-weight-normal"></span></p>
+							</div>
+							<div class="col border d-flex">
+								<p class="font-weight-bold mb-0">Total factura: <span id="totalFactura" class="font-weight-normal"></span></p>
+							</div>
+							<div class="col border d-flex">
+								<p class="font-weight-bold mb-0">Total abonos factura: <span id="totalAbonosFactura" class="font-weight-normal"></span></p>
+							</div>
+							<div class="col border d-flex">
+								<p class="font-weight-bold mb-0">Valor pendiente factura: <span id="valorPendienteFactura" class="font-weight-normal"></span></p>
+							</div>
+						</div>
 					</div>
 				</div>
 

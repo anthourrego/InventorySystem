@@ -96,11 +96,11 @@ let DTCuentasCobrar = $("#table").DataTable({
 
 				if (row.FechaVencimiento != null) {
 					botones += validPermissions(1001) ? `<button type="button" class="btn btn-primary btnAgregar" title="Ver"><i class="fa-solid fa-plus"></i></button>` : '<button type="button" class="btn btn-dark btnVer" title="Ver"><i class="fa-solid fa-eye"></i></button>';
-	
+
 					botones += validPermissions(1004) ? `<a href="${base_url()}Reportes/CuentaCobrar/${row.id}/0" target="_blank" type="button" class="btn btn-info" title="Imprimir Abonos">
 						<i class="fa-solid fa-print"></i>
 					</a>` : '';
-	
+
 					botones += validPermissions(1006) ? `<a href="${base_url()}Reportes/ReciboCaja/${row.id}/0" target="_blank" type="button" class="btn btn-secondary" title="Imprimir Recibos Caja">
 						<i class="fa-solid fa-money-check"></i>
 					</a>` : '';
@@ -140,9 +140,8 @@ let DTCuentasCobrar = $("#table").DataTable({
 					}
 					optionBillSelected = data;
 					setValuesAccounts(accountsBill);
-					console.log(venta.FechaVencimiento);
 
-					$("#clienteFactura").html(venta.NombreCliente);
+					$("#clienteFactura").html(venta.NombreCliente + `(${venta.NombreSucursal})`);
 					$("#vendedorFactura").html(venta.NombreVendedor);
 					$("#metodoPagoFactura").html((venta.metodo_pago == '2' ? 'Credito' : 'Contado'));
 					$("#fechaCreacionFactura").html(moment(venta.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
@@ -254,7 +253,7 @@ let DTDataAccountsBill = $("#tblAbonos").DataTable({
 						if (success) {
 							alertify.success(msj);
 							setValuesAccounts(info.accountsBill)
-							
+
 							$("#valorPendienteFactura").html(formatoPesos.format(info.venta.ValorPendiente));
 
 							if (+info.venta.ValorPendiente > 0) {
