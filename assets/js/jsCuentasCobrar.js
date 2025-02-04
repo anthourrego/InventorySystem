@@ -8,6 +8,7 @@ let filtrosConfig = {
 	branches: "",
 	branchesName: ""
 };
+
 let DTCuentasCobrar = $("#table").DataTable({
 	ajax: {
 		url: rutaBase + "DT",
@@ -38,10 +39,10 @@ let DTCuentasCobrar = $("#table").DataTable({
 				}
 				return bill;
 			}
-		}, 
-		{ data: 'NombreCliente'}, 
-		{ data: 'Sucursal'}, 
-		{ data: 'Ciudad'}, 
+		},
+		{ data: 'NombreCliente'},
+		{ data: 'Sucursal'},
+		{ data: 'Ciudad'},
 		{
 			data: 'descuento',
 			className: "text-right",
@@ -79,7 +80,7 @@ let DTCuentasCobrar = $("#table").DataTable({
 				return moment(data, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A");
 			}
 		},
-		{ 
+		{
 			data: 'observacion',
 			width: "20%",
 			render: (data, type, row, meta) => {
@@ -165,7 +166,11 @@ let DTCuentasCobrar = $("#table").DataTable({
 			$('#fechaVencimientoDate').datetimepicker('minDate', fechaVen);
 			$("#modalAssignDate").modal('show');
 		});
+	},
+	drawCallback: function (settings) {
+		getTotalBalance();
 	}
+
 });
 
 let DTDataAccountsBill = $("#tblAbonos").DataTable({
@@ -270,6 +275,54 @@ let DTDataAccountsBill = $("#tblAbonos").DataTable({
 	}
 });
 
+function setValuesAccounts(accountsBill) {
+	DTDataAccountsBill.clear().rows.add(accountsBill);
+	setTimeout(() => {
+		DTDataAccountsBill.draw();
+	}, 200);
+}
+
+function getColorBill(valorPendiente, fechaVencimiento, abonosVenta) {
+	if (moment(fechaVencimiento, "YYYY-MM-DD").isBefore(moment()) && abonosVenta > 0) {
+		return "#f7b267";
+	} else if (moment(fechaVencimiento, "YYYY-MM-DD").isBefore(moment())) {
+		return "#f6a8a8";
+	} else if (valorPendiente <= 0) {
+		return "#8ae287";
+	} else if (abonosVenta == 0) {
+		return "#ffffff";
+	} else if (abonosVenta > 0) {
+		return "#98c0f6";
+	}
+
+	return "#f4f6f9";
+}
+
+const resetFilter = (reload = true) => {
+	var sucursalOption = new Option(filtrosConfig.branchesName, filtrosConfig.branches, true, true);
+	$('#sucursal').append(sucursalOption).trigger('change');
+	$("#selectTipoFacturas").val(filtrosConfig.type);
+
+	if (reload === true) {
+		DTCuentasCobrar.ajax.reload();
+		$("#modalFilter").modal("hide");
+	}
+}
+
+const getTotalBalance = () => {
+	$.ajax({
+		type: "POST",
+		url: rutaBase + "ObtenerTotales",
+		data: filtrosConfig,
+		dataType: 'json',
+		success: function ({ total }) {
+			$("#thFooterTotal").html(formatoPesos.format(total.total));
+			$("#thFooterTotalAbonos").html(formatoPesos.format(total.AbonosVenta));
+			$("#thFooterSaldoPendiente").html(formatoPesos.format(total.ValorPendiente));
+		}
+	});
+}
+
 $(function () {
 
 	inputOutstandingBalance.value = formatoPesos.format($outstandingBalance);
@@ -367,7 +420,7 @@ $(function () {
 		if ($("#sucursal").val() != filtrosConfig.branches) {
 			branchesName = (sucursales.length ? sucursales.find(x => x.id == $("#sucursal").val()).text : "")
 		}
-		
+
 		filtrosConfig = {
 			type: $("#selectTipoFacturas").val(),
 			branches: $("#sucursal").val(),
@@ -470,7 +523,7 @@ $(function () {
 				alertify.error('La fecha de vencimiento no puede ser menor que la fecha original.');
 				return;
 			}
-			
+
 			$.ajax({
 				type: "POST",
 				url: rutaBase + "AsignarFechaVencimiento",
@@ -494,37 +547,3 @@ $(function () {
 		}
 	});
 });
-
-function setValuesAccounts(accountsBill) {
-	DTDataAccountsBill.clear().rows.add(accountsBill);
-	setTimeout(() => {
-		DTDataAccountsBill.draw();
-	}, 200);
-}
-
-function getColorBill(valorPendiente, fechaVencimiento, abonosVenta) {
-	if (moment(fechaVencimiento, "YYYY-MM-DD").isBefore(moment()) && abonosVenta > 0) {
-		return "#f7b267";
-	} else if (moment(fechaVencimiento, "YYYY-MM-DD").isBefore(moment())) {
-		return "#f6a8a8";
-	} else if (valorPendiente <= 0) {
-		return "#8ae287";
-	} else if (abonosVenta == 0) {
-		return "#ffffff";
-	} else if (abonosVenta > 0) {
-		return "#98c0f6";
-	}
-
-	return "#f4f6f9";
-}
-
-const resetFilter = (reload = true) => {
-	var sucursalOption = new Option(filtrosConfig.branchesName, filtrosConfig.branches, true, true);
-	$('#sucursal').append(sucursalOption).trigger('change');
-	$("#selectTipoFacturas").val(filtrosConfig.type);
-
-	if (reload === true) {
-		DTCuentasCobrar.ajax.reload();
-		$("#modalFilter").modal("hide");
-	}
-}

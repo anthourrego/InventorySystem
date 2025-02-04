@@ -333,4 +333,5 @@ $routes->group('CuentasCobrar', ['filter' => 'authGuard:100'], function ($routes
 	$routes->post('AsignarFechaVencimiento', 'cCuentasCobrar::AsignarFechaVencimiento', ['filter' => ['authGuard:1007', 'ajax']]);
 	$routes->get('CurrentBuy', 'cCuentasCobrar::getCurrentBuy');
 	$routes->get('ObtenerCuentaCobrar/(:any)', 'cCuentasCobrar::getAccounts/$1');
+	$routes->post('ObtenerTotales', 'cCuentasCobrar::getTotalBalance');
 });

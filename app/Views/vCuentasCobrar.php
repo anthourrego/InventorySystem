@@ -65,9 +65,9 @@
 				<tfoot>
 					<tr>
 						<th colspan="5" class="text-right">Total:</th>
-						<th>$ 0</th>
-						<th>$ 0</th>
-						<th>$ 0</th>
+						<th id="thFooterTotal">$ 0</th>
+						<th id="thFooterTotalAbonos">$ 0</th>
+						<th id="thFooterSaldoPendiente">$ 0</th>
 					</tr>
         </tfoot>
 			</table>
