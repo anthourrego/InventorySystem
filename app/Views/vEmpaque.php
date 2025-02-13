@@ -31,8 +31,8 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <div class="btn-group btn-group-toggle">
+      <div class="modal-body position-relative">
+        <div class="btn-group btn-group-toggle position-fixed" style="z-index:5;">
           <!-- Agregar caja para empezar a empacar -->
           <button type="button" id="btnAgregarCaja" class="btn btn-secondary">
             <i class="fas fa-plus"></i> Agregar Caja
@@ -47,7 +47,7 @@
           </button>
         </div>
 
-        <div class="row mt-2">
+        <div class="row mt-5">
           <div class="col-12 col-md-4">
             <div class="row mb-2">
               <div class="col-2">
