@@ -49,6 +49,7 @@
             <th>Total</th>
             <th>Fecha Creación</th>
             <th>Vendedor</th>
+            <th>Observación</th>
             <th>Acciones</th>
           </tr>
         </thead>

@@ -12,10 +12,10 @@
         foreach ($css as $css1) {
           if(is_array($css1)) {
             foreach ($css1 as $css2) {
-              echo(link_tag(esc($css2)));
+              echo(link_tag(esc($css2 . '?' . (ENVIRONMENT !== 'production' ? rand() : LIBRARY_RANDOM))));
             }
           } else {
-            echo(link_tag(esc($css1)));
+            echo(link_tag(esc($css1 . '?' . (ENVIRONMENT !== 'production' ? rand() : LIBRARY_RANDOM))));
           }
         }
       }
@@ -24,10 +24,10 @@
         foreach ($css_add as $css_add1) {
           if(is_array($css_add1)) {
             foreach ($css_add1 as $css_add2) {
-              echo(link_tag(esc("assets/css/{$css_add2}?" . rand())));
+              echo(link_tag(esc("assets/css/{$css_add2}?" . (ENVIRONMENT !== 'production' ? rand() : LIBRARY_RANDOM))));
             }
           } else {
-            echo(link_tag(esc("assets/css/{$css_add1}?" . rand())));
+            echo(link_tag(esc("assets/css/{$css_add1}?" . (ENVIRONMENT !== 'production' ? rand() : LIBRARY_RANDOM))));
           }
         }
       }

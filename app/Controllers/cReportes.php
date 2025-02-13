@@ -328,7 +328,7 @@ class cReportes extends BaseController {
 					->select("
 						IM.codigo AS numeracion,
 						U.nombre AS nombreVendedor,
-						DATE_FORMAT(IM.created_at, '%d-%m-%Y') AS fechaCreacion,
+						DATE_FORMAT(IM.created_at, '%d/%m/%Y') AS fechaCreacion,
 						DATE_FORMAT(IM.created_at, '%H:%i:%s') AS horaCreacion,
 						IM.observacion,
 						CASE
@@ -347,7 +347,7 @@ class cReportes extends BaseController {
 						C.codigo AS numeracion,
 						U.nombre AS nombreVendedor,
 						C.total AS totalGeneral,
-						DATE_FORMAT(C.created_at, '%d-%m-%Y') AS fechaCreacion,
+						DATE_FORMAT(C.created_at, '%d/%m/%Y') AS fechaCreacion,
 						DATE_FORMAT(C.created_at, '%H:%i:%s') AS horaCreacion,
 						C.observacion,
 						CASE
@@ -369,7 +369,7 @@ class cReportes extends BaseController {
 						C.nombre AS nombreCliente,
 						U.nombre AS nombreVendedor,
 						" . ($tabla == 'ventas' ? "(V.total - V.descuento)" : "V.total") . " AS totalGeneral,
-						DATE_FORMAT(V.created_at, '%d-%m-%Y') AS fechaCreacion,
+						DATE_FORMAT(V.created_at, '%d/%m/%Y') AS fechaCreacion,
 						DATE_FORMAT(V.created_at, '%H:%i:%s') AS horaCreacion,
 						S.direccion AS direccionSucursal,
 						S.nombre AS nombreSucursal,
@@ -392,12 +392,12 @@ class cReportes extends BaseController {
 					$venta = $venta->select("id_pedido");
 					$venta = $venta->select("V.total AS totalSinDescuento");
 					$venta = $venta->select("V.descuento AS descuento");
-					$venta = $venta->select("DATE_FORMAT(V.fecha_vencimiento, '%Y-%m-%d') AS fechaVencimiento");
+					$venta = $venta->select("DATE_FORMAT(V.fecha_vencimiento, '%d/%m/%Y') AS fechaVencimiento");
 				} else {
 					$venta = $venta->select("
-						DATE_FORMAT(V.inicio_empaque, '%d-%m-%Y') AS fechaIniEmpa,
+						DATE_FORMAT(V.inicio_empaque, '%d/%m/%Y') AS fechaIniEmpa,
 						DATE_FORMAT(V.inicio_empaque, '%h:%i:%s %p') AS horaIniEmpa,
-						DATE_FORMAT(V.fin_empaque, '%d-%m-%Y') AS fechaFinEmpa,
+						DATE_FORMAT(V.fin_empaque, '%d/%m/%Y') AS fechaFinEmpa,
 						DATE_FORMAT(V.fin_empaque, '%h:%i:%s %p') AS horaFinEmpa,
 						TIMEDIFF(V.fin_empaque, V.inicio_empaque) AS tiempoEmpa
 					");
@@ -787,7 +787,7 @@ class cReportes extends BaseController {
 				abonosventas.codigo AS codigoAbonoDP,
 				abonosventas.valor AS valorAbonoDP,
 				abonosventas.observacion AS observacionAbonoDP,
-				DATE_FORMAT(abonosventas.created_at, '%d-%m-%Y') AS fechaAbonoDP,
+				DATE_FORMAT(abonosventas.created_at, '%d/%m/%Y') AS fechaAbonoDP,
 				U.nombre AS usuarioAbonoDP,
 				CASE
 					WHEN abonosventas.estado = 'AN'

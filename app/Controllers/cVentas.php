@@ -184,7 +184,8 @@ class cVentas extends BaseController {
 				V.fecha_vencimiento AS FechaVencimiento,
 				V.descuento,
 				'0' AS totalMenosDescuento,
-				CAST(SUBSTRING_INDEX(codigo, '$dataPref', -1) AS UNSIGNED) AS Delimitado
+				CAST(SUBSTRING_INDEX(codigo, '$dataPref', -1) AS UNSIGNED) AS Delimitado,
+				V.observacion
 			")->join('clientes AS C', 'V.id_cliente = C.id', 'left')
 			->join('sucursales AS S', 'V.id_sucursal = S.id', 'left')
 			->join('ciudades AS CUI', 'S.id_ciudad = CUI.id', 'left')

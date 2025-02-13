@@ -8,7 +8,6 @@ use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
-use Config\Services;
 use Config\Database;
 
 /**
@@ -60,13 +59,13 @@ abstract class BaseController extends Controller
 
         // Preload any models, libraries, etc, here.
 
-        $this->routes = Services::routes();
+        $this->routes = service("routes");
         $this->db = Database::connect();
 
         $this->content['Project_Name'] = "Inventory System";
-        
+
         $this->LJQuery();
-        
+
         if(session()->has("logged_in") && session()->get("logged_in")){
             $this->LAdminLTE();
             $this->LOverlayScrollbars();
@@ -85,29 +84,29 @@ abstract class BaseController extends Controller
           'vendor/components/jquery/jquery.min.js'
         ];
     }
-    
+
     public function LBootstrap(){
         $this->content['css'][] = [
             'vendor/twbs/bootstrap/dist/css/bootstrap.min.css'
         ];
-    
+
         $this->content['js'][] = [
             'vendor/twbs/bootstrap/dist/js/bootstrap.min.js'
         ];
     }
-    
+
     public function LJQueryValidation(){
         $this->content['js'][] = [
             'assets/Libraries/jquery-validation/jquery.validate.min.js'
             ,'assets/Libraries/jquery-validation/additional-methods.min.js'
             ,'assets/Libraries/jquery-validation/messages_es.min.js'
         ];
-    
+
         $this->content['js_add'][] = [
             'validate.js'
         ];
     }
-    
+
     public function LAlertify(){
         $this->content['css'][] = [
             'assets/Libraries/alertifyjs/css/alertify.min.css'
@@ -118,13 +117,13 @@ abstract class BaseController extends Controller
             'assets/Libraries/alertifyjs/alertify.min.js'
         ];
     }
-    
+
     public function LFontAwesome(){
         $this->content['css'][] = [
             'vendor/fortawesome/font-awesome/css/all.min.css'
         ];
     }
-    
+
     public function LAdminLTE(){
         $this->content['css'][] = [
             'vendor/almasaeed2010/adminlte/dist/css/adminlte.min.css'
@@ -135,7 +134,7 @@ abstract class BaseController extends Controller
             ,'vendor/almasaeed2010/adminlte/dist/js/adminlte.min.js'
         ];
     }
-    
+
     public function LGlobal(){
         $this->content['css_add'][] = [
             'Global.css'
@@ -151,7 +150,7 @@ abstract class BaseController extends Controller
             'assets/Libraries/ExportExcel/export-excel.js'
         ];
     }
-    
+
     public function LOverlayScrollbars(){
         $this->content['css'][] = [
             'assets/Libraries/OverlayScrollbars/css/OverlayScrollbars.min.css'
@@ -161,7 +160,7 @@ abstract class BaseController extends Controller
             'assets/Libraries/OverlayScrollbars/js/OverlayScrollbars.min.js'
         ];
     }
-    
+
     public function LDataTables(){
         $this->content['css'][] = [
             'vendor/datatables.net/datatables.net-bs4/css/dataTables.bootstrap4.min.css'
@@ -186,14 +185,14 @@ abstract class BaseController extends Controller
             'DataTables.js'
         ];
     }
-    
+
     public function LMoment(){
         $this->content['js'][] = [
             'vendor/moment/moment/moment.js',
             'vendor/moment/moment/locale/es-mx.js'
         ];
     }
-    
+
     public function LLightbox(){
         $this->content['css'][] = [
             'assets/Libraries/lightbox/lightbox.min.css'
@@ -203,7 +202,7 @@ abstract class BaseController extends Controller
             'assets/Libraries/lightbox/lightbox.min.js'
         ];
     }
-    
+
     public function LFancybox(){
         $this->content['css'][] = [
             'assets/Libraries/fancybox/jquery.fancybox.min.css'
@@ -213,7 +212,7 @@ abstract class BaseController extends Controller
             'assets/Libraries/fancybox/jquery.fancybox.min.js'
         ];
     }
-    
+
     public function LSelect2(){
         $this->content['css'][] = [
             'vendor/select2/select2/dist/css/select2.min.css'
@@ -229,7 +228,7 @@ abstract class BaseController extends Controller
             'select2.js'
         ];
     }
-    
+
     public function LInputMask(){
         $this->content['js'][] = [
             'vendor/robinherbots/jquery.inputmask/dist/jquery.inputmask.min.js',
@@ -239,7 +238,7 @@ abstract class BaseController extends Controller
             'InputMask.js'
         ];
     }
-    
+
     public function Lgijgo(){
         $this->content['css'][] = [
             'assets/Libraries/gijgo/css/gijgo.min.css'

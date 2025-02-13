@@ -59,6 +59,13 @@ let DT = $("#table").DataTable({
       }
     },
     { data: 'NombreVendedor' },
+    { 
+      data: 'observacion',
+      width: "20%",
+      render: function(data, type, row, meta) {
+        return `<span title="${data}" class="text-descripcion">${data}</span>`;
+      }
+    },
     {
       orderable: false,
       searchable: false,

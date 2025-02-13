@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 	$(document).on("keypress", ".soloLetras", function (e) {
 		key = e.keyCode || e.which;
 		tecla = String.fromCharCode(key).toLowerCase();
-		letras = "abcdefghijklmnopqrstuvwxyz-_1234567890";
+		letras = "abcdefghijklmnopqrstuvwxyz-_1234567890*+";
 		especiales = "8-37-39-46";
 
 		if ($(e.target).hasClass('validarenie')) letras += 'ñ';
@@ -572,4 +572,9 @@ $(document).on("click", ".btn-pass", function (e) {
 		$(this).closest('.input-group').find('input').attr('type', 'password');
 		$(this).find('i').removeClass('fa-eye-slash').addClass('fa-eye');
 	}
+});
+
+$(document).on("click", ".text-descripcion", function (e) {
+	e.preventDefault();
+	alertify.alert("Observación", $(this).attr("title"));
 });
