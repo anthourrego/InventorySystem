@@ -285,7 +285,7 @@ class cReportes extends BaseController {
 						"verify_peer" => false,
 						"verify_peer_name" => false,
 					),
-				);  
+				);
 				$estructuraPdf = file_get_contents($path, false, stream_context_create($arrContextOptions));
 			} else {
 				echo "<h1>No se encontra estructura relacionada</h1>";
@@ -320,7 +320,7 @@ class cReportes extends BaseController {
 		return $pdf;
 	}
 
-	private function cargarDataVenta($pdf, $id, $tabla) {
+	private function cargarDataVenta($pdf, $id, $tabla, $addTable = []) {
 		$venta = null;
 		switch ($tabla) {
 			case 'ingresomercancia':
@@ -387,7 +387,7 @@ class cReportes extends BaseController {
 					->join("ciudades AS CI", "S.id_ciudad = CI.id", "left")
 					->join("departamentos AS DEP", "CI.id_depto = DEP.codigo", "left")
 					->where("V.id", $id);
-				
+
 				if ($tabla == 'ventas') {
 					$venta = $venta->select("id_pedido");
 					$venta = $venta->select("V.total AS totalSinDescuento");
@@ -407,8 +407,22 @@ class cReportes extends BaseController {
 
 		$venta = $venta->get()->getResultObject()[0];
 
+		if (in_array("abonos", $addTable) ) {
+			$abonos = $this->db->table("abonosventas AS AV")
+				->select("
+					SUM(CASE WHEN AV.estado = 'CO' THEN AV.valor ELSE 0 END) AS TotalAbonosVenta
+				")->groupBy("AV.id_venta")
+				->where("AV.id_venta", $id)
+				->get()->getRow("TotalAbonosVenta");
+
+			$abonos = is_null($abonos) ? 0 : $abonos;
+
+			$venta->totalAbono = $abonos;
+			$venta->totalPendiente = $venta->totalGeneral - $abonos;
+		}
+
 		foreach ($venta as $key => $value) {
-			if ($key == 'totalGeneral' || $key == 'descuento' || $key == 'totalSinDescuento') {
+			if ($key == 'totalGeneral' || $key == 'descuento' || $key == 'totalSinDescuento' || $key == 'totalAbono' || $key == 'totalPendiente') {
 				$value = '$ ' . number_format($value, 0, ',', '.');
 			}
 			$pdf = str_replace("{{$key}}", (is_null($value) ? '' : $value), $pdf);
@@ -778,7 +792,7 @@ class cReportes extends BaseController {
 
 		$estrucPdf = $this->setValuesCompany($estrucPdf);
 
-		$dataVenta = $this->cargarDataVenta($estrucPdf, $idVenta, "ventas");
+		$dataVenta = $this->cargarDataVenta($estrucPdf, $idVenta, "ventas", ["abonos"]);
 		$estrucPdf = $dataVenta['pdf'];
 
 		$mCuentasCobrar = new mCuentasCobrar();

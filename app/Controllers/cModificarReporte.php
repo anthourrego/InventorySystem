@@ -327,6 +327,10 @@ class cModificarReporte extends BaseController {
       "aplica" => ["Cuenta_Cobrar"],
       "descripcion" => "Total de abonos a la factura"
     ],
+    "totalPendiente" => [
+      "aplica" => ["Cuenta_Cobrar"],
+      "descripcion" => "Total de pendiente a la factura menos los abonos"
+    ],
     "tipoPago" => [
       "aplica" => ["Recibo_Caja"],
       "descripcion" => "Tipo de pago del recibo de caja"
@@ -365,7 +369,7 @@ class cModificarReporte extends BaseController {
   }
 
   public function reporte($reporte) {
-    
+
     $datReporte = [];
     if (isset($this->reportes[$reporte])) {
       $datReporte = $this->reportes[$reporte];
