@@ -1,5 +1,6 @@
 let rutaBase = base_url() + "Empaque/";
 let productosPedido = [];
+let sortAscendent = true;
 
 let DT = $("#table").DataTable({
   ajax: {
@@ -174,9 +175,23 @@ $(function () {
     buscarValores($(this).val());
   });
 
+  $("#inputBuscarProd").on('focus', function () {
+    $("#btnSincronizar").click();
+  });
+
   $("#btnBuscar").on("click", function () {
     buscarValores($("#inputBuscarProd").val());
   });
+
+  $("#btnSortBoxes").on('click', function () {
+    if (sortAscendent) {
+      $(this).html('<i class="fa-solid fa-arrow-down-wide-short"></i>');
+    } else {
+      $(this).html('<i class="fa-solid fa-arrow-up-wide-short"></i>');
+    }
+    sortAscendent = !sortAscendent
+    $("#btnSincronizar").click();
+  })
 })
 
 /* Funcion para organizar info de pedido en caja */
@@ -309,7 +324,12 @@ function obtenerInfoPedido(pedido, sync = false) {
   $("#btnFinalizarCaja").hide();
   if (pedido.cajas.length) {
     let estructura = '';
-    pedido.cajas.forEach((it, pos) => {
+    pedido.cajas.sort((a, b) => {
+      if (!sortAscendent) {
+        return +a.numeroCaja > (+b.numeroCaja) ? -1 : 1;
+      }
+      return +b.numeroCaja > (+a.numeroCaja) ? -1 : 1;
+    }).forEach((it, pos) => {
 
       if (!it.finEmpaque && $USUARIOID == it.empacador) {
         $("#btnAgregarCaja").hide();
@@ -317,23 +337,25 @@ function obtenerInfoPedido(pedido, sync = false) {
       }
 
       let estructu = `
-        <div class="card item-caja rounded border ${(!it.finEmpaque && $USUARIOID == it.empacador ? 'border-primary caja-actual' : 'border-ligth')}" ${(!it.finEmpaque && $USUARIOID == it.empacador ? `data-caja="${it.idCajaPedido}"` : '')} style="cursor: pointer;" data-pos="${pos}">
-          <div class="card-body">
-            <div class="d-flex justify-content-between">
-              <div class="w-75 mr-2">
-                <h5 class="card-title">
-                  <i class="fa-solid fa-box mr-1"></i> ${it.numeroCaja}
-                </h5>
-                <p class="card-text h6 text-muted text-truncate">${it.nombreEmpacador}</p>
+        <div class="col">
+          <div class="card item-caja rounded border ${(!it.finEmpaque && $USUARIOID == it.empacador ? 'border-primary caja-actual' : 'border-ligth')}" ${(!it.finEmpaque && $USUARIOID == it.empacador ? `data-caja="${it.idCajaPedido}"` : '')} style="cursor: pointer;" data-pos="${pos}">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div class="w-75 mr-2">
+                  <h5 class="card-title">
+                    <i class="fa-solid fa-box mr-1"></i> ${it.numeroCaja}
+                  </h5>
+                  <p class="card-text h6 text-muted text-truncate">${it.nombreEmpacador}</p>
+                </div>
+                ${$USUARIOID == it.empacador ? `
+                  <div class="d-flex align-items-center justify-content-center">
+                    <button class="btn btn-sm btn-danger eliminar-caja" data-pos="${pos}" title="eliminar">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>` : ''}
               </div>
-              ${$USUARIOID == it.empacador ? `
-                <div class="d-flex align-items-center justify-content-center">
-                  <button class="btn btn-sm btn-danger eliminar-caja" data-pos="${pos}" title="eliminar">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>` : ''}
+              <div id="listaproductoscaja${it.idCajaPedido}"></div>
             </div>
-            <div id="listaproductoscaja${it.idCajaPedido}"></div>
           </div>
         </div>
       `;
@@ -451,6 +473,9 @@ function obtenerInfoPedido(pedido, sync = false) {
       success: function (resp) {
         if (resp.success) {
           obtenerInfoPedido(resp.pedido, true);
+          if ($("#inputBuscarProd").val()) {
+            buscarValores($("#inputBuscarProd").val());
+          }
         } else {
           alertify.error(resp.msj);
           DT.ajax.reload();
@@ -526,7 +551,6 @@ function obtenerInfoPedido(pedido, sync = false) {
         caja: 1
       },
       success: function (resp) {
-        console.log('resp', resp)
         if (resp.success) {
           alertify.success(resp.msj);
           obtenerInfoPedido(resp.pedido);
@@ -607,7 +631,6 @@ function buscarValores(valor) {
 
   $.each($("#listaproductospedido .item-prod-agregar h6"), function () {
     let item = $(this).data("item");
-    console.log($(this));
     if (item != undefined) {
       let itemAgregar = $(this).closest(".item-prod-agregar");
       if (!$(this).text().toLowerCase().includes(valor.toLowerCase()) && !(item + "").toLowerCase().includes(valor.toLowerCase())) {

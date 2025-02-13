@@ -49,9 +49,18 @@
 
         <div class="row mt-2">
           <div class="col-12 col-md-4">
-            <h5 class="text-center">Cajas</h5>
+            <div class="row mb-2">
+              <div class="col-2">
+                <button class="btn btn-dark btn-sm" type="button" id="btnSortBoxes" title="Ordenar cajas ascendente o descendente por número">
+                  <i class="fa-solid fa-arrow-up-wide-short"></i>
+                </button>
+              </div>
+              <div class="col-10">
+                <h5 class="text-center">Cajas</h5>
+              </div>
+            </div>
             <!-- Lista de cajas del pedido -->
-            <div id="listacajas"></div>
+            <div class="row row-cols-2 row-cols-md-1" id="listacajas"></div>
           </div>
           <div class="col-12 col-md-8">
             
