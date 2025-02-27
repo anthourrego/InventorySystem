@@ -172,7 +172,7 @@
 	$CANTIDADCLIENTES ="<?= $cantidadClientes ?>";
 	$PREFIJOVALIDO ="<?= $prefijoValido ?>";
 	$NROPEDIDO = "<?= $nroPedido ?>";
-	$DATOSPEDIDO = '<?= is_null($pedido) ? '' : json_encode($pedido) ?>';
+	$DATOSPEDIDO = JSON.stringify(<?= is_null($pedido) ? '' : json_encode($pedido) ?>);
 	$DATOSPEDIDO = $DATOSPEDIDO.length == 0 ? '' : JSON.parse($DATOSPEDIDO);
 	$IMAGENPROD = <?= $imagenProd ?>;
 	$CAMPOSPRODUCTO = <?= json_encode($camposProducto) ?>;

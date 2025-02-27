@@ -13,7 +13,7 @@ $(function(){
     $('#vendedor').append(vendedorOption).trigger('change');
     //$('#cliente').append(clienteOption).trigger('change');
     $('#sucursal').append(sucursalOption).trigger('change');
-    
+
     productosPedido = $DATOSPEDIDO.productos;
     DTProductosPedido.clear().rows.add(productosPedido).draw();
     DTProductos.ajax.reload();

@@ -127,7 +127,7 @@
 			</div>
 			<div class="card-body">
 				<table id="table" class="table table-sm table-striped table-hover table-bordered w-100">
-					<thead> 
+					<thead>
 						<tr>
 							<th>Imagen</th>
 							<th>Referencia</th>
@@ -151,7 +151,7 @@
 	$CANTIDADCLIENTES ="<?= $cantidadClientes ?>";
 	$PREFIJOVALIDO ="<?= $prefijoValido ?>";
 	$NROVENTA = "<?= $nroVenta ?>";
-	$DATOSVENTA = '<?= is_null($venta) ? '' : json_encode($venta) ?>';
+	$DATOSVENTA = JSON.stringify(<?= is_null(value: $venta) ? '' : json_encode($venta) ?>);
 	$DATOSVENTA = $DATOSVENTA.length == 0 ? '' : JSON.parse($DATOSVENTA);
 	$IMAGENPROD = <?= $imagenProd ?>;
 	$CAMPOSPRODUCTO = <?= json_encode($camposProducto) ?>;

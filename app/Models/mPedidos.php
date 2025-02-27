@@ -85,7 +85,7 @@ class mPedidos extends Model {
 				S.administrador AS AdministradorSucursal,
 				S.telefono,
 				CI.nombre AS Ciudad,
-				DEP.nombre AS Departamento  
+				DEP.nombre AS Departamento
 			")->join("clientes AS C", "P.id_cliente = C.id", "left")
 			->join("usuarios AS U", "P.id_vendedor = U.id", "left")
 			->join("sucursales AS S", "P.id_sucursal = S.id", "left")

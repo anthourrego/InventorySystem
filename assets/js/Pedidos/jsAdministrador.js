@@ -59,7 +59,7 @@ let DT = $("#table").DataTable({
       }
     },
     { data: 'NombreVendedor' },
-    { 
+    {
       data: 'observacion',
       width: "20%",
       render: function(data, type, row, meta) {
