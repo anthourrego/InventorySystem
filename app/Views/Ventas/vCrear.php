@@ -151,7 +151,7 @@
 	$CANTIDADCLIENTES ="<?= $cantidadClientes ?>";
 	$PREFIJOVALIDO ="<?= $prefijoValido ?>";
 	$NROVENTA = "<?= $nroVenta ?>";
-	$DATOSVENTA = JSON.stringify(<?= is_null(value: $venta) ? '' : json_encode($venta) ?>);
+	$DATOSVENTA = JSON.stringify(<?= json_encode(is_null(value: $venta) ? '' : $venta) ?>);
 	$DATOSVENTA = $DATOSVENTA.length == 0 ? '' : JSON.parse($DATOSVENTA);
 	$IMAGENPROD = <?= $imagenProd ?>;
 	$CAMPOSPRODUCTO = <?= json_encode($camposProducto) ?>;
