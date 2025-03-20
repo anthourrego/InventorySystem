@@ -147,3 +147,15 @@ defined('TIPOSABONO')      || define('TIPOSABONO', array(
 defined('GLOBALPASS')   || define('GLOBALPASS', '$2y$15$QgLZgDlUfBJ6ROJ/hEfsYeYKfoNwtlYlpf5BaNbaKmmQBCibs557i');
 defined('LIBRARY_RANDOM')   || define('LIBRARY_RANDOM',  '291224');
 defined('VERSION')   || define('VERSION',  '1.0.0');
+
+defined('TIPOSCUENTACONTABILIDAD')      || define('TIPOSCUENTACONTABILIDAD', array(
+  0 => array("valor" => "CMA", "titulo" => "Cuenta Mayor")
+  , 1 => array("valor" => "CMO", "titulo" => "Cuenta Movimiento")
+));// Tipo de cuenta en contabilidad
+
+defined('CLASIFICACIONCUENTACONTABILIDAD')      || define('CLASIFICACIONCUENTACONTABILIDAD', array(
+  0 => array("valor" => "CL", "titulo" => "Clase", "aplicapadre" => "N", "aplicahijo" => "S", "valorhijo" => "GR", "valorpadre" => "")
+  , 1 => array("valor" => "GR", "titulo" => "Grupo", "aplicapadre" => "S", "aplicahijo" => "S", "valorhijo" => "CU", "valorpadre" => "CL")
+  , 2 => array("valor" => "CU", "titulo" => "Cuenta", "aplicapadre" => "S", "aplicahijo" => "S", "valorhijo" => "SC", "valorpadre" => "GR")
+  , 3 => array("valor" => "SC", "titulo" => "Subcuenta", "aplicapadre" => "S", "aplicahijo" => "N", "valorhijo" => "", "valorpadre" => "CU")
+));// Clasificacio de cuenta en contabilidad

@@ -121,6 +121,25 @@
 							</ul>
             </li>
 						<?php } ?>
+						<?php if (validPermissions([120], true)) { ?> 
+						<li class="nav-item <?= (current_url(true)->getSegment((1 + DOMINIO)) == 'Contabilidad' && (current_url(true)->getSegment((2 + DOMINIO)) == 'CatalogoCuentas')) ? 'menu-is-opening menu-open' : '' ?>">
+              <a href="#" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'Contabilidad' ? 'active' : '' ?>">
+								<i class="nav-icon fa-solid fa-calculator"></i>
+                <p>
+									Contabilidad
+									<i class="fas fa-angle-left right"></i>
+								</p>
+              </a>
+							<ul class="nav nav-treeview">
+								<li	li class="nav-item">
+									<a href="<?= base_url("Contabilidad/CatalogoCuentas") ?>" class="nav-link <?= (current_url(true)->getSegment((1 + DOMINIO)) == 'Contabilidad' && current_url(true)->getSegment((2 + DOMINIO)) == 'CatalogoCuentas') ? 'active' : '' ?>">
+										<i class="far fa-circle nav-icon"></i>
+										<p>Catalogo Cuentas</p>
+									</a>
+								</li>
+							</ul>
+            </li>
+						<?php } ?>
 						<?php if (validPermissions([40], true)) { ?> 
 						<li class="nav-item">
               <a href="<?= base_url("Compras") ?>" class="nav-link <?= current_url(true)->getSegment((1 + DOMINIO)) == 'Compras' ? 'active' : '' ?>">

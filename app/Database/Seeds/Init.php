@@ -14,5 +14,6 @@ class Init extends Seeder {
 		$this->call('DepartamentosSeeder');
 		$this->call('CiudadesSeeder');
 		$this->call('EstadosPedidosSeeder');
+		$this->call('CatalogoCuentasSeeder');
 	}
 }

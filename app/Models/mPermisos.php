@@ -588,7 +588,7 @@ class mPermisos extends Model {
 				"text" => "Cuentas por cobrar",
 				"uri" => "CuentasCobrar",
 				"icon" => "fa-solid fa-receipt",
-				"color" => "bg-secondary",
+				"color" => "bg-success",
 				"children" => [
 					[
 						"id" => 1001,
@@ -618,6 +618,29 @@ class mPermisos extends Model {
 						"id" => 1007,
 						"text" => "Asignar Fechas"
 					],
+				]
+			],
+			[
+				"id" => 120,
+				"text" => "Contabilidad",
+				"uri" => "Contabilidad",
+				"icon" => "fa-solid fa-calculator",
+				"color" => "bg-danger",
+				"children" => [
+					[
+						"id" => 1201,
+						"text" => "Catalogo de cuentas",
+						"children" => [
+							[
+								"id" => 120101,
+								"text" => "Crear cuenta"
+							],
+							[
+								"id" => 120102,
+								"text" => "Eliminar cuenta"
+							]
+						]
+					]
 				]
 			],
 		];

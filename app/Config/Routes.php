@@ -335,3 +335,12 @@ $routes->group('CuentasCobrar', ['filter' => 'authGuard:100'], function ($routes
 	$routes->get('ObtenerCuentaCobrar/(:any)', 'cCuentasCobrar::getAccounts/$1');
 	$routes->post('ObtenerTotales', 'cCuentasCobrar::getTotalBalance');
 });
+
+//Contabilidad
+$routes->group('Contabilidad/CatalogoCuentas', ['filter' => 'authGuard:120,1201', 'namespace' => 'App\Controllers\Contabilidad'], function ($routes) {
+	$routes->get('/', 'cCatalogoCuentas::index');
+	$routes->post('DT', 'cCatalogoCuentas::listaDT');
+	$routes->post('Crear', 'cCatalogoCuentas::crearEditar', ['filter' => ['authGuard', 'ajax']]);
+	$routes->post('Editar', 'cCatalogoCuentas::crearEditar', ['filter' => ['authGuard', 'ajax']]);
+	$routes->post('Eliminar', 'cCatalogoCuentas::eliminar', ['filter' => ['authGuard', 'ajax']]);
+});
