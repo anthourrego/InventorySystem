@@ -48,6 +48,7 @@ class Database extends Config
             'datetime' => 'Y-m-d H:i:s',
             'time'     => 'H:i:s',
         ],
+        'initSQLs' => ['SET time_zone = "America/Bogota"']
     ];
 
     //    /**
@@ -185,6 +186,7 @@ class Database extends Config
             'datetime' => 'Y-m-d H:i:s',
             'time'     => 'H:i:s',
         ],
+        'initSQLs' => ['SET time_zone = "America/Bogota"']
     ];
 
     public function __construct()
