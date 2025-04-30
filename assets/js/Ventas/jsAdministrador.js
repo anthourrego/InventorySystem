@@ -59,9 +59,7 @@ let DT = $("#table").DataTable({
             `<a href="${base_url()}Reportes/Pedido/${data.id_pedido}/0" target="_blank" type="button" class="btn btn-success" title="Imprimir pedido"><i class="fa-solid fa-check-to-slot"></i></a>` : ``
           }
           <button type="button" class="btn btn-secondary btnEditar" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>
-          ${data.id_pedido == null ?
-            `<button type="button" class="btn btn-danger btnEliminar" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button>` : ``
-          }
+          ${(data.id_pedido == null && validPermissions(63)) ? `<button type="button" class="btn btn-danger btnEliminar" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button>` : ``}
           <button type="button" class="bt btn-inf btnImprimirQR d-none" title="Código QR">
             <i class="fa-solid fa-qrcode"></i>
           </button>
