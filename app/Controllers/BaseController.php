@@ -62,6 +62,8 @@ abstract class BaseController extends Controller
         $this->routes = service("routes");
         $this->db = Database::connect();
 
+        $this->db->simpleQuery("SET time_zone = '-05:00'");
+
         $this->content['Project_Name'] = "Inventory System";
 
         $this->LJQuery();
