@@ -159,6 +159,9 @@ function agregarIconosAgregar() {
     $("#codigo").val(dataNode.codigo);
     $("#tipo").val(dataNode.type);
     $("#estado").prop("checked", dataNode.estado);
+    $("#naturaleza").val(dataNode.naturaleza);
+    console.log(dataNode)
+    $("#comportamiento").val(dataNode.comportamiento);
     $("#idParent").val(dataNode.id_parent);
 
     $(".inputVer").prop("disabled", true);
@@ -166,7 +169,7 @@ function agregarIconosAgregar() {
     $(".btns-form").removeClass('d-flex');
     $(".btns-form").addClass('d-none');
 
-    if (dataNode.clasificacion != "CL") {
+    if (dataNode.solo_lectura != "1") {
       $("#btnHabilitarEditar").show()
 
       $("#btnHabilitarEditar").off('click').on('click', function () {
@@ -176,19 +179,19 @@ function agregarIconosAgregar() {
         $(".btns-form").removeClass('d-none');
 
         $("#btnHabilitarEditar").hide()
-      })
-
-      if (dataNode.clasificacion === 'SC' || dataNode.type === 'CMO') {
-        $("#btnEliminarCuenta").show()
-
-        $("#btnEliminarCuenta").off('click').on('click', function () {
-          eliminar()
-        })
-      } else {
-        $("#btnEliminarCuenta").hide()
-      }
+      });
     } else {
-      $("#btnHabilitarEditar, #btnEliminarCuenta").hide()
+      $("#btnHabilitarEditar").hide()
+    }
+    
+    if (dataNode.eliminable == '1') {
+      $("#btnEliminarCuenta").show()
+
+      $("#btnEliminarCuenta").off('click').on('click', function () {
+        eliminar()
+      })
+    } else {
+      $("#btnEliminarCuenta").hide()
     }
   });
 }

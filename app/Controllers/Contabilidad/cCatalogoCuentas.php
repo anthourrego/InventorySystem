@@ -36,8 +36,14 @@ class cCatalogoCuentas extends BaseController {
 			estado,
 			type,
 			id_parent,
-			created_at
+			created_at,
+			solo_lectura,
+			eliminable,
+			naturaleza,
+			comportamiento,
+			descripcion
 		");
+
 
 		$catalogoCuentas = is_null($id)
 			? $mCatalogoCuentas->asObject()->where("id_parent IS NULL")->findAll()
