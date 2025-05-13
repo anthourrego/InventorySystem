@@ -60,6 +60,24 @@
                 <input type="text" style="font-weight: bold;" disabled readonly class="form-control" value="Estado" aria-label="Text input with checkbox">
               </div>
             </div>
+            <div class="col-12 col-md-6 form-group form-valid">
+              <label for="naturaleza">Naturaleza</label>
+              <select id="naturaleza" name="naturaleza" data-placeholder="Seleccione una opción" class="custom-select select2 inputVer">
+                <?php foreach (NATURALEZACUENTACONTABILIDAD as $key => $value) {
+                  echo '<option value="' . $value['valor'] . '">' . $value['titulo'] . '</option>';
+                }
+                ?>
+              </select>
+            </div>
+            <div class="col-12 col-md-6 form-group form-valid">
+              <label for="comportamiento">Comportamiento</label>
+              <select id="comportamiento" name="comportamiento" data-placeholder="Seleccione una opción" class="custom-select select2 inputVer">
+                <?php foreach (TIPOCOMPORTAMIENTOCONTABILIDAD as $clave => $item) {
+                  echo '<option value="' . $clave . '">' . $item['titulo'] . '</option>';
+                }
+                ?>
+              </select>
+            </div>
           </div>
           <div class="d-flex justify-content-end btns-form">
             <button type="button" class="btn btn-secondary mr-2" id="bnt-cancelar-form" data-dismiss="modal"><i class="fas fa-times"></i> Cancelar</button>

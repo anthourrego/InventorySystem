@@ -25,6 +25,30 @@ class CatalogoCuentas extends Migration
 				'type'        => 'VARCHAR',
 				'constraint'  => 255,
 			],
+			'descripcion' => [
+				'type'        => 'VARCHAR',
+				'constraint'  => 255,
+			],
+			'solo_lectura' => [
+				'type'           => 'TINYINT',
+				'constraint'     => 1,
+				'default'        => 1
+			],
+			'eliminable' => [
+				'type'           => 'TINYINT',
+				'constraint'     => 1,
+				'default'        => 1
+			],
+			'naturaleza' => [
+				'type'           => 'VARCHAR',
+				'constraint'     => 10,
+				'default'        => 10
+			],
+			'comportamiento' => [
+				'type'           => 'VARCHAR',
+				'constraint'     => 100,
+				'default'        => 100
+			],
             'clasificacion' => [ // CL -> Clase, GR -> Grupo, CU -> Cuenta, SC -> SubCuenta
 				'type'        => 'CHAR',
 				'constraint'  => 2,
