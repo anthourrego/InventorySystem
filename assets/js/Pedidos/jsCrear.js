@@ -470,6 +470,7 @@ $(function () {
                     DTProductosPedido.clear().rows.add(productosPedido).draw();
                     resetForm("#formPedido");
                     $("#nroPedido").val(resp.nroPedido);
+                    $("#frm-Excel").trigger("reset");
                   },
                   function () {
                     window.location.href = base_url() + 'Pedidos/Administrar';

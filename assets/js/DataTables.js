@@ -37,9 +37,9 @@ var domlftrip = "<'row no-gutters pt-1 px-1'<'col-sm-6'l><'col-sm-6 d-flex justi
 var domftrip = "<'row no-gutters pt-1 px-1'<'col-sm-12 d-flex justify-content-end'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 d-flex justify-content-end'p>>";
 var domftr = "<'row no-gutters pt-1 px-1'<'col-12'f>><'row'<'col-md-12't>><'row'<'col-md-6'><'col-md-6'>>r";
 var domlftri = "<'row no-gutters pt-1 px-1'<'col-sm-12 d-flex justify-content-end'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5 d-flex justify-content-end'i>>";
-var domSearch = "<'row no-gutters pt-3 px-1'<'col-12'f>><'row'<'col-sm-12'tr>><'row'<'col-12'i>>";
-var domSearch1 = "<'row no-gutters pt-0 px-1'<'col-12'f>><'row'<'col-sm-12'tr>><'row'<'col-12'i>>";
-var domBSearch = "<'row no-gutters pt-0 px-1'<'col-sm-12 col-md-8 mb-2 mb-md-0'B><'col-sm-12 col-md-4'f>><'row'<'col-sm-12'tr>><'row'<'col-12'i>>";
+var domSearch = "<'row no-gutters pt-3 px-1'<'col-12 d-flex justify-content-end'f>><'row'<'col-sm-12'tr>><'row'<'col-12'i>>";
+var domSearch1 = "<'row no-gutters pt-0 px-1'<'col-12 d-flex justify-content-end'f>><'row'<'col-sm-12'tr>><'row'<'col-12'i>>";
+var domBSearch = "<'row no-gutters pt-0 px-1'<'col-sm-12 col-md-8 mb-2 mb-md-0'B><'col-sm-12 col-md-4 d-flex justify-content-end'f>><'row'<'col-sm-12'tr>><'row'<'col-12'i>>";
 
 $.extend(true, $.fn.dataTable.defaults, {
 	processing: true,
