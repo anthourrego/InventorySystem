@@ -242,6 +242,10 @@ class mPermisos extends Model {
 							]
 						]
 					],
+					[
+						"id" => 63,
+						"text" => "Eliminar"
+					],
 				]
 			],
 			[
