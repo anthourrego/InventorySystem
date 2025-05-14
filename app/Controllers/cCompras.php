@@ -77,7 +77,7 @@ class cCompras extends BaseController {
 				->join("proveedores AS P", "C.id_proveedor = P.id", "left")
 				->join("(
 					SELECT
-						COUNT(id) AS Total_Productos, SUM(costo) AS Total_Costo, id_compra
+						COUNT(id) AS Total_Productos, (SUM(costo) * SUM(cantidad)) AS Total_Costo, id_compra
 					FROM comprasproductos
 					GROUP BY id_compra
 				) AS CP", "C.id = CP.id_compra", "left");
