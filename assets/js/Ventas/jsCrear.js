@@ -461,6 +461,10 @@ $(function () {
     }
   }
 
+  if (validPermissions(61) && $IDUSUARIO && $NOMBREUSUARIO) {
+    let vendedorOption = new Option($NOMBREUSUARIO, $IDUSUARIO, true, true);
+    $('#vendedor').append(vendedorOption).trigger('change');
+  }
 });
 
 /* Calculamos el descuento de la factura */
