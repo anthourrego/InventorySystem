@@ -344,3 +344,9 @@ $routes->group('Contabilidad/CatalogoCuentas', ['filter' => 'authGuard:120,1201'
 	$routes->post('Editar', 'cCatalogoCuentas::crearEditar', ['filter' => ['authGuard', 'ajax']]);
 	$routes->post('Eliminar', 'cCatalogoCuentas::eliminar', ['filter' => ['authGuard', 'ajax']]);
 });
+
+$routes->group('Contabilidad/Parametrizacion', ['filter' => 'authGuard:120', 'namespace' => 'App\Controllers\Contabilidad'], function ($routes) {
+	$routes->get('/', 'cParametrizacionCuentas::index');
+	$routes->get('Datos', 'cParametrizacionCuentas::datos', ['filter' => ['ajax']]);
+	$routes->post('Actualizar', 'cParametrizacionCuentas::actualizar', ['filter' => ['authGuard:120201', 'ajax']]);
+});
