@@ -158,4 +158,6 @@
 	$NOMBREEMPRESA = "<?= session()->get("nombreEmpresa") ?>";
 	$DIASVENCIMIENTOFACTURAGENERAL = <?= $diasVencimientoFacturaGeneral ?>;
 	$PORCENTAJEDESCUENTOFACTURAGENERAL = <?= $porcentajeDescuento ?>;
+	$IDUSUARIO = "<?= session()->get("id_user") ?>";
+	$NOMBREUSUARIO = "<?= session()->get("nombre") ?>";
 </script>
