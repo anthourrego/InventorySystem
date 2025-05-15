@@ -13,44 +13,64 @@
           <h5 class="mb-1 col-12">Ventas:</h5>
           <h6 class="mb-1 col-12 text-muted">Configura las cuentas contables de ingresos por defecto para el registro de documentos de venta y devoluciones de tus clientes.</h6>
           <div class="col-12 col-md-6 col-lg-3">
-            <label for="costoProducto">Ingresos:</label>
-            <select id="costoProducto" data-nombre="Costo de producto" <?= !$editar ? 'disabled' : '' ?> name="costoProducto" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
+            <label for="cuentaIngresos">Ingresos:</label>
+            <select id="cuentaIngresos" data-nombre="Cuenta de ingresos" <?= !$editar ? 'disabled' : '' ?> name="cuentaIngresos" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
               <option value=""></option>
-              <option value="1">Si</option>
-              <option value="0" selected>No</option>
+              <?php 
+              foreach ($cuentas as $cuenta) {
+                echo call_user_func($renderAccountOptions, 'SALES', $cuenta);
+              }
+              ?>
             </select>
           </div>
           <hr class="col-12 my-2">
           <h5 class="mb-1 col-12">Inventario:</h5>
           <h6 class="mb-1 col-12 text-muted">Selecciona la cuenta que se va a utilizar para el registro de entradas, salidas y ajustes de inventario.</h6>
           <div class="col-12 col-md-6 col-lg-3">
-            <label for="itemProducto">Inventario:</label>
-            <select id="itemProducto" data-nombre="Item Producto" <?= !$editar ? 'disabled' : '' ?> name="itemProducto" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
+            <label for="cuentaInventario">Inventario:</label>
+            <select id="cuentaInventario" data-nombre="Cuenta de inventario" <?= !$editar ? 'disabled' : '' ?> name="cuentaInventario" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
               <option value=""></option>
-              <option value="1">Si</option>
-              <option value="0" selected>No</option>
+              <?php
+              foreach ($cuentas as $cuenta) {
+                echo call_user_func($renderAccountOptions, 'INVENTORY', $cuenta);
+              }
+              ?>
             </select>
           </div>
           <hr class="col-12 my-2">
           <h5 class="mb-1 col-12">Clientes:</h5>
           <h6 class="mb-1 col-12 text-muted">Selecciona la cuenta que recibirá el movimiento de tus transacciones con clientes y proveedores.</h6>
           <div class="col-12 col-md-6 col-lg-3">
-            <label for="manifiestoProducto">Cuenta por cobrar clientes:</label>
-            <select id="manifiestoProducto" data-nombre="Manifiesto Producto" <?= !$editar ? 'disabled' : '' ?> name="manifiestoProducto" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
+            <label for="cuentaPorCobrarClientes">Cuenta por cobrar clientes:</label>
+            <select id="cuentaPorCobrarClientes" data-nombre="Cuenta por cobrar clientes" <?= !$editar ? 'disabled' : '' ?> name="cuentaPorCobrarClientes" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
               <option value=""></option>
-              <option value="1">Si</option>
-              <option value="0" selected>No</option>
+              <?php
+              foreach ($cuentas as $cuenta) {
+                echo call_user_func($renderAccountOptions, 'RECEIVABLE_ACCOUNTS', $cuenta);
+              }
+              ?>
             </select>
           </div>
           <hr class="col-12 my-2">
           <h5 class="mb-1 col-12">Patrimonio:</h5>
           <h6 class="mb-1 col-12 text-muted">Configura la cuenta en la que se van a registrar los resultados de la empresa y los ajustes por saldos iniciales.</h6>
           <div class="col-12 col-md-6 col-lg-3">
-            <label for="pacDescarga">Ganancias acumuladas:</label>
-            <input type="number" id="pacDescarga" data-nombre="Paquete descarga" name="pacDescarga" min="1" max="100" <?= !$editar ? 'disabled' : '' ?> class="soloNumeros form-control configAct" required autocomplete="off" placeholder="Ingrese la cantidad">
+            <label for="cuentaGananciasAcumuladas">Ganancias acumuladas:</label>
+            <select id="cuentaGananciasAcumuladas" data-nombre="Cuenta de ganancias acumuladas" <?= !$editar ? 'disabled' : '' ?> name="cuentaGananciasAcumuladas" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
+              <option value=""></option>
+              <?php
+              foreach ($cuentas as $cuenta) {
+                echo call_user_func($renderAccountOptions, '', $cuenta, 0, 5129);
+              }
+              ?>
+            </select>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  let $CUENTAS = <?= json_encode($cuentas) ?>;
+</script>

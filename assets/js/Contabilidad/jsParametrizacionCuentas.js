@@ -47,8 +47,22 @@ $(function () {
         } else {
           alertify.error(resp.msj);
         }
+
+        deshabilitarCuentas();
       }
     });
   });
 
+  $('#cuentaGananciasAcumuladas').on('select2:open', function (e) {
+    deshabilitarCuentas();
+  });
+
 });
+
+function deshabilitarCuentas() {
+  setTimeout(() => {
+    $('[id*="cuentaGananciasAcumuladas"] [aria-disabled="true"]').each(function () {
+      $(this).attr("style", "opacity: 0.5;");
+    });
+  }, 300);
+}

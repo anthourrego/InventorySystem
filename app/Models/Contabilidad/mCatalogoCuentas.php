@@ -66,4 +66,40 @@ class mCatalogoCuentas extends Model {
 	protected $afterFind      = [];
 	protected $beforeDelete   = [];
 	protected $afterDelete    = [];
+
+	public function getCuentas($id = null) {
+		
+		$this->select("
+			id,
+			CONCAT(codigo, ' - ', nombre) AS text,
+			nombre,
+			codigo,
+			clasificacion,
+			estado,
+			type,
+			id_parent,
+			created_at,
+			solo_lectura,
+			eliminable,
+			naturaleza,
+			comportamiento,
+			descripcion
+		");
+
+
+		$catalogoCuentas = is_null($id)
+			? $this->asObject()->where("id_parent IS NULL")->findAll()
+			: $this->asObject()->where("id_parent", $id)->findAll();
+		
+		if (empty($catalogoCuentas)) {
+			return [];
+		}
+	
+		foreach ($catalogoCuentas as $cuenta) {
+			$cuenta->children = $this->getCuentas($cuenta->id);
+		}
+	
+		return $catalogoCuentas;
+	}
+	
 }
