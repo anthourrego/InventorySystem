@@ -627,7 +627,7 @@ class mPermisos extends Model {
 			[
 				"id" => 120,
 				"text" => "Contabilidad",
-				"uri" => "Contabilidad",
+				"uri" => "Contabilidad/CatalogoCuentas",
 				"icon" => "fa-solid fa-calculator",
 				"color" => "bg-danger",
 				"children" => [
@@ -642,6 +642,16 @@ class mPermisos extends Model {
 							[
 								"id" => 120102,
 								"text" => "Eliminar cuenta"
+							]
+						]
+					],
+					[
+						"id" => 1202,
+						"text" => "Parametrización",
+						"children" => [
+							[
+								"id" => 120201,
+								"text" => "Modificar"
 							]
 						]
 					]

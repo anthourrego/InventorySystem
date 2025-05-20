@@ -131,12 +131,22 @@
 								</p>
               </a>
 							<ul class="nav nav-treeview">
+								<?php if (validPermissions([1201], true)) { ?> 
 								<li	li class="nav-item">
 									<a href="<?= base_url("Contabilidad/CatalogoCuentas") ?>" class="nav-link <?= (current_url(true)->getSegment((1 + DOMINIO)) == 'Contabilidad' && current_url(true)->getSegment((2 + DOMINIO)) == 'CatalogoCuentas') ? 'active' : '' ?>">
 										<i class="far fa-circle nav-icon"></i>
 										<p>Catalogo Cuentas</p>
 									</a>
 								</li>
+								<?php } ?>
+								<?php if (validPermissions([1202], true)) { ?> 
+								<li	li class="nav-item">
+									<a href="<?= base_url("Contabilidad/Parametrizacion") ?>" class="nav-link <?= (current_url(true)->getSegment((1 + DOMINIO)) == 'Contabilidad' && current_url(true)->getSegment((2 + DOMINIO)) == 'Parametrizacion') ? 'active' : '' ?>">
+										<i class="far fa-circle nav-icon"></i>
+										<p>Parametrización</p>
+									</a>
+								</li>
+								<?php } ?>
 							</ul>
             </li>
 						<?php } ?>

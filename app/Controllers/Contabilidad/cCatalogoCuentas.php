@@ -26,40 +26,8 @@ class cCatalogoCuentas extends BaseController {
 
 	public function listaCuentas($id = null) {
 		$mCatalogoCuentas = new mCatalogoCuentas();
-
-		$mCatalogoCuentas->select("
-			id,
-			CONCAT(codigo, ' - ', nombre) AS text,
-			nombre,
-			codigo,
-			clasificacion,
-			estado,
-			type,
-			id_parent,
-			created_at,
-			solo_lectura,
-			eliminable,
-			naturaleza,
-			comportamiento,
-			descripcion
-		");
-
-
-		$catalogoCuentas = is_null($id)
-			? $mCatalogoCuentas->asObject()->where("id_parent IS NULL")->findAll()
-			: $mCatalogoCuentas->asObject()->where("id_parent", $id)->findAll();
-		
-		if (empty($catalogoCuentas)) {
-			return [];
-		}
-	
-		foreach ($catalogoCuentas as $cuenta) {
-			$cuenta->children = $this->listaCuentas($cuenta->id);
-		}
-	
-		return $catalogoCuentas;
+		return $mCatalogoCuentas->getCuentas($id);
 	}
-	
 
 	public function crearEditar(){
 		$resp["success"] = false;
