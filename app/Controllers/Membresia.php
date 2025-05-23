@@ -8,6 +8,22 @@ use stdClass;
 
 class Membresia extends BaseController
 {
+	public $planDias = [
+		'1' => 30,
+		'2' => 30,
+		'3' => 90,
+		'4' => 180,
+		'5' => 30,
+		'6' => 360,
+		'7' => 1,
+		'8' => 30,
+		'10' => 30,
+		'11' => 7,
+		'12' => 15,
+		'13' => 30,
+		'14' => 30,
+	];
+
 	public function index() {
 		$this->content['title'] = "Membresias";
 		$this->content['view'] = "vMembresia";
@@ -68,25 +84,31 @@ class Membresia extends BaseController
 						$errores = "";
 						if (($totalrows - 3) > 0) {
 
-							for ($i=5; $i <= $totalrows; $i++) { 
-								$fila = new stdClass();
-								
-								// Función para convertir valores numéricos de Excel a fechas
-								$formatearFecha = function($valor) {
-									if (is_numeric($valor)) {
-										// Convertir el número de Excel a una fecha de PHP
-										return \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($valor)->format('Y-m-d');
+							$formatearFecha = function($valor, $formato = 'Y-m-d') {
+								if (is_numeric($valor)) {
+									// Convertir el número de Excel a una fecha de PHP
+									return \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($valor)->format($formato);
+								} elseif (is_string($valor) && preg_match('/^\d{1,2}\/\d{1,2}\/\d{2,4}$/', $valor)) {
+									// Si es una cadena con formato de fecha (como "01/05/25"), convertir a formato estándar
+									$fecha = \DateTime::createFromFormat('d/m/y', $valor);
+									if ($fecha) {
+										return $fecha->format($formato);
 									}
-									return $valor;
-								};
+								}
+								return $valor;
+							};
+							
+
+							for ($i=4; $i <= $totalrows; $i++) { 
+								$fila = new stdClass();
+										// Función para convertir valores numéricos de Excel a fechas
 								
 								$fila->planId = trim($hojadeExcel->getCell("A".$i)->getValue());
 								$fila->plan = trim($hojadeExcel->getCell("B".$i)->getValue());
 								$fila->documento = trim($hojadeExcel->getCell("C".$i)->getValue());
-								// Aplicar formato de fecha a las columnas que contienen fechas
-								$fila->fechaAfiliacion = $formatearFecha(trim($hojadeExcel->getCell("D".$i)->getValue()));
-								$fila->fechaInicio = $formatearFecha(trim($hojadeExcel->getCell("E".$i)->getValue()));
-								$fila->fechaPago = $formatearFecha(trim($hojadeExcel->getCell("G".$i)->getValue()));
+								$fila->fechaAfiliacion = $formatearFecha(trim($hojadeExcel->getCell("D".$i)->getValue()), 'Y-m-d');
+								$fila->fechaInicio = $formatearFecha(trim($hojadeExcel->getCell("E".$i)->getValue()), 'Y-m-d');
+								$fila->fechaPago = $formatearFecha(trim($hojadeExcel->getCell("G".$i)->getValue()), 'Y-m-d');
 								$fila->idAfiliado = trim($hojadeExcel->getCell("H".$i)->getValue());
 								$fila->Afiliado = trim($hojadeExcel->getCell("I".$i)->getValue());
 								$fila->valorPagado = trim($hojadeExcel->getCell("J".$i)->getValue());
@@ -96,10 +118,9 @@ class Membresia extends BaseController
 								$fila->cuentasxCobrar = trim($hojadeExcel->getCell("N".$i)->getValue());
 								$fila->celular = trim($hojadeExcel->getCell("P".$i)->getValue());
 								$fila->correo = trim($hojadeExcel->getCell("Q".$i)->getValue());
-								$fila->nroPagos = trim($hojadeExcel->getCell("R".$i)->getValue());
-								$fila->porceDecuento = trim($hojadeExcel->getCell("S".$i)->getValue());
-								var_dump($fila);
-								exit;
+								$fila->nroPagos = trim($hojadeExcel->getCell("R".$i)->getValue());								$fila->porceDecuento = trim($hojadeExcel->getCell("S".$i)->getValue());
+								
+								// Comentamos el var_dump y exit para permitir continuar con el proceso
 								$membresiaImportar[] = $fila;
 
 								/* $referencia = trim($hojadeExcel->getCell("A".$i)->getValue());

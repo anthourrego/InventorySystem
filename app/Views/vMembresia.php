@@ -32,7 +32,6 @@
           <th>No. Celular</th>
           <th>Correo</th>
           <th>No. Pagos</th>
-          <th>% de Descuento</th>
         </tr>
       </thead>
       <tbody></tbody>

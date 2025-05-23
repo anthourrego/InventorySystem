@@ -15,19 +15,41 @@ const DTMembresias = $("#tblMembresia").DataTable({
     { data: 'fechaPago' },
     { data: 'idAfiliado' },
     { data: 'Afiliado' },
-    { data: 'valorPagado' },
-    { data: 'efectivo' },
-    { data: 'tarjeta' },
-    { data: 'transferencia' },
-    { data: 'cuentasxCobrar' },
+    { 
+      data: 'valorPagado',
+      render: function (data, type, row, meta2) {
+        return formatoPesos.format(data);
+      }
+    },
+    { 
+      data: 'efectivo',
+      render: function (data, type, row, meta2) {
+        return formatoPesos.format(data);
+      }
+    },
+    { 
+      data: 'tarjeta',
+      render: function (data, type, row, meta2) {
+        return formatoPesos.format(data);
+      }
+    },
+    { 
+      data: 'transferencia',
+      render: function (data, type, row, meta2) {
+        return formatoPesos.format(data);
+      }
+    },
+    { 
+      data: 'cuentasxCobrar',
+      render: function (data, type, row, meta2) {
+        return formatoPesos.format(data);
+      }
+    },
     { data: 'celular' },
     { data: 'correo' },
-    { data: 'nroPagos' },
-    { data: 'porceDecuento' }
+    { data: 'nroPagos' }
   ],
   createdRow: function (row, data, dataIndex) {
-  },
-  drawCallback: function (settings) {
   }
 });
 
