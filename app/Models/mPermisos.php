@@ -622,7 +622,14 @@ class mPermisos extends Model {
 						"id" => 1007,
 						"text" => "Asignar Fechas"
 					],
-				]
+				],
+			],
+			[
+				"id" => 200,
+				"text" => "Membresias",
+				"uri" => "Membresias",
+				"icon" => "fa-solid fa-table-list",
+				"color" => "bg-primary",
 			],
 		];
 
