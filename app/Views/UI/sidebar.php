@@ -147,6 +147,14 @@
 									</a>
 								</li>
 								<?php } ?>
+								<?php if (validPermissions([1203], true)) { ?> 
+								<li	li class="nav-item">
+									<a href="<?= base_url("Contabilidad/CuentaMovimientos") ?>" class="nav-link <?= (current_url(true)->getSegment((1 + DOMINIO)) == 'Contabilidad' && current_url(true)->getSegment((2 + DOMINIO)) == 'CuentaMovimientos') ? 'active' : '' ?>">
+										<i class="far fa-circle nav-icon"></i>
+										<p>Cuenta Movimientos</p>
+									</a>
+								</li>
+								<?php } ?>
 							</ul>
             </li>
 						<?php } ?>

@@ -161,8 +161,8 @@ defined('CLASIFICACIONCUENTACONTABILIDAD')      || define('CLASIFICACIONCUENTACO
 ));// Clasificacio de cuenta en contabilidad
 
 defined('NATURALEZACUENTACONTABILIDAD')      || define('NATURALEZACUENTACONTABILIDAD', array(
-  0 => array("valor" => "credito", "titulo" => "Credito")
-  , 1 => array("valor" => "debito", "titulo" => "Debito")
+  0 => array("valor" => "credito", "titulo" => "Credito", "relation" => "2")
+  , 1 => array("valor" => "debito", "titulo" => "Debito", "relation" => "1")
 ));// Naturaleza de catalogo de cuentas
 
 defined('TIPOCOMPORTAMIENTOCONTABILIDAD') || define('TIPOCOMPORTAMIENTOCONTABILIDAD', array(
@@ -179,5 +179,8 @@ defined('TIPOCOMPORTAMIENTOCONTABILIDAD') || define('TIPOCOMPORTAMIENTOCONTABILI
   "OTHER_TAX_TYPE_IN_FAVOR"       => array("valor" => "OTHER_TAX_TYPE_IN_FAVOR", "titulo" => "Otro tipo de impuesto a favor"),
   "RECEIVABLE_ACCOUNTS_RETURNS"   => array("valor" => "RECEIVABLE_ACCOUNTS_RETURNS", "titulo" => "Devoluciones a proveedores"),
   "RECEIVABLE_ACCOUNTS"           => array("valor" => "RECEIVABLE_ACCOUNTS", "titulo" => "Cuentas por cobrar"),
-  "PROPERTY_PLANT_EQUIPMENT"      => array("valor" => "PROPERTY_PLANT_EQUIPMENT", "titulo" => "Propiedad, planta y equipo")
+  "PROPERTY_PLANT_EQUIPMENT"      => array("valor" => "PROPERTY_PLANT_EQUIPMENT", "titulo" => "Propiedad, planta y equipo"),
+  "FINANCIAL_DISCOUNT"            => array("valor" => "FINANCIAL_DISCOUNT", "titulo" => "Descuentos financieros"),
+  "SALES"                         => array("valor" => "SALES", "titulo" => "Ventas"),
+  "ORDERS"                         => array("valor" => "ORDERS", "titulo" => "Pedidos"),
 ));

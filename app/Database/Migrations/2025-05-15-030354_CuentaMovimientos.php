@@ -21,6 +21,11 @@ class CuentaMovimientos extends Migration
 				'constraint'     => 11,
 				'unsigned'       => true
 			],
+			'naturaleza' => [
+				'type'           => 'VARCHAR',
+				'constraint'     => 10,
+				'default'        => 10
+			],
 			'total' => [
 				'type'        => 'DECIMAL',
 				'constraint'  => '20,2',
