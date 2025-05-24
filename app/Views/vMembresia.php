@@ -1,7 +1,4 @@
-<div class="form-row">
-  <div class="col-12">
-    <hr class="my-2">
-  </div>
+<div class="form-row pb-4">
   <div class="col-12">
     <form enctype="multipart/form-data" accept-charset="utf-8" name="frmExcel" id="frm-Excel">
       <div class="input-group mb-3">
@@ -36,7 +33,5 @@
       </thead>
       <tbody></tbody>
     </table>
-    <!-- <div class="table-responsive">
-    </div> -->
   </div>
 </div> 
