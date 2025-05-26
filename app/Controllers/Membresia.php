@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\mAfiliados;
 use \PhpOffice\PhpSpreadsheet\IOFactory;
 use stdClass;
 
@@ -46,6 +47,7 @@ class Membresia extends BaseController
 		$resp["data"] = [];
 		$archivoExcel = $this->request->getFile("excelFile");
 		$membresiaImportar = [];
+		$mAfiliado = new mAfiliados();
 
 		if (!empty($archivoExcel->getBasename())) {
 			//Validamos la foto
@@ -98,6 +100,7 @@ class Membresia extends BaseController
 								return $valor;
 							};
 							
+							$this->db->transBegin();
 
 							for ($i=4; $i <= $totalrows; $i++) { 
 								$fila = new stdClass();
@@ -118,10 +121,42 @@ class Membresia extends BaseController
 								$fila->cuentasxCobrar = trim($hojadeExcel->getCell("N".$i)->getValue());
 								$fila->celular = trim($hojadeExcel->getCell("P".$i)->getValue());
 								$fila->correo = trim($hojadeExcel->getCell("Q".$i)->getValue());
-								$fila->nroPagos = trim($hojadeExcel->getCell("R".$i)->getValue());								$fila->porceDecuento = trim($hojadeExcel->getCell("S".$i)->getValue());
+								$fila->nroPagos = trim($hojadeExcel->getCell("R".$i)->getValue());								
+								$fila->porceDecuento = trim($hojadeExcel->getCell("S".$i)->getValue());
 								
 								// Comentamos el var_dump y exit para permitir continuar con el proceso
 								$membresiaImportar[] = $fila;
+
+								$afiliadoSave = [
+									'terceroid' => $fila->idAfiliado,
+									'nombre' => $fila->Afiliado,
+									'telefono' => $fila->celular,
+									'correo' => $fila->correo,
+									'fecha_afiliacion' => $fila->fechaAfiliacion,
+									'fecha_inicio' => $fila->fechaInicio,
+								];
+								// Validamos si el afiliado ya existe
+								//$existeAfiliado = $afiliado->where('terceroid', $fila->idAfiliado)->first();
+
+
+								if (!$mAfiliado->save($afiliadoSave)) {
+									$docAfiliado = $fila->idAfiliado;
+									$resp["msj"] = "Ha ocurrido un error al guardar el afiliado {$docAfiliado}." . listErrors($mAfiliado->errors());
+									return $this->response->setJSON($resp);
+								}
+
+								/* if (is_null($existeAfiliado)) {
+									// Si no existe, lo creamos
+								} else {
+									// Si ya existe, actualizamos los datos
+									$afiliado->update($existeAfiliado->id, [
+										'nombre' => $fila->Afiliado,
+										'telefono' => $fila->celular,
+										'correo' => $fila->correo,
+										'fecha_afiliacion' => $fila->fechaAfiliacion,
+										'fecha_inicio' => $fila->fechaInicio,
+									]);
+								} */
 
 								/* $referencia = trim($hojadeExcel->getCell("A".$i)->getValue());
 								$cantidad = trim($hojadeExcel->getCell("B".$i)->getValue());
@@ -147,7 +182,18 @@ class Membresia extends BaseController
 									}
 								} */
 							}
+
+							if ($this->db->transStatus() === false) {
+								$this->db->transRollback();
+								$resp["msj"] = "Ha ocurrido un error al guardar los afiliados.";
+								return $this->response->setJSON($resp);
+							} else {
+								$this->db->transCommit();
+							}
 						}
+
+						$datos = $mAfiliado->findAll(); // Liberar resultados de la consulta
+						var_dump($datos);exit;
 
 						if ($errores == "") {
 							if (count($membresiaImportar) > 0) {
