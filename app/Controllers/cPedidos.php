@@ -18,6 +18,7 @@ use App\Models\mVentasProductos;
 use App\Models\mPedidosCajas;
 use App\Models\mPedidosCajasProductos;
 use App\Models\mSucursalesCliente;
+use App\Models\Contabilidad\mCuentaMovimientos;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
 use \PhpOffice\PhpSpreadsheet\IOFactory;
@@ -465,6 +466,10 @@ class cPedidos extends BaseController {
 					if ($pedidoModel->save($dataSave)) {
 						$resp["success"] = true;
 						$resp["msj"] = $dataSave;
+
+						$mCuentaMovimientos = new mCuentaMovimientos();
+						$mCuentaMovimientos->guardarPedido($dataSave["id"]);
+
 					} else {
 						$resp["msj"] = "Ha ocurrido un error al guardar el pedido." . listErrors($pedidoModel->errors());
 					}
@@ -700,6 +705,10 @@ class cPedidos extends BaseController {
 
 					if ($mPedidos->save($dataSave)) {
 						$resp["msj"] = $dataSave;
+
+						$mCuentaMovimientos = new mCuentaMovimientos();
+						$mCuentaMovimientos->guardarPedido($dataSave["id"], true);
+
 					} else {
 						$resp["msj"] = "Ha ocurrido un error al guardar el pedido." . listErrors($mPedidos->errors());
 					}
@@ -1097,6 +1106,9 @@ class cPedidos extends BaseController {
 				$resp['msj'] = "Pedido Facturado correctamente, Factura nro: " . $codigo;
 				$resp["id_factura"] = $ventaSave["id"];
 				$resp["nFactura"] = $codigo;
+
+				$mCuentaMovimientos = new mCuentaMovimientos();
+				$mCuentaMovimientos->guardarVenta($ventaSave["id"]);
 			}
 		} else {
 			$resp["msj"] = "Ha ocurrido un error al guardar la venta." . listErrors($ventaModel->errors());

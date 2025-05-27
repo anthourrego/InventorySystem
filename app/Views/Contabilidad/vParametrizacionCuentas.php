@@ -11,7 +11,7 @@
       <div class="tab-pane fade show active" id="productoTab" role="tabpanel" aria-labelledby="producto-tab">
         <div class="form-row">
           <h5 class="mb-1 col-12">Ventas:</h5>
-          <h6 class="mb-1 col-12 text-muted">Configura las cuentas contables de ingresos por defecto para el registro de documentos de venta.</h6>
+          <h6 class="mb-1 col-12 text-muted">Configura las cuentas contables de ingresos por defecto para el registro de documentos.</h6>
           <div class="col-12 col-md-6 col-lg-3">
             <label for="cuentaIngresos">Ingresos:</label>
             <select id="cuentaIngresos" data-nombre="Cuenta de ingresos" <?= !$editar ? 'disabled' : '' ?> name="cuentaIngresos" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
@@ -25,7 +25,7 @@
           </div>
           <hr class="col-12 my-2">
           <h5 class="mb-1 col-12">Pedidos:</h5>
-          <h6 class="mb-1 col-12 text-muted">Configura las cuentas contables de pedidos por defecto para el registro de documentos de pedido.</h6>
+          <h6 class="mb-1 col-12 text-muted">Configura las cuentas contables de pedidos por defecto para el registro de documentos.</h6>
           <div class="col-12 col-md-6 col-lg-3">
             <label for="cuentaPedidos">Ingresos:</label>
             <select id="cuentaPedidos" data-nombre="Cuenta de pedidos" <?= !$editar ? 'disabled' : '' ?> name="cuentaPedidos" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
@@ -33,6 +33,20 @@
               <?php 
               foreach ($cuentas as $cuenta) {
                 echo call_user_func($renderAccountOptions, 'ORDERS', $cuenta);
+              }
+              ?>
+            </select>
+          </div>
+          <hr class="col-12 my-2">
+          <h5 class="mb-1 col-12">Compras:</h5>
+          <h6 class="mb-1 col-12 text-muted">Configura las cuentas contables de compras por defecto para el registro de documentos.</h6>
+          <div class="col-12 col-md-6 col-lg-3">
+            <label for="cuentaCompras">Ingresos:</label>
+            <select id="cuentaCompras" data-nombre="Cuenta de compras" <?= !$editar ? 'disabled' : '' ?> name="cuentaCompras" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
+              <option value=""></option>
+              <?php 
+              foreach ($cuentas as $cuenta) {
+                echo call_user_func($renderAccountOptions, 'BUYS', $cuenta);
               }
               ?>
             </select>

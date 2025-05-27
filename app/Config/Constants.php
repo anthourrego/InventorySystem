@@ -183,4 +183,5 @@ defined('TIPOCOMPORTAMIENTOCONTABILIDAD') || define('TIPOCOMPORTAMIENTOCONTABILI
   "FINANCIAL_DISCOUNT"            => array("valor" => "FINANCIAL_DISCOUNT", "titulo" => "Descuentos financieros"),
   "SALES"                         => array("valor" => "SALES", "titulo" => "Ventas"),
   "ORDERS"                         => array("valor" => "ORDERS", "titulo" => "Pedidos"),
+  "BUYS"                         => array("valor" => "BUYS", "titulo" => "Compras"),
 ));

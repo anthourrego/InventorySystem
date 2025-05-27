@@ -13,6 +13,7 @@ use App\Models\MovimientoInventarioModel;
 use App\Models\mPedidosProductos;
 use App\Models\mProductos;
 use App\Models\mVentasProductos;
+use App\Models\Contabilidad\mCuentaMovimientos;
 
 class cCompras extends BaseController {
 
@@ -197,6 +198,10 @@ class cCompras extends BaseController {
 					if ($mCompras->save($dataBuy)) {
 						$resp["success"] = true;
 						$resp["msj"] = $dataBuy;
+
+						$mCuentaMovimientos = new mCuentaMovimientos();
+						$mCuentaMovimientos->guardarCompra($dataBuy["id"]);
+
 					} else {
 						$resp["msj"] = $this->messageError . listErrors($mCompras->errors());
 					}
@@ -390,6 +395,9 @@ class cCompras extends BaseController {
 						$resp["success"] = true;
 
 						$dataBuy['codigo'] = $mCompras->where("id", $dataBuy["id"])->first()->codigo;
+
+						$mCuentaMovimientos = new mCuentaMovimientos();
+						$mCuentaMovimientos->guardarCompra($dataPost->idCompra, true);
 
 						$resp["msj"] = $dataBuy;
 					} else {
