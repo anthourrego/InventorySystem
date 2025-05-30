@@ -134,19 +134,7 @@ class CatalogoCuentasSeeder extends Seeder
                             "use"=> "movement",
                             "deletable"=> false,
                             "behavior"=> "RECEIVABLE_ACCOUNTS",
-                            "children"=> [
-                              [
-                                "id"=> "5009",
-                                "name"=> "Deterioro acumulado de cuentas por cobrar",
-                                "description"=> "",
-                                "nature"=> "credit",
-                                "readOnly"=> false,
-                                "use"=> "movement",
-                                "deletable"=> true,
-                                "behavior"=> "RECEIVABLE_ACCOUNTS",
-                                "children"=> []
-                              ]
-                            ]
+                            "children"=> []
                           ]
                         ]
                       ],
@@ -1976,6 +1964,28 @@ class CatalogoCuentasSeeder extends Seeder
                     "use"=> "movement",
                     "deletable"=> false,
                     "behavior"=> "SALES",
+                    "children"=> []
+                  ],
+                  [
+                    "id"=> "51481",
+                    "name"=> "Pedidos",
+                    "description"=> "",
+                    "nature"=> "credit",
+                    "readOnly"=> false,
+                    "use"=> "movement",
+                    "deletable"=> false,
+                    "behavior"=> "ORDERS",
+                    "children"=> []
+                  ],
+                  [
+                    "id"=> "51482",
+                    "name"=> "Compras",
+                    "description"=> "",
+                    "nature"=> "credit",
+                    "readOnly"=> false,
+                    "use"=> "movement",
+                    "deletable"=> false,
+                    "behavior"=> "BUYS",
                     "children"=> []
                   ],
                   [

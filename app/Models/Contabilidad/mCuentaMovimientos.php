@@ -153,7 +153,7 @@ class mCuentaMovimientos extends Model {
 				->select("
 					(ventasproductos.cantidad * ventasproductos.valor_original) AS totalVentaProducto,
 					(ventasproductos.cantidad * p.costo) AS totalCostoProducto,
-					((ventasproductos.cantidad * ventasproductos.valor) - (ventasproductos.cantidad * p.costo)) AS totalGananciaProducto
+					((ventasproductos.cantidad * ventasproductos.valor_original) - (ventasproductos.cantidad * p.costo)) AS totalGananciaProducto
 				")
 				->join("productos p", "ventasproductos.id_producto = p.id", "left")
 				->where("ventasproductos.id_venta", $idVenta)
@@ -163,7 +163,7 @@ class mCuentaMovimientos extends Model {
 			foreach ($productos as $value) {
 				$totalGanancia += $value->totalGananciaProducto;
 			}
-			$this->guardarMovimiento("cuentaGananciasAcumuladas", $naturaleza, $totalGanancia, $ventaActual->id, "id_venta");
+			$this->guardarMovimiento("cuentaGananciasAcumuladas", $naturaleza, $totalGanancia - ($ventaActual->descuento ?? 0), $ventaActual->id, "id_venta");
 
 			return true;
 		} catch (Exception $e) {
@@ -230,9 +230,9 @@ class mCuentaMovimientos extends Model {
 				->where("comprasproductos.id_compra", $idCompra)
 				->findAll();
 			
-			/* Generamos un movimiento por producto respecto al costo * cantidad en la venta */
+			/* Generamos un movimiento por producto respecto al costo * cantidad en la compra */
 			foreach ($productos as $value) {
-				$this->guardarInventarioProducto($value->id_producto, $value->costo, $value->cantidad);
+				$this->guardarInventarioProducto($value->id_producto, $value->costo, $value->cantidad, "id_compra", $compraActual->id);
 			}
 			return true;
 		} catch (Exception $e) {
@@ -241,7 +241,8 @@ class mCuentaMovimientos extends Model {
         }
 	}
 
-	public function guardarInventarioProducto($idProducto, $costoUnitario, $cantidad): string|bool {
+	/* idProducto - costo - cantidad - pertenece a compra, venta, pedido, etc - id de la cuenta que pertenece */
+	public function guardarInventarioProducto($idProducto, $costoUnitario, $cantidad, $perteneceMovimiento, $idPerteneceMovimiento): string|bool {
 		try {
 			$mProductos = new mProductos();
 			$productoActual = $mProductos->asObject()->find($idProducto);
@@ -255,15 +256,45 @@ class mCuentaMovimientos extends Model {
 			}
 
 			$naturaleza = $this->buscarNaturaleza($cuenta, true);
+
+			$extraData = array(
+				$perteneceMovimiento => $idPerteneceMovimiento,
+			);
 			
 			/* Guardamos movimiento de producto */
-			$this->guardarMovimiento("cuentaInventario", $naturaleza, $costoUnitario * $cantidad, $productoActual->id, "id_producto");
+			$this->guardarMovimiento("cuentaInventario", $naturaleza, $costoUnitario * $cantidad, $productoActual->id, "id_producto", $extraData);
 
 			return true;
 		} catch (Exception $e) {
             log_message('error', 'Register Account Movement: ' . $e->getMessage());
 			return $e->getMessage();
         }
+	}
+
+	public function anularMovimiento($type, $id, $elimina = false) {
+		$column = null;
+		switch ($type) {
+			case 'compra':
+				$column = 'id_compra';
+				break;
+			case 'pedido':
+				$column = 'id_pedido';
+				break;
+			case 'venta':
+				$column = 'id_venta';
+				break;
+			default:
+				$column = null;
+				break;
+		}
+
+		if ($column) {
+			if ($elimina) {
+				$this->where($column, $id)->delete();
+			} else {
+				$this->builder()->where($column, $id)->update(['estado' => 'AN']);
+			}
+		}
 	}
 	
 }

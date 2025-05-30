@@ -356,6 +356,10 @@ class cPedidos extends BaseController {
 
 			if ($moveInventoryModel->update()) {
 				if($mPedidosProductos->where("id_pedido", $data->id)->delete()){
+
+					$mCuentaMovimientos = new mCuentaMovimientos();
+					$mCuentaMovimientos->anularMovimiento('pedido', $data->id, true);
+
 					$pedidos = new mPedidos();
 					if ($pedidos->delete($data->id)) {
 						$resp["success"] = true;
@@ -1162,7 +1166,8 @@ class cPedidos extends BaseController {
 			")->join('productos P', 'pedidoscajasproductos.id_producto = P.id', 'left')
 			->where("pedidoscajasproductos.id_caja", $value->id)
 			->groupBy("pedidoscajasproductos.id_caja")
-			->first();
+			->get()
+ 			->getRow();
 		}
 
 		return $this->response->setJSON($pedido);

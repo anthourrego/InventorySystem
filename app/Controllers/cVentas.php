@@ -236,6 +236,10 @@ class cVentas extends BaseController {
 
 			if ($moveInventoryModel->update()) {
 				if($mVentasProductos->where("id_venta", $data->id)->delete()){
+
+					$mCuentaMovimientos = new mCuentaMovimientos();
+					$mCuentaMovimientos->anularMovimiento('venta', $data->id, true);
+
 					$salesModel = new mVentas();
 					if ($salesModel->delete($data->id)) {
 						$resp["success"] = true;

@@ -1,16 +1,14 @@
 let rutaBase = base_url() + "Contabilidad/CuentaMovimientos/";
 
 $(function () {
-    // Inicializar estado de expansión
-    initializeExpandedState();
 
-    // Manejar clicks en iconos de expansión
+    correrTodo();
+
     $('.expand-icon').on('click', function (e) {
         e.preventDefault();
         toggleAccountGroup($(this));
     });
 
-    // Hover effects
     $('.account-row').hover(
         function () {
             $(this).addClass('table-active');
@@ -20,51 +18,54 @@ $(function () {
         }
     );
 
-    function initializeExpandedState() {
-        // Expandir por defecto algunos grupos
-        const defaultExpanded = ['activos', 'activos-corrientes', 'efectivo', 'caja'];
+    $("#exapandAll").on('click', function () {
+        correrTodo(true);
+    })
 
-        defaultExpanded.forEach(function (target) {
-            const icon = $('.expand-icon[data-target="' + target + '"]');
-            if (icon.length) {
-                expandGroup(icon, target);
-            }
-        });
-    }
-
-    function toggleAccountGroup(icon) {
-        const target = icon.data('target');
-        const isExpanded = icon.hasClass('expanded');
-
-        if (isExpanded) {
-            collapseGroup(icon, target);
-        } else {
-            expandGroup(icon, target);
-        }
-    }
-
+    $("#collapseAll").on('click', function () {
+        correrTodo();
+    })
 });
 
-function expandGroup(icon, target) {
+function correrTodo(all = false) {
+    $('.cuenta-padre').each(function () {
+        let icon = $(this).find('td i');
+        toggleAccountGroup(icon, all);
+    })
+}
+
+function toggleAccountGroup(icon, all = false) {
+    const target = icon.data('target');
+    const isExpanded = icon.hasClass('expanded');
+
+    if (isExpanded) {
+        collapseGroup(icon, target);
+    } else {
+        expandGroup(icon, target, all);
+    }
+}
+
+function expandGroup(icon, target, all = false) {
     icon.removeClass('fa-plus').addClass('fa-minus expanded');
     $('.collapsible.' + target).show();
 
-    // Animar la aparición
     $('.collapsible.' + target).each(function (index) {
         $(this).delay(index * 50).fadeIn(200);
+
+        if (all) {
+            let icon = $(this).find('td i');
+            expandGroup(icon, icon.data('target'), all);
+        }
     });
 }
 
 function collapseGroup(icon, target) {
     icon.removeClass('fa-minus expanded').addClass('fa-plus');
 
-    // Colapsar grupos hijos primero
     $('.collapsible.' + target + ' .expand-icon.expanded').each(function () {
         const childTarget = $(this).data('target');
-        debugger
         collapseGroup($(this), childTarget);
     });
 
-    // Ocultar el grupo
     $('.collapsible.' + target).fadeOut(200);
 }

@@ -198,10 +198,6 @@ class cCompras extends BaseController {
 					if ($mCompras->save($dataBuy)) {
 						$resp["success"] = true;
 						$resp["msj"] = $dataBuy;
-
-						$mCuentaMovimientos = new mCuentaMovimientos();
-						$mCuentaMovimientos->guardarCompra($dataBuy["id"]);
-
 					} else {
 						$resp["msj"] = $this->messageError . listErrors($mCompras->errors());
 					}
@@ -396,9 +392,6 @@ class cCompras extends BaseController {
 
 						$dataBuy['codigo'] = $mCompras->where("id", $dataBuy["id"])->first()->codigo;
 
-						$mCuentaMovimientos = new mCuentaMovimientos();
-						$mCuentaMovimientos->guardarCompra($dataPost->idCompra, true);
-
 						$resp["msj"] = $dataBuy;
 					} else {
 						$resp["msj"] = $this->messageError . listErrors($mCompras->errors());
@@ -516,6 +509,10 @@ class cCompras extends BaseController {
 		}
 
 		if ($resp["success"]) {
+
+			$mCuentaMovimientos = new mCuentaMovimientos();
+			$mCuentaMovimientos->anularMovimiento('compra', $data->idCompra);
+
 			$this->db->transCommit();
 			$resp['msj'] = "Compra anulada correctamente";
 		} else {
@@ -585,6 +582,12 @@ class cCompras extends BaseController {
 				break;
 			}
 		}
+
+		if (!is_string($response)) {
+			$mCuentaMovimientos = new mCuentaMovimientos();
+			$mCuentaMovimientos->guardarCompra($idBuy);
+		}
+
 		return $response;
 	}
 
