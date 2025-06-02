@@ -42,6 +42,8 @@ class cCatalogoCuentas extends BaseController {
 			"estado" => $postData["estado"] === "true" ? 1 : 0,
 			"type" => trim($postData["tipo"]),
 			"id_parent" => trim($postData["idParent"]),
+			"naturaleza" => trim($postData["naturaleza"]),
+			"comportamiento" => trim($postData["comportamiento"]),
 		);
 
 		$mCatalogoCuentas = new mCatalogoCuentas();

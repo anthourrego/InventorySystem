@@ -654,6 +654,10 @@ class mPermisos extends Model {
 								"text" => "Modificar"
 							]
 						]
+					],
+					[
+						"id" => 1203,
+						"text" => "Cuenta Movimientos"
 					]
 				]
 			],

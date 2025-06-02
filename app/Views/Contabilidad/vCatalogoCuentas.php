@@ -27,7 +27,7 @@
           <div class="form-row">
             <div class="col-12 col-md-6 form-group form-valid">
               <label class="mb-0" for="nombre">Código <span class="text-danger">*</span></label>
-              <input placeholder="Código" class="form-control soloNumeros inputVer" id="codigo" name="codigo" type="text" minlength="1" maxlength="2" required autocomplete="off">
+              <input placeholder="Código" class="form-control inputVer" id="codigo" name="codigo" type="text" minlength="1" maxlength="20" required autocomplete="off">
             </div>
             <div class="col-12 col-md-6 form-group form-valid">
               <label class="mb-0" for="nombre">Nombre <span class="text-danger">*</span></label>
