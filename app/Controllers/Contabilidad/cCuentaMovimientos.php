@@ -14,7 +14,7 @@ class cCuentaMovimientos extends BaseController {
 	public function index() {
 
 		$mCatalogoCuentas = new mCatalogoCuentas();
-		$cuentasContables = $mCatalogoCuentas->getCuentas(null);
+		$cuentasContables = $mCatalogoCuentas->getCuentas();
 
 		$this->mCuentaMovimientos = new mCuentaMovimientos();
 

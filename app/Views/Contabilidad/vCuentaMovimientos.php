@@ -21,20 +21,14 @@
                     <thead class="table-header">
                       <tr>
                         <th style="text-align: left; width: 30%;"></th>
-                        <!-- <th style="width: 12%; text-align: center;" colspan="2">Saldo Inicial</th> -->
                         <th style="width: 12%; text-align: center;" colspan="2">Movimientos</th>
-                        <!-- <th style="width: 12%; text-align: center;" colspan="2">Saldo final</th> -->
                       </tr>
                     </thead>
                     <thead class="table-header">
                       <tr>
                         <th style="text-align: left; width: 30%;">Cuenta contable</th>
-                        <!-- <th style="width: 12%; text-align: center;">Débito</th>
-                        <th style="width: 12%; text-align: center;">Crédito</th> -->
-                        <th style="width: 12%; text-align: center;">Débito</th>
-                        <th style="width: 12%; text-align: center;">Crédito</th>
-                        <!-- <th style="width: 12%; text-align: center;">Débito</th>
-                        <th style="width: 10%; text-align: center;">Crédito</th> -->
+                        <th style="width: 12%; text-align: center;">Total</th>
+                        <!-- <th style="width: 12%; text-align: center;">Crédito</th> -->
                       </tr>
                     </thead>
 
@@ -49,12 +43,8 @@
                             <?php } ?>
                             <?= $cuenta->nombre ?>
                           </td>
-                          <!-- <td class="amount-cell amount-positive">$ 0</td>
-                          <td class="amount-cell amount-zero">$ 0</td> -->
                           <td class="amount-cell amount-zero">$ <?=number_format($cuenta->movimientoDebito)?></td>
-                          <td class="amount-cell amount-zero">$ <?=number_format($cuenta->movimientoCredito)?></td>
-                          <!-- <td class="amount-cell amount-positive">$ 0</td>
-                          <td class="amount-cell amount-zero">$ 0</td> -->
+                          <!-- <td class="amount-cell amount-zero">$ <?=number_format($cuenta->movimientoCredito)?></td> -->
                         </tr>
                         <?php if (!empty($cuenta->children)):
                           foreach ($cuenta->children as $children) {
