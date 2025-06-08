@@ -4795,7 +4795,7 @@ class CatalogoCuentasSeeder extends Seeder
               'naturaleza'     => "credito",
               'clasificacion'  => $clasificacion,
               'estado'         => 0,
-              'solo_lectura'   => 1,
+              'solo_lectura'   => 0,
               'eliminable'     => 0,
               'type'           => isset($account['children']) && !empty($account['children']) ? 'CMA' : "CMO",
               'comportamiento' => "SIN_USO",
