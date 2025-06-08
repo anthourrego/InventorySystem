@@ -6,6 +6,8 @@ use App\Models\mPedidos;
 use App\Models\mProductos;
 use App\Models\mObservacionProductos;
 use App\Models\mVentas;
+use App\Models\Contabilidad\mCuentaMovimientos;
+use App\Models\mPedidosProductos;
 use \Hermawan\DataTables\DataTable;
 
 class cProductosReportados extends BaseController {
@@ -104,7 +106,8 @@ class cProductosReportados extends BaseController {
 
     $this->db->transBegin();
 
-		$mObservacionProductos = new mObservacionProductos();
+		$mPedidosProductos = new mPedidosProductos();
+    $mObservacionProductos = new mObservacionProductos();
 		$mProductos = new mProductos();
 
     //Creamos los datos para guardar
@@ -128,6 +131,17 @@ class cProductosReportados extends BaseController {
       if ($mProductos->save($datosSaveProd)) {
         $resp["success"] = true;
         $resp["msj"] = "Producto confrontado correctamente";
+
+        if (+$postData["cantidadReportada"] > 0) {
+          $observacion = $mObservacionProductos->asObject()->find($postData["idObservacionProducto"]);
+          
+          $pedidoProducto = $mPedidosProductos->asObject()->find($observacion->id_pedido_producto);
+          
+          $total = +$producto->precio_venta * (+$postData["cantidadReportada"]);
+  
+          $mCuentaMovimientos = new mCuentaMovimientos();
+          $mCuentaMovimientos->guardarInventarioProducto($postData["idProducto"], ($total * -1), "id_pedido", $pedidoProducto->id_pedido);
+        }
       } else {
         $resp["msj"] = "No fue posible modificar el invetario del producto." . listErrors($mObservacionProductos->errors());
       }

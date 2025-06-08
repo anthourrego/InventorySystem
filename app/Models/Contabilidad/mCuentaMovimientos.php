@@ -10,6 +10,7 @@ use App\Models\mVentasProductos;
 use App\Models\mProductos;
 use App\Models\mCompras;
 use App\Models\mCompraProductos;
+use App\Models\mCuentasCobrar;
 use CodeIgniter\Log\Logger;
 use CodeIgniter\Model;
 use Exception;
@@ -35,6 +36,7 @@ class mCuentaMovimientos extends Model {
 		"created_at",
 		"updated_at",
 		"id_producto",
+		"id_abono",
 	];
 
 	// Dates
@@ -55,7 +57,8 @@ class mCuentaMovimientos extends Model {
 		'id_pedido_observacion' => "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[observacionproductos.id]",
 		'id_compra' 			=> "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[compras.id]",
         'id_ingresomercancia'   => "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[ingresomercancia.id]",
-		'id_producto'		    => "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[productos.id]"
+		'id_producto'		    => "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[productos.id]",
+		'id_abono'			    => "permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[abonosventas.id]"
 	];
 	protected $validationMessages   = [];
 	protected $skipValidation       = false;
@@ -136,15 +139,17 @@ class mCuentaMovimientos extends Model {
 			$naturaleza = $this->buscarNaturaleza($ventaActual->metodo_pago);
 
 			/* Guardamos movimiento de descuento */
-			$this->guardarMovimiento("cuentaDescuentoCliente", $naturaleza, $ventaActual->descuento, $ventaActual->id, "id_venta");
+			$this->guardarMovimiento("cuentaGastosDescuentos", $naturaleza, $ventaActual->descuento, $ventaActual->id, "id_venta");
 			
 			/* Guardamos movimiento de total */
 			$totalMenosDescuento = $ventaActual->total - ($ventaActual->descuento ?? 0);
-			$this->guardarMovimiento("cuentaIngresos", $naturaleza, $totalMenosDescuento, $ventaActual->id, "id_venta");
 			
 			/* Generamos un movimiento para las cuentas por cobrar cuando es credito */
 			if ($naturaleza == 'credito') {
-				$this->guardarMovimiento("cuentaPorCobrarClientes", $naturaleza, $totalMenosDescuento, $ventaActual->id, "id_venta");
+				$this->guardarMovimiento("cuentaIngresoCuentaPorCobrar", $naturaleza, $totalMenosDescuento, $ventaActual->id, "id_venta");
+			} else {
+				/* se guarda en la caja, cuando se valide si es trasnferencia o no, se hace movimiento a cuentaIngresoTransferencia */
+				$this->guardarMovimiento("cuentaIngresoCaja", $naturaleza, $totalMenosDescuento, $ventaActual->id, "id_venta");
 			}
 
 			/* Generamos un movimiento para las ganancias respecto al valor de los productos */
@@ -160,38 +165,18 @@ class mCuentaMovimientos extends Model {
 				->findAll();
 			
 			$totalGanancia = 0;
+			$totalInventario = 0;
 			foreach ($productos as $value) {
 				$totalGanancia += $value->totalGananciaProducto;
+				$totalInventario += $value->totalVentaProducto;
 			}
-			$this->guardarMovimiento("cuentaGananciasAcumuladas", $naturaleza, $totalGanancia - ($ventaActual->descuento ?? 0), $ventaActual->id, "id_venta");
+			$this->guardarMovimiento("cuentaPatrimonioGanancias", $naturaleza, $totalGanancia - ($ventaActual->descuento ?? 0), $ventaActual->id, "id_venta");
+
+			$this->guardarMovimiento("cuentaActivosInventario", $naturaleza, ($totalInventario * -1), $ventaActual->id, "id_venta");
 
 			return true;
 		} catch (Exception $e) {
-            log_message('error', 'Register Account Movement: ' . $e->getMessage());
-			return $e->getMessage();
-        }
-	}
-
-	public function guardarPedido($idPedido, $reiniciarMovimientos = false): string|bool {
-		try {
-			$mPedidos = new mPedidos();
-			$pedidoActual = $mPedidos->asObject()->find($idPedido);
-			if (!$pedidoActual) {
-				throw new Exception("El pedido no se encontro almacenado");
-			}
-
-			if ($reiniciarMovimientos) {
-				$this->where("id_pedido", $pedidoActual->id)->delete();
-			}
-
-			$naturaleza = $this->buscarNaturaleza($pedidoActual->metodo_pago);
-			
-			/* Guardamos movimiento de total */
-			$this->guardarMovimiento("cuentaPedidos", $naturaleza, $pedidoActual->total, $pedidoActual->id, "id_pedido");
-
-			return true;
-		} catch (Exception $e) {
-            log_message('error', 'Register Account Movement: ' . $e->getMessage());
+            log_message('error', 'Register Account Movement Venta: ' . $e->getMessage());
 			return $e->getMessage();
         }
 	}
@@ -208,15 +193,15 @@ class mCuentaMovimientos extends Model {
 				$this->where("id_compra", $compraActual->id)->delete();
 			}
 
-			$cuenta = $this->obtenerCuentaConfigurada("cuentaCompras");
+			$cuenta = $this->obtenerCuentaConfigurada("cuentaGastosCompras");
 			if (!$cuenta) {
-				throw new Exception("La cuenta no se encontro configurada");
+				throw new Exception("La cuenta no se encontro configurada para compra");
 			}
 
 			$naturaleza = $this->buscarNaturaleza($cuenta, true);
 
 			/* Guardamos movimiento de total */
-			$this->guardarMovimiento("cuentaCompras", $naturaleza, $compraActual->total, $compraActual->id, "id_compra");
+			$this->guardarMovimiento("cuentaGastosCompras", $naturaleza, $compraActual->total, $compraActual->id, "id_compra");
 			
 			$mCompraProductos = new mCompraProductos();
 			$productos = $mCompraProductos
@@ -232,17 +217,17 @@ class mCuentaMovimientos extends Model {
 			
 			/* Generamos un movimiento por producto respecto al costo * cantidad en la compra */
 			foreach ($productos as $value) {
-				$this->guardarInventarioProducto($value->id_producto, $value->costo, $value->cantidad, "id_compra", $compraActual->id);
+				$this->guardarInventarioProducto($value->id_producto, $value->valor_original * $value->cantidad, "id_compra", $compraActual->id);
 			}
 			return true;
 		} catch (Exception $e) {
-            log_message('error', 'Register Account Movement: ' . $e->getMessage());
+            log_message('error', 'Register Account Movement Compra: ' . $e->getMessage());
 			return $e->getMessage();
         }
 	}
 
 	/* idProducto - costo - cantidad - pertenece a compra, venta, pedido, etc - id de la cuenta que pertenece */
-	public function guardarInventarioProducto($idProducto, $costoUnitario, $cantidad, $perteneceMovimiento, $idPerteneceMovimiento): string|bool {
+	public function guardarInventarioProducto($idProducto, $total, $perteneceMovimiento, $idPerteneceMovimiento): string|bool {
 		try {
 			$mProductos = new mProductos();
 			$productoActual = $mProductos->asObject()->find($idProducto);
@@ -250,9 +235,9 @@ class mCuentaMovimientos extends Model {
 				throw new Exception("El producto no se encontro almacenado");
 			}
 
-			$cuenta = $this->obtenerCuentaConfigurada("cuentaInventario");
+			$cuenta = $this->obtenerCuentaConfigurada("cuentaActivosInventario");
 			if (!$cuenta) {
-				throw new Exception("La cuenta no se encontro configurada");
+				throw new Exception("La cuenta no se encontro configurada para movimiento de producto");
 			}
 
 			$naturaleza = $this->buscarNaturaleza($cuenta, true);
@@ -262,11 +247,11 @@ class mCuentaMovimientos extends Model {
 			);
 			
 			/* Guardamos movimiento de producto */
-			$this->guardarMovimiento("cuentaInventario", $naturaleza, $costoUnitario * $cantidad, $productoActual->id, "id_producto", $extraData);
+			$this->guardarMovimiento("cuentaActivosInventario", $naturaleza, $total, $productoActual->id, "id_producto", $extraData);
 
 			return true;
 		} catch (Exception $e) {
-            log_message('error', 'Register Account Movement: ' . $e->getMessage());
+            log_message('error', 'Register Account Product: ' . $e->getMessage());
 			return $e->getMessage();
         }
 	}
@@ -295,6 +280,40 @@ class mCuentaMovimientos extends Model {
 				$this->builder()->where($column, $id)->update(['estado' => 'AN']);
 			}
 		}
+	}
+
+	public function guardarCuentaCobrar($idAbono, $reiniciarMovimientos = false): string|bool {
+		try {
+			$mCuentasCobrar = new mCuentasCobrar();
+			$cuentaCobrar = $mCuentasCobrar->asObject()->find($idAbono);
+			if (!$cuentaCobrar) {
+				throw new Exception("El abono no se encontro almacenado");
+			}
+
+			$cuenta = $this->obtenerCuentaConfigurada("cuentaIngresoCuentaPorCobrar");
+			if (!$cuenta) {
+				throw new Exception("La cuenta no se encontro configurada para abono de cuenta cobrar");
+			}
+
+			if ($reiniciarMovimientos) {
+				return $this->where("id_abono", $cuentaCobrar->id)->delete();
+			}
+
+			$naturaleza = $this->buscarNaturaleza($cuenta, 1);
+
+			$extra = [
+				"id_venta" => $cuentaCobrar->id_venta
+			];
+
+			$this->guardarMovimiento("cuentaIngresoCuentaPorCobrar", $naturaleza, ($cuentaCobrar->valor * -1), $cuentaCobrar->id, "id_abono", $extra);
+
+			$this->guardarMovimiento("cuentaIngresoCaja", $naturaleza, $cuentaCobrar->valor, $cuentaCobrar->id, "id_abono", $extra);
+
+			return true;
+		} catch (Exception $e) {
+            log_message('error', 'Register Account Movement Venta: ' . $e->getMessage());
+			return $e->getMessage();
+        }
 	}
 	
 }

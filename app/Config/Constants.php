@@ -175,4 +175,5 @@ defined('TIPOCOMPORTAMIENTOCONTABILIDAD') || define('TIPOCOMPORTAMIENTOCONTABILI
   "COMPRAS"                     => array("valor" => "COMPRAS", "titulo" => "Compras"),
   "INVENTARIO_PERDIDO"          => array("valor" => "INVENTARIO_PERDIDO", "titulo" => "Inventario Perdido"),
   "GANANCIAS"                   => array("valor" => "GANANCIAS", "titulo" => "Ganancias"),
+  "DESCUENTOS"                  => array("valor" => "DESCUENTOS", "titulo" => "Descuentos"),
 ));

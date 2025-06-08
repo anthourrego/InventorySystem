@@ -44,6 +44,10 @@ class ActivarCuentasSeeder extends Seeder
             [
                 "codigo" => "590505",
                 "comportamiento" => "GANANCIAS"
+            ],
+            [
+                "codigo" => "421040",
+                "comportamiento" => "DESCUENTOS"
             ]
         ];
 
@@ -59,6 +63,7 @@ class ActivarCuentasSeeder extends Seeder
             ["campo" => "cuentaGastosCompras", "key" => "COMPRAS"],
             ["campo" => "cuentaGastosInventarioPerdido", "key" => "INVENTARIO_PERDIDO"],
             ["campo" => "cuentaPatrimonioGanancias", "key" => "GANANCIAS"],
+            ["campo" => "cuentaGastosDescuentos", "key" => "DESCUENTOS"],
         ];
         $mParametrizacionCuentas = new mParametrizacionCuentas();
         $mCatalogoCuentas = new mCatalogoCuentas();

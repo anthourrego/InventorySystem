@@ -356,10 +356,6 @@ class cPedidos extends BaseController {
 
 			if ($moveInventoryModel->update()) {
 				if($mPedidosProductos->where("id_pedido", $data->id)->delete()){
-
-					$mCuentaMovimientos = new mCuentaMovimientos();
-					$mCuentaMovimientos->anularMovimiento('pedido', $data->id, true);
-
 					$pedidos = new mPedidos();
 					if ($pedidos->delete($data->id)) {
 						$resp["success"] = true;
@@ -470,10 +466,6 @@ class cPedidos extends BaseController {
 					if ($pedidoModel->save($dataSave)) {
 						$resp["success"] = true;
 						$resp["msj"] = $dataSave;
-
-						$mCuentaMovimientos = new mCuentaMovimientos();
-						$mCuentaMovimientos->guardarPedido($dataSave["id"]);
-
 					} else {
 						$resp["msj"] = "Ha ocurrido un error al guardar el pedido." . listErrors($pedidoModel->errors());
 					}
@@ -709,10 +701,6 @@ class cPedidos extends BaseController {
 
 					if ($mPedidos->save($dataSave)) {
 						$resp["msj"] = $dataSave;
-
-						$mCuentaMovimientos = new mCuentaMovimientos();
-						$mCuentaMovimientos->guardarPedido($dataSave["id"], true);
-
 					} else {
 						$resp["msj"] = "Ha ocurrido un error al guardar el pedido." . listErrors($mPedidos->errors());
 					}

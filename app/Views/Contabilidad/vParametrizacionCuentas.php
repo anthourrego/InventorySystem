@@ -22,7 +22,7 @@
               ?>
             </select>
           </div>
-          <div class="col-12 col-md-6 col-lg-3">
+          <!-- <div class="col-12 col-md-6 col-lg-3">
             <label for="cuentaIngresoTransferencia">Transferencias:</label>
             <select id="cuentaIngresoTransferencia" data-nombre="Cuenta de Transferencias" <?= !$editar ? 'disabled' : '' ?> name="cuentaIngresoTransferencia" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
               <option value=""></option>
@@ -32,7 +32,7 @@
               }
               ?>
             </select>
-          </div>
+          </div> -->
           <div class="col-12 col-md-6 col-lg-3">
             <label for="cuentaIngresoCuentaPorCobrar">Cuentas por cobrar:</label>
             <select id="cuentaIngresoCuentaPorCobrar" data-nombre="Cuenta por cobrar" <?= !$editar ? 'disabled' : '' ?> name="cuentaIngresoCuentaPorCobrar" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
@@ -77,6 +77,17 @@
               <?php 
               foreach ($cuentas as $cuenta) {
                 echo call_user_func($renderAccountOptions, 'INVENTARIO_PERDIDO', $cuenta);
+              }
+              ?>
+            </select>
+          </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <label for="cuentaGastosDescuentos">Descuentos:</label>
+            <select id="cuentaGastosDescuentos" data-nombre="Cuenta de inventario perdido" <?= !$editar ? 'disabled' : '' ?> name="cuentaGastosDescuentos" data-placeholder="Seleccione una opción" class="custom-select select2 configAct">
+              <option value=""></option>
+              <?php 
+              foreach ($cuentas as $cuenta) {
+                echo call_user_func($renderAccountOptions, 'DESCUENTOS', $cuenta);
               }
               ?>
             </select>

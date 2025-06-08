@@ -11,16 +11,22 @@ class cCuentaMovimientos extends BaseController {
 	
 	private $mCuentaMovimientos;
 	
-	public function index() {
+	public function index($fechaIni = '', $fechaFin = '') {
+
+		$filters = [
+			"fechaIni" => $fechaIni,
+			"fechaFin" => $fechaFin
+		];
 
 		$mCatalogoCuentas = new mCatalogoCuentas();
-		$cuentasContables = $mCatalogoCuentas->getCuentas();
+		$cuentasContables = $mCatalogoCuentas->getCuentas(1, null, $filters);
 
 		$this->mCuentaMovimientos = new mCuentaMovimientos();
 
 		$this->calcularTotalCuenta($cuentasContables);
 
 		$this->content['cuentasContables'] = $cuentasContables;
+		$this->content['filtros'] = $filters;
 
 		$this->content['title'] = "Movimiento de cuentas";
 		$this->content['view'] = "Contabilidad/vCuentaMovimientos";
@@ -72,7 +78,7 @@ class cCuentaMovimientos extends BaseController {
 		}
 
 		$cuenta->{'movimientoCredito'} = $resultado['credito'] ?? 0;
-		$cuenta->{'movimientoDebito'} = $resultado['debito'] ?? 0;
+		$cuenta->{'movimientoDebito'} = ($resultado['debito'] ?? 0) + ($resultado['credito'] ?? 0);
 		return $cuenta;
 	}
 }

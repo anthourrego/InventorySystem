@@ -3194,7 +3194,7 @@ class CatalogoCuentasSeeder extends Seeder
                               ["codigo" => "421025", "name" => "Financiación vehículos", "children" => []],
                               ["codigo" => "421030", "name" => "Financiación sistemas de viajes", "children" => []],
                               ["codigo" => "421035", "name" => "Aceptaciones bancarias", "children" => []],
-                              ["codigo" => "421040", "name" => "Descuentos comerciales condicionados", "children" => []],
+                              ["codigo" => "421040", "name" => "Descuentos comerciales", "children" => []],
                               ["codigo" => "421045", "name" => "Descuentos bancarios", "children" => []],
                               ["codigo" => "421050", "name" => "Comisiones cheques de otras plazas", "children" => []],
                               ["codigo" => "421055", "name" => "Multas y recargos", "children" => []],

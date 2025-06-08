@@ -25,6 +25,25 @@ $(function () {
     $("#collapseAll").on('click', function () {
         correrTodo();
     })
+
+    $("#btnFiltros").on('click', function () {
+        $("#modalFiltros").modal('show');
+    });
+
+    $("#formFiltros").on('submit', function (e) {
+        e.preventDefault();
+
+        if (moment($("#fechaIni").val()).isAfter($("#fechaFin").val())) {
+            return alertify.warning("La fecha inicial es mayor a la fecha final");
+        }
+
+        location.href = `${rutaBase}${$("#fechaIni").val()}/${$("#fechaFin").val()}`;
+    });
+
+    $("#reiniciarFiltros").on('click', function (e) {
+        location.href = rutaBase;
+    });
+
 });
 
 function correrTodo(all = false) {
