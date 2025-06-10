@@ -350,3 +350,8 @@ $routes->group('Contabilidad/Parametrizacion', ['filter' => 'authGuard:120', 'na
 	$routes->get('Datos', 'cParametrizacionCuentas::datos', ['filter' => ['ajax']]);
 	$routes->post('Actualizar', 'cParametrizacionCuentas::actualizar', ['filter' => ['authGuard:120201', 'ajax']]);
 });
+
+$routes->group('Contabilidad/CuentaMovimientos', ['filter' => 'authGuard:120', 'namespace' => 'App\Controllers\Contabilidad'], function ($routes) {
+	$routes->get('(:any)/(:any)', 'cCuentaMovimientos::index/$1/$2', ['filter' => 'authGuard:1203']);
+	$routes->get('/', 'cCuentaMovimientos::index', ['filter' => 'authGuard:1203']);
+});

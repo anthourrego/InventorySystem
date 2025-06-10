@@ -12,6 +12,7 @@ use App\Models\mUsuarios;
 use App\Models\mClientes;
 use App\Models\mVentasProductos;
 use App\Models\mConfiguracion;
+use App\Models\Contabilidad\mCuentaMovimientos;
 
 class cVentas extends BaseController {
 	public function index() {
@@ -235,6 +236,10 @@ class cVentas extends BaseController {
 
 			if ($moveInventoryModel->update()) {
 				if($mVentasProductos->where("id_venta", $data->id)->delete()){
+
+					$mCuentaMovimientos = new mCuentaMovimientos();
+					$mCuentaMovimientos->anularMovimiento('venta', $data->id, true);
+
 					$salesModel = new mVentas();
 					if ($salesModel->delete($data->id)) {
 						$resp["success"] = true;
@@ -339,6 +344,10 @@ class cVentas extends BaseController {
 						$resp["success"] = true;
 						$dataSave["total"] = $valorTotal - $dataPost->descuento;
 						$resp["msj"] = $dataSave;
+
+						$mCuentaMovimientos = new mCuentaMovimientos();
+						$mCuentaMovimientos->guardarVenta($dataSave["id"]);
+
 					} else {
 						$resp["msj"] = "Ha ocurrido un error al guardar la venta." . listErrors($ventaModel->errors());
 					}
@@ -521,6 +530,10 @@ class cVentas extends BaseController {
 
 					if ($mVentas->save($dataSave)) {
 						$resp["msj"] = $dataSave;
+
+						$mCuentaMovimientos = new mCuentaMovimientos();
+						$mCuentaMovimientos->guardarVenta($dataSave["id"], true);
+
 					} else {
 						$resp["msj"] = "Ha ocurrido un error al guardar la venta." . listErrors($mVentas->errors());
 					}

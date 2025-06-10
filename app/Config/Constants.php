@@ -161,23 +161,19 @@ defined('CLASIFICACIONCUENTACONTABILIDAD')      || define('CLASIFICACIONCUENTACO
 ));// Clasificacio de cuenta en contabilidad
 
 defined('NATURALEZACUENTACONTABILIDAD')      || define('NATURALEZACUENTACONTABILIDAD', array(
-  0 => array("valor" => "credito", "titulo" => "Credito")
-  , 1 => array("valor" => "debito", "titulo" => "Debito")
+  0 => array("valor" => "credito", "titulo" => "Credito", "relation" => "2")
+  , 1 => array("valor" => "debito", "titulo" => "Debito", "relation" => "1")
 ));// Naturaleza de catalogo de cuentas
 
 defined('TIPOCOMPORTAMIENTOCONTABILIDAD') || define('TIPOCOMPORTAMIENTOCONTABILIDAD', array(
-  "WITHOUT_USE"                     => array("valor" => "WITHOUT_USE", "titulo" => "Sin uso contable"),
-  "TAXES_IN_FAVOR"                  => array("valor" => "TAXES_IN_FAVOR", "titulo" => "Impuesto a favor"),
-  "PAYROLL_ADVANCE"                => array("valor" => "PAYROLL_ADVANCE", "titulo" => "Anticipo de nómina"),
-  "TAX_REFUND_IN_FAVOR"            => array("valor" => "TAX_REFUND_IN_FAVOR", "titulo" => "Devolución de impuestos a favor"),
-  "RETENTIONS_IN_FAVOR"           => array("valor" => "RETENTIONS_IN_FAVOR", "titulo" => "Retenciones a favor"),
-  "INVENTORY"                      => array("valor" => "INVENTORY", "titulo" => "Inventario"),
-  "OTHER_RETENTION_TYPE_IN_FAVOR" => array("valor" => "OTHER_RETENTION_TYPE_IN_FAVOR", "titulo" => "Otro tipo de retención a favor"),
-  "CASH_ACCOUNTS"                  => array("valor" => "CASH_ACCOUNTS", "titulo" => "Bancos tipo efectivo"),
-  "ADVANCE_OUT"                    => array("valor" => "ADVANCE_OUT", "titulo" => "Anticipos entregados"),
-  "BANK_ACCOUNTS"                  => array("valor" => "BANK_ACCOUNTS", "titulo" => "Bancos tipo bancos"),
-  "OTHER_TAX_TYPE_IN_FAVOR"       => array("valor" => "OTHER_TAX_TYPE_IN_FAVOR", "titulo" => "Otro tipo de impuesto a favor"),
-  "RECEIVABLE_ACCOUNTS_RETURNS"   => array("valor" => "RECEIVABLE_ACCOUNTS_RETURNS", "titulo" => "Devoluciones a proveedores"),
-  "RECEIVABLE_ACCOUNTS"           => array("valor" => "RECEIVABLE_ACCOUNTS", "titulo" => "Cuentas por cobrar"),
-  "PROPERTY_PLANT_EQUIPMENT"      => array("valor" => "PROPERTY_PLANT_EQUIPMENT", "titulo" => "Propiedad, planta y equipo")
+  "SIN_USO"                     => array("valor" => "SIN_USO", "titulo" => "Sin uso contable"),
+  "CUENTAS_COBRAR"              => array("valor" => "CUENTAS_COBRAR", "titulo" => "Cuentas por cobrar"),
+  "INVENTARIO"                  => array("valor" => "INVENTARIO", "titulo" => "Inventario"),
+  "DEVOLUCIONES"                => array("valor" => "DEVOLUCIONES", "titulo" => "Devoluciones"),
+  "TRANSFERENCIAS"              => array("valor" => "TRANSFERENCIAS", "titulo" => "Transferencias"),
+  "CAJA_MENOR"                  => array("valor" => "CAJA_MENOR", "titulo" => "Caja Menor"),
+  "COMPRAS"                     => array("valor" => "COMPRAS", "titulo" => "Compras"),
+  "INVENTARIO_PERDIDO"          => array("valor" => "INVENTARIO_PERDIDO", "titulo" => "Inventario Perdido"),
+  "GANANCIAS"                   => array("valor" => "GANANCIAS", "titulo" => "Ganancias"),
+  "DESCUENTOS"                  => array("valor" => "DESCUENTOS", "titulo" => "Descuentos"),
 ));

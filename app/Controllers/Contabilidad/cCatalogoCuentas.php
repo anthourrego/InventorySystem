@@ -24,9 +24,9 @@ class cCatalogoCuentas extends BaseController {
 		return view('UI/viewDefault', $this->content);
 	}
 
-	public function listaCuentas($id = null) {
+	public function listaCuentas() {
 		$mCatalogoCuentas = new mCatalogoCuentas();
-		return $mCatalogoCuentas->getCuentas($id);
+		return $mCatalogoCuentas->getCuentas(0);
 	}
 
 	public function crearEditar(){
@@ -42,6 +42,8 @@ class cCatalogoCuentas extends BaseController {
 			"estado" => $postData["estado"] === "true" ? 1 : 0,
 			"type" => trim($postData["tipo"]),
 			"id_parent" => trim($postData["idParent"]),
+			"naturaleza" => trim($postData["naturaleza"]),
+			"comportamiento" => trim($postData["comportamiento"]),
 		);
 
 		$mCatalogoCuentas = new mCatalogoCuentas();

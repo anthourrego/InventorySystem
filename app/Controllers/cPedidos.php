@@ -18,6 +18,7 @@ use App\Models\mVentasProductos;
 use App\Models\mPedidosCajas;
 use App\Models\mPedidosCajasProductos;
 use App\Models\mSucursalesCliente;
+use App\Models\Contabilidad\mCuentaMovimientos;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
 use \PhpOffice\PhpSpreadsheet\IOFactory;
@@ -1097,6 +1098,9 @@ class cPedidos extends BaseController {
 				$resp['msj'] = "Pedido Facturado correctamente, Factura nro: " . $codigo;
 				$resp["id_factura"] = $ventaSave["id"];
 				$resp["nFactura"] = $codigo;
+
+				$mCuentaMovimientos = new mCuentaMovimientos();
+				$mCuentaMovimientos->guardarVenta($ventaSave["id"]);
 			}
 		} else {
 			$resp["msj"] = "Ha ocurrido un error al guardar la venta." . listErrors($ventaModel->errors());
@@ -1150,7 +1154,8 @@ class cPedidos extends BaseController {
 			")->join('productos P', 'pedidoscajasproductos.id_producto = P.id', 'left')
 			->where("pedidoscajasproductos.id_caja", $value->id)
 			->groupBy("pedidoscajasproductos.id_caja")
-			->first();
+			->get()
+ 			->getRow();
 		}
 
 		return $this->response->setJSON($pedido);
