@@ -54,7 +54,7 @@ class cCompras extends BaseController {
 		$query = $this->db->table("compras AS C")
 				->select("
 						C.id,
-						C.codigo AS Codigo,
+						CAST(REGEXP_REPLACE(C.codigo, '[^0-9]', '') AS UNSIGNED) AS Codigo,
 						U.nombre AS Nombre_Usuario,
 						CP.Total_Productos,
 						CP.Total_Costo,
@@ -544,7 +544,7 @@ class cCompras extends BaseController {
 			
 			// $productSaved["stock"] = $productSaved["stock"] + $product->cantidad;
 			$productSaved["precio_venta"] = $product->valor;
-			$productSaved["costo"] = ($dataConf["canPacaProd"] ? $product->costo : '0');
+			$productSaved["costo"] = ($dataConf["canCostoProd"] ? $product->costo : '0');
 			$productSaved["cantPaca"] = ($dataConf["canPacaProd"] ? $product->cantPaca : 1);
 
 			if ($currentStock <= 0) {
