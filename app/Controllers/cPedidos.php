@@ -64,7 +64,7 @@ class cPedidos extends BaseController {
 		$mClientes = new mClientes();
 		$this->content["cantidadClientes"] = $mClientes->where("estado", 1)->countAllResults();
 
-    	$mConfiguracion = new mConfiguracion();
+		$mConfiguracion = new mConfiguracion();
 
 		$dataPref = (session()->has("prefijoPed") ? session()->get("prefijoPed") : '');
 		$cantDigitos = (session()->has("digitosPed") ? session()->get("digitosPed") : 0);

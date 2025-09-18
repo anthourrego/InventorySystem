@@ -13,6 +13,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use App\Models\MovimientoInventarioModel;
 use App\Entities\MovimientoInventarioEntity;
+use App\Models\mConfiguracion;
 
 class cProductos extends BaseController {
 
@@ -1031,5 +1032,59 @@ class cProductos extends BaseController {
 			return $movimientoInventarioModel->errorAfterInsertMsg;
 		}
 		return $response;
+	}
+
+	public function getProductsShop($id = null, $type = 'C') {
+		$mProductos = new mProductos();
+		$mConfiguracion = new mConfiguracion();
+		$config = $mConfiguracion->getAllConfig(); 
+
+		if (isset($config->itemProducto) && $config->itemProducto == '1') {
+			$mProductos->select("IFNULL(P.item, P.descripcion) As name, P.descripcion As description");
+		} else {
+			$mProductos->select("P.descripcion As name, '' As description");
+		}
+
+		if (!(isset($config->inventarioNegativo) && $config->inventarioNegativo == '1')) {
+			$mProductos->where("P.stock >", 0);
+			$mProductos->select("P.stock");
+		} else {
+			$mProductos->select("9999 AS stock");
+		}
+
+		$mProductos->select("
+				P.id,
+				P.precio_venta As price,
+				C.nombre AS category,
+				P.id_categoria As category_id,
+				CASE 
+					WHEN P.imagen IS NULL THEN null
+					ELSE CONCAT('" . base_url() . "/fotoProductosAPP/', P.id, '/', P.imagen) 
+				END As FotoURL,
+				CASE 
+					WHEN P.imagen IS NULL THEN null
+					ELSE CONCAT('" . base_url() . "/fotoProductosAPP/', P.id, '/', SUBSTRING(P.imagen,1,LOCATE('.', P.imagen)+-1), '-small', SUBSTRING(P.imagen,LOCATE('.', P.imagen),LENGTH(P.imagen)-LOCATE('.', P.imagen)+1)) 
+				END As FotoURLSmall	
+			")->from("productos AS P", true)
+			->join('categorias AS C', 'P.id_categoria = C.id', 'left')
+			->where("P.estado", 1)
+			->where("C.estado", 1)
+			->where('C.apply_shop', 1);
+
+		if (!is_null($id) && $type == 'C') {
+			$mProductos->where('id_categoria', $id);
+		}
+
+		if (!is_null($id) && $type == 'P') {
+			$mProductos->where('P.id', $id);
+		}
+
+		if ($type == 'C') {
+			$productos = $mProductos->findAll();
+		} else {
+			$productos = $mProductos->first();
+		}
+
+		return $this->response->setJSON($productos);
 	}
 }

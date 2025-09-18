@@ -17,7 +17,8 @@ let DTCategorias = $("#table").DataTable({
         return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
       }
     },
-    {data: 'Estadito',},
+    {data: 'ApplyShopDesc'},
+    {data: 'Estadito'},
     {
       data: 'created_at',
       render: function(meta, type, data, meta) {
@@ -66,6 +67,7 @@ let DTCategorias = $("#table").DataTable({
       $("#fechaMod").val(moment(data.updated_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
       $("#fechaCre").val(moment(data.created_at, "YYYY-MM-DD HH:mm:ss").format("DD/MM/YYYY hh:mm:ss A"));
       $("#estado").val(data.Estadito);
+      $("#aplicaTienda").val(data.apply_shop);
       $(".form-group-edit").removeClass("d-none");
       $("#modalCategorias").modal("show");
     });

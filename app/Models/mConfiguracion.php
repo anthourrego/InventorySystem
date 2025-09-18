@@ -45,4 +45,23 @@ class mConfiguracion extends Model {
 	protected $afterFind      = [];
 	protected $beforeDelete   = [];
 	protected $afterDelete    = [];
+
+	public function getValConfig($campo, $obj = false) {
+		$conf = $this->where("campo", $campo)->first();
+
+		if ($obj) {
+			return (is_null($conf)) ? null : (object) $conf;
+		} else {
+			return (is_null($conf)) ? null : $conf->valor;
+		}
+	}
+
+	public function getAllConfig() {
+		$config = $this->findAll();
+		$result = [];
+		foreach ($config as $conf) {
+			$result[$conf->campo] = $conf->valor;
+		}
+		return (object) $result;
+	}
 }

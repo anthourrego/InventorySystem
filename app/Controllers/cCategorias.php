@@ -33,6 +33,11 @@ class cCategorias extends BaseController {
 															WHEN estado = 1 THEN 'Activo' 
 															ELSE 'Inactivo' 
 													END AS Estadito,
+													apply_shop,
+													CASE 
+															WHEN apply_shop = 1 THEN 'Activo' 
+															ELSE 'Inactivo' 
+													END AS ApplyShopDesc,
 													created_at,
 													updated_at
 											");
@@ -49,10 +54,12 @@ class cCategorias extends BaseController {
 		//Traemos los datos del post
 		$postData = $this->request->getPost();
 		//Creamos los datos para guardar
+
 		$datosSave = array(
 			"id" => $postData["id"],
 			"nombre" => trim($postData["nombre"]),
 			"descripcion" => trim($postData["descripcion"]),
+			"apply_shop" => (int) $postData["aplicaTienda"],
 		);
 
 		$perfil = new mCategorias();
@@ -87,5 +94,13 @@ class cCategorias extends BaseController {
 		}
 
 		return $this->response->setJSON($resp);
+	}
+
+	public function getCategoriesShop() {
+		$categories = new mCategorias();
+
+		$categories->select('id, nombre As name')->where('estado', 1)->where('apply_shop', 1);
+
+		return $this->response->setJSON($categories->findAll());
 	}
 }
