@@ -1039,6 +1039,10 @@ class cProductos extends BaseController {
 		$mConfiguracion = new mConfiguracion();
 		$config = $mConfiguracion->getAllConfig(); 
 
+		// Retrieve GET parameters
+		$request = (object) $this->request->getGet();
+		$search = isset($request->q) ? trim($request->q) : null;
+
 		if (isset($config->itemProducto) && $config->itemProducto == '1') {
 			$mProductos->select("IFNULL(P.item, P.descripcion) As name, P.descripcion As description");
 		} else {
@@ -1071,12 +1075,20 @@ class cProductos extends BaseController {
 			->where("C.estado", 1)
 			->where('C.apply_shop', 1);
 
-		if (!is_null($id) && $type == 'C') {
+		if (is_null($search) && !is_null($id) && $type == 'C') {
 			$mProductos->where('id_categoria', $id);
 		}
 
 		if (!is_null($id) && $type == 'P') {
 			$mProductos->where('P.id', $id);
+		}
+
+		if (!is_null($search) && !empty($search)) {
+			$mProductos->groupStart()
+				->like('P.referencia', $search)
+				->orLike('P.descripcion', $search)
+				->orLike('P.item', $search)
+			->groupEnd();
 		}
 
 		if ($type == 'C') {

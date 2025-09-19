@@ -23,6 +23,7 @@ $routes->group('Shop', function ($routes) {
 	$routes->get('getProducts/(:num)', 'cProductos::getProductsShop/$1');
 	$routes->get('getProducts', 'cProductos::getProductsShop');
 	$routes->get('getProduct/(:num)', 'cProductos::getProductsShop/$1/P');
+	$routes->get('searchProducts', 'cProductos::getProductsShop');
 });
 
 //Usuarios
