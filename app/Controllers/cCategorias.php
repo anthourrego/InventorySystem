@@ -3,8 +3,23 @@
 namespace App\Controllers;
 use \Hermawan\DataTables\DataTable;
 use App\Models\mCategorias;
+use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\HTTP\ResponseInterface;
+use Psr\Log\LoggerInterface;
 
 class cCategorias extends BaseController {
+	private $applyShop = '0';
+
+	public function initController(
+		RequestInterface $request,
+		ResponseInterface $response,
+		LoggerInterface $logger
+	) {
+		parent::initController($request, $response, $logger);
+
+		$this->applyShop = (int) (session()->has("applyShop") ? session()->get("applyShop") : '0');
+	}
+
 	public function index() {
 		$this->content['title'] = "Categorias";
 		$this->content['view'] = "vCategorias";
@@ -12,6 +27,10 @@ class cCategorias extends BaseController {
 		$this->LDataTables();
 		$this->LMoment();
 		$this->LJQueryValidation();
+
+		$this->content["campos"] = [
+			"applyShop" => $this->applyShop,
+ 		];
 
 		$this->content['js_add'][] = [
 			'jsCategorias.js'
@@ -59,7 +78,7 @@ class cCategorias extends BaseController {
 			"id" => $postData["id"],
 			"nombre" => trim($postData["nombre"]),
 			"descripcion" => trim($postData["descripcion"]),
-			"apply_shop" => (int) $postData["aplicaTienda"],
+			"apply_shop" => ($this->applyShop == '1' ? (int) $postData["aplicaTienda"] : 0),
 		);
 
 		$perfil = new mCategorias();

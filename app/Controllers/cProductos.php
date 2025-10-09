@@ -27,6 +27,7 @@ class cProductos extends BaseController {
 	private $pacDescarga = '1';
 	private $inventarioNegativo = '0';
 	private $imageProd = 0;
+	private $applyShop = '0';
 
 	public function initController(
 		RequestInterface $request,
@@ -45,6 +46,7 @@ class cProductos extends BaseController {
 		$this->pacDescarga = (session()->has("pacDescarga") ? session()->get("pacDescarga") : '1');
 		$this->inventarioNegativo = (session()->has("inventarioNegativo") ? session()->get("inventarioNegativo") : '0');
 		$this->imageProd = (session()->has("imageProd") ? session()->get("imageProd") : 0);
+		$this->applyShop = (int) (session()->has("applyShop") ? session()->get("applyShop") : '0');
 	}
 
 	public function index() {
@@ -57,7 +59,8 @@ class cProductos extends BaseController {
 			"costo" => $this->costoProducto,
 			"manifiesto" => $this->manifiestoProducto,
 			"paca" => $this->pacaProducto,
-			"pacDescarga" => $this->pacDescarga
+			"pacDescarga" => $this->pacDescarga,
+			"applyShop" => $this->applyShop
  		];
 		$this->content["inventario_negativo"] = $this->inventarioNegativo;
 		$this->content['imagenProd'] = $this->imageProd;
@@ -174,6 +177,8 @@ class cProductos extends BaseController {
 						END AS manifiesto,
 						TPR.TotalProductosReportados,
 						CAST(({$stringStock} / P.cantPaca) AS DECIMAL(12,2)) AS cantidadXPaca,
+						no_apply_shop,
+						nombre_tienda
 				")->join('categorias AS C', 'P.id_categoria = C.id', 'left')
 				->join('manifiestos AS M', 'P.id_manifiesto = M.id', 'left')
 				->join("({$subQuery1}) TPR", "P.id = TPR.id_producto", "left");
@@ -280,6 +285,8 @@ class cProductos extends BaseController {
 				,"id_manifiesto" => !isset($postData->manifiesto) || strlen(trim($postData->manifiesto)) == 0 ? null : trim($postData->manifiesto)
 				,"costo" => ($this->costoProducto == '1' ? str_replace(",", "", trim(str_replace("$", "", $postData->costo))) : '0')
 				,"cantPaca" => ($this->pacaProducto == '1' ? trim($postData->paca) : 1)
+				,"nombre_tienda" =>trim($postData->nombre_tienda) == '' ? null : trim($postData->nombre_tienda)
+				,"no_apply_shop" => $postData->noApplyShop == '1' ? 1 : 0
 				,"updated_at" => date("Y-m-d H:i:s")
 			);
 
@@ -1043,12 +1050,6 @@ class cProductos extends BaseController {
 		$request = (object) $this->request->getGet();
 		$search = isset($request->q) ? trim($request->q) : null;
 
-		if (isset($config->itemProducto) && $config->itemProducto == '1') {
-			$mProductos->select("IFNULL(P.item, P.descripcion) As name, P.descripcion As description");
-		} else {
-			$mProductos->select("P.descripcion As name, '' As description");
-		}
-
 		if (!(isset($config->inventarioNegativo) && $config->inventarioNegativo == '1')) {
 			$mProductos->where("P.stock >", 0);
 			$mProductos->select("P.stock");
@@ -1057,6 +1058,16 @@ class cProductos extends BaseController {
 		}
 
 		$mProductos->select("
+				CASE 
+            WHEN LENGTH(TRIM(IFNULL(P.nombre_tienda, ''))) > 0 
+                THEN P.nombre_tienda 
+            ELSE P.descripcion 
+        END AS name,
+				CASE 
+            WHEN LENGTH(TRIM(IFNULL(P.nombre_tienda, ''))) > 0 
+                THEN P.descripcion 
+            ELSE ''
+        END AS description,
 				P.id,
 				P.precio_venta As price,
 				C.nombre AS category,
@@ -1073,6 +1084,7 @@ class cProductos extends BaseController {
 			->join('categorias AS C', 'P.id_categoria = C.id', 'left')
 			->where("P.estado", 1)
 			->where("C.estado", 1)
+			->where("P.no_apply_shop", 0)
 			->where('C.apply_shop', 1);
 
 		if (is_null($search) && !is_null($id) && $type == 'C') {

@@ -17,7 +17,7 @@ let DTCategorias = $("#table").DataTable({
         return `<span title="${data.descripcion}" class="text-descripcion">${data.descripcion}</span>`;
       }
     },
-    {data: 'ApplyShopDesc'},
+    {data: 'ApplyShopDesc', visible: $CAMPOS.applyShop == '1'},
     {data: 'Estadito'},
     {
       data: 'created_at',

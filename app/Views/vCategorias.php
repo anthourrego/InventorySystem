@@ -60,7 +60,7 @@
               <label class="mb-0" for="descripcion">Descripción</label>
               <textarea class="form-control inputVer" id="descripcion" name="descripcion" minlength="1" maxlength="500" placeholder="Descripción" rows="3" autocomplete="off"></textarea>
             </div>
-            <div class="col-6 form-group form-valid">
+            <div class="col-6 form-group form-valid <?= $campos['applyShop'] == '1' ? '' : 'd-none' ?>">
               <label class="mb-0" for="aplicaTienda">Aplica tienda <span class="text-danger">*</span></label>
               <select class="form-control inputVer" id="aplicaTienda" name="aplicaTienda" required>
                 <option value="1">Sí</option>
@@ -91,3 +91,7 @@
     </div>
   </div>
 </div>
+
+<script>
+  const $CAMPOS = <?= json_encode($campos) ?>;
+</script>
