@@ -617,15 +617,15 @@ class cCompras extends BaseController {
 			/* Se crean con valores iniciales para que al momento de confirmar
 			la compra se pueda actualizar el inventario como debe ser */
 			$dataNewProducto = array(
-				"referencia" => trim($product->referencia)
-				, "item" => (session()->has("itemProducto") && session()->get("itemProducto") == '1' ? trim($product->item) : null)
-				, "descripcion" => trim($product->descripcion)
-				, "stock" => 0
-				, "precio_venta" => 0
-				, "precio_venta_dos" => 0
-				, "costo" => '0'
-				, "cantPaca" => 1
-				, "estado" => 0
+				"referencia" => trim($product->referencia),
+				"item" => (session()->has("itemProducto") && session()->get("itemProducto") == '1' ? trim($product->item) : null),
+				"descripcion" => trim($product->descripcion),
+				"stock" => 0,
+				"precio_venta" => 0,
+				"precio_venta_dos" => 0,
+				"costo" => '0',
+				"cantPaca" => 1,
+				"estado" => 0
 				/* , "stock" => $product->stock
 				, "precio_venta" => $product->precioVenta
 				, "costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0')
@@ -661,10 +661,11 @@ class cCompras extends BaseController {
 
 		$productoFind = $mProductosFind->asObject()->find($idProducto);
 
-		if ($productoFind->descripcion != $product->descripcion) {
+		if ($productoFind->descripcion != $product->descripcion || $productoFind->item != $product->item) {
 			$dataUpdateProducto = array(
-				"id" => $idProducto
-				, "descripcion" => trim($product->descripcion)
+				"id" => $idProducto,
+				"descripcion" => trim($product->descripcion),
+				"item" => (session()->has("itemProducto") && session()->get("itemProducto") == '1' ? trim($product->item) : null)
 			);
 
 			if(!$mProductosFind->save($dataUpdateProducto)) {
