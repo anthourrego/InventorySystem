@@ -67,7 +67,7 @@ class mCatalogoCuentas extends Model {
 	protected $beforeDelete   = [];
 	protected $afterDelete    = [];
 
-	public function getCuentas($id = null) {
+	public function getCuentas($estado = 1, $id = null, $filters = []) {
 		
 		$this->select("
 			id,
@@ -86,17 +86,32 @@ class mCatalogoCuentas extends Model {
 			descripcion
 		");
 
+		if (is_null($id)) {
+			$this->asObject()->where("id_parent IS NULL");
+		} else {
+			$this->asObject()->where("id_parent", $id);
+		}
 
-		$catalogoCuentas = is_null($id)
-			? $this->asObject()->where("id_parent IS NULL")->findAll()
-			: $this->asObject()->where("id_parent", $id)->findAll();
+		if ($estado == 1) {
+			$this->where("estado", "{$estado}");
+		}
+
+		if (isset($filters['fechaIni']) && $filters['fechaIni'] != '') {
+			$this->where("DATE(created_at) >=", $filters['fechaIni']);
+		}
+
+		if (isset($filters['fechaFin']) && $filters['fechaFin'] != '') {
+			$this->where("DATE(created_at) <=", $filters['fechaFin']);
+		}
+
+		$catalogoCuentas = $this->findAll();
 		
 		if (empty($catalogoCuentas)) {
 			return [];
 		}
 	
 		foreach ($catalogoCuentas as $cuenta) {
-			$cuenta->children = $this->getCuentas($cuenta->id);
+			$cuenta->children = $this->getCuentas($estado, $cuenta->id, $filters);
 		}
 	
 		return $catalogoCuentas;

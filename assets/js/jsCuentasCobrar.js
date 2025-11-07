@@ -40,9 +40,9 @@ let DTCuentasCobrar = $("#table").DataTable({
 				return bill;
 			}
 		},
-		{ data: 'NombreCliente'},
-		{ data: 'Sucursal'},
-		{ data: 'Ciudad'},
+		{ data: 'NombreCliente' },
+		{ data: 'Sucursal' },
+		{ data: 'Ciudad' },
 		{
 			data: 'descuento',
 			className: "text-right",
@@ -150,7 +150,7 @@ let DTCuentasCobrar = $("#table").DataTable({
 					$("#descuentoFactura").html(formatoPesos.format(venta.descuento));
 					$("#totalFactura").html(formatoPesos.format(venta.total));
 					$("#totalAbonosFactura").html(formatoPesos.format(venta.AbonosVenta));
-					$("#valorPendienteFactura").html(formatoPesos.format(venta.ValorPendiente));
+					$("#valorPendienteFactura").html(formatoPesos.format(+venta.ValorPendiente - (+venta.descuento ?? 0)));
 
 					$("#modalAgregarAbono").modal('show');
 				}
@@ -185,7 +185,7 @@ let DTDataAccountsBill = $("#tblAbonos").DataTable({
 	},
 	columns: [{
 		data: 'codigo'
-	},{
+	}, {
 		data: 'tipo_abono',
 		render: function (meta, type, data, meta2) {
 			return TIPOSABONO.find(tipo => tipo.valor === data.tipo_abono)?.titulo;
@@ -259,7 +259,7 @@ let DTDataAccountsBill = $("#tblAbonos").DataTable({
 							alertify.success(msj);
 							setValuesAccounts(info.accountsBill)
 
-							$("#valorPendienteFactura").html(formatoPesos.format(info.venta.ValorPendiente));
+							$("#valorPendienteFactura").html(formatoPesos.format(+info.venta.ValorPendiente - (+info.venta.ValorPendiente ?? 0)));
 
 							if (+info.venta.ValorPendiente > 0) {
 								optionBillSelected.ValorPendiente = info.venta.ValorPendiente;
@@ -348,7 +348,7 @@ $(function () {
 				return
 			}
 
-			if (+dataProd.valor > +optionBillSelected.ValorPendiente) {
+			if (+dataProd.valor > (+optionBillSelected.ValorPendiente - (+optionBillSelected.descuento ?? 0))) {
 				alertify.warning("El valor ingresado es superior al saldo pendiente");
 				return
 			}
@@ -364,7 +364,7 @@ $(function () {
 						setValuesAccounts(info.accountsBill)
 
 						$("#valor, #observacion").val('')
-						$("#valorPendienteFactura").html(formatoPesos.format(info.venta.ValorPendiente));
+						$("#valorPendienteFactura").html(formatoPesos.format(+info.venta.ValorPendiente - (+info.venta.ValorPendiente ?? 0)));
 
 						optionBillSelected.ValorPendiente = info.venta.ValorPendiente;
 
@@ -470,7 +470,7 @@ $(function () {
 		resetFilter(false);
 	});
 
-	$("#reiniciarFiltros").on("click", function() {
+	$("#reiniciarFiltros").on("click", function () {
 		filtrosConfig = {
 			type: "-1",
 			branches: "",
@@ -496,7 +496,7 @@ $(function () {
 		}
 	});
 
-	document.addEventListener("focusin", function(event) {
+	document.addEventListener("focusin", function (event) {
 		if (event.target.classList.contains("datetimepicker-focus")) {
 			event.target.nextElementSibling.click();
 		}

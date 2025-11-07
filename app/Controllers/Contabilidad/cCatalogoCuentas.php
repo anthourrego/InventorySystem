@@ -24,9 +24,9 @@ class cCatalogoCuentas extends BaseController {
 		return view('UI/viewDefault', $this->content);
 	}
 
-	public function listaCuentas($id = null) {
+	public function listaCuentas() {
 		$mCatalogoCuentas = new mCatalogoCuentas();
-		return $mCatalogoCuentas->getCuentas($id);
+		return $mCatalogoCuentas->getCuentas(0);
 	}
 
 	public function crearEditar(){

@@ -158,9 +158,8 @@ function agregarIconosAgregar() {
     $("#nombre").val(dataNode.nombre);
     $("#codigo").val(dataNode.codigo);
     $("#tipo").val(dataNode.type);
-    $("#estado").prop("checked", dataNode.estado);
+    $("#estado").prop("checked", dataNode.estado == "1");
     $("#naturaleza").val(dataNode.naturaleza);
-    console.log(dataNode)
     $("#comportamiento").val(dataNode.comportamiento);
     $("#idParent").val(dataNode.id_parent);
 

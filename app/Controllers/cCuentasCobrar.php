@@ -7,6 +7,7 @@ use App\Controllers\BaseController;
 use App\Models\mVentas;
 use App\Models\mConfiguracion;
 use App\Models\mCuentasCobrar;
+use App\Models\Contabilidad\mCuentaMovimientos;
 
 class cCuentasCobrar extends BaseController {
 
@@ -92,6 +93,8 @@ class cCuentasCobrar extends BaseController {
 
 		if($mCuentasCobrar->save($dataAccount)) {
 
+			$insertedId = $mCuentasCobrar->getInsertID();
+
 			$mConfiguracion = new mConfiguracion();
 
 			$dataSave = [
@@ -108,6 +111,10 @@ class cCuentasCobrar extends BaseController {
 				$this->db->transRollback();
 				$resp["msj"] = "Ha ocurrido un error al guardar el abono." . listErrors($mConfiguracion->errors());
 			} else {
+
+				$mCuentaMovimientos = new mCuentaMovimientos();
+				$mCuentaMovimientos->guardarCuentaCobrar($insertedId);
+
 				$resp["success"] = true;
 				$this->db->transCommit();
 			}
@@ -174,6 +181,10 @@ class cCuentasCobrar extends BaseController {
 		$this->db->transBegin();
 
 		if($mCuentasCobrar->save($dataAddAccount)) {
+
+			$mCuentaMovimientos = new mCuentaMovimientos();
+			$mCuentaMovimientos->guardarCuentaCobrar($data->idAbonoVenta, true);
+
 			$this->db->transCommit();
 			$resp['msj'] = "Abono anulado correctamente";
 			$resp["info"] = $this->getAccounts($data->idVenta, 0);
@@ -237,13 +248,13 @@ class cCuentasCobrar extends BaseController {
 				CU.nombre AS Ciudad,
 				V.observacion,
 				(V.total) AS total,
-				(V.total - (CASE WHEN TA.TotalAbonosVenta IS NULL THEN 0 ELSE TA.TotalAbonosVenta END)) AS ValorPendiente,
+				((V.total - V.descuento) - (CASE WHEN TA.TotalAbonosVenta IS NULL THEN 0 ELSE TA.TotalAbonosVenta END)) AS ValorPendiente,
 				(CASE WHEN TA.TotalAbonosVenta IS NULL THEN 0 ELSE TA.TotalAbonosVenta END) AS AbonosVenta
 			");
 		} else {
 			$query->select("
 				SUM(V.total) AS total,
-				SUM(V.total - (CASE WHEN TA.TotalAbonosVenta IS NULL THEN 0 ELSE TA.TotalAbonosVenta END)) AS ValorPendiente,
+				SUM((V.total - V.descuento) - (CASE WHEN TA.TotalAbonosVenta IS NULL THEN 0 ELSE TA.TotalAbonosVenta END)) AS ValorPendiente,
 				SUM(CASE WHEN TA.TotalAbonosVenta IS NULL THEN 0 ELSE TA.TotalAbonosVenta END) AS AbonosVenta
 			");
 		}
