@@ -168,6 +168,18 @@
                 <?php endforeach ?>
               </select>
             </div>
+            <div class="col-8 form-group form-valid <?= $camposProducto["applyShop"] == "1" ? '' : 'd-none' ?>">
+                <label class="mb-0" for="nombre_tienda">Nombre en la tienda</label>
+                <input placeholder="Ingrese el nombre en la tienda" type="text" <?= $camposProducto["applyShop"] == "1" ? '' : 'disabled' ?> data-campo="nombre_tienda" id="nombre_tienda" name="nombre_tienda" class="form-control soloLetrasEspacio inputVer" minlength="1" maxlength="255" autocomplete="off">
+              </div>
+            <div class="col-4 form-group form-valid <?= $camposProducto["applyShop"] == "1" ? '' : 'd-none' ?>">
+              <label for="noApplyShop" class="mb-0">No Aplica Tienda:</label>
+              <select id="noApplyShop" data-nombre="No Aplica Tienda" name="noApplyShop" data-placeholder="Seleccione una opción" class="custom-select select2">
+                <option value=""></option>
+                <option value="1">Si</option>
+                <option value="0" selected>No</option>
+              </select>
+            </div>
             <div class="col-12 form-group form-valid">
               <label class="mb-0" for="descripcion">Descripción <span class="text-danger">*</span></label>
               <textarea class="form-control inputVer" id="descripcion" name="descripcion" minlength="1" required maxlength="500" placeholder="Ingrese la descripción" rows="3" autocomplete="off"></textarea>

@@ -17,6 +17,14 @@ $routes->post('sidebar', 'Home::sidebar', ['filter' => ['authGuard', 'ajax']]);
 //$routes->get('FacturaQR/(:num)/(:num)', 'cPedidos::facturaQR/$1/$2');
 $routes->get('FotoEmpresa', 'Home::fotoEmpresa');
 
+/* Rutas para la tienda */
+$routes->group('Shop', function ($routes) {
+	$routes->get('getCategories', 'cCategorias::getCategoriesShop');
+	$routes->get('getProducts/(:num)', 'cProductos::getProductsShop/$1');
+	$routes->get('getProducts', 'cProductos::getProductsShop');
+	$routes->get('getProduct/(:num)', 'cProductos::getProductsShop/$1/P');
+	$routes->get('searchProducts', 'cProductos::getProductsShop');
+});
 
 //Usuarios
 $routes->group('Usuarios', ['filter' => 'authGuard:1'], function ($routes) {

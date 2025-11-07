@@ -27,6 +27,7 @@
           <tr>
             <th>Nombre</th>
             <th>Descripción</th>
+            <th>Aplica tienda</th>
             <th>Estado</th>
             <th>Fecha Creación</th>
             <th>Acciones</th>
@@ -59,18 +60,27 @@
               <label class="mb-0" for="descripcion">Descripción</label>
               <textarea class="form-control inputVer" id="descripcion" name="descripcion" minlength="1" maxlength="500" placeholder="Descripción" rows="3" autocomplete="off"></textarea>
             </div>
+            <div class="col-6 form-group form-valid <?= $campos['applyShop'] == '1' ? '' : 'd-none' ?>">
+              <label class="mb-0" for="aplicaTienda">Aplica tienda <span class="text-danger">*</span></label>
+              <select class="form-control inputVer" id="aplicaTienda" name="aplicaTienda" required>
+                <option value="1">Sí</option>
+                <option value="0" selected>No</option>
+              </select>
+            </div>
+
+            <div class="col-6 form-group form-group-edit">
+              <label class="mb-0" for="estado">Estado</label>
+              <input class="form-control" id="estado" disabled>
+            </div>
             <div class="col-6 form-group form-group-edit">
               <label class="mb-0" for="fechaMod">Fecha modificación</label>
-              <input class="form-control" id="fechaMod" disabled>
+              <input class="form-control" id="fechaMod" disabled>                                        
             </div>
             <div class="col-6 form-group form-group-edit">
               <label class="mb-0" for="fechaCre">Fecha creación</label>
               <input class="form-control" id="fechaCre" disabled>
             </div>
-            <div class="col-6 form-group form-group-edit">
-              <label class="mb-0" for="estado">Estado</label>
-              <input class="form-control" id="estado" disabled>
-            </div>
+            
           </div>
         </form>
       </div>
@@ -81,3 +91,7 @@
     </div>
   </div>
 </div>
+
+<script>
+  const $CAMPOS = <?= json_encode($campos) ?>;
+</script>

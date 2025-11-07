@@ -28,6 +28,8 @@ class mProductos extends Model {
 		"ventas",
 		"estado",
 		"cantPaca",
+		"no_apply_shop",
+		"nombre_tienda",
 		"updated_at",
 	];
 
@@ -53,7 +55,9 @@ class mProductos extends Model {
 		'id_manifiesto'			=> 'permit_empty|numeric|min_length[1]|max_length[11]|is_not_unique[manifiestos.id]',
 		'ventas'       			=> 'permit_empty|integer|min_length[1]|max_length[11]',
 		'estado'       			=> 'permit_empty|integer|min_length[1]|max_length[1]',
-		'cantPaca'     			=> 'permit_empty|numeric|min_length[1]|max_length[11]'
+		'cantPaca'     			=> 'permit_empty|numeric|min_length[1]|max_length[11]',
+		'nombre_tienda'			=> 'permit_empty|min_length[1]|max_length[255]',
+		'no_apply_shop'     => 'permit_empty|integer|min_length[1]|max_length[1]'
 	];
 	protected $validationMessages   = [
 		"referencia" => [

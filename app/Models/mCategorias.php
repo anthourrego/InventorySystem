@@ -17,6 +17,7 @@ class mCategorias extends Model {
 		"nombre",
 		"descripcion",
 		"estado",
+		"apply_shop",
 		"created_at",
 		"updated_at"
 	];
@@ -33,6 +34,7 @@ class mCategorias extends Model {
 		'id'           => "permit_empty|is_natural_no_zero",
 		'nombre'       => "required|alpha_numeric_space|min_length[1]|max_length[255]|is_unique[categorias.nombre, id, {id}]",
 		'descripcion'  => 'permit_empty|min_length[1]|max_length[500]',
+		'apply_shop'   => 'permit_empty|in_list[0,1]',
 	];
 	protected $validationMessages   = [
 		"nombre" => [

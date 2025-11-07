@@ -55,7 +55,7 @@ class cCompras extends BaseController {
 		$query = $this->db->table("compras AS C")
 				->select("
 						C.id,
-						C.codigo AS Codigo,
+						CAST(REGEXP_REPLACE(C.codigo, '[^0-9]', '') AS UNSIGNED) AS Codigo,
 						U.nombre AS Nombre_Usuario,
 						CP.Total_Productos,
 						CP.Total_Costo,
@@ -78,7 +78,7 @@ class cCompras extends BaseController {
 				->join("proveedores AS P", "C.id_proveedor = P.id", "left")
 				->join("(
 					SELECT
-						COUNT(id) AS Total_Productos, (SUM(costo) * SUM(cantidad)) AS Total_Costo, id_compra
+						COUNT(id) AS Total_Productos, SUM(costo * cantidad) AS Total_Costo, id_compra
 					FROM comprasproductos
 					GROUP BY id_compra
 				) AS CP", "C.id = CP.id_compra", "left");
@@ -549,7 +549,7 @@ class cCompras extends BaseController {
 			
 			// $productSaved["stock"] = $productSaved["stock"] + $product->cantidad;
 			$productSaved["precio_venta"] = $product->valor;
-			$productSaved["costo"] = ($dataConf["canPacaProd"] ? $product->costo : '0');
+			$productSaved["costo"] = ($dataConf["canCostoProd"] ? $product->costo : '0');
 			$productSaved["cantPaca"] = ($dataConf["canPacaProd"] ? $product->cantPaca : 1);
 
 			if ($currentStock <= 0) {
@@ -628,15 +628,15 @@ class cCompras extends BaseController {
 			/* Se crean con valores iniciales para que al momento de confirmar
 			la compra se pueda actualizar el inventario como debe ser */
 			$dataNewProducto = array(
-				"referencia" => trim($product->referencia)
-				, "item" => (session()->has("itemProducto") && session()->get("itemProducto") == '1' ? trim($product->item) : null)
-				, "descripcion" => trim($product->descripcion)
-				, "stock" => 0
-				, "precio_venta" => 0
-				, "precio_venta_dos" => 0
-				, "costo" => '0'
-				, "cantPaca" => 1
-				, "estado" => 0
+				"referencia" => trim($product->referencia),
+				"item" => (session()->has("itemProducto") && session()->get("itemProducto") == '1' ? trim($product->item) : null),
+				"descripcion" => trim($product->descripcion),
+				"stock" => 0,
+				"precio_venta" => 0,
+				"precio_venta_dos" => 0,
+				"costo" => '0',
+				"cantPaca" => 1,
+				"estado" => 0
 				/* , "stock" => $product->stock
 				, "precio_venta" => $product->precioVenta
 				, "costo" => (session()->has("costoProducto") && session()->get("costoProducto") == '1' ? str_replace(",", "", trim(str_replace("$", "", $product->costo))) : '0')
@@ -672,10 +672,11 @@ class cCompras extends BaseController {
 
 		$productoFind = $mProductosFind->asObject()->find($idProducto);
 
-		if ($productoFind->descripcion != $product->descripcion) {
+		if ($productoFind->descripcion != $product->descripcion || $productoFind->item != $product->item) {
 			$dataUpdateProducto = array(
-				"id" => $idProducto
-				, "descripcion" => trim($product->descripcion)
+				"id" => $idProducto,
+				"descripcion" => trim($product->descripcion),
+				"item" => (session()->has("itemProducto") && session()->get("itemProducto") == '1' ? trim($product->item) : null)
 			);
 
 			if(!$mProductosFind->save($dataUpdateProducto)) {

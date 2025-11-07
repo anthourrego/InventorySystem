@@ -12,7 +12,7 @@ let DTCompras = $("#table").DataTable({
       return $.extend(d, { "estado": Math.random() })
     }
   },
-  order: [[0, "desc"]],
+  order: [[0, "desc"]], // Ordena por Codigo_Numerico (primera columna oculta)
   scrollX: true,
   columns: [
     {
